@@ -1,8 +1,8 @@
 {
-  "name": "HEMS-Logger",
-  "productName": "HEMS-Logger",
-  "version": "3.3.5",
-  "description": "Home Energy Management System and Life Logger",
+  "name": "PLIS",
+  "productName": "PLIS",
+  "version": "0.0.1",
+  "description": "Platform for Life Improvement and Support",
   "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
@@ -12,7 +12,7 @@
     "package": "electron-forge package",
     "make": "license-checker --json > ./src/modules.json && electron-forge make",
     "publish": "electron-forge publish",
-    "macsign": "electron-osx-sign ./out/HEMS-Logger-darwin-arm64/HEMS-Logger.app --identity='Developer ID Application' --no-gatekeeper-assess",
+    "macsign": "electron-osx-sign ./out/PLIS-darwin-arm64/PLIS.app --identity='Developer ID Application' --no-gatekeeper-assess",
     "lint": "echo \"No linting configured\"",
     "license-check": "license-checker --json > ./src/modules.json"
   },

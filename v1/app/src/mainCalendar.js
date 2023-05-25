@@ -13,7 +13,7 @@ require('date-utils'); // for log
 
 
 //////////////////////////////////////////////////////////////////////
-const appname  = 'HEMS-Logger';
+const appname  = 'PLIS';
 const isWin    = process.platform == "win32" ? true : false;
 const userHome = process.env[ isWin ? "USERPROFILE" : "HOME"];
 const databaseDir = path.join(userHome, appname);  // SQLite3ファイルの置き場

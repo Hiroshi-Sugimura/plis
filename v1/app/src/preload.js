@@ -10,7 +10,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	//======================================================
 	// renderer to main
 
-	// HEMS-Logger全体
+	// PLIS全体
 	already: () => { // rendererが準備できた
 		ipcRenderer.invoke('already', '');
 	},

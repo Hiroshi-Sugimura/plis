@@ -8,7 +8,7 @@ const env = process.env.NODE_ENV || "development";
 
 const path = require('path');
 
-const appname = 'HEMS-Logger';
+const appname = 'PLIS';
 const userHome = process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"];
 const configDir = path.join(userHome, appname);
 

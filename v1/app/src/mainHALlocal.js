@@ -130,8 +130,8 @@ mainHALlocal.submitQuestionnaire = async function( arg, succeessFunc, errorFunc 
 		if (minor) {
 			// 今日の minorResults レコードが見つかれば、成績データを更新
 			let minor_update_data = {};
-			if (minor.dataValues.assessmentSource === 'HEMS-Logger') {
-				// assessmentSource が "HEMS-Logger" なら null のカラムだけ更新
+			if (minor.dataValues.assessmentSource === 'PLIS') {
+				// assessmentSource が "PLIS" なら null のカラムだけ更新
 				for (let [k, v] of Object.entries(minor.dataValues)) {
 					if (/^r_\d+_\d+$/.test(k) && v === null) {
 						minor_update_data[k] = v;
@@ -158,8 +158,8 @@ mainHALlocal.submitQuestionnaire = async function( arg, succeessFunc, errorFunc 
 			}
 
 			let major_update_data = {};
-			if (major.dataValues.assessmentSource === 'HEMS-Logger') {
-				// assessmentSource が "HEMS-Logger" なら null のカラムだけ更新
+			if (major.dataValues.assessmentSource === 'PLIS') {
+				// assessmentSource が "PLIS" なら null のカラムだけ更新
 				for (let [k, v] of Object.entries(major.dataValues)) {
 					if (/^r_\d+_\d+$/.test(k) && v === null) {
 						major_update_data[k] = v;

@@ -17,7 +17,7 @@ const { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } = require('./mai
 
 //////////////////////////////////////////////////////////////////////
 // 基本設定，electronのファイル読み込み対策，developmentで変更できるようにした（けどつかってない）
-const appname = 'HEMS-Logger';
+const appname = 'PLIS';
 const appDir = process.env.NODE_ENV === 'development' ? __dirname : __dirname;
 const isWin = process.platform == "win32" ? true : false;
 const isMac = process.platform == "darwin" ? true : false;
@@ -78,7 +78,7 @@ let sendIPCMessage = function (cmdStr, argStr) {
 //////////////////////////////////////////////////////////////////////
 // Communication for Electron's Renderer process
 //////////////////////////////////////////////////////////////////////
-// HEMS-Logger全体
+// PLIS全体
 
 // Renderer準備完了
 ipcMain.handle('already', async (event, arg) => {
@@ -655,8 +655,8 @@ function menuInitialize() {
 function createShortCut() {
 	// windows用
 	if (isWin) {
-		let dist = path.join(userHome, 'Desktop', 'HEMS-Logger.lnk');		// 作成したいショートカットのパス (末尾の.lnkが必要)
-		let source = path.join(userHome, 'AppData', 'Local', 'HEMS_Logger', 'HEMS-Logger.exe'); // リンク元としたいディレクトリorファイルパス（本体）
+		let dist = path.join(userHome, 'Desktop', 'PLIS.lnk');		// 作成したいショートカットのパス (末尾の.lnkが必要)
+		let source = path.join(userHome, 'AppData', 'Local', 'HEMS_Logger', 'PLIS.exe'); // リンク元としたいディレクトリorファイルパス（本体）
 
 		// ショートカット作成コマンド
 		let command = `$WshShell = New-Object -ComObject WScript.Shell; $ShortCut = $WshShell.CreateShortcut("${dist}"); $ShortCut.TargetPath = "${source}"; $ShortCut.Save();`;

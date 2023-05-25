@@ -255,7 +255,7 @@ function onLoad() {
 
 
 			//----------------------------------------------
-			// HEMS-Logger全体
+			// PLIS全体
 			case "myIPaddr":
 			console.log( 'main -> myIPaddr:', c.arg );
 			myIPaddr.innerHTML = 'My IP address list: ' + c.arg;
