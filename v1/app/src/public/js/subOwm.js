@@ -1,0 +1,133 @@
+//////////////////////////////////////////////////////////////////////
+//	Copyright (C) SUGIMURA Lab. 2022.08.30
+//	netatmo関係の処理
+//////////////////////////////////////////////////////////////////////
+'use strict'
+
+
+////////////////////////////////////////////////////////////////////////////////
+// HTMLロードしたら準備
+window.addEventListener('DOMContentLoaded', function () {
+	console.dir('## DOMContentLoaded subOwm.js');
+
+	let weather;       // 天気情報（OpenWeatherMap）
+
+	let divWeather = document.getElementById('divWeather'); // open weather mapのセンサデータ
+	let divWeatherSuggest = document.getElementById('divWeatherSuggest');
+	let divWeatherConfigInfo = document.getElementById('divWeatherConfigInfo');  // open weather map
+
+	// config
+	let inOwmUse             = document.getElementById('inOwmUse');  // use
+	let inOwmAPIKey          = document.getElementById('inOwmAPIKey');  // open weather map
+	let inOwmZipCode         = document.getElementById('inOwmZipCode');
+	let btnOwmConfigSet      = document.getElementById('btnOwmConfigSet');  // 設定ボタン
+
+	let dlgOwmHelp        = document.getElementById('dlgOwmHelp');  // 設定方法の説明ダイアログ
+
+
+	//----------------------------------------------------------------------------------------------
+	// OWM デバイス情報のrenew
+	// OpenWeatherMap
+	window.renewOwm = function( arg ) {
+		console.log('window.renewOwm() arg:', arg);
+		weather = arg;
+		if( inOwmUse.checked == false || inOwmAPIKey.value == '' || weather == {} ) {
+			return;
+		}
+
+		try{
+			let weatherDoc = "<h3><i class='fa-solid fa-cloud-sun'></i> 気象データ by Open Weather Map： " + weather.name + ", " + weather.sys.country
+				+ ' <span class="f_right"><a href="#" onClick="document.getElementById(\'configTab\').checked=true; location.hash=\'OpenWeatherMapConfig\'; document.getElementById(\'OWMConfigDetails\').open=true;"><i class="fa-solid fa-gear right"></i></a></span></h3>'
+					+ " <div class='LinearLayoutParent'>";
+
+			weatherDoc += "<div class='LinearLayoutChild'> <section>"
+				+ "<img src='http://openweathermap.org/img/wn/" + weather.weather[0].icon + "@2x.png' class='weather-icon'><br class='omitable'>"
+					+ "天気: " + weather.weather[0].main + "<br></section> </div>";
+			weatherDoc += "<div class='LinearLayoutChild'> <section>"
+				+ "<i class='fas fa-temperature-high mr-2 env-icon'></i><br class='omitable'>"
+					+ "気温: " + weather.main.temp + "℃<br class='omitable'> (最高:" +weather.main.temp_max + ", 最低:" + weather.main.temp_min +")" + "</section> </div>";
+			weatherDoc += "<div class='LinearLayoutChild'> <section>"
+				+ "<i class='fa-solid fa-tent-arrow-down-to-line env-icon'></i><br class='omitable'>"
+					+ "気圧: " + weather.main.pressure + " hPa<br>" + "</section> </div>";
+			weatherDoc += "<div class='LinearLayoutChild'> <section>"
+				+ "<i class='fas fa-tint mr-2 env-icon'></i><br class='omitable'>"
+					+ "湿度: " +weather.main.humidity  + " %<br>" + "</section> </div>";
+			weatherDoc += "<div class='LinearLayoutChild'> <section>"
+				+ "<i class='fa-solid fa-wind env-icon'></i><br class='omitable'>"
+					+ "風: " +weather.wind.speed + " m/s<br>" + "</section> </div>";
+			weatherDoc += "<div class='LinearLayoutChild'> <section>"
+				+ "<i class='fa-solid fa-location-arrow env-icon'></i><br class='omitable'>"
+					+ "風向: " +weather.wind.deg + "° <br class='omitable'>(0:北、CW)<br>" + "</section> </div>";
+			weatherDoc += "<div class='LinearLayoutChild'> <section>"
+				+ "<i class='fa-brands fa-soundcloud env-icon'></i><br class='omitable'>"
+					+ "雲量: " +weather.clouds.all + "%</section> </div>";
+			weatherDoc += "</div>"; // LinearLayoutParent
+
+			divWeather.innerHTML = weatherDoc;
+			divWeatherConfigInfo.innerHTML = '';
+		}catch(e) {
+			// console.log('renewOwm()');
+			window.addToast( 'Error', 'OpenWeatherMap連携エラー<br>' + weather.message );
+			console.log(weather);
+			console.dir(e);
+			divWeather.innerHTML = '<p> <strong class="error">Error: 設定を認識しましたが通信に失敗しました。もう一度APIを設定しなおしてください。通信結果: ' + weather.message + '</strong> </p>';
+			divWeatherConfigInfo.innerHTML = '<p> <strong class="error">Error: 設定を認識しましたが通信に失敗しました。もう一度APIを設定しなおしてください。</strong> </p>';
+		}
+	};
+
+
+	//----------------------------------------------------------------------------------------------
+	// Open Weather Map
+	// 設定ボタン
+	window.btnOwmConfigSet_Click = function() {
+		btnOwmConfigSet.disabled = true;
+		btnOwmConfigSet.textContent = '保存中…';
+
+		if( !inOwmUse.checked ) {
+			window.ipc.OwmStop( inOwmAPIKey.value, inOwmZipCode.value );  // OWMの監視をstopする
+			renewOwm();
+			return; // falseなら外すだけ
+		}
+
+		// true にした時のチェック
+		if( inOwmAPIKey.value == '' || inOwmZipCode.value == '' ) { // 情報不足で有効にしたら解説ダイアログ
+			inOwmUse.checked = false;
+			dlgOwmHelp.showModal();
+		}else{  // 全情報ありなので利用開始
+			window.ipc.OwmUse( inOwmAPIKey.value, inOwmZipCode.value );
+		}
+	};
+
+	// 設定完了
+	window.OwmConfigSaved = function () {
+		btnOwmConfigSet.disabled    = false;
+		btnOwmConfigSet.textContent = '設定';
+
+		window.addToast( 'Info', 'OWM 設定を保存しました。');
+	};
+
+	// mainプロセスから設定値をもらったので画面を更新
+	window.renewOwmConfigView = function( arg ) {
+		btnOwmConfigSet.disabled    = false;
+		btnOwmConfigSet.textContent = '設定';
+		inOwmUse.checked   = arg.enabled;
+		inOwmAPIKey.value  = arg.APIKey;
+		inOwmZipCode.value = arg.zipcode;
+
+		if( inOwmUse.checked ) {
+			divWeather.style.display = 'block';
+			divWeatherSuggest.style.display = 'none';
+		}else{
+			divWeather.style.display = 'none';
+			divWeatherSuggest.style.display  = 'block';
+		}
+
+	};
+
+
+	//----------------------------------------------------------------------------------------------
+	// OWM chart
+
+
+
+} );

@@ -1,0 +1,52 @@
+{
+  "name": "HEMS-Logger",
+  "productName": "HEMS-Logger",
+  "version": "3.3.5",
+  "description": "Home Energy Management System and Life Logger",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron-forge start",
+    "preinstall": "npm i -g license-checker npm-check-updates",
+    "win": "chcp 65001 && npm run license-check && electron-forge start",
+    "mac": "npm run license-check && electron-forge start",
+    "package": "electron-forge package",
+    "make": "license-checker --json > ./src/modules.json && electron-forge make",
+    "publish": "electron-forge publish",
+    "macsign": "electron-osx-sign ./out/HEMS-Logger-darwin-arm64/HEMS-Logger.app --identity='Developer ID Application' --no-gatekeeper-assess",
+    "lint": "echo \"No linting configured\"",
+    "license-check": "license-checker --json > ./src/modules.json"
+  },
+  "keywords": [],
+  "author": {
+    "name": "SUGIMURA Hiroshi (Kanagawa Institute of Technology, JAPAN)",
+    "email": "hiroshi.sugimura@gmail.com"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "@network-utils/arp-lookup": "^2.0.1",
+    "date-utils": "^1.2.21",
+    "e-smartmeter-echonet-lite": "^2.7.6",
+    "echonet-lite": "^2.14.2",
+    "echonet-lite-conv": "^1.8.1",
+    "electron-squirrel-startup": "^1.0.0",
+    "electron-store": "^8.1.0",
+    "hue-handler": "^2.1.0",
+    "netatmo": "^2.4.0",
+    "node-cron": "^3.0.2",
+    "node-tradfri-client": "^3.2.0",
+    "request-promise-native": "^1.0.9",
+    "sequelize": "^6.31.0",
+    "sqlite3": "^5.1.6",
+    "switchbot-client": "^0.2.0",
+    "tradfri-handler": "^0.5.3",
+    "usb-2jcie-bu": "^1.2.0"
+  },
+  "devDependencies": {
+    "@electron-forge/cli": "^6.1.1",
+    "@electron-forge/maker-deb": "^6.1.1",
+    "@electron-forge/maker-rpm": "^6.1.1",
+    "@electron-forge/maker-squirrel": "^6.1.1",
+    "@electron-forge/maker-zip": "^6.1.1",
+    "electron": "24.1.0"
+  }
+}

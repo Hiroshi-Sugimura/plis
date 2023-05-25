@@ -1,0 +1,180 @@
+//////////////////////////////////////////////////////////////////////
+//	Copyright (C) SUGIMURA Lab. 2022.11.28
+//	Ikea関係の処理
+//////////////////////////////////////////////////////////////////////
+'use strict'
+
+
+////////////////////////////////////////////////////////////////////////////////
+// HTMLロードしたら準備
+window.addEventListener('DOMContentLoaded', function () {
+	console.dir('## DOMContentLoaded subIkea.js');
+
+	//----------------------------------------------------------------------------------------------
+	// Ikea デバイス情報のrenew
+	let facilitiesHue;  // デバイスリスト Hue
+	let ikeaConnected = false; // ikeaとリンクしていないとコントロールさせない
+
+	let txtIkeaLog = document.getElementById('txtIkeaLog');
+
+	// control tab
+	let H2ControlIkea = document.getElementById('H2ControlIkea');
+	let divControlIkea = document.getElementById('divControlIkea');  // Ikeaのコントロール
+
+	// config tab
+	let inIkeaUse        = document.getElementById('inIkeaUse');
+	let inIkeaSecurityCode = document.getElementById('inIkeaSecurityCode');
+	let inIkeaIdentity   = document.getElementById('inIkeaIdentity');
+	let inIkeaPsk        = document.getElementById('inIkeaPsk');
+	let btnIkeaConfigSet = document.getElementById('btnIkeaConfigSet');
+
+	// mainからの情報で，ikea関係のhtmlを変更する
+	window.renewFacilitiesIkea = function ( arg ) { //facilitiesIkea = json = arg; // 機器情報確保
+		facilitiesIkea = arg;
+		// console.log( 'window.renewFacilitiesIkea() arg:', arg );
+
+		if( !inIkeaUse.checked ) {  // 機能無効なのにrenewが来た
+			if( H2ControlIkea.style.display == '' ) {
+				H2ControlIkea.style.display = 'none';
+			}
+			divControlIkea.innerHTML = '';
+			return;
+		}
+
+		if (!facilitiesIkea || isObjEmpty(facilitiesIkea ) ) {  // 機器情報なし
+			doc ='<img src="./img/loadingRed.gif">接続中';
+			divControlIkea.innerHTML = doc;
+			return; // 機器情報なければやらない、存在も消す
+		}
+
+		let doc = '';
+		if( !ikeaConnected ) {  // 情報あるけど未接続
+			doc ='<img src="./img/loadingRed.gif">接続中';
+
+		}else{
+			doc = '';
+
+			for (const [key, value] of Object.entries(facilitiesIkea))
+			{
+				let ip = key;
+				let bridge  = value.bridge;
+				let devices = value.devices;
+				doc += "<div class='LinearLayoutChild'> <section>";
+				doc += '<div class="tooltip"><img src="./img/ikea_bridge.jpg" class="ikea-dev" /><div class="description">' + bridge.model.serial + '&#013;&#010;' + bridge.ipaddress + '</div></div><br>' + bridge.name + '<br> </section> </div>';
+
+				for (const [key, value] of Object.entries(devices)) {
+					if( key == 0 ) { continue; } // デバイスがないときも、無しというエントリーが入っているので無視する
+
+					// key is light number
+					// value is details
+					let devName = key + ':' + value.name;
+					let makerCode = value.manufacturername;
+					doc += "<div class='LinearLayoutChild'> <section>";
+
+					if (value.state) {
+						let operatingStatus = value.state.on;
+						if (operatingStatus == true) {
+							doc += "<div class='tooltip'><img src=\"./img/ikea_on.png\" class='ikea-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + devName + "<br>" +
+								'<button onclick="IkeaPowButton(this)" value="' + key + ',off">OFF</button><br>';
+						} else {
+							doc += "<div class='tooltip'><img src=\"./img/ikea_off.png\" class='ikea-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + devName + "<br>" +
+								'<button onclick="IkeaPowButton(this)" value="' + key + ',on">ON</button><br>';
+						}
+					}
+					doc += "</section> </div>";  // ボタン設置
+				}
+			}
+		}
+
+		divControlIkea.innerHTML = doc;
+	}
+
+	// configタブのデバッグログ
+	window.renewIkeaLog = function( text ) {
+		txtIkeaLog.value = text;
+	}
+
+	// ikeaとリンクしたのでGUI表示する
+	window.ikeaLinked = function () {
+		if( H2ControlIkea.style.display == 'none' ) {
+			H2ControlIkea.style.display = '';
+		}
+
+		if( divControlIkea.style.display == 'none' ) {
+			divControlIkea.style.display = '';
+		}
+
+		ikeaConnected = true;
+	}
+
+	//----------------------------------------------------------------------------------------------
+	// Ikea
+	window.IkeaPowButton = function (btn) {
+		let cmd = btn.value.split(",");
+
+		let sendurl = "/lights/" + cmd[0] + "/state";
+
+		switch (cmd[1]) {
+			case 'on':
+			window.ipc.IkeaSend( sendurl, {"on":true} );
+			break;
+			case 'off':
+			window.ipc.IkeaSend( sendurl, {"on":false} );
+			break;
+			default:
+			console.error('unknown cmd');
+			console.error(cmd[1]);
+		}
+	};
+
+	// 設定ボタン
+	window.btnIkeaConfigSet_Click = function () {
+		// console.log( 'window.ikeaUseCheck() checkBox:', checkBox.checked );
+
+		// 使用しない
+		if( !inIkeaUse.checked ) {
+			window.ipc.IkeaUseStop(inIkeaSecurityCode.value, inIkeaIdentity.value, inIkeaPsk.value );  // ikeaの監視をstopする
+			ikeaConnected = false;
+			return;
+		}
+
+		// 使用する
+		if( inIkeaSecurityCode.value != '' && inIkeaIdentity.value != '' && inIkeaPsk.value != '' ) {
+			window.addToast( 'Info', 'Ikea 連携を開始しました。実際の通信まで2分程度お待ちください。');
+			window.ipc.IkeaUse( inIkeaSecurityCode.value, inIkeaIdentity.value, inIkeaPsk.value );
+		}else{
+			inIkeaUse.checked = false;
+			window.addToast( 'Info', 'Ikea 連携を開始できません。設定を確認してください。');
+		}
+	};
+
+
+	// 設定完了通知
+	window.IkeaConfigSaved = function () {
+		btnIkeaConfigSet.disabled    = false;
+		btnIkeaConfigSet.textContent = '設定';
+
+		window.addToast( 'Info', 'IKEA 設定を保存しました。');
+	};
+
+	// mainプロセスから設定値をもらったので画面を更新
+	window.renewIkeaConfigView = function( arg ) {
+		inIkeaUse.checked = arg.enabled;
+		inIkeaSecurityCode.value = arg.securityCode;
+		inIkeaIdentity.value = arg.identity;
+		inIkeaPsk.value = arg.psk;
+		btnIkeaConfigSet.disabled    = false;
+		btnIkeaConfigSet.textContent = '設定';
+
+		if( arg.enabled ) {  // 利用する場合
+			H2ControlIkea.style.display = 'block';
+			divControlIkea.style.display = '-webkit-flex';
+			divIkeaSuggest.style.display = 'none';
+		}else{  // 利用しない場合
+			H2ControlIkea.style.display = 'none';
+			divControlIkea.style.display = 'none';
+			divIkeaSuggest.style.display = 'block';
+		}
+	};
+
+} );

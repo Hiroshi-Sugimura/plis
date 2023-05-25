@@ -1,0 +1,1865 @@
+<!DOCTYPE html>
+<!--
+  //////////////////////////////////////////////////////////////////////
+  // Copyright (C) Hiroshi SUGIMURA 2020.08.28.
+  // Updated: 2021.09.13
+  //////////////////////////////////////////////////////////////////////
+  -->
+<html lang="ja">
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="Content-Security-Policy"
+		content="default-src 'self'; style-src 'self' 'unsafe-inline';script-src 'self' 'unsafe-inline';img-src 'self' http://openweathermap.org/  https://www.jma.go.jp/ data: base64" />
+
+	<title>HEMS-Logger</title>
+	<link rel="stylesheet" type="text/css" media="screen" href="./css/style.css" />
+</head>
+
+<body>
+	<header class="gheader">
+		<h1 class="shadow">HEMS-Logger</h1>
+		<div id="divHALArea">
+			<button type="button" id="btnHALSync" onclick="window.btnHALsync_Click();"><i
+					class="fa-solid fa-rotate"></i> 同期開始</button>
+		</div>
+	</header>
+
+	<div id="contents">
+
+		<div class="tab_area">
+			<!-- タブ -->
+			<input id="top" type="radio" name="tab_item" checked="checked">
+			<label class="tab_item" for="top"><img src="./img/home.png" class=tab-icon alt="home" align="top"> <span
+					class="omitable">TOP</span></label>
+
+			<input id="control" type="radio" name="tab_item">
+			<label class="tab_item" for="control"><img src="./img/set.png" class=tab-icon alt="set" align="top"><span
+					class="omitable">Control</span></label>
+
+			<input id="hal" type="radio" name="tab_item">
+			<label class="tab_item" for="hal"><img src="./img/chart.png" class=tab-icon alt="chart" align="top"><span
+					class="omitable">HAL</span></label>
+
+			<input id="questionnaire" type="radio" name="tab_item">
+			<label class="tab_item" for="questionnaire"><img src="./img/profile.png" class=tab-icon alt="hal"
+					align="top"><span class="omitable">Questionnaire</span></label>
+
+			<input id="details" type="radio" name="tab_item">
+			<label class="tab_item" for="details"><img src="./img/debug.png" class=tab-icon alt="debug"
+					align="top"><span class="omitable">Details</span></label>
+
+			<input id="configTab" type="radio" name="tab_item">
+			<label class="tab_item_config" for="configTab"> <i class="fa-solid fa-gear tab-icon" alt="top"
+					align="top"></i> </label>
+
+			<!-- topタブ開始 -->
+			<div class="tab_content" id="divTop_tab">
+
+				<h2><i class="fa-regular fa-clock"></i> Daytime <span class="f_right"><a href="#"
+							onClick="document.getElementById('configTab').checked=true; location.hash='SystemConfig'; document.getElementById('SystemConfigDetails').open=true;"><i
+								class="fa-solid fa-gear right"></i></a></span></h2>
+
+				<div class="LinearLayoutParent_split">
+					<!-- 時計 -->
+					<div class="clock-wrap LinearLayoutChild_left">
+						<canvas class="clock" width="200" height="200"></canvas>
+					</div>
+
+					<div class="calendar-wrap LinearLayoutChild_right">
+						<!-- ボタンクリックで月移動 -->
+						<div id="next-prev-button">
+							<button id="calendarPrev" onclick="window.calendarPrev()"><i
+									class="fa-solid fa-angles-left"></i></button>
+							<strong id="year_month"></strong><!-- xxxx年xx月を表示 -->
+							<button id="calendarNext" onclick="window.calendarNext()"><i
+									class="fa-solid fa-angles-right"></i></button>
+						</div>
+						<!-- カレンダー -->
+						<div id="calendar">カレンダーの表示がない場合は設定から祝日データの再取得をしてください。</div>
+					</div>
+				</div>
+
+				<!-- 天気 -->
+				<h2 id="H2weatherReport">気象情報</h2>
+				<div id="divWeather"></div>
+
+				<!-- 気象庁予報 -->
+				<div id="divJma"></div>
+
+				<!-- 屋内 -->
+				<h2 id="roomEnvTitle" class="none">屋内環境</h2>
+
+				<!-- Netatmo -->
+				<h3 id="H3Netatmo" class="none"><i class='fa-solid fa-person-shelter'></i> 屋内環境：Netatmo <span
+						id="spanNetatmoHomename"></span> (<span id="spanNetatmoTime"></span>) <span class="f_right"><a
+							href="#"
+							onClick="document.getElementById('configTab').checked=true; location.hash='NetatmoConfig'; document.getElementById('NetatmoConfigDetails').open=true;"><i
+								class="fa-solid fa-gear right"></i></a></span></h3>
+				<div class="LinearLayoutParent_split">
+					<div class="LinearLayoutChild_left none" id="divNetatmoAbst"><!-- abst -->
+						<div class='LinearLayoutParent'>
+							<section><img src='./img/netatmo.svg' class='dev-type-icon'><br><br class='omitable'>
+								<div class='LinearLayoutChild_Env'>
+									<section class='temp_color' id='netatmoDocTempSec'
+										onClick='window.netatmoDocSectionClicked("温度 [℃]");'>
+										<i class='fas fa-temperature-high mr-2 env-icon'></i>
+										温度 (left axis):<br> <span id="spanNetatmoTemperature"></span> ℃
+									</section>
+								</div>
+								<div class='LinearLayoutChild_Env'>
+									<section class='hum_color' id='netatmoDocHumSec'
+										onClick='window.netatmoDocSectionClicked("湿度 [%]");'>
+										<i class='fas fa-tint mr-2 env-icon'></i>
+										湿度 (left axis):<br> <span id="spanNetatmoHumidity"></span> %
+									</section>
+								</div>
+								<div class='LinearLayoutChild_Env'>
+									<section class='pressure_color' id='netatmoDocPressSec'
+										onClick='window.netatmoDocSectionClicked("気圧 [mb]");'>
+										<i class='fa-solid fa-tent-arrow-down-to-line env-icon'></i>
+										気圧 (right axis):<br> <span id="spanNetatmoPressure"></span> mb (hPa)
+									</section>
+								</div>
+								<div class='LinearLayoutChild_Env'>
+									<section class='co2_color' id='netatmoDocCo2Sec'
+										onClick='window.netatmoDocSectionClicked("CO2 [ppm]");'>
+										<i class='fas fa-head-side-cough mr-2 env-icon'></i>
+										CO2 (right axis):<br> <span id="spanNetatmoCO2"></span> ppm
+									</section>
+								</div>
+								<div class='LinearLayoutChild_Env'>
+									<section class='noise_color' id='netatmoDocNoiseSec'
+										onClick='window.netatmoDocSectionClicked("騒音 [dB]");'>
+										<i class='fas fa-volume-up mr-2 env-icon'></i>
+										騒音 (left axis):<br> <span id="spanNetatmoNoise"></span> dB
+									</section>
+								</div>
+							</section>
+						</div>
+					</div>
+					<div class="LinearLayoutChild_right" id="divNetatmoChart"><!-- graph -->
+						<canvas id="canRoomEnvChartNetatmo" class="none canRoomEnvChart"></canvas>
+					</div>
+				</div>
+
+				<!-- OMRON -->
+				<h3 id="H3Omron" class="none"><i class='fa-solid fa-person-shelter'></i> 屋内環境：Omron, <span
+						id="spanOmronPlace"></span> （<span id="spanOmronTime"></span>） <span class="f_right"><a href="#"
+							onClick="document.getElementById('configTab').checked=true; location.hash='OmronConfig'; document.getElementById('OmronConfigDetails').open=true;"><i
+								class="fa-solid fa-gear right"></i></a></span></h3>
+				<div class="LinearLayoutParent_split">
+					<!-- abst -->
+					<div class="LinearLayoutChild_left none" id="divOmronAbst">
+						<div class='LinearLayoutParent'>
+							<section>
+								<i class='fa-brands fa-usb devTypeOmron'></i><br>
+								<div class='LinearLayoutChild_Env'>
+									<section class='temp_color' id='omronDocTempSec'
+										onClick='window.omronDocSectionClicked("温度 [℃]");'>
+										<i class='fas fa-temperature-high mr-2 env-icon'></i> 温度 (left axis):<br> <span
+											id="spanOmronTemperature"></span> ℃
+									</section>
+								</div>
+								<div class='LinearLayoutChild_Env'>
+									<section class='hum_color' id='omronDocHumSec'
+										onClick='window.omronDocSectionClicked("湿度 [%RH]");'>
+										<i class='fas fa-tint mr-2 env-icon'></i> 湿度 (left axis):<br> <span
+											id="spanOmronHumidity"></span> %RH
+									</section>
+								</div>
+								<div class='LinearLayoutChild_Env'>
+									<section class='pressure_color' id='omronDocPressSec'
+										onClick='window.omronDocSectionClicked("気圧 [hPa]");'>
+										<i class='fa-solid fa-tent-arrow-down-to-line env-icon'></i> 気圧 (right
+										axis):<br> <span id="spanOmronPressure"></span> hPa
+									</section>
+								</div>
+								<div class='LinearLayoutChild_Env'>
+									<section class='noise_color' id='omronDocNoiseSec'
+										onClick='window.omronDocSectionClicked("騒音 [dB]");'>
+										<i class='fas fa-volume-up mr-2 env-icon'></i> 騒音 (left axis):<br> <span
+											id="spanOmronNoise"></span> dB
+									</section>
+								</div>
+								<div class='LinearLayoutChild_Env'>
+									<section class='anbientLight_color' id='omronDocAnbientSec'
+										onClick='window.omronDocSectionClicked("光 [lx]");'>
+										<i class='fa-solid fa-circle-half-stroke env-icon'></i> 照度 (right axis):<br>
+										<span id="spanOmronAnbientLight"></span> lx<span class='small'></span>
+									</section>
+								</div>
+								<div class='LinearLayoutChild_Env'>
+									<section class='discomfort_color' id='omronDocDiscomfortSec'
+										onClick='window.omronDocSectionClicked("不快指数");'>
+										<i class='far fa-grin-beam-sweat env-icon'></i> 不快指数 (left axis):<br> <span
+											id="spanOmronDiscomfortIndex"></span> <span class='small'>(*参)</span>
+									</section>
+								</div>
+								<div class='LinearLayoutChild_Env'>
+									<section class='heatStroke_color' id='omronDocHeatStrokeSec'
+										onClick='window.omronDocSectionClicked("熱中症警戒度");'>
+										<i class='fas fa-sun mr-2 env-icon'></i> 熱中症度 (left axis):<br> <span
+											id="spanOmronHeatStroke"></span> [<span
+											id="spanOmronHeat_stroke_desc"></span>] <span class='small'>(*参)</span>
+									</section>
+								</div>
+							</section>
+						</div>
+					</div>
+					<!-- graph -->
+					<div class="LinearLayoutChild_right" id="divOmronChart">
+						<canvas id="canRoomEnvChartOmron" class="none canRoomEnvChart"></canvas>
+					</div>
+				</div>
+
+
+				<!-- スマート電力メータのグラフ、デフォルトで消えているけど、データが来たら表示、subESMで制御 -->
+				<h2 id="H3ESM" class="none"><i class='fa-solid fa-person-shelter'></i> 消費電力：Electric Smart Meter<span
+						class="f_right"><a href="#"
+							onClick="document.getElementById('configTab').checked=true; location.hash='ESMConfig'; document.getElementById('ESMConfigDetails').open=true;"><i
+								class="fa-solid fa-gear right"></i></a></span></h2>
+				<div class="LinearLayoutParent_split">
+					<div class="LinearLayoutChild_lef none" id="divESMAbst"><!-- abst -->
+						<div class='LinearLayoutParent'>
+							<section>
+								<div class='tooltip'>
+									<img src='./img/electric.png' class='esm-icon' />
+									<div class='description'>設置場所: <span id="spanESMPlace"></span>, IP: <span
+											id="spanESMIP"></span>, Version: <span id="spanESMVersion" /></div>
+								</div><br>
+								<div class='LinearLayoutChild_Env'>
+									<section class='watt_color' id='esmDocWattSec'
+										onClick='window.esmDocSectionClicked("瞬時電力 [W]");'>
+										<i class="fa-solid fa-bolt"></i> 瞬時電力<br><span id="spanESMWatt"></span> W
+									</section>
+								</div>
+								<div class='LinearLayoutChild_Env'>
+									<section class='ampereR_color' id='esmDocAmpereRSec'
+										onClick='window.esmDocSectionClicked("瞬時電流R [A]");'>
+										<i class="fa-solid fa-bolt"></i> 瞬時電流R相<br><span id="spanESMAmpereR"></span> A
+									</section>
+								</div>
+								<div class='LinearLayoutChild_Env'>
+									<section class='ampereT_color' id='esmDocAmpereTSec'
+										onClick='window.esmDocSectionClicked("瞬時電流T [A]");'>
+										<i class="fa-solid fa-bolt"></i> 瞬時電流T相<br><span id="spanESMAmpereT"></span> A
+									</section>
+								</div>
+								<div class='LinearLayoutChild_Env'>
+									<section class='comWattNorm_color' id='esmDocComWattNormSec'
+										onClick='window.esmDocSectionClicked("積算電力量正方向 [kWh]");'>
+										<i class="fa-solid fa-bolt"></i> 積算電力量（正）<br><span
+											id="spanESMComWattNorm"></span> kWh
+									</section>
+								</div>
+								<div class='LinearLayoutChild_Env'>
+									<section class='comWattRev_color' id='esmDocComWattRevSec'
+										onClick='window.esmDocSectionClicked("積算電力量逆方向 [kWh]");'>
+										<i class="fa-solid fa-bolt"></i> 積算電力量（逆）<br><span
+											id="spanESMComWattRev"></span> kWh
+									</section>
+								</div>
+							</section>
+						</div><!-- LinearLayoutParent -->
+					</div>
+					<div class="LinearLayoutChild_right none" id="divESMChart"><!-- graph -->
+						<canvas id="canEnergyChart" class="canEnergyChart"></canvas>
+					</div>
+				</div>
+
+
+				<!-- 電力サブメータのグラフ、デフォルトで消えているけど、データが来たら表示、subELで制御 -->
+				<div id="divSubESMH3" class="none">
+					<h2>
+						<i class='fa-solid fa-person-shelter'></i> 消費電力：Electric Smart Sub Meter
+						<span class="f_right"><a href="#"
+								onClick="document.getElementById('configTab').checked=true; location.hash='userProfileConfig'; document.getElementById('userProfileDetail').open=true;"><i
+									class="fa-solid fa-gear right"></i></a></span>
+					</h2>
+				</div>
+				<div class="p">
+					<table class="roomEnv">
+						<tbody>
+							<tr class="">
+								<td class="roomEnvLeftNetatmo">
+									<div id="divSubESM"></div>
+								</td>
+								<td class="roomEnvRightNetatmo">
+									<canvas id="canSubEnergyChart" class="none canEnergyChart"></canvas>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<div id="divWeatherSuggest">
+					<h3><i class='fa-solid fa-person-shelter'></i> 気象環境</h3>
+					<div class='LinearLayoutParent'>
+						<div class='LinearLayoutChild'>
+							<section>
+								<strong>ConfigからOpenWeatherMapの情報を入力すると表示されます。</strong><br>
+								<button
+									onclick="document.getElementById('configTab').checked=true; location.hash='OpenWeatherMapConfig'; document.getElementById('OpenWeatherMapConfig').open=true;">設定はこちら</button>
+							</section>
+						</div>
+					</div>
+				</div>
+
+				<div id="divNetatmoSuggest">
+					<h3><i class='fa-solid fa-person-shelter'></i> 屋内環境</h3>
+					<div class='LinearLayoutParent'>
+						<div class='LinearLayoutChild'>
+							<section>
+								<strong>ConfigからNetatmoの情報を入力すると表示されます。</strong><br>
+								<button
+									onclick="document.getElementById('configTab').checked=true; location.hash='NetatmoConfig'; document.getElementById('NetatmoConfigDetails').open=true;">設定はこちら</button>
+							</section>
+						</div>
+					</div>
+				</div>
+
+				<div id="divOmronSuggest">
+					<h3><i class='fa-solid fa-person-shelter'></i> 屋内環境</h3>
+					<div class='LinearLayoutParent'>
+						<div class='LinearLayoutChild'>
+							<section>
+								<strong>ConfigからOmronの情報を入力すると表示されます。</strong><br>
+								<button
+									onclick="document.getElementById('configTab').checked=true; location.hash='OmronConfig'; document.getElementById('OmronConfigDetails').open=true;">設定はこちら</button>
+							</section>
+						</div>
+					</div>
+				</div>
+
+				<div id="divESMSuggest">
+					<h3><i class='fa-solid fa-person-shelter'></i> 消費電力</h3>
+					<div class='LinearLayoutParent'>
+						<div class='LinearLayoutChild'>
+							<section>
+								<strong>ConfigからESMの情報を入力すると表示されます。</strong><br>
+								<button
+									onclick="document.getElementById('configTab').checked=true; location.hash='ESMConfig'; document.getElementById('ESMConfigDetails').open=true;">設定はこちら</button>
+							</section>
+						</div>
+					</div>
+				</div>
+			</div> <!-- Topタブ終了 -->
+
+			<!-- controlタブ開始 -->
+			<div class="tab_content" id="divControl_tab">
+				<h2 id="H2ControlEL" class="none">
+					ECHONET Lite
+					<span class="f_right">
+						<i class="fa-solid fa-arrows-rotate" onClick="window.ipc.ELsearch();"></i>
+						<a href="#"
+							onClick="document.getElementById('configTab').checked=true; location.hash='ELConfig'; document.getElementById('ELConfigDetails').open=true;"><i
+								class="fa-solid fa-gear right"></i></a>
+					</span>
+				</h2>
+				<div class="p">
+					<div id="divControlEL" class="LinearLayoutParent" style="display:none;"></div>
+					<div id="divControlESM" class="LinearLayoutParent" style="display:none;"></div>
+				</div>
+
+				<h2 id="H2ControlHue" style="display:none;">
+					Philips hue
+					<span class="f_right"><a href="#"
+							onClick="document.getElementById('configTab').checked=true; location.hash='HueConfig'; document.getElementById('HueConfigDetails').open=true;"><i
+								class="fa-solid fa-gear right"></i></a></span>
+				</h2>
+				<div class="p">
+					<div id="divControlHue" class="LinearLayoutParent" style="display:none;"></div>
+				</div>
+
+				<h2 id="H2ControlIkea" style="display:none;">IKEA Tradfri</h2>
+				<div class="p">
+					<div id="divControlIkea" class="LinearLayoutParent none"></div>
+				</div>
+
+				<h2 id="H2ControlSwitchBot" style="display: none;">
+					SwitchBot (<span id="spanSwitchBotTime"></span>)
+					<span class="f_right"><a href="#"
+							onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;"><i
+								class="fa-solid fa-gear right"></i></a></span>
+				</h2>
+				<div class="p">
+					<div id="divControlSwitchBot" class="LinearLayoutParent" style="display: none;"></div>
+				</div>
+
+				<!-- SwitchBotChart -->
+				<h3 id="H3SwitchBot" class="none"><i class='fa-solid fa-person-shelter'></i> 屋内環境：SwitchBot （<span
+						id="spanSwitchBotTime">取得中</span>） <span class="f_right"><a href="#"
+							onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;"><i
+								class="fa-solid fa-gear right"></i></a></span></h3>
+				<!-- graph -->
+				<div class="p">
+					<canvas id="canRoomEnvChartSwitchBot" class="none canRoomEnvChart"></canvas>
+				</div>
+
+				<div id="divELSuggest">
+					<h3><i class='fa-solid fa-person-shelter'></i> ECHONET Lite</h3>
+					<div class='LinearLayoutParent'>
+						<div class='LinearLayoutChild'>
+							<section>
+								<strong>ConfigからECHONET Liteの通信機能を有効化すると表示されます。</strong><br>
+								<button
+									onclick="document.getElementById('configTab').checked=true; location.hash='ELConfig'; document.getElementById('ELConfigDetails').open=true;">設定はこちら</button>
+							</section>
+						</div>
+					</div>
+				</div>
+
+				<div id="divHueSuggest">
+					<h3><i class='fa-solid fa-person-shelter'></i> Philips hue</h3>
+					<div class='LinearLayoutParent'>
+						<div class='LinearLayoutChild'>
+							<section>
+								<strong>ConfigからPhilip hueの情報を入力すると表示されます。</strong><br>
+								<button
+									onclick="document.getElementById('configTab').checked=true; location.hash='HueConfig'; document.getElementById('HueConfigDetails').open=true;">設定はこちら</button>
+							</section>
+						</div>
+					</div>
+				</div>
+
+				<div id="divSwitchBotSuggest">
+					<h3><i class='fa-solid fa-person-shelter'></i> SwitchBot</h3>
+					<div class='LinearLayoutParent'>
+						<div class='LinearLayoutChild'>
+							<section>
+								<strong>ConfigからSwitchBotの情報を入力すると表示されます。</strong><br>
+								<button
+									onclick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;">設定はこちら</button>
+							</section>
+						</div>
+					</div>
+				</div>
+
+				<div id="divIkeaSuggest">
+					<h3><i class='fa-solid fa-person-shelter'></i> IKEA Tradfri</h3>
+					<div class='LinearLayoutParent'>
+						<div class='LinearLayoutChild'>
+							<section>
+								<strong>ConfigからIKEA Tradfriの情報を入力すると表示されます。</strong><br>
+								<button
+									onclick="document.getElementById('configTab').checked=true; location.hash='IkeaConfig'; document.getElementById('IkeaConfigDetails').open=true;">設定はこちら</button>
+							</section>
+						</div>
+					</div>
+				</div>
+			</div> <!-- Control タブ終了 -->
+
+
+			<!-- HAL タブ開始 -->
+			<div class="haltab_content" id="divHal_tab">
+				<div class="haltab_area">
+					<input id="general" type="radio" name="haltab_item" checked>
+					<label class="haltab_item" for="general"><i class="fa-solid fa-chart-pie"></i><span
+							class="omitable"> 総合</span></label>
+
+					<input id="clothing" type="radio" name="haltab_item">
+					<label class="haltab_item" for="clothing"> <i class="fa-solid fa-shirt"></i><span class="omitable">
+							衣服</span></label>
+
+					<input id="food" type="radio" name="haltab_item">
+					<label class="haltab_item" for="food"><i class="fa-solid fa-utensils"></i> <span class="omitable">
+							食事</span></label>
+
+					<input id="housing" type="radio" name="haltab_item">
+					<label class="haltab_item" for="housing"><i class="fa-solid fa-house"></i> <span class="omitable">
+							住居</span></label>
+
+					<input id="physical" type="radio" name="haltab_item">
+					<label class="haltab_item" for="physical"><i class="fa-solid fa-person"></i> <span class="omitable">
+							身体</span></label>
+
+					<input id="mental" type="radio" name="haltab_item">
+					<label class="haltab_item" for="mental"><i class="fa-solid fa-heart"></i> <span class="omitable">
+							心・絆</span></label>
+
+					<input id="ecology" type="radio" name="haltab_item">
+					<label class="haltab_item" for="ecology"><i class="fa-solid fa-earth-americas"></i> <span
+							class="omitable"> エコ</span></label>
+
+					<div class="haltab_content" id="general_content"><!-- 総合タブ開始 -->
+						<table width="80%">
+							<tr>
+								<td class="hal"><span class="omitable">ユーザー</span>ID<span class="omitable">(UID)</span>
+								</td>
+								<td class="hal">
+									<div id="divId"></div>
+								</td>
+								<td rowspan="7" class="hal"> <img src="./img/Ray.png" height="250"> </td>
+							</tr>
+							<tr>
+								<td class="hal">記録日時</td>
+								<td class="hal">
+									<div id="divDatetime"></div>
+								</td>
+							</tr>
+							<tr>
+								<td class="hal">総合得点<span class="omitable">(HAL数)</span></td>
+								<td class="hal">
+									<div id="divTotalPoint"></div>
+								</td>
+							</tr>
+							<tr>
+								<td class="hal"><span class="omitable">総合</span>ランク</td>
+								<td class="hal">
+									<div id="divTotalRank"></div>
+								</td>
+							</tr>
+							<tr>
+								<td class="hal">SLI</td>
+								<td class="hal">
+									<div id="divSLI"></div>
+								</td>
+							</tr>
+							<tr>
+								<td background="./img/balloon.png"
+									style="background-size: 100% 100%;background-repeat : no-repeat; padding:1em"
+									width="60%" colspan="2" class="hal">
+									<div id="divComment"></div>
+								</td>
+							</tr>
+						</table>
+
+						<table width="90%" border="1">
+							<thead>
+								<tr>
+									<td class="hal">大項目</td>
+									<td colspan="2" class="hal">項目平均点 / 満点</td>
+									<td class="hal"> 項目別ランク <b>(TDB)</b></td>
+								</tr>
+							</thead>
+							<tr>
+								<td class="hal"><i class="fa-solid fa-shirt"></i><span class="omitable">衣服・身だしなみ</span>
+								</td>
+								<td class="hal">
+									<div id="divClothing" class="inline, right"></div>
+								</td>
+								<td class="hal"> / 100 点</td>
+								<td class="hal">
+									<div id="divClothingRatio"></div>
+								</td>
+							</tr>
+							<tr>
+								<td class="hal"><i class="fa-solid fa-utensils"></i> <span class="omitable">食事</span>
+								</td>
+								<td class="hal">
+									<div id="divFood" class="inline, right"></div>
+								</td>
+								<td class="hal"> / 100 点</td>
+								<td class="hal">
+									<div id="divFoodRatio"></div>
+								</td>
+							</tr>
+							<tr>
+								<td class="hal"><i class="fa-solid fa-house"></i> <span class="omitable">住居</span></td>
+								<td class="hal">
+									<div id="divHousing" class="inline, right"></div>
+								</td>
+								<td class="hal"> / 100 点</td>
+								<td class="hal">
+									<div id="divHousingRatio"></div>
+								</td>
+							</tr>
+							<tr>
+								<td class="hal"><i class="fa-solid fa-person"></i> <span class="omitable">体の健康</span>
+								</td>
+								<td class="hal">
+									<div id="divPhysicalHealth" class="inline, right"></div>
+								</td>
+								<td class="hal"> / 100点</td>
+								<td class="hal">
+									<div id="divPhysicalRatio"></div>
+								</td>
+							</tr>
+							<tr>
+								<td class="hal"><i class="fa-solid fa-heart"></i> <span class="omitable">心の健康</span>
+								</td>
+								<td class="hal">
+									<div id="divMentalHealth" class="inline, right"></div>
+								</td>
+								<td class="hal"> / 100点</td>
+								<td class="hal">
+									<div id="divMentalRatio"></div>
+								</td>
+							</tr>
+							<tr>
+								<td class="hal"><i class="fa-solid fa-earth-americas"></i> <span
+										class="omitable">エコ度</span></td>
+								<td class="hal">
+									<div id="divEcology" class="inline, right"></div>
+								</td>
+								<td class="hal"> / 100点</td>
+								<td class="hal">
+									<div id="divEcologyRatio"></div>
+								</td>
+							</tr>
+							<tfoot>
+								<tr>
+									<td class="hal">HAL数</td>
+									<td class="hal">
+										<div id="divHALPoint" class="inline, right"></div>
+									</td>
+									<td class="hal"> / 100点</td>
+									<td class="hal"> </td>
+								</tr>
+							</tfoot>
+						</table>
+
+						<canvas id="canMajorRaderChart"></canvas>
+					</div><!-- 総合タブ終了 -->
+
+					<div class="haltab_content" id="clothing_content"><!-- 衣服タブ開始 -->
+						<canvas id="canClothingBarChart"></canvas>
+					</div><!-- 衣服タブ終了 -->
+
+					<div class="haltab_content" id="food_content"><!-- 食事タブ開始 -->
+						<canvas id="canFoodBarChart"></canvas>
+					</div><!-- 食事タブ終了 -->
+
+					<div class="haltab_content" id="housing_content"><!-- 住居タブ開始 -->
+						<canvas id="canHousingBarChart"></canvas>
+					</div><!-- 住居タブ終了 -->
+
+					<div class="haltab_content" id="physical_content"><!-- 体タブ開始 -->
+						<canvas id="canPhysicalBarChart"></canvas>
+					</div><!-- 体タブ終了 -->
+
+					<div class="haltab_content" id="mental_content"><!-- 心タブ開始 -->
+						<canvas id="canMentalBarChart"></canvas>
+					</div><!-- 心タブ終了 -->
+
+					<div class="haltab_content" id="ecology_content"><!-- エコタブ開始 -->
+						<canvas id="canEcologyBarChart"></canvas>
+					</div><!-- エコタブ終了 -->
+
+				</div><!-- HAL項目tab_area end -->
+			</div><!-- HAL タブ終了 -->
+
+
+			<!-- アンケートタブ開始 -->
+			<div class="tab_content" id="divQestionnaire_tab">
+				<form action="" method="post" id="questionaire">
+					<h3>1. <i class="fa-solid fa-shirt"></i> 衣服・身だしなみ</h3>
+					<dl>
+						<dt>1.1. 最近、いつ洗濯しましたか？</dt>
+						<dd>
+							<label><input type="radio" name="q_1_1" value="100">今日</label>
+							<label><input type="radio" name="q_1_1" value="80">昨日</label>
+							<label><input type="radio" name="q_1_1" value="60">3日以内</label>
+							<label><input type="radio" name="q_1_1" value="40">1週間以内</label>
+							<label><input type="radio" name="q_1_1" value="20">全くしていない</label>
+							<label><input type="radio" name="q_1_1" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>1.2. 最近、アイロンを行いましたか？</dt>
+						<dd>
+							<label><input type="radio" name="q_1_2" value="100">今日</label>
+							<label><input type="radio" name="q_1_2" value="80">昨日</label>
+							<label><input type="radio" name="q_1_2" value="60">3日以内</label>
+							<label><input type="radio" name="q_1_2" value="40">1週間以内</label>
+							<label><input type="radio" name="q_1_2" value="20">全くしていない</label>
+							<label><input type="radio" name="q_1_2" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>1.3. 季節に合わせた服装を選びを意識していますか？</dt>
+						<dd>
+							<label><input type="radio" name="q_1_3" value="100">1週間以内に買った</label>
+							<label><input type="radio" name="q_1_3" value="80">1か月以内に買った</label>
+							<label><input type="radio" name="q_1_3" value="60">半年以内に買った</label>
+							<label><input type="radio" name="q_1_3" value="40">1年以内に買った</label>
+							<label><input type="radio" name="q_1_3" value="20">全く買っていない</label>
+							<label><input type="radio" name="q_1_3" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>1.4. 最近、服を買っていますか？</dt>
+						<dd>
+							<label><input type="radio" name="q_1_4" value="100">1週間以内に買った</label>
+							<label><input type="radio" name="q_1_4" value="80">1か月以内に買った</label>
+							<label><input type="radio" name="q_1_4" value="60">半年以内に買った</label>
+							<label><input type="radio" name="q_1_4" value="40">1年以内に買った</label>
+							<label><input type="radio" name="q_1_4" value="20">全く買っていない</label>
+							<label><input type="radio" name="q_1_4" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>1.5. 昨日 着替えましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_1_5" value="100">着替えた</label>
+							<label><input type="radio" name="q_1_5" value="50">着替えていない</label>
+							<label><input type="radio" name="q_1_5" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>1.6. 最近 爪を切りましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_1_6" value="100">1週間以内に切った</label>
+							<label><input type="radio" name="q_1_6" value="80">2週間以内に切った</label>
+							<label><input type="radio" name="q_1_6" value="60">3週間以内に切った</label>
+							<label><input type="radio" name="q_1_6" value="40">1か月以内に切った</label>
+							<label><input type="radio" name="q_1_6" value="20">1か月以上切っていない</label>
+							<label><input type="radio" name="q_1_6" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>1.7. 最近 何回歯を磨きましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_1_7" value="100">3回以上磨いた</label>
+							<label><input type="radio" name="q_1_7" value="80">2回磨いた</label>
+							<label><input type="radio" name="q_1_7" value="60">1回磨いた</label>
+							<label><input type="radio" name="q_1_7" value="40">2日前に磨いた</label>
+							<label><input type="radio" name="q_1_7" value="20">3日以上磨いていない</label>
+							<label><input type="radio" name="q_1_7" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>1.8. 最近 髪を切りましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_1_8" value="100">1か月以内に切った</label>
+							<label><input type="radio" name="q_1_8" value="80">2か月以内に切った</label>
+							<label><input type="radio" name="q_1_8" value="60">3か月以内に切った</label>
+							<label><input type="radio" name="q_1_8" value="40">半年以内に切った</label>
+							<label><input type="radio" name="q_1_8" value="20">半年以上切っていない</label>
+							<label><input type="radio" name="q_1_8" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>1.9. 最近 ムダ毛、髭を処理しましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_1_9" value="100">毎日している</label>
+							<label><input type="radio" name="q_1_9" value="80">1週間以内にしている</label>
+							<label><input type="radio" name="q_1_9" value="60">2週間以内にしている</label>
+							<label><input type="radio" name="q_1_9" value="40">3週間以内にしている</label>
+							<label><input type="radio" name="q_1_9" value="20">3週間以上していない</label>
+							<label><input type="radio" name="q_1_9" value="0">わからない/答えられない</label>
+						</dd>
+					</dl>
+
+
+					<h3>2. <i class="fa-solid fa-utensils"></i> 食事</h3>
+					<dl>
+						<dt>2.1. 昨日、油っぽいものを食べましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_2_1" value="100">食べていない</label>
+							<label><input type="radio" name="q_2_1" value="80">少し食べた</label>
+							<label><input type="radio" name="q_2_1" value="60">食べた</label>
+							<label><input type="radio" name="q_2_1" value="40">少し多く食べた</label>
+							<label><input type="radio" name="q_2_1" value="20">かなり多く食べた</label>
+							<label><input type="radio" name="q_2_1" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>2.2. 昨日、塩っぱいものを食べましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_2_2" value="100">食べていない</label>
+							<label><input type="radio" name="q_2_2" value="80">少し食べた</label>
+							<label><input type="radio" name="q_2_2" value="60">食べた</label>
+							<label><input type="radio" name="q_2_2" value="40">少し多く食べた</label>
+							<label><input type="radio" name="q_2_2" value="20">かなり多く食べた</label>
+							<label><input type="radio" name="q_2_2" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>2.3. 昨日、夜遅く食べましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_2_3" value="100">20時までに食べた</label>
+							<label><input type="radio" name="q_2_3" value="80">21時までに食べた</label>
+							<label><input type="radio" name="q_2_3" value="60">22時までに食べた</label>
+							<label><input type="radio" name="q_2_3" value="40">23時までに食べた</label>
+							<label><input type="radio" name="q_2_3" value="20">24時以降に食べた</label>
+							<label><input type="radio" name="q_2_3" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>2.4. 昨日、どのくらい水分を取りましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_2_4" value="100">1.5L以上水分を取った</label>
+							<label><input type="radio" name="q_2_4" value="80">1.5Lぐらいの水分を取った</label>
+							<label><input type="radio" name="q_2_4" value="60">1Lぐらい水分を取った</label>
+							<label><input type="radio" name="q_2_4" value="40">500mLぐらい水分を取った</label>
+							<label><input type="radio" name="q_2_4" value="20">覚えていない</label>
+							<label><input type="radio" name="q_2_4" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>2.5. 昨日、野菜を食べましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_2_5" value="100">三食野菜を食べた</label>
+							<label><input type="radio" name="q_2_5" value="80">二食野菜をたくさん食べた</label>
+							<label><input type="radio" name="q_2_5" value="60">二食野菜を食べた</label>
+							<label><input type="radio" name="q_2_5" value="40">一食野菜を食べた</label>
+							<label><input type="radio" name="q_2_5" value="20">食べていない</label>
+							<label><input type="radio" name="q_2_5" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>2.6. 昨日、お肉を食べてましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_2_6" value="100">三食お肉を食べた</label>
+							<label><input type="radio" name="q_2_6" value="80">二食お肉をたくさん食べた</label>
+							<label><input type="radio" name="q_2_6" value="60">二食お肉を食べた</label>
+							<label><input type="radio" name="q_2_6" value="40">一食お肉を食べた</label>
+							<label><input type="radio" name="q_2_6" value="20">食べていない</label>
+							<label><input type="radio" name="q_2_6" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>2.7. 昨日、デザートを食べましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_2_7" value="100">食べていない</label>
+							<label><input type="radio" name="q_2_7" value="80">少し食べた</label>
+							<label><input type="radio" name="q_2_7" value="60">一つ食べた</label>
+							<label><input type="radio" name="q_2_7" value="40">二つ食べた</label>
+							<label><input type="radio" name="q_2_7" value="20">三つ以上食べた</label>
+							<label><input type="radio" name="q_2_7" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>2.8. 昨日、主食を食べ過ぎていないか?</dt>
+						<dd>
+							<label><input type="radio" name="q_2_8" value="100">三食普通盛りを食べた</label>
+							<label><input type="radio" name="q_2_8" value="80">大盛りではないがたくさん食べた</label>
+							<label><input type="radio" name="q_2_8" value="60">一食大盛りを食べた</label>
+							<label><input type="radio" name="q_2_8" value="40">二食大盛りを食べた</label>
+							<label><input type="radio" name="q_2_8" value="20">三食大盛りを食べた</label>
+							<label><input type="radio" name="q_2_8" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>2.9. 昨日、消費期限がきれたものを食べましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_2_9" value="100">消費期限を過ぎていない物を食べた</label>
+							<label><input type="radio" name="q_2_9" value="80">消費期限を意識していないが過ぎていない物を食べた</label>
+							<label><input type="radio" name="q_2_9" value="60">消費期限がギリギリの物を食べてた</label>
+							<label><input type="radio" name="q_2_9" value="40">一日消費期限が過ぎているが食べた</label>
+							<label><input type="radio" name="q_2_9" value="20">消費期限が過ぎているが食べた</label>
+							<label><input type="radio" name="q_2_9" value="0">わからない/答えられない</label>
+						</dd>
+					</dl>
+
+
+					<h3>3. <i class="fa-solid fa-house"></i> 住居</h3>
+					<dl>
+						<dt>3.1. 最近、掃除機を使用して掃除しましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_3_1" value="100">掃除した</label>
+							<label><input type="radio" name="q_3_1" value="80">昨日掃除した</label>
+							<label><input type="radio" name="q_3_1" value="60">一昨日掃除した</label>
+							<label><input type="radio" name="q_3_1" value="40">3日～1週間以内に掃除した</label>
+							<label><input type="radio" name="q_3_1" value="20">1週間以上前に掃除した</label>
+							<label><input type="radio" name="q_3_1" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>3.2. お部屋の整理整頓はしましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_3_2" value="100">今日した</label>
+							<label><input type="radio" name="q_3_2" value="80">昨日した</label>
+							<label><input type="radio" name="q_3_2" value="60">一昨日した</label>
+							<label><input type="radio" name="q_3_2" value="40">3日～1週間以内にした</label>
+							<label><input type="radio" name="q_3_2" value="20">1週間以上前にした</label>
+							<label><input type="radio" name="q_3_2" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>3.3. 最近、換気をしていますか?</dt>
+						<dd>
+							<label><input type="radio" name="q_3_3" value="100">換気した</label>
+							<label><input type="radio" name="q_3_3" value="80">昨日換気した</label>
+							<label><input type="radio" name="q_3_3" value="60">一昨日換気した</label>
+							<label><input type="radio" name="q_3_3" value="40">3日～1週間以内にした</label>
+							<label><input type="radio" name="q_3_3" value="20">1週間以上前にした</label>
+							<label><input type="radio" name="q_3_3" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>3.4. 最近、空気清浄機を、使いましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_3_4" value="100">毎日使う</label>
+							<label><input type="radio" name="q_3_4" value="80">昨日使用した</label>
+							<label><input type="radio" name="q_3_4" value="60">一昨日使用した</label>
+							<label><input type="radio" name="q_3_4" value="40">3日～1週間以内に使用した</label>
+							<label><input type="radio" name="q_3_4" value="20">1週間以上前に使用した</label>
+							<label><input type="radio" name="q_3_4" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>3.5. お部屋の温度は何℃にしていますか?</dt>
+						<dd>
+							<label><input type="radio" name="q_3_5" value="100">夏：28℃±1℃以内　冬：20℃±1℃以内</label>
+							<label><input type="radio" name="q_3_5" value="80">夏：28℃±2℃以内　冬：20℃±2℃以内</label>
+							<label><input type="radio" name="q_3_5" value="60">夏：28℃±3℃以内　冬：20℃±3℃以内</label>
+							<label><input type="radio" name="q_3_5" value="40">夏：28℃±4℃以内　冬：20℃±4℃以内</label>
+							<label><input type="radio" name="q_3_5" value="20">夏：28℃±5℃以上　冬：20℃±5℃以上</label>
+							<label><input type="radio" name="q_3_5" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>3.6. 布団は干しましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_3_6" value="100">今日干した</label>
+							<label><input type="radio" name="q_3_6" value="80">昨日干した</label>
+							<label><input type="radio" name="q_3_6" value="60">一昨日干した</label>
+							<label><input type="radio" name="q_3_6" value="40">3～1週間前に干した</label>
+							<label><input type="radio" name="q_3_6" value="20">1週間以上前に干した</label>
+							<label><input type="radio" name="q_3_6" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>3.7. 外出時に鍵を掛けましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_3_7" value="100">外出時にドアや窓の鍵が閉まっている</label>
+							<label><input type="radio" name="q_3_7" value="50">外出時にドアや窓の鍵が開いている</label>
+							<label><input type="radio" name="q_3_7" value="0">わからない/答えられない</label>
+						</dd>
+					</dl>
+
+
+					<h3>4. <i class="fa-solid fa-person"></i> 体の健康</h3>
+					<dl>
+						<dt>4.1. 昨日、何時間寝ましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_4_1" value="100">7時間寝ている</label>
+							<label><input type="radio" name="q_4_1" value="80">6時間寝ている</label>
+							<label><input type="radio" name="q_4_1" value="60">5時間寝ている</label>
+							<label><input type="radio" name="q_4_1" value="40">4時間寝ている</label>
+							<label><input type="radio" name="q_4_1" value="20">4時間以下、7時間以上寝ている</label>
+							<label><input type="radio" name="q_4_1" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>4.2. 最近、汗をかく運動をしていますか?</dt>
+						<dd>
+							<label><input type="radio" name="q_4_2" value="100">今日した（する予定）</label>
+							<label><input type="radio" name="q_4_2" value="80">昨日した</label>
+							<label><input type="radio" name="q_4_2" value="60">一昨日した</label>
+							<label><input type="radio" name="q_4_2" value="40">3日～1週間以内にした</label>
+							<label><input type="radio" name="q_4_2" value="20">1週間以上前にした</label>
+							<label><input type="radio" name="q_4_2" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>4.3. 昨日、何キロ歩きましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_4_3" value="100">5キロ（約8000歩）以上歩いた</label>
+							<label><input type="radio" name="q_4_3" value="80">4キロ（約6500歩）歩いた</label>
+							<label><input type="radio" name="q_4_3" value="60">3キロ（約5000歩）歩いた</label>
+							<label><input type="radio" name="q_4_3" value="40">2キロ（約3500歩）歩いた</label>
+							<label><input type="radio" name="q_4_3" value="20">1キロ（約1500歩）以下歩いた</label>
+							<label><input type="radio" name="q_4_3" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>4.4. 昨日の朝食の時間はいつですか?</dt>
+						<dd>
+							<label><input type="radio" name="q_4_4" value="100">６時に食べた</label>
+							<label><input type="radio" name="q_4_4" value="80">７時に食べた</label>
+							<label><input type="radio" name="q_4_4" value="60">８時に食べた</label>
+							<label><input type="radio" name="q_4_4" value="40">９時に食べた</label>
+							<label><input type="radio" name="q_4_4" value="20">その他</label>
+							<label><input type="radio" name="q_4_4" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>4.5. 昨日の昼食の時間は何時ですか?</dt>
+						<dd>
+							<label><input type="radio" name="q_4_5" value="100">11時に食べた</label>
+							<label><input type="radio" name="q_4_5" value="80">12時に食べた</label>
+							<label><input type="radio" name="q_4_5" value="60">13時に食べた</label>
+							<label><input type="radio" name="q_4_5" value="40">14時に食べた</label>
+							<label><input type="radio" name="q_4_5" value="20">15時に食べた</label>
+							<label><input type="radio" name="q_4_5" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>4.6. 昨日の夜食の時間は何時ですか?</dt>
+						<dd>
+							<label><input type="radio" name="q_4_6" value="100">17時に食べた</label>
+							<label><input type="radio" name="q_4_6" value="80">18時に食べた</label>
+							<label><input type="radio" name="q_4_6" value="60">19時に食べた</label>
+							<label><input type="radio" name="q_4_6" value="40">20時に食べた</label>
+							<label><input type="radio" name="q_4_6" value="20">21時に食べた</label>
+							<label><input type="radio" name="q_4_6" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>4.7. 体脂肪率または、BMI値はいくつですか?</dt>
+						<dd>
+							<label><input type="radio" name="q_4_7" value="100">BMI21～23</label>
+							<label><input type="radio" name="q_4_7" value="80">BMI20～21、 23～24</label>
+							<label><input type="radio" name="q_4_7" value="60">BMI18.5～20、24～25</label>
+							<label><input type="radio" name="q_4_7" value="40">BMI16～18.5、25～27</label>
+							<label><input type="radio" name="q_4_7" value="20">BMI16～、 27～</label>
+							<label><input type="radio" name="q_4_7" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>4.8. 昨日、お風呂に入りましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_4_8" value="100">お風呂に入った</label>
+							<label><input type="radio" name="q_4_8" value="80">シャワーを浴びた</label>
+							<label><input type="radio" name="q_4_8" value="60">入っていない</label>
+							<label><input type="radio" name="q_4_8" value="40">一昨日入った</label>
+							<label><input type="radio" name="q_4_8" value="20">3日前以上前に入った</label>
+							<label><input type="radio" name="q_4_8" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>4.9. 病院で処方された薬はありますか？ある場合、用法用量守りを正しく使用していますか?</dt>
+						<dd>
+							<label><input type="radio" name="q_4_9" value="100">必ず守っている、処方されていない</label>
+							<label><input type="radio" name="q_4_9" value="80">1週間に1度忘れてしまう</label>
+							<label><input type="radio" name="q_4_9" value="60">2～3週間に1度忘れてしまう</label>
+							<label><input type="radio" name="q_4_9" value="40">1週間に1度忘れてしまう</label>
+							<label><input type="radio" name="q_4_9" value="20">守っていない</label>
+							<label><input type="radio" name="q_4_9" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>4.10. 最近、お酒は飲みましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_4_10" value="100">１ヶ月以上飲んでいない</label>
+							<label><input type="radio" name="q_4_10" value="80">１週間～１ヶ月飲んでいない</label>
+							<label><input type="radio" name="q_4_10" value="60">３日～１週間飲んでいない</label>
+							<label><input type="radio" name="q_4_10" value="40">一昨日飲んだ</label>
+							<label><input type="radio" name="q_4_10" value="20">昨日飲んだ</label>
+							<label><input type="radio" name="q_4_10" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>4.11. タバコは吸っていますか?</dt>
+						<dd>
+							<label><input type="radio" name="q_4_11" value="100">吸わない</label>
+							<label><input type="radio" name="q_4_11" value="80">半年以上吸っていない</label>
+							<label><input type="radio" name="q_4_11" value="60">3か月以上吸っていない</label>
+							<label><input type="radio" name="q_4_11" value="40">1週間以上吸っていない</label>
+							<label><input type="radio" name="q_4_11" value="20">毎日吸う</label>
+							<label><input type="radio" name="q_4_11" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>4.12. 最近、座っている時間はどのくらいですか?</dt>
+						<dd>
+							<label><input type="radio" name="q_4_12" value="100">１時間以内で座っている</label>
+							<label><input type="radio" name="q_4_12" value="80">３時間以内で座っている</label>
+							<label><input type="radio" name="q_4_12" value="60">6時間以内で座っている</label>
+							<label><input type="radio" name="q_4_12" value="40">8時間以内で座っている</label>
+							<label><input type="radio" name="q_4_12" value="20">10時間以上座ってる</label>
+							<label><input type="radio" name="q_4_12" value="0">わからない/答えられない</label>
+						</dd>
+					</dl>
+
+					<h3>5. <i class="fa-solid fa-heart"></i> 心・絆の健康</h3>
+					<dl>
+						<dt>5.1. 最近ストレスを感じていますか?</dt>
+						<dd>
+							<label><input type="radio" name="q_5_1" value="100">全く感じていない</label>
+							<label><input type="radio" name="q_5_1" value="80">あまり感じていない</label>
+							<label><input type="radio" name="q_5_1" value="60">時々感じている</label>
+							<label><input type="radio" name="q_5_1" value="40">感じている</label>
+							<label><input type="radio" name="q_5_1" value="20">とても感じている</label>
+							<label><input type="radio" name="q_5_1" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>5.2. 最近誰かと話しましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_5_2" value="100">とても話している</label>
+							<label><input type="radio" name="q_5_2" value="80">話している</label>
+							<label><input type="radio" name="q_5_2" value="60">時々話している</label>
+							<label><input type="radio" name="q_5_2" value="40">あまり話していない</label>
+							<label><input type="radio" name="q_5_2" value="20">全く話していない</label>
+							<label><input type="radio" name="q_5_2" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>5.3. 最近心から笑う機会がありましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_5_3" value="100">とてもある</label>
+							<label><input type="radio" name="q_5_3" value="80">ある</label>
+							<label><input type="radio" name="q_5_3" value="60">時々ある</label>
+							<label><input type="radio" name="q_5_3" value="40">あまりない</label>
+							<label><input type="radio" name="q_5_3" value="20">全くない</label>
+							<label><input type="radio" name="q_5_3" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>5.4. 最近（休日）、外出しましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_5_4" value="100">昨日した</label>
+							<label><input type="radio" name="q_5_4" value="80">一昨日した</label>
+							<label><input type="radio" name="q_5_4" value="60">3日～1週間以内にした</label>
+							<label><input type="radio" name="q_5_4" value="40">1～2週間以内にした</label>
+							<label><input type="radio" name="q_5_4" value="20">2週間以上前にした</label>
+							<label><input type="radio" name="q_5_4" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>5.5. 信頼、相談できる人は何人いますか?</dt>
+						<dd>
+							<label><input type="radio" name="q_5_5" value="100">5人以上いる</label>
+							<label><input type="radio" name="q_5_5" value="80">4人いる</label>
+							<label><input type="radio" name="q_5_5" value="60">3人いる</label>
+							<label><input type="radio" name="q_5_5" value="40">2人いる</label>
+							<label><input type="radio" name="q_5_5" value="20">1人いる</label>
+							<label><input type="radio" name="q_5_5" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>5.6. 最近お客さんは来ましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_5_6" value="100">昨日に来た</label>
+							<label><input type="radio" name="q_5_6" value="80">一昨日に来た</label>
+							<label><input type="radio" name="q_5_6" value="60">3日～1週間以内に来た</label>
+							<label><input type="radio" name="q_5_6" value="40">1ヶ月以内に来た</label>
+							<label><input type="radio" name="q_5_6" value="20">1ヶ月以上前から来ていない</label>
+							<label><input type="radio" name="q_5_6" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>5.7. 最近、ワクワクすることがありましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_5_7" value="100">とてもある</label>
+							<label><input type="radio" name="q_5_7" value="80">ある</label>
+							<label><input type="radio" name="q_5_7" value="60">時々ある</label>
+							<label><input type="radio" name="q_5_7" value="40">あまりない</label>
+							<label><input type="radio" name="q_5_7" value="20">全くない</label>
+							<label><input type="radio" name="q_5_7" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>5.8. 最近、イライラすることがありましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_5_8" value="100">全くない</label>
+							<label><input type="radio" name="q_5_8" value="80">あまりない</label>
+							<label><input type="radio" name="q_5_8" value="60">時々ある</label>
+							<label><input type="radio" name="q_5_8" value="40">ある</label>
+							<label><input type="radio" name="q_5_8" value="20">とてもある</label>
+							<label><input type="radio" name="q_5_8" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>5.9. 最近、趣味は楽しいですか?</dt>
+						<dd>
+							<label><input type="radio" name="q_5_9" value="100">とても楽しい</label>
+							<label><input type="radio" name="q_5_9" value="80">楽しい</label>
+							<label><input type="radio" name="q_5_9" value="60">時々楽しい</label>
+							<label><input type="radio" name="q_5_9" value="40">あまり楽しくない</label>
+							<label><input type="radio" name="q_5_9" value="20">全く楽しくない、趣味がない</label>
+							<label><input type="radio" name="q_5_9" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>5.10. SNSを頻繁に気にしていますか?</dt>
+						<dd>
+							<label><input type="radio" name="q_5_10" value="100">1日見ない日もある</label>
+							<label><input type="radio" name="q_5_10" value="80">12時間に1度は見ている</label>
+							<label><input type="radio" name="q_5_10" value="60">3時間に1度は見ている</label>
+							<label><input type="radio" name="q_5_10" value="40">1時間に1度は見ている</label>
+							<label><input type="radio" name="q_5_10" value="20">常に気にしている</label>
+							<label><input type="radio" name="q_5_10" value="0">わからない/答えられない</label>
+						</dd>
+					</dl>
+
+					<h3>6. <i class="fa-solid fa-earth-americas"></i> エコ度</h3>
+					<dl>
+						<dt>6.1. 最近、なるべくゴミの量が増えないようにしましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_6_1" value="100">すごくした</label>
+							<label><input type="radio" name="q_6_1" value="80">した</label>
+							<label><input type="radio" name="q_6_1" value="60">時々した</label>
+							<label><input type="radio" name="q_6_1" value="40">あまりしなかった</label>
+							<label><input type="radio" name="q_6_1" value="20">全くしなかった、気にしていない</label>
+							<label><input type="radio" name="q_6_1" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>6.2. 最近、リサイクルを心掛けていますか?</dt>
+						<dd>
+							<label><input type="radio" name="q_6_2" value="100">すごく心掛けた</label>
+							<label><input type="radio" name="q_6_2" value="80">心掛けた</label>
+							<label><input type="radio" name="q_6_2" value="60">少し心掛けた</label>
+							<label><input type="radio" name="q_6_2" value="40">あまり心掛けていない</label>
+							<label><input type="radio" name="q_6_2" value="20">全く心掛けていない</label>
+							<label><input type="radio" name="q_6_2" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>6.3. 電気を使い過ぎませんでしたか</dt>
+						<dd>
+							<label><input type="radio" name="q_6_3" value="100">無駄には使用していない(削減した)</label>
+							<label><input type="radio" name="q_6_3" value="80">必要最低限しか使用していない</label>
+							<label><input type="radio" name="q_6_3" value="60">余り使い過ぎてはいない</label>
+							<label><input type="radio" name="q_6_3" value="40">多少使い過ぎたと思う</label>
+							<label><input type="radio" name="q_6_3" value="20">使いすぎてしまったと思う</label>
+							<label><input type="radio" name="q_6_3" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>6.4. エコバック・マイボトル等を使い、プラスチック系のゴミが出ないようにしましたか</dt>
+						<dd>
+							<label><input type="radio" name="q_6_4" value="100">すごくした 例）レジ袋を一切貰わなかった</label>
+							<label><input type="radio" name="q_6_4" value="80">した 例）無駄にレジ袋を貰わなかった</label>
+							<label><input type="radio" name="q_6_4" value="60">時々した 例）レジ袋を捨てずに再利用した</label>
+							<label><input type="radio" name="q_6_4" value="40">あまりしなかった 例）ペットボトルや使い捨てのカップを時々使った</label>
+							<label><input type="radio" name="q_6_4" value="20">全くしなかった 例）レジ袋を余分に貰い、その日に捨てた</label>
+							<label><input type="radio" name="q_6_4" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>6.5. エコ運転しましたか?</dt>
+						<dd>
+							<label><input type="radio" name="q_6_5" value="100">すごくした</label>
+							<label><input type="radio" name="q_6_5" value="80">した</label>
+							<label><input type="radio" name="q_6_5" value="60">時々した</label>
+							<label><input type="radio" name="q_6_5" value="40">あまりしなかった</label>
+							<label><input type="radio" name="q_6_5" value="20">しなかった</label>
+							<label><input type="radio" name="q_6_5" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>6.6. 節水していますか?</dt>
+						<dd>
+							<label><input type="radio" name="q_6_6" value="100">無駄には使用していない(削減した)</label>
+							<label><input type="radio" name="q_6_6" value="80">必要最低限しか使用していない</label>
+							<label><input type="radio" name="q_6_6" value="60">余り使い過ぎてはいない</label>
+							<label><input type="radio" name="q_6_6" value="40">多少使い過ぎたと思う</label>
+							<label><input type="radio" name="q_6_6" value="20">使いすぎてしまったと思う</label>
+							<label><input type="radio" name="q_6_6" value="0">わからない/答えられない</label>
+						</dd>
+
+						<dt>6.7. ガスの無駄使いしていませんか?</dt>
+						<dd>
+							<label><input type="radio" name="q_6_7" value="100">無駄には使用していない(削減した)</label>
+							<label><input type="radio" name="q_6_7" value="80">必要最低限しか使用していない</label>
+							<label><input type="radio" name="q_6_7" value="60">余り使い過ぎてはいない</label>
+							<label><input type="radio" name="q_6_7" value="40">多少使い過ぎたと思う</label>
+							<label><input type="radio" name="q_6_7" value="20">使いすぎてしまったと思う</label>
+							<label><input type="radio" name="q_6_7" value="0">わからない/答えられない</label>
+						</dd>
+					</dl>
+
+					<div style="text-align:center;">
+						<button type="button" id="btnQuestionnaireSubmit">送信</button>
+					</div>
+				</form>
+			</div>
+
+			<!-- detailsタブ開始 -->
+			<div class="tab_content" id="divDetails_tab">
+				<div id="divDetails_content"></div>
+			</div>
+
+
+			<!-- config tab開始 -->
+			<div class="tab_content" id="divConfig_tab">
+
+				<!-- ユーザの個人情報 -->
+				<a name="userProfileConfig"></a>
+				<details class="config">
+					<summary class="config" id="userProfileDetail">ユーザプロファイル</summary>
+					<div class="p">
+						ニックネーム: <input id="inUserNickname" type="text" value="" /> <br>
+						年齢: <form class="secretBorder inline"><input id="inUserAge" type="password" value=""
+								class="secretText" inputmode="numeric" /><span id="inUserAgeButtonEye" class="fa fa-eye"
+								onclick="window.pushHideButton('inUserAge');"></span></form> 歳 <br>
+						身長: <form class="secretBorder inline"><input id="inUserHeight" type="password" value=""
+								class="secretText" inputmode="numeric" /><span id="inUserHeightButtonEye"
+								class="fa fa-eye" onclick="window.pushHideButton('inUserHeight');"></span></form> cm
+						<br>
+						体重: <form class="secretBorder inline"><input id="inUserWeight" type="password" value=""
+								class="secretText" inputmode="numeric" /><span id="inUserWeightButtonEye"
+								class="fa fa-eye" onclick="window.pushHideButton('inUserWeight');"></span></form> kg
+						<br>
+						契約アンペア: <form class="inline"><input id="inUserAmpere" value="" inputmode="numeric" /></form> A
+						(節電状況の計算に利用)<br>
+						<button id="btnUserProfileSet" onclick="window.btnUserProfileSet_Click();">設定</button>
+					</div>
+				</details>
+
+				<!-- 気象庁、JMA -->
+				<a name="jmaConfig"></a>
+				<details class="config" id="jmaConfigDetail">
+					<summary class="config">気象庁</summary>
+					<div class="p">
+						天気予報の地域設定ができます。<br>
+						地域: <select id="inJmaArea" size="1" onChange="window.inJmaArea_Change();" /></select> 地域コード:
+						<span id="divJmaCode">13000</span><br>
+						<button id="btnJmaConfigSet" onClick="window.btnJmaConfigSet_Click();">設定</button>
+					</div>
+				</details>
+
+
+				<!-- HAL -->
+				<a name="HALConfig"></a>
+				<details class="config">
+					<summary class="config">HAL (Home-life Assessment List) 連携設定</summary>
+
+					<div class="p">
+						クラウドサービスHALと連携し、生活状況を得点化して見える化します。<br>
+						API Key: <form class="secretBorder inline"><input id="inHALApiKey" type="password" value=""
+								size="100" /><span id="inHALApiKeyButtonEye" class="fa fa-eye"
+								onclick="window.pushHideButton('inHALApiKey');"></span></form>
+					</div>
+
+					<!-- デフォルトは設定されていないものとする -->
+					<span id="spanHALinfo" class='none'>
+						<p>
+							<strong>連携設定完了しています。</strong><br>
+							HALと連携を解除するには登録解除ボタンを押してください。<br>
+							<button type="button" onclick="window.btnDeleteHalApiToken_Click();">登録解除</button>
+						</p>
+					</span>
+
+					<span id="spanHALsuggenst">
+						<p>
+							<strong>連携設定がされていません。</strong><br>
+							HALと連携するには下記の事前準備の通りにAPIトークンを取得し、Key入力をして登録ください。<br>
+						<p id="pSetHalApiTokenErr" style="color:red;"></p>
+						<p><button type="button" id="btnSetHalApiToken"
+								onclick="window.btnSetHalApiTokenBtn_Click();">登録</button></p>
+						</p>
+					</span>
+
+					<h3>事前準備</h3>
+					<p>
+						1. (HALでの作業)；<a href="#"
+							onClick='window.URLopen("https://hal.sugi-lab.net/");'>HAL</a>にログインする。（外部ブラウザが開きます。）<br>
+						2. (HALでの作業)；ユーティリティのProfileのページに行く。<br>
+						3. (HALでの作業)；APIトークンをコピーする。<br>
+						4. (HEMS-Loggerでの作業)；HAL連携設定に先ほどのAPIトークンを張り付ける。<br>
+						5. (HEMS-Loggerでの作業)；登録ボタンを押す。<br>
+					</p>
+				</details>
+
+				<!-- ESM: Electricity Smart Meter -->
+				<a name="ElectricSmartMeter"></a>
+				<details class="config" id="ESMConfigDetails">
+					<summary class="config">電力スマートメータ</summary>
+					<div class="p">
+						<label><input type="checkbox" id="inESMUse">Use Electric Smart Meter</label><br>
+						DonbleType: <select id="inDongleType" size="1" />
+						<option value="ROHM">ROHM</option>
+						<option value="TESSERA">TESSERA</option> </select> <br>
+						Bルート認証ID設定: <form class="secretBorder inline"><input id="inESMId" type="password" value=""
+								size="50" /><span id="inESMIdButtonEye" class="fa fa-eye"
+								onclick="window.pushHideButton('inESMId');"></span></form> <br>
+						Bルート認証パスワード設定: <form class="secretBorder inline"><input id="inESMPassword" type="password"
+								value="" size="50" /><span id="inESMPasswordButtonEye" class="fa fa-eye"
+								onclick="window.pushHideButton('inESMPassword');"></span></form><br>
+						契約アンペア: <form class="inline"><input id="inESMUserAmpere" value="" inputmode="numeric" /></form>
+						A (グラフ表示に利用)<br>
+						<button id="btnESMConfigSet" onClick="window.btnESMConfigSet_Click();">設定</button>
+					</div>
+
+					<div id="divESM_info"><!-- 連携していないときだけ表示 -->
+						<h3>事前準備</h3>
+						<p>
+							動作させるためには電力会社のBルートサービスの利用申し込みが必要です。電力会社に申請をすると，Bルート認証ID設定とBルート認証パスワード設定を取得できます。<br>
+							通信モジュールとしてWi-SUNモジュール（TESSERA RL7023，またはROHM BP35C2のどちらか）が必須です。<br>
+							TESSERA RL7023: <a href="#ElectricSmartMeter"
+								onClick='window.URLopen("https://tessera.co.jp/product/rfmodul/rl7023stick-d_ips.html");'>Web
+								site</a><br>
+							ROHM BP35C2: <a href="#ElectricSmartMeter"
+								onClick='window.URLopen("https://www.rohm.co.jp/products/wireless-communication/specified-low-power-radio-modules/bp35c2-product#productDetail");'>Web
+								site</a>
+						</p>
+					</div>
+				</details>
+
+
+				<!-- Philips hue -->
+				<a name="HueConfig"></a>
+				<details class="config" id="HueConfigDetails">
+					<summary class="config">Philips hue</summary>
+					<div class="p">
+						すでにKeyをお持ちのかたは、Keyに入力したあとチェックボックスを有効にしてください。<br>
+						まだKeyをお持ちでないかたは、Use Hueをチェックするとダイアログが出ますので，HueのGatewayのアクセススイッチを押してください。<br>
+						<br>
+						<label><input type="checkbox" id="inHueUse">Use Hue</label><br>
+						Key: <form class="secretBorder inline"><input id="inHueKey" type="password" value="" size="50"
+								class="secretText" /><span id="inHueKeyButtonEye" class="fa fa-eye"
+								onclick="window.pushHideButton('inHueKey');"></span></form><br>
+						<button id="btnHueConfigSet" onClick="window.btnHueConfigSet_Click();">設定</button>
+					</div>
+				</details>
+
+
+				<!-- Ikea Tradfri -->
+				<a name="IkeaConfig"></a>
+				<details class="config" id="IkeaConfigDetails">
+					<summary class="config">IKEA Tradfri</summary>
+					<div class="p">
+						<strong>開発中</strong><br>
+						すでにIdentityとPSKをお持ちのかたは、（key, identity, psk）の3か所に入力したあとチェックボックスを有効にしてください。<br>
+						まだIdentityとPSKをお持ちでないかたは、ゲートウェイの背面にあるKeyのみをSerucity codeに入力してからUse IKEA Tradfriをチェックしてください。<br>
+						<br>
+						<label><input type="checkbox" id="inIkeaUse">Use IKEA Tradfri</label><br>
+						Security code: <form class="secretBorder inline"><input id="inIkeaSecurityCode" type="password"
+								value="" size="50" class="secretText" /><span id="inIkeaSecurityCodeButtonEye"
+								class="fa fa-eye" onclick="window.pushHideButton('inIkeaSecurityCode');"></span></form>
+						<br>
+						Identity: <form class="secretBorder inline"><input id="inIkeaIdentity" type="password" value=""
+								size="50" class="secretText" /><span id="inIkeaIdentityButtonEye" class="fa fa-eye"
+								onclick="window.pushHideButton('inIkeaIdentity');"></span></form><br>
+						PSK: <form class="secretBorder inline"><input id="inIkeaPsk" type="password" value="" size="50"
+								class="secretText" /><span id="inIkeaPskButtonEye" class="fa fa-eye"
+								onclick="window.pushHideButton('inIkeaPsk');"></span></form><br>
+
+						<button id="btnIkeaConfigSet" onClick="window.btnIkeaConfigSet_Click();">設定</button>
+					</div>
+				</details>
+
+
+				<!-- OpenWeatherMap -->
+				<a name="OpenWeatherMapConfig"></a>
+				<details class="config" id="OWMConfigDetails">
+					<summary class="config" id="h2owmConfig">OpenWeatherMap (外部サービス)</summary>
+					<div class="p">
+						<a href="#OpenWeatherMapConfig"
+							onClick='window.URLopen("https://openweathermap.org/");'>OpenWeatherMap</a>
+						（こちらから無料アカウントを作成し，API keyを取得してください。）<br>
+						<br>
+						<label><input type="checkbox" id="inOwmUse">Use OpenWeatherMap</label><br>
+						API Key: <form class="secretBorder inline"><input id="inOwmAPIKey" type="password" value=""
+								size="50" class="secretText" /><span id="inOwmAPIKeyButtonEye" class="fa fa-eye"
+								onclick="window.pushHideButton('inOwmAPIKey');"></span></form> (e.g.
+						12345678910abcdefghijklmnopqrstu)<br>
+						Zip-code (郵便番号): <form class="secretBorder inline"><input id="inOwmZipCode" type="password"
+								value="" class="secretText" size="10" /><span id="inOwmZipCodeButtonEye"
+								class="fa fa-eye" onclick="window.pushHideButton('inOwmZipCode');"></span></form> (e.g.
+						000-0000)<br>
+						<div id="divWeatherConfigInfo"></div>
+						<button id="btnOwmConfigSet" onclick="window.btnOwmConfigSet_Click();">設定</button>
+					</div>
+				</details>
+
+
+				<!-- Netatmo -->
+				<a name="NetatmoConfig"></a>
+				<details class="config" id="NetatmoConfigDetails">
+					<summary class="config" id="netatmoConfig">Netatmo (外部サービス)</summary>
+					<div class="p">
+						<label><input type="checkbox" id="inNetatmoUse" value="on">Use Netatmo</label><br>
+						Client ID: <form class="secretBorder inline"><input id="inNetatmoID" type="password" value=""
+								class="secretText" size="50" /><span id="inNetatmoIDButtonEye" class="fa fa-eye"
+								onclick="window.pushHideButton('inNetatmoID');"></span></form> (e.g.
+						1234567890abcdefghijklmn)<br>
+						Client Secret: <form class="secretBorder inline"><input id="inNetatmoSecret" type="password"
+								value="" class="secretText" size="50" /><span id="inNetatmoSecretButtonEye"
+								class="fa fa-eye" onclick="window.pushHideButton('inNetatmoSecret');"></span></form>
+						(e.g. 012345678910abcdefghijklmnopqrstuvwxyz123)<br>
+						Username (E-mail): <form class="secretBorder inline"><input id="inNetatmoUsername"
+								type="password" value="" class="secretText" size="50" /><span
+								id="inNetatmoUsernameButtonEye" class="fa fa-eye"
+								onclick="window.pushHideButton('inNetatmoUsername');"></span></form> (e.g.
+						sugi-lab@example.com)<br>
+						Password: <form class="secretBorder inline"><input id="inNetatmoPassword" type="password"
+								value="" class="secretText" size="20" /><span id="inNetatmoPasswordButtonEye"
+								class="fa fa-eye" onclick="window.pushHideButton('inNetatmoPassword');"></span></form>
+						(e.g. password)<br>
+
+						<button id="btnNetatmoConfigSet" onclick="window.btnNetatmoConfigSet_Click();">設定</button>
+
+
+						<h3>Netatmo設定方法</h3>
+						<p>
+							1. Netatmoアカウントを作成する。 <a href="#NetatmoConfig"
+								onClick='window.URLopen("https://dev.netatmo.com/");'>Netatmo Developers</a>
+							（こちらから無料アカウントを作成し，下記の情報を取得してください。）<br>
+							2. 右上のアカウントから、My Appsのページに行く。<br>
+							3. Create new appのフォームに、**app name、description、data protection officer name、data protection
+							officer email**を入力して保存する。<br>
+							4. 同ページの**client ID、client secret**を取得できる
+						</p>
+					</div>
+				</details>
+
+				<!-- Omron -->
+				<a name="OmronConfig"></a>
+				<details class="config" id="OmronConfigDetails">
+					<summary class="config">OMRON USB Sensor</summary>
+					<div class="p">
+						OmronのUSBセンサをお持ちのかたは、デバイスドライバをインストールしてから、USBに挿してチェックボックスを有効にしてください。<br>
+						<br>
+						<label><input type="checkbox" id="inOmronUse">Use Omron</label><br>
+						<label>設置場所: </label><input type="text" id="inOmronPlace"><br>
+						<button id="btnOmronConfigSet" onclick="window.btnOmronConfigSet_Click();">設定</button>
+
+						<h3>対応センサ</h3>
+						バージョンアップで随時対応センサを増やしていく予定です。
+						<p>
+							- <a href="#OmronConfig"
+								onClick='window.URLopen("https://www.fa.omron.co.jp/products/family/3724/");'>2JCIE-BU
+								環境センサ (USB型)</a><br>
+						</p>
+						<p>
+							お使いの際にはドライバをインストールしてください。
+						<ol>
+							<li>上記ページの右側のボタン ソフトウェアダウンロード</li>
+							<li>使用許諾契約を読み、同意できる場合にのみ「ご承諾事項に同意します」にチェック</li>
+							<li>ダウンロードページを開く</li>
+							<li>USBドライバ 「2jcie-bu01_usbdriver.zip」 をダウンロード</li>
+							<li>ダウンロードしたファイルを展開する</li>
+							<li>2jcieport.inf を右クリックし、「その他のオプション」から「インストール」する</li>
+						</ol>
+						</p>
+					</div>
+				</details>
+
+
+				<!-- SwitchBot -->
+				<a name="SwitchBotConfig"></a>
+				<details class="config" id="SwitchBotConfigDetails">
+					<summary class="config">SwitchBot</summary>
+					<div class="p">
+						すでにTokenをお持ちのかたは、入力したあとチェックボックスを有効にしてください。<br>
+						まだTokenをお持ちでないかたは、下記の案内に従ってTokenを取得してください。<br>
+						<br>
+						<label><input type="checkbox" id="inSwitchBotUse">Use SwitchBot</label><br>
+						Token: <form class="secretBorder inline"><input id="inSwitchBotToken" type="password" value=""
+								size="50" class="secretText" /><span id="inSwitchBotTokenButtonEye" class="fa fa-eye"
+								onclick="window.pushHideButton('inSwitchBotToken');"></span></form><br>
+						<button id="btnSwitchBotConfigSet" onclick="window.btnSwitchBotConfigSet_Click();">設定</button>
+
+					</div>
+					<h3>Token取得方法</h3>
+					<p>
+					<ol>
+						<li>スマートフォンのSwitchBotアプリを起動する</li>
+						<li>プロフィールを開く</li>
+						<li>設定を開く</li>
+						<li>アプリバージョンを10回タップする（タップに反応しません、公式の隠しコマンドです）</li>
+						<li>開発者向けオプションが出現するので、それを開く</li>
+						<li>トークン右側のボタンでコピーして、メールなどを利用してパソコンに送信する。</li>
+					</ol>
+					</p>
+				</details>
+
+
+				<!-- ECHONET Lite -->
+				<a name="ELConfig"></a>
+				<details class="config" id="ELConfigDetails">
+					<summary class="config">ECHONET Lite</summary>
+					<div class="p">
+						ECHONET Lite機器を利用したくないかたは、チェックボックスを無効にしてください。（default: checked）<br>
+						<br>
+						<label><input type="checkbox" id="inELUse">Use ECHONET Lite</label><br>
+						<button id="btnELConfigSet" onclick="window.btnELConfigSet_Click();">設定</button>
+					</div>
+				</details>
+
+				<!-- System -->
+				<a name="SystemConfig"></a>
+				<details class="config" id="SystemConfigDetails">
+					<summary class="config">System</summary>
+					<div class="p">
+						スクリーンモード： <select id="inScreenMode" size="1">
+							<option value="window">Window</option>
+							<option value="fullscreen">Full screen</option>
+						</select><br>
+						<br>
+						デバッグモード： <select id="inDebugMode" size="1">
+							<option value="true">有効</option>
+							<option value="false">無効</option>
+						</select> <small>（設定反映のためには再起動が必要です。）</small><br>
+						<br>
+						祝日データの再取得： <button id="btnCalendarRenewSyukujitsu"
+							onclick="window.btnCalendarRenewSyukujitsu_Click()"><i
+								class="fa-solid fa-arrows-rotate"></i></button>
+						<small>（祝日データは<a href="#"
+								onClick='window.URLopen("https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html");'>内閣府Webサイト</a>のものを利用しています）</small><br>
+						<br>
+						家電操作ログ： 本日を含めて <input id="inEllogExpireDays" type="number" value="" min="0" max="9999" step="1">
+						日間 (0 .. 9999)<br>
+						成績データ： 本日を含めて <input id="inResultExpireDays" type="number" value="" min="0" max="9999" step="1">
+						日間 (0 .. 9999)<br>
+						<button id="btnSystemConfigSet" onclick="window.btnSystemConfigSet_Click();">設定</button>
+					</div>
+
+					<h3>Network</h3>
+					<div class="p">
+						IP version: <select id="inIPver" size="1">
+							<option value="0">IPv4 and IPv6</option>
+							<option value="4">IPv4 only</option>
+							<option value="6">IPv6 only</option>
+						</select><br>
+						Specified IPv4 multicast address: <input id="inIPv4" type="text" value="" /> (default:
+						empty)<br>
+						Specified IPv6 multicast address: <input id="inIPv6" type="text" value="" /> (default:
+						empty)<br>
+						<button id="btnNetworkConfigSet" onclick="window.btnNetworkConfigSet_Click();">設定</button>
+					</div>
+
+					<h3>ECHONET Lite test</h3>
+					<p>
+					<div id="myIPaddr"></div>
+					</p>
+					<p>
+						To IP address: <input type="text" id="toIP" size="30" value="224.0.23.0"><br>
+						SEOJ:<input type="text" id="eltestSEOJ" size="6" value="05ff01">
+						DEOJ:<input type="text" id="eltestDEOJ" size="6" value="0ef001">
+						ESV:<input type="text" id="eltestESV" size="4" value="62">
+						EPC:<input type="text" id="eltestEPC" size="4" value="80">
+						PDC,EDT:<input type="text" id="eltestDETAILs" size="20" value="00">
+						<button id="elsend" onclick="window.ELSendTest();">Send</button><br>
+						<br>
+						<button id="multicastSearch">Multicast Search</button><br>
+					</p>
+
+					<h3>ECHONET Lite Log</h3>
+					<p> <textarea id="txtELLog" cols="50" rows="30"></textarea> </p>
+
+					<h3>ECHONET Lite Device Details</h3>
+					<p> <textarea id="divDetails_content" cols="50" rows="30"></textarea></p>
+
+					<h3>Philips hue light Log</h3>
+					<p> <textarea id="txtHueLog" cols="50" rows="30"></textarea> </p>
+
+					<h3>Error/Warning Log</h3>
+					<p> <textarea id="txtErrLog" cols="50" rows="30"></textarea> </p>
+				</details>
+
+				<details class="config" id="TermsConfigDetails">
+					<summary class="config">プライバシーポリシー</summary>
+					<h3>はじめに</h3>
+					<p>
+						本アプリケーション（HEMS-Logger、以下本アプリ）では、ユーザーのプライバシー情報を保護する重要性を認識しております。
+						このプライバシーポリシーは、当アプリに於いて、どのような情報を収集、利用、管理しているかを記したものです。
+						本アプリの内容、利用許諾契約、本プライバシーポリシーの内容を承諾できない場合、本アプリの利用はご遠慮ください。
+					</p>
+
+					<h3>本アプリで利用する情報/ネットワーク通信データ利用について</h3>
+					<p>
+						本アプリで利用している各種IoT機器の制御のために、ユーザが設定値において利用を有効とした各種サービスの制御データをそのメーカーとの通信を行います。
+						さらに、本アプリでは統合的な生活行動分析とIoT連携の利便性向上のため、ユーザの設定値とIoT通信データの収集・解析・利用をしております。
+						これらはデフォルトでは本アプリ内でのみの利用にとどまりますが、もしHAL連携機能を有効化した場合は、匿名で、個人を特定できない範囲に注意を払い、HALサーバと送受信します。
+					</p>
+
+					<h3>利用しない情報</h3>
+					<p>
+						本アプリでは、氏名、住所、電話番号、メールアドレス、クレジットカード番号、社会保障番号などのユーザー個人情報を要求・収集・第三者への譲渡・販売などをすることはございません。
+						また、デバイス内に含まれる写真・連絡先アドレス・別アプリ内のデータなどを取得・利用・第三者への譲渡・販売することもございません。
+					</p>
+
+					<h3>ポリシーの改訂について</h3>
+					<p>
+						本アプリは、このプライバシーポリシーを改訂することがあります。
+						改訂する場合、アプリのアップデート内容に、改訂した旨を告知致しますので、ご確認ください。
+						なお、改訂した内容は、ユーザがアプリを実際にアップデートするかどうかに関わらず、適用されるものと致します。
+						改訂内容に承諾できない場合、本アプリの利用をおやめください。
+					</p>
+
+					<h3>作成日と更新日</h3>
+					<p>
+						本プライバシーポリシーは2023年3月4日に作成されました。
+					</p>
+
+					<h3>お問い合わせ</h3>
+					<p>
+						ご不明な点があれば、ダウンロード元のWebサイトの連絡先までお気軽にお問い合わせください。
+					</p>
+				</details>
+
+				<a name="AcknowledgementsConfig"></a>
+				<details class="config" id="AcknowledgementsConfigDetails">
+					<summary class="config">謝辞</summary>
+					<h3>Contributors</h3>
+					<dl>
+						<li>杉村 博/SUGIMURA Hiroshi, Project leader, 2017-Now, KAIT.</li>
+						<li>一色 正男/ISSHIKI Masao, Project researcher, 2017-Now, KAIT.</li>
+						<li>栗栖 優里奈/KURISU Yurina and 望月 海久斗/MOCHIDUKI Mikuto, Module developer, 2022-2023, KAIT.</li>
+						<li>鬢櫛 理子/BINGUSHI Riko and 濱野 あゆみ/HAMANO Ayumi, UI/UX design, 2021-2022, KAIT.</li>
+						<li>佐野 芳樹/SANO Yoshiki, Essential Research, 2019-2021, KAIT.</li>
+						<li>寺埼 越/TERASAKI Etsu and 宮井 智也/MIYAI Tomoya, Essential Research, 2020-2021, KAIT.</li>
+						<li>志田 匠/SHIDA Takumi, Essential Research, 2017-2019, KAIT.</li>
+						<li>and Members of Sugimura Lab., Isshiki Lab., Smart House Research Center.</li>
+					</dl>
+
+					<h3>Funding</h3>
+					<p>
+						本アプリは、JSPS科研費 JP21K12150 の助成を受けた研究に関連して製作したものです。<br>
+						This work was supported by JSPS KAKENHI Grant Numbers JP21K12150.
+					</p>
+				</details>
+
+
+				<a name="TermsConfig"></a>
+				<details class="config" id="LicenseConfigDetails">
+					<summary class="config">本アプリのライセンス</summary>
+					<h3>Summary</h3>
+					<p>
+						本アプリは、無料アプリケーションとして構築しました。
+						本アプリは、私たちが無償で提供するものであり、そのまま使用することを意図しています。
+						このページは、誰かが私たちのサービスを使用することを決めた場合、個人情報の収集、使用、および開示に関する開発グループの方針についてお客様に通知するために使用されます。
+						お客様が当社のサービスを利用される場合、お客様はこのポリシーに関連した情報の収集と使用に同意されたものとします。
+						開発グループが収集する個人情報は、本サービスの提供および改善のために使用されます。
+						当社は、本プライバシーポリシーに記載されている場合を除き、お客様の情報を使用したり、誰かと共有したりすることはありません。
+						このプライバシーポリシーで使用される用語は、このプライバシーポリシーで特に定義されていない限り、本アプリでアクセスできる我々の利用規約と同じ意味を有します。
+					</p>
+
+					<h3>サードパーティのAPI利用について</h3>
+					<p>
+						本アプリでは各種のIoT通信を実装していますが、それらは各社の心遣いによるAPIサービスを利用しているものであり、本アプリ及び開発者グループには何らかの権利を有していません。
+						そのため、API廃止・公開停止・仕様変更による本アプリの機能停止や不具合が発生することがあります。
+					</p>
+
+					<h3>本アプリのライセンスとオープンソースについて</h3>
+					<p>
+						本アプリはオープンソースとして提供し、サードパーティが自社開発できるように提供されます。
+						この場合、ソースコードは下記の通りMIT Licenseで提供されます。
+						なお、サードパーティのモジュールを利用しており、そちらのライセンスを下記に記しておりますが、具体的に自社開発したアプリケーションを提供・販売する場合には、必ず提供する者が全ての著作権・ライセンスに関して確認することを必要とします。
+						本アプリのソースコート提供に関しては、まだ準備中ですのでお待ちください。
+					</p>
+
+					<h3>MIT License</h3>
+					<p>
+						Copyright (c) 2023 SUGIMURA Hiroshi (IoT Programming Lab., Kanagawa Institute of Technology)<br>
+						<br>
+						許可は、以下の条件を満たす限りにおいて、無料で繰り返し使用、コピー、変更、マージ、公開、配布、サブライセンス、および/または販売することができます。<br>
+						・上記の著作権表示および本許諾表示を、ソフトウェアのすべてのコピーまたは重要な部分に含めること。<br>
+						・本ソフトウェアは、明示黙示を問わず、商業利用、特定の目的への適合性、および非侵害性に関する暗黙の保証を含め、いかなる種類の保証も提供しません。<br>
+						・著作権者または本ソフトウェアの使用に関与した人物は、いかなる場合も、契約、不法行為またはその他の行為に基づき、ソフトウェアに起因または関連し、またはソフトウェアの使用またはその他の取引に関連して生じた契約外の損害について責任を負うことはありません。<br>
+					</p>
+
+					<h3>ECHONET Lite通信認証に関して</h3>
+					<p>
+						本アプリは、ECHONET Lite通信について認証を有していません。
+						ECHONET Liteプロトコルはオープン規格であり、フリーソフト提供と個人利用である本アプリに制限はありませんが、商品として販売する場合には必ず認証を受ける必要があります。
+						例えば、本アプリのソースコードを利用して自社サービスやアプリを開発・販売する場合には、必ずエコーネットコンソーシアムが定める通りに認証を受ける必要があります。
+					</p>
+				</details>
+
+
+				<a name="LicenseConfig"></a>
+				<details class="config" id="LicenseConfigDetails">
+					<summary class="config">Modules' license</summary>
+					<div class="p" id="divLicenses"> </div>
+
+					<div class="p">
+						<dl>
+							<li><a href="#" onClick='window.URLopen("https://www.apache.org/licenses/")'>Apache
+									License</a></li>
+							<li><a href="#"
+									onClick='window.URLopen("https://opensource.org/licenses/mit-license.php")'>MIT
+									License</a></li>
+							<li><a href="#" onClick='window.URLopen("https://www.isc.org/licenses/")'>ISC License</a>
+							</li>
+							<li><a href="#"
+									onClick='window.URLopen("https://opensource.org/licenses/BSD-2-Clause")'>BSD-2-Clause
+									License</a></li>
+							<li><a href="#"
+									onClick='window.URLopen("https://opensource.org/licenses/BSD-3-Clause")'>BSD-3-Clause
+									License</a></li>
+							<li><a href="#" onClick='window.URLopen("https://opensource.org/licenses/0BSD")'>Zero-Clause
+									BSD (0BSD)</a></li>
+							<li><a href="#"
+									onClick='window.URLopen("https://spdx.org/licenses/AFL-2.1.html")'>AFL-2.1</a></li>
+							<li><a href="#"
+									onClick='window.URLopen("https://creativecommons.org/publicdomain/zero/1.0/")'>CC0-1.0</a>
+							</li>
+						</dl>
+					</div>
+				</details>
+
+			</div><!-- config tab -->
+		</div><!-- tab全体ここまで -->
+
+		<a href="#" id="page-top">TOP</a><!-- topに戻るボタン -->
+
+		<!-- //////////////////// 実際のContents bodyはここまで，ここからダイアログ制御 //////////////////// -->
+		<!-- 電力スマートメータのダイアログ -->
+		<dialog id="esmHelpDialog">
+			<h3>説明：電力スマートメータ連携を有効にするには</h3>
+			<p>
+				DongleType，Bルート認証ID設定，Bルート認証パスワード設定を設定してから，チェックボックスを有効にしてください。<br>
+				Bルート認証ID設定，Bルート認証パスワード設定は，管轄の電力会社のWebサイトで申請方法をお知らせしています。<br>
+				正しく設定した後，有効/無効の設定を反映するには，アプリを再起動してください。<br>
+			</p>
+			<p>
+				<button type="button" onclick="this.parentNode.parentNode.close()">説明ダイアログを閉じる</button>
+			</p>
+		</dialog>
+
+		<!-- EL設定のダイアログ -->
+		<dialog id="ELSettingsDialog">
+			<h3>デバイス設定の変更</h3>
+			<div class="p">
+				<div id="ELSettingsContents"></div>
+			</div>
+		</dialog>
+
+		<!-- Philips hueのプッシュスイッチ用ダイアログ -->
+		<dialog id="dlgHuePush">
+			<h3>Philips hueのコントロールを有効にしました</h3>
+			<p>
+				Philips HueブリッジのLinkボタンを押して，しばらくお待ちください。<br>
+				設定が完了したらこのダイアログは自動的に消えます。<br>
+				ランプの設定はHueアプリで行ってください。
+				<img src="./img/loadingRed.gif">
+			</p>
+			<p>
+				<button type="button" onclick="window.btnHueUseCancel_Click();">キャンセル</button>
+			</p>
+		</dialog>
+
+		<!-- Philips hueのリネーム -->
+		<dialog id="dlgHueRenameDialog">
+			<h3>デバイス設定の変更</h3>
+			<p>
+				新しい名前：<input type="text" id="hueNewName" size="20" value="">
+				<span id="spanHueRenameBtn"></span>
+			</p>
+			<p>
+				<button type="button" onclick="document.getElementById('dlgHueRenameDialog').close()">キャンセル</button>
+			</p>
+		</dialog>
+
+
+		<!-- OpenWeatherMapのダイアログ -->
+		<dialog id="dlgOwmHelp">
+			<h3>説明：OpenWeatherMapのAPI連携を有効にするには</h3>
+			<p>
+				APIキーとZip-code（郵便番号）を設定してから，チェックボックスを有効にしてください。<br>
+				OpenWeatherMapのAPI keyは，こちらから無料アカウントを作成し，API keyを取得してください。<br>
+				<a href="#" onClick='window.URLopen("https://openweathermap.org/");'>OpenWeatherMapへ</a><br>
+				ヒント： ログイン後、右上のアカウント名からMy API keysで取得できます。
+			</p>
+			<p>
+				<button type="button" onclick="this.parentNode.parentNode.close()">説明ダイアログを閉じる</button>
+			</p>
+		</dialog>
+
+		<!-- Netatmoのダイアログ -->
+		<dialog id="netatmoHelpDialog">
+			<h3>説明：NetatmoのAPI連携を有効にするには</h3>
+			<p>
+				Client ID, Client Secret, Username, Passwordを設定してから，チェックボックスを有効にしてください。<br>
+				上記情報は，こちらから無料アカウントを作成して取得してください。<br>
+				<a href="#" onClick='window.URLopen("https://dev.netatmo.com/");'>Netatmo Developersへ</a><br>
+			</p>
+			<p>
+				<button type="button" onclick="this.parentNode.parentNode.close()">説明ダイアログを閉じる</button>
+			</p>
+		</dialog>
+
+	</div>
+	<footer id="footer">
+		<center>
+			<a href="#" onClick='window.URLopen("https://toyhack.club")'>
+				<img src="./img/homexkadecot.png" height="50" id="imgKadecot">
+			</a>
+
+			<a href="#" onClick='window.URLopen("https://www.he.kanagawa-it.ac.jp/~sugimura/")'>
+				<img src="./img/sugilab_k.png" height="50" id="imgSugilab">
+			</a>
+
+			<a href="#" onClick='window.URLopen("https://www.smartlife.mhlw.go.jp")'>
+				<img src="./img/header_logo.png" height="50" id="imgSLP" alt="smartlife project link">
+			</a>
+		</center>
+	</footer>
+
+	<!-- トースト -->
+	<div id="divToast"></div>
+</body>
+
+<script type="text/babel">
+	window.nodeRequire = require
+	delete window.require;
+	delete window.exports;
+	delete window.module;
+</script>
+
+<!-- 3rd party's module -->
+<script src="./js/@fortawesome/fontawesome-free/js/all.js"></script>
+<script src="./js/footerFixed.js"></script>
+<script src="./js/w3.js"></script>
+
+<script src="./js/Chart.min.js"></script>
+<script src="./js/chartjs-plugin-annotation.min.js"></script>
+<script src="./js/moment.min.js"></script>
+<script src="./js/chartjs-adapter-moment.min.js"></script>
+<script src="./js/moment-timezone-with-data-10-year-range.min.js"></script>
+<script src="./js/subClock.js"></script>
+<script src="./js/subCalendar.js"></script>
+
+<!-- our module -->
+<script src="./js/subToast.js"></script>
+<script src="./js/subSystem.js"></script>
+<script src="./js/subUser.js"></script>
+<script src="./js/subEL.js"></script>
+<script src="./js/subELcontrol.js"></script>
+<script src="./js/subHue.js"></script>
+<script src="./js/subIkea.js"></script>
+<script src="./js/subNetatmo.js"></script>
+<script src="./js/subOmron.js"></script>
+<script src="./js/subOwm.js"></script>
+<script src="./js/subJma.js"></script>
+<script src="./js/subESM.js"></script>
+<script src="./js/subSwitchBot.js"></script>
+<script src="./js/subQuestionnaire.js"></script>
+<script src="./js/subHAL.js"></script>
+<script src="./js/index.js"></script> <!-- 一応index.jsが最後にloadされるようにする。実際はonLoadで順序制御できてるはず -->
+
+</html>
