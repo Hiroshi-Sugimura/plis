@@ -1,0 +1,27 @@
+{
+    "source": {
+        "include": [
+            "../app/src",
+            "../app/src/public/js"
+        ],
+        "exclude": [
+            "node_modules"
+        ],
+        "includePattern": ".+\\.js(doc)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "opts": {
+        "encoding": "utf8",
+        "destination": "./jsdoc",
+        "readme": "../README.md",
+        "recurse": true,
+        "template": "node_modules/@clean-jsdoc/clean-jsdoc-es5"
+    },
+    "tags": {
+        "allowUnknownTags": true,
+        "dictionaries": [
+            "jsdoc",
+            "closure"
+        ]
+    }
+}
