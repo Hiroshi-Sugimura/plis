@@ -449,8 +449,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	// エアコンの詳細コントロールダイアログを表示
 	window.ELAirconShowControlDialog = function (ip, obj) {
-		let eoj = obj.split(/\(|\)/)[1];  // マルかっこで分割
-		console.log(ip, eoj);
+		let eoj = obj.split(/\(|\)/)[1];  // 丸括弧 = Parenthesisで分割
+		// console.log('ELAirconShowControlDialog:', ip, eoj);
+
 		ELSettingsContents.innerHTML = "<form>"
 			+ `<input type='radio' name='elaircon_mode' value='automatic' onclick='window.ELAAirconChangeMode(this, "${ip}", "${eoj}")'>自動<br>`
 			+ `<input type='radio' name='elaircon_mode' value='cooling' onclick='window.ELAAirconChangeMode(this, "${ip}", "${eoj}")'>冷房<br>`
@@ -461,12 +462,25 @@ window.addEventListener('DOMContentLoaded', function () {
 			+ `</form>`
 			+ '<button type="button" onclick="this.parentNode.parentNode.parentNode.close()">閉じる</button>';
 
+		let radios = document.getElementsByName('elaircon_mode');
+		let mode = facilitiesEL[ip][obj]["運転モード設定(B0)"];
+
+		switch (mode) {
+			case '自動(41)': radios[0].checked = true; break;
+			case '冷房(42)': radios[1].checked = true; break;
+			case '暖房(43)': radios[2].checked = true; break;
+			case '除湿(44)': radios[3].checked = true; break;
+			case '送風(45)': radios[4].checked = true; break;
+			case 'その他(40)': radios[5].checked = true; break;
+			default: break;  // Undefined, NULL 対策
+		}
+
 		ELSettingsDialog.showModal();
 	}
 
 	// エアコンのモード切り替え（詳細コントロールダイアログから呼ばれる）
 	window.ELAAirconChangeMode = function (radio, ip, eoj) {
-		console.log(ip, eoj, radio.value);
+		// console.log(ip, eoj, radio.value);
 		let msg = "1081000005ff01" + eoj + "6101B001";
 		switch (radio.value) {
 			case 'cooling': msg += '42'; break;
