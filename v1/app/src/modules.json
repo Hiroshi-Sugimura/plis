@@ -424,7 +424,7 @@
     "path": "/Users/sugimura/plis/v1/app/node_modules/@types/yauzl",
     "licenseFile": "/Users/sugimura/plis/v1/app/node_modules/@types/yauzl/LICENSE"
   },
-  "PLIS@0.2.0": {
+  "PLIS@0.4.0": {
     "licenses": "MIT",
     "publisher": "SUGIMURA Hiroshi",
     "email": "hiroshi.sugimura@gmail.com",
