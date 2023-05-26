@@ -41,6 +41,11 @@ https://hiroshi-sugimura.github.io/plis/v1/docs/jsdoc/index.html
 - 0.1.0 Windows動作確認
 - 0.0.1 HEMS-LoggerからPLISにリポジトリ移行、ソースコード公開開始。2023.05.26
 
+# Copyright
+
+Copyright © 2023-Now Sugimura Laboratory, KAIT All Rights Reserved.
+
+
 # Work around
 
 - node-gyp (windows + sqlite3モジュールで発生しやすい)
