@@ -2,13 +2,14 @@
 
 Platform for Life Improvement and Support
 
-https://hiroshi-sugimura.github.io/plis/
+# Links
+
+- [This page](https://hiroshi-sugimura.github.io/plis/)
+- [for PLIS developper's README](https://hiroshi-sugimura.github.io/plis/v1/)
 
 
-# for PLIS developper's README
+# Copyright
 
-https://hiroshi-sugimura.github.io/plis/v1/
-
-
+Copyright © 2023-Now Sugimura Laboratory, KAIT All Rights Reserved.
 
 
