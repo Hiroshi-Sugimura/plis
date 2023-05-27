@@ -1,10 +1,10 @@
-# PLIS Users Manual
+# PLIS User's Manual
 
 Platform for Life Improvement and Support
 
 # Links
 
-- [This page](https://hiroshi-sugimura.github.io/plis/)
+- [This page (User's Manual)](https://hiroshi-sugimura.github.io/plis/)
 - [for PLIS developper's README](https://hiroshi-sugimura.github.io/plis/v1/)
 
 
