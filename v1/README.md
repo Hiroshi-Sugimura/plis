@@ -2,13 +2,15 @@
 
 # Source Code
 
-https://github.com/Hiroshi-Sugimura/plis
+[Source Code](https://github.com/Hiroshi-Sugimura/plis)
 
 ## License
 
 PLISのソースコードはMITライセンスにて配布しています。
 
-https://github.com/Hiroshi-Sugimura/plis/LICENSE
+
+[LICENSE file](https://github.com/Hiroshi-Sugimura/plis/LICENSE)
+
 
 正確には原文を読んで欲しいのですが、簡単に表現すれば次のようになります。
 
@@ -25,13 +27,11 @@ https://github.com/Hiroshi-Sugimura/plis/LICENSE
 なお、他のモジュールのライセンスに関しては各モジュールのライセンスをご確認ください。
 利用しているモジュール群は下記ファイルにまとめています。
 
-https://hiroshi-sugimura.github.io/plis/v1/app/src/modules.json
-
-
+[Modules.json](https://hiroshi-sugimura.github.io/plis/v1/app/src/modules.json)
 
 # API manual
 
-https://hiroshi-sugimura.github.io/plis/v1/docs/jsdoc/index.html
+[API manual](https://hiroshi-sugimura.github.io/plis/v1/docs/jsdoc/index.html)
 
 # Logs
 
@@ -57,7 +57,7 @@ Copyright © 2023-Now Sugimura Laboratory, KAIT All Rights Reserved.
 ? Locating application
 ? Loading configuration
 ? Preparing native dependencies: 0 / 1
-  ? node-gyp failed to rebuild 'C:\Users\HiroshiSUGIMURA\Documents\plis\v1\app\node_modules\sqlite3'
+  ? node-gyp failed to rebuild '~\plis\v1\app\node_modules\sqlite3'
 ?? Running generateAssets hook
 
 node-gyp failed to rebuild sqlite3
