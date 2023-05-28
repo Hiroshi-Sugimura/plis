@@ -1,6 +1,14 @@
 //////////////////////////////////////////////////////////////////////
-//	Copyright (C) Hiroshi SUGIMURA 2020.10.30
+/** @file mainSwitchBot.js
+ *  @author SUGIMURA Hiroshi
+ *  @copyright © 2020.10.30 Sugimura Laboratory, KAIT
+ *  @license MIT
+ */
+
 //////////////////////////////////////////////////////////////////////
+/**
+ * @module mainSwitchBot
+ */
 'use strict'
 
 //////////////////////////////////////////////////////////////////////
@@ -14,25 +22,53 @@ const { objectSort, getNow, getToday, isObjEmpty, mergeDeeply} = require('./main
 
 const store = new Store();
 
+/** mainSwitchBotのconfig */
 let config =  {
 	enabled: false,
 	token: '',
 	debug: false
 };
 
+/** mainSwitchBotのpersist */
 let persist = {};
+
+/** mainSwitchBotからIPCMessageを呼ぶためのcallback */
 let sendIPCMessage = null;
 
 //////////////////////////////////////////////////////////////////////
+/** mainSwitchBot
+ *  @desc SwitchBotとの通信を管理
+ */
 let mainSwitchBot = {
+	/** @member client
+	 *  @desc SwitchBotとの接続を保持
+	 *  @default null
+	 */
 	client: null,
+	/** @member observationJob
+	 *  @desc 定期的にSwitchBotの状態を取得するタイマー
+	 *  @default null
+	 */
 	observationJob: null,
+	/** @member callback
+	 *  @desc SwitchBotの状態を取得したら呼ばれる関数を保持
+	 *  @default null
+	 */
 	callback: null,
+	/** @member isRun
+	 *  @desc 初期化して起動済みのフラグ
+	 *  @default null
+	 */
 	isRun: false,
 
 	//////////////////////////////////////////////////////////////////////
 	// interfaces
-
+	/**
+	 * @async
+	 * @function start
+	 * @param {sendIPCMessage} [_sendIPCMessage]
+	 * @return {void}
+	*/
 	start: function ( _sendIPCMessage ) {
 		sendIPCMessage = _sendIPCMessage;
 
@@ -79,7 +115,13 @@ let mainSwitchBot = {
 			console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.start() error:\x1b[32m', error, '\x1b[0m');
 		}
 	},
-
+	
+	/**
+	 * @async
+	 * @function stop
+	 * @param {void} [void]
+	 * @return {void}
+	*/
 	stop: async function () {
 		mainSwitchBot.isRun = false;
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.stop()'):0;
@@ -89,6 +131,12 @@ let mainSwitchBot = {
 		await store.set('persist.SwitchBot', persist );
 	},
 
+	/**
+	 * @async
+	 * @function stopWithoutSave
+	 * @param {void} [void]
+	 * @return {void}
+	*/
 	stopWithoutSave: async function () {
 		mainSwitchBot.isRun = false;
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.stopWithoutSave()'):0;
@@ -97,6 +145,12 @@ let mainSwitchBot = {
 	},
 
 
+	/**
+	 * @async
+	 * @function setConfig
+	 * @param {_config} [_config]
+	 * @return {void}
+	*/
 	setConfig: async function (_config) {
 		if( _config ) {
 			config = mergeDeeply( config, _config );
@@ -108,15 +162,35 @@ let mainSwitchBot = {
 		sendIPCMessage( "renewSwitchBotConfigView", config );  // 保存したので画面に通知
 	},
 
+	/**
+	 * @async
+	 * @function getConfig
+	 * @param {void}
+	 * @return {config}
+	*/
 	getConfig: function () {
 		return config;
 	},
 
+
+	/**
+	 * @async
+	 * @function getPersist
+	 * @param {void}
+	 * @return {persist}
+	*/
 	getPersist: function() {
 		return persist;
 	},
 
 	// デバイスタイプごとに制御
+	/**
+	 * @async
+	 * @function control
+	 * @param {id} [id]
+	 * @param {command} [command]
+	 * @return {void}
+	*/
 	control: async function( id, command ) {
 		// mainSwitchBot.client
 		console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.control() id:', id, 'command:', command);
@@ -128,7 +202,12 @@ let mainSwitchBot = {
 
 	//////////////////////////////////////////////////////////////////////
 	// inner functions
-
+	/**
+	 * @async
+	 * @function renewFacilities
+	 * @param {_client} [_client]
+	 * @return {object} ret
+	*/
 	renewFacilities: async function ( _client ) {
 		let ret = {};
 		try{
@@ -157,6 +236,12 @@ let mainSwitchBot = {
 	//////////////////////////////////////////////////////////////////////
 	// 定時処理のインタフェース
 	// 監視開始
+	/**
+	 * @async
+	 * @function startCore
+	 * @callback {_callback} [_callback]
+	 * @return {void}
+	*/
 	startCore: async function( _callback ) {
 		if( !config.token || config.token == '' ) {
 			throw new Error('mainSwitchBot.startCore() config.token is empty.');
@@ -187,6 +272,12 @@ let mainSwitchBot = {
 	},
 
 	// 監視をやめる
+	/**
+	 * @async
+	 * @function stopObservation
+	 * @param {void} [void]
+	 * @return {void}
+	*/
 	stopObservation: function() {
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.stopObserve().' ):0;
 
@@ -203,6 +294,12 @@ let mainSwitchBot = {
 
 
 	// デバイスタイプごとにステータスの読見方を変えてDBにためる
+	/**
+	 * @async
+	 * @function storeData
+	 * @param {facilities} [facilities]
+	 * @return {void}
+	*/
 	storeData: async function( facilities ) {
 		for( let d of facilities.deviceList ) {
 			let det = facilities[d.deviceId];
@@ -395,6 +492,12 @@ let mainSwitchBot = {
 		when createdAt >= "2023-01-06 23:54" and createdAt < "2023-01-06 23:57" then "23:57"
 		else "24:00"
 	*/
+	/**
+	 * @async
+	 * @function getCases
+	 * @param {date} [date]
+	 * @return {ret}
+	*/
 	getCases: function ( date ) {
 		let T1 = new Date(date);
 		let T2 = new Date(date);
@@ -422,6 +525,13 @@ let mainSwitchBot = {
 	},
 
 	// meterListを取得
+	/**
+	 * @async
+	 * @function getMeterList
+	 * @param {theDayBegin} [theDayBegin]
+	 * @param {theDayEnd} [theDayEnd]
+	 * @return {rows}
+	*/
 	getMeterList: async function( theDayBegin, theDayEnd ) {
 		let meterList = [];
 		try{
@@ -446,6 +556,15 @@ let mainSwitchBot = {
 
 
 	// 3分毎のtemperature
+	/**
+	 * @async
+	 * @function getTempratureRows
+	 * @param {theDayBegin} [theDayBegin]
+	 * @param {theDayEnd} [theDayEnd]
+	 * @param {meter} [meter]
+	 * @param {subQuery} [subQuery]
+	 * @return {rows}
+	*/
 	getTempratureRows: async function( theDayBegin, theDayEnd, meter, subQuery ) {
 		try{
 			// 3分毎データ tempreture
@@ -471,6 +590,12 @@ let mainSwitchBot = {
 	},
 
 	// 3分毎のhumidity
+	/**
+	 * @async
+	 * @function getHumidityRows
+	 * @param {sendIPCMessage} [_sendIPCMessage]
+	 * @return {rows}
+	*/
 	getHumidityRows: async function( theDayBegin, theDayEnd, meter, subQuery ) {
 		let ret = [];
 		try{
@@ -498,6 +623,12 @@ let mainSwitchBot = {
 
 
 	// DBからテーブル取得
+	/**
+	 * @async
+	 * @function getTodayRoomEnvSwitchBot
+	 * @param {void}
+	 * @return {object}
+	*/
 	getTodayRoomEnvSwitchBot: async function() {
 		// 画面に今日のデータを送信するためのデータ作る
 		let ret = {	srcType: 'switchBot', meterList:[] }; // 戻り値  // { meterList:[], meter1:[], meter2[], .... }
@@ -568,6 +699,12 @@ let mainSwitchBot = {
 		}
 	},
 
+	/**
+	 * @async
+	 * @function sendTodayRoomEnv
+	 * @param {void}
+	 * @return {void}
+	*/
 	sendTodayRoomEnv: async function( ) {
 		let arg = { };
 
