@@ -5,7 +5,7 @@ Platform for Life Improvement and Support
 # Links
 
 - [This page (User's Manual)](https://hiroshi-sugimura.github.io/plis/)
-- [for PLIS developper's README](https://hiroshi-sugimura.github.io/plis/v1/)
+- [for PLIS developper's README](https://hiroshi-sugimura.github.io/plis//v1/docs/jsdoc/)
 
 
 # Copyright
