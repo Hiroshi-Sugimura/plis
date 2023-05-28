@@ -1,5 +1,10 @@
 //////////////////////////////////////////////////////////////////////
-//	Copyright (C) Hiroshi SUGIMURA 2020.10.30
+/** @file mainSwitchBot.js
+ *  @author SUGIMURA Hiroshi
+ *  @copyright © 2020.10.30 Sugimura Laboratory, KAIT
+ *  @license MIT
+ */
+
 //////////////////////////////////////////////////////////////////////
 /**
  * @module mainSwitchBot
@@ -17,20 +22,43 @@ const { objectSort, getNow, getToday, isObjEmpty, mergeDeeply} = require('./main
 
 const store = new Store();
 
+/** mainSwitchBotのconfig */
 let config =  {
 	enabled: false,
 	token: '',
 	debug: false
 };
 
+/** mainSwitchBotのpersist */
 let persist = {};
+
+/** mainSwitchBotからIPCMessageを呼ぶためのcallback */
 let sendIPCMessage = null;
 
 //////////////////////////////////////////////////////////////////////
+/** mainSwitchBot
+ *  @desc SwitchBotとの通信を管理
+ */
 let mainSwitchBot = {
+	/** @member client
+	 *  @desc SwitchBotとの接続を保持
+	 *  @default null
+	 */
 	client: null,
+	/** @member observationJob
+	 *  @desc 定期的にSwitchBotの状態を取得するタイマー
+	 *  @default null
+	 */
 	observationJob: null,
+	/** @member callback
+	 *  @desc SwitchBotの状態を取得したら呼ばれる関数を保持
+	 *  @default null
+	 */
 	callback: null,
+	/** @member isRun
+	 *  @desc 初期化して起動済みのフラグ
+	 *  @default null
+	 */
 	isRun: false,
 
 	//////////////////////////////////////////////////////////////////////

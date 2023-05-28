@@ -17,8 +17,10 @@ const  {objectSort, getNow, getToday, isObjEmpty, mergeDeeply} = require('./main
 
 const store = new Store();
 
+/** mainOwmからIPCMessageを呼ぶためのcallback */
 let sendIPCMessage = null;
 
+/** mainOwmのconfig */
 let config = {
 	enabled: false,
 	APIKey: '',
@@ -26,6 +28,7 @@ let config = {
 	debug: false
 };
 
+/** mainOwmのpersist */
 let persist = {};
 
 
