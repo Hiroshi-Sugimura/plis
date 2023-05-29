@@ -46,9 +46,15 @@ let sendIPCMessage = null;
 // HAL, Home-life Assessment Listの処理
 
 let mainHALsync = {
-
 	//----------------------------------
-	// 初期化
+	/**
+	 * @func start
+	 * @desc 初期化
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	start: async function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
 		config = await store.get('config.HAL', config);
@@ -59,8 +65,14 @@ let mainHALsync = {
 	},
 
 	//----------------------------------------------------------------------------------------------
-	// 同期処理
-	// トリガー：APIKey設定時、同期ボタン押下、定時処理
+	/**
+	 * @func startSync
+	 * @desc 同期処理, トリガー：APIKey設定時、同期ボタン押下、定時処理
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	startSync: async function () {
 		mainHALsync.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.startSync().') : 0;
 
@@ -253,6 +265,14 @@ let mainHALsync = {
 	},
 
 	//----------------------------------------------------------------------------------------------
+	/**
+	 * @func httpGetRequest
+	 * @desc httpGetRequest
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	httpGetRequest: function (url, token) {
 		return new Promise((resolve, reject) => {
 			if (!token) {
@@ -309,6 +329,14 @@ let mainHALsync = {
 
 
 	//----------------------------------------------------------------------------------------------
+	/**
+	 * @func httpPostRequest
+	 * @desc httpPostRequest
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	httpPostRequest: function (url, data, token) {
 		if (!token) {
 			token = config.halApiToken;
@@ -368,8 +396,15 @@ let mainHALsync = {
 
 
 	//----------------------------------
-	// HAL API トークン設定
-	// APIトークンをセットして、実際にプロファイルを受信できたら設定値として保存
+	/**
+	 * @func setHalApiTokenRequest
+	 * @desc HAL API トークン設定
+	 * APIトークンをセットして、実際にプロファイルを受信できたら設定値として保存
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	setHalApiTokenRequest: async function (_token) {
 		let arg = {};
 		try {
@@ -384,7 +419,14 @@ let mainHALsync = {
 	},
 
 	//----------------------------------
-	// HAL API トークン設定削除
+	/**
+	 * @func deleteHalApiToken
+	 * @desc HAL API トークン設定削除
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	deleteHalApiToken: async function () {
 		try {
 			await store.delete('config.HAL.halApiToken');
@@ -398,7 +440,14 @@ let mainHALsync = {
 	},
 
 	//----------------------------------
-	// HAL ユーザープロファイル取得
+	/**
+	 * @func getHalUserProfileRequest
+	 * @desc HAL ユーザープロファイル取得
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getHalUserProfileRequest: async function () {
 		let arg = {};
 		try {
@@ -413,7 +462,14 @@ let mainHALsync = {
 	},
 
 	//----------------------------------------------------------------------------------------------
-	// 家電操作ログのアップロードを開始、定期的実行
+	/**
+	 * @func startUploadEldata
+	 * @desc 家電操作ログのアップロードを開始、定期的実行
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	startUploadEldata: async function () {
 		// HAL API トークンが登録されていなければ次回起動のタイマーをセットして終了
 		if (!config.halApiToken) {
@@ -504,10 +560,26 @@ let mainHALsync = {
 	},
 
 	//----------------------------------------------------------------------------------------------
+	/**
+	 * @func ConfigSave
+	 * @desc ConfigSave
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	ConfigSave: async function () {
 		await store.set('config.HAL', config);
 	},
 
+	/**
+	 * @func setConfig
+	 * @desc setConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	setConfig: async function (_config) {
 		config = mergeDeeply(config, _config);
 		await store.set('config.HAL', config);
@@ -515,15 +587,30 @@ let mainHALsync = {
 		sendIPCMessage("configSaved", 'HAL');  // 保存したので画面に通知
 	},
 
+	/**
+	 * @func getConfig
+	 * @desc getConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getConfig: function () {
 		return config;
 	},
 
 	//----------------------------------------------------------------------------------------------
+	/**
+	 * @func renewConfigView
+	 * @desc renewConfigView
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	renewConfigView: async function () {
 		sendIPCMessage("renewHALConfigView", config);  // 現在の設定値を表示
 	}
-
 
 };
 

@@ -38,7 +38,14 @@ let mainCalendar = {
 	// 保存先
 
 	// interfaces
-
+	/**
+	 * @func start
+	 * @desc 初期化
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	start: function ( _sendIPCMessage ) {
 		sendIPCMessage = _sendIPCMessage;
 
@@ -55,6 +62,14 @@ let mainCalendar = {
 		});
 	},
 
+	/**
+	 * @func getHolidays
+	 * @desc getHolidays
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getHolidays: function() {
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.getHolidays()'):0;
 

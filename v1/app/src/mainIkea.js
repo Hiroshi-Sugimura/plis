@@ -37,6 +37,14 @@ let mainIkea = {
 	isRun: false,
 
 	//////////////////////////////////////////////////////////////////////
+	/**
+	 * @func start
+	 * @desc start
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	// interfaces
 	start: async function ( _sendIPCMessage ) {
 		sendIPCMessage = _sendIPCMessage;
@@ -93,6 +101,14 @@ let mainIkea = {
 		}
 	},
 
+	/**
+	 * @func stop
+	 * @desc stop
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stop: async function () {
 		mainIkea.isRun = false;
 
@@ -104,6 +120,14 @@ let mainIkea = {
 		await store.set('persist.Ikea', persist);
 	},
 
+	/**
+	 * @func stopWithoutSave
+	 * @desc stopWithoutSave
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stopWithoutSave: async function () {
 		mainIkea.isRun = false;
 
@@ -114,6 +138,14 @@ let mainIkea = {
 
 
 
+	/**
+	 * @func setConfig
+	 * @desc setConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	setConfig: async function ( _config ) {
 		if( _config ) {
 			config = mergeDeeply( config, _config );
@@ -124,17 +156,40 @@ let mainIkea = {
 		sendIPCMessage( "configSaved", 'Ikea' );  // 保存したので画面に通知
 	},
 
+	/**
+	 * @func getConfig
+	 * @desc getConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getConfig: function () {
 		return config;
 	},
 
+	/**
+	 * @func getPersist
+	 * @desc getPersist
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getPersist: function() {
 		return persist;
 	},
 
 
 	//////////////////////////////////////////////////////////////////////
-	// inner functions
+	/**
+	 * @func startCore
+	 * @desc inner functions
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	startCore: async function( callback ) {
 		if( !config.securityCode || config.securityCode == "" ) {
 			console.error('mainIkea.startCore() config.key is not valid.');
@@ -156,7 +211,14 @@ let mainIkea = {
 	},
 
 
-	// 受信データ処理
+	/**
+	 * @func received
+	 * @desc 受信データ処理
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	received: function(rIP, device, error) {
 		if( error ) {
 			console.log('-- received error');
@@ -171,7 +233,14 @@ let mainIkea = {
 	},
 
 
-	// Ikeaを監視する
+	/**
+	 * @func observe
+	 * @desc Ikeaを監視する
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	observe: async function( interval ) {
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.observe() start.' ):0;
 
@@ -192,7 +261,14 @@ let mainIkea = {
 	},
 
 
-	// 監視をやめる、リリースする
+	/**
+	 * @func stop
+	 * @desc 監視をやめる、リリースする
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stop: function() {
 		config.debug? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.stop().' ):0;
 

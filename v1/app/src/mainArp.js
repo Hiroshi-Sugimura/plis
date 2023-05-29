@@ -26,6 +26,9 @@ let persist = {};
 let sendIPCMessage = null;
 
 //////////////////////////////////////////////////////////////////////
+/**
+ * @class
+ */
 let mainArp = {
 	isRun: false,  // 機能が利用可能になったか？
 	table: null,
@@ -34,6 +37,14 @@ let mainArp = {
 	//////////////////////////////////////////////////////////////////////
 	// 内部
 
+	/**
+	 * @func toMAC
+	 * @desc IP address to MAC address
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	// arpテーブル検索，IPからMACアドレスに変換
 	toMAC: function(IP) {  //  IP = '192.168.2.192'
 		if( IP == '224.0.23.0' || IP == 'FF02::1' ) {
@@ -60,7 +71,15 @@ let mainArp = {
 
 
 	//////////////////////////////////////////////////////////////////////
-	// 定時処理のインタフェース、監視開始
+	// interfaces
+	/**
+	 * @func start
+	 * @desc 定時処理のインタフェース、監視開始
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	start: async function(_sendIPCMessage ) {
 		sendIPCMessage = _sendIPCMessage;
 		if( mainArp.isRun ) {
@@ -99,7 +118,15 @@ let mainArp = {
 	},
 
 
-	// 停止
+	// interfaces
+	/**
+	 * @func stop
+	 * @desc 停止
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stop: async function () {
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainArp.stop()'):0;
 		mainArp.isRun = false;
@@ -108,6 +135,14 @@ let mainArp = {
 		await mainArp.stopObservation();
 	},
 
+	/**
+	 * @func stopWithoutSave
+	 * @desc stopWithoutSave
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stopWithoutSave: async function () {
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainArp.stopWithoutSave()'):0;
 		mainArp.isRun = false;
@@ -116,7 +151,14 @@ let mainArp = {
 		await mainArp.stopObservation();
 	},
 
-	// 監視をやめる
+	/**
+	 * @func stopObservation
+	 * @desc 監視をやめる
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stopObservation: async function() {
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainArp.stopObserve() observation.' ):0;
 
@@ -127,17 +169,40 @@ let mainArp = {
 	},
 
 
-	// 設定保存
+	// interfaces
+	/**
+	 * @func setConfig
+	 * @desc 設定保存
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	setConfig: async function ( ) {
 		await store.set('config.Arp', config );
 		await store.set('persist.Arp', persist );
 	},
 
-	// 設定参照
+	/**
+	 * @func getConfig
+	 * @desc 設定参照
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getConfig: function () {
 		return config;
 	},
 
+	/**
+	 * @func getPersist
+	 * @desc getPersist
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getPersist: function() {
 		return persist;
 	}

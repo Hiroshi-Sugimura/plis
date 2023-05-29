@@ -65,6 +65,14 @@ let mainEL = {
 
 	//////////////////////////////////////////////////////////////////////
 	// インタフェース
+	/**
+	 * @func start
+	 * @desc 初期化
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	start: async function (_sendIPCMessage, _localaddresses) {
 		sendIPCMessage = _sendIPCMessage;
 
@@ -105,7 +113,15 @@ let mainEL = {
 		mainEL.setCron();		// 定時処理設定
 	},
 
-	// ELの機能を停止する。
+
+	/**
+	 * @func stop
+	 * @desc ELの機能を停止する。
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stop: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.stop()') : 0;
 
@@ -116,6 +132,14 @@ let mainEL = {
 		await store.set('persist.EL', persist);
 	},
 
+	/**
+	 * @func stopWithoutSave
+	 * @desc stopWithoutSave
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stopWithoutSave: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.stopWithoutSave()') : 0;
 
@@ -123,6 +147,14 @@ let mainEL = {
 		await EL.release();
 	},
 
+	/**
+	 * @func setConfig
+	 * @desc setConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	setConfig: async function (_config) {
 		config.debug ?? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.setConfig() _config:', _config);
 
@@ -136,17 +168,40 @@ let mainEL = {
 		sendIPCMessage("configSaved", 'EL');  // 保存したので画面に通知
 	},
 
+	/**
+	 * @func getConfig
+	 * @desc getConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getConfig: function () {
 		return config;
 	},
 
+	/**
+	 * @func getPersist
+	 * @desc getPersist
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getPersist: function () {
 		return persist;
 	},
 
 	//////////////////////////////////////////////////////////////////////
 	// 内部
-	// EL受け取った後の処理
+	/**
+	 * @func received
+	 * @desc EL受け取った後の処理
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	received: function (rinfo, els, error) {
 		if (error) {
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.received() error:', error);
@@ -199,6 +254,14 @@ let mainEL = {
 		elrawModel.create({ srcip: rinfo.address, srcmac: mainArp.toMAC(rinfo.address), dstip: mainEL.localaddresses[0], dstmac: mainArp.toMAC(mainEL.localaddresses[0]), rawdata: rawdata, seoj: els.SEOJ, deoj: els.DEOJ, esv: els.ESV, opc: els.OPC, detail: els.DETAIL });
 	},
 
+	/**
+	 * @func sendMsg
+	 * @desc sendMsg
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	sendMsg: function (_ip, _msg) {
 		// 送信は自分のログも残しておく
 		let rawdata = _msg;
@@ -213,15 +276,39 @@ let mainEL = {
 		EL.sendString(_ip, _msg);
 	},
 
+	/**
+	 * @func sendOPC1
+	 * @desc sendOPC1
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	sendOPC1: function (_ip, _seoj, _deoj, _esv, _epc, _edt) {
 		EL.sendOPC1(_ip, _seoj, _deoj, _esv, _epc, _edt);
 	},
 
+	/**
+	 * @func search
+	 * @desc search
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	search: function () {
 		EL.search();
 	},
 
 
+	/**
+	 * @func sendTodayEnergy
+	 * @desc sendTodayEnergy
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	sendTodayEnergy: async function () {
 		let arg = {};
 
@@ -237,7 +324,14 @@ let mainEL = {
 	},
 
 
-	// 3分毎にチェックする
+	/**
+	 * @func setCron
+	 * @desc 3分毎にチェックする
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	setCron: function () {
 		// cron.schedule('*/3 * * * *', async () => {
 		cron.schedule('*/1 * * * *', async () => {
@@ -345,7 +439,14 @@ let mainEL = {
 
 
 	//////////////////////////////////////////////////////////////////////
-	// ELの処理開始
+	/**
+	 * @func init
+	 * @desc ELの処理開始
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	init: async function () {
 
 		// 辞書の読み込みをオーバーライド
@@ -404,7 +505,14 @@ let mainEL = {
 
 
 	//////////////////////////////////////////////////////////////////////
-	// 基礎的なデバイスの情報取得
+	/**
+	 * @func getStatic
+	 * @desc 基礎的なデバイスの情報取得
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getStatic: async function () {
 		await EL.sendString(EL.Multi, "1081000405ff01028d016206E100E300E700E800D300D400");  // サブメータ
 		await mainEL.sleep(5000);
@@ -414,7 +522,14 @@ let mainEL = {
 	//////////////////////////////////////////////////////////////////////
 	// 定期的なデバイスの監視、監視はIPアドレスが変更される可能性があることに注意すべし
 
-	// 監視シーケンス
+	/**
+	 * @func observation
+	 * @desc 監視シーケンス
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	observation: async function () {
 		// config.debug ? console.log('mainEL.observation() network:', network):0;
 		// ipv4, or 0 and 4
@@ -449,7 +564,14 @@ let mainEL = {
 	},
 
 
-	// 監視行動をやめて，タイマーも解放する
+	/**
+	 * @func stopObservation
+	 * @desc 監視行動をやめて，タイマーも解放する
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stopObservation: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.stopObservation()') : 0;
 
@@ -464,13 +586,26 @@ let mainEL = {
 		}
 	},
 
-	// Wait必要な時
+	/**
+	 * @func sleep
+	 * @desc Wait必要な時
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	sleep: function (ms) {
 		return new Promise(resolve => setTimeout(resolve, ms));
 	},
 
-	// 定時処理用
-	// 電力（サブメータ）
+	/**
+	 * @func getTodayElectricEnergy_submeter
+	 * @desc 定時処理用, 電力（サブメータ）
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getTodayElectricEnergy_submeter: async function () {
 		// 画面に今日のデータを送信するためのデータ作る
 		try {

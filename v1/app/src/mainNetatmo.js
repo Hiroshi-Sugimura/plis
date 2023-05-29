@@ -12,11 +12,12 @@ const Store = require('electron-store');
 const netatmo = require('netatmo');
 const cron = require('node-cron');
 require('date-utils');// for log
-const { Sequelize, Op, sqlite3, netatmoModel, roomEnvModel } = require('./models/localDBModels');// DBデータと連携
-const  {objectSort, getNow, getToday, isObjEmpty, mergeDeeply} = require('./mainSubmodule');
+const { Sequelize, Op, netatmoModel, roomEnvModel } = require('./models/localDBModels');// DBデータと連携
+const  {mergeDeeply} = require('./mainSubmodule');
 
 let sendIPCMessage = null;
 const store = new Store();
+
 let config = {
 	enabled: false,
 	id: "",
@@ -25,6 +26,7 @@ let config = {
 	password: "",
 	debug: false
 };
+
 let persist = {};
 
 
@@ -39,6 +41,14 @@ let mainNetatmo = {
 	isRun: false,
 
 	//////////////////////////////////////////////////////////////////////
+	/**
+	 * @func start
+	 * @desc start
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	// netatmo start
 	start: function ( _sendIPCMessage ) {
 		sendIPCMessage = _sendIPCMessage;
@@ -107,6 +117,14 @@ let mainNetatmo = {
 	// Netatmoの処理
 
 
+	/**
+	 * @func stop
+	 * @desc stop
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stop: async function () {
 		mainNetatmo.isRun = false;
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.stop()'):0;
@@ -116,6 +134,14 @@ let mainNetatmo = {
 		await mainNetatmo.stopObservation();
 	},
 
+	/**
+	 * @func stopWithoutSave
+	 * @desc stopWithoutSave
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stopWithoutSave: async function () {
 		mainNetatmo.isRun = false;
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.stopWithoutSave()'):0;
@@ -123,6 +149,14 @@ let mainNetatmo = {
 	},
 
 
+	/**
+	 * @func setConfig
+	 * @desc setConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	setConfig: async function ( _config ) {
 		if( _config ) {
 			config = mergeDeeply( config, _config );
@@ -132,10 +166,26 @@ let mainNetatmo = {
 		sendIPCMessage( "configSaved", 'Netatmo' );// 保存したので画面に通知
 	},
 
+	/**
+	 * @func getConfig
+	 * @desc getConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getConfig: function () {
 		return config;
 	},
 
+	/**
+	 * @func getPersist
+	 * @desc getPersist
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getPersist: function() {
 		return persist;
 	},
@@ -144,6 +194,14 @@ let mainNetatmo = {
 	//////////////////////////////////////////////////////////////////////
 	// innser functions
 
+	/**
+	 * @func getCases
+	 * @desc getRows
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	// 定時処理、部屋環境のデータ送信
 	/*
 	getCases
@@ -185,7 +243,14 @@ let mainNetatmo = {
 	},
 
 
-	// DBからテーブル取得
+	/**
+	 * @func getRows
+	 * @desc DBからテーブル取得
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getRows: async function() {
 		try {
 			let now = new Date();// 現在
@@ -221,6 +286,14 @@ let mainNetatmo = {
 		}
 	},
 
+	/**
+	 * @func getTodayRoomEnv
+	 * @desc getTodayRoomEnv
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getTodayRoomEnv: async function( ) {
 		// 画面に今日のデータを送信するためのデータ作る
 		try {
@@ -266,6 +339,14 @@ let mainNetatmo = {
 		}
 	},
 
+	/**
+	 * @func sendTodayRoomEnv
+	 * @desc sendTodayRoomEnv
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	sendTodayRoomEnv: async function( ) {
 		let arg = { };
 
@@ -275,7 +356,15 @@ let mainNetatmo = {
 		}
 	},
 
-	// netatmoを監視する
+	/**
+	 * @func setObservesetObserve
+	 * @func setObserve
+	 * @desc netatmoを監視する
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	setObserve: function() {
 		if( mainNetatmo.observationJob ) {
 			config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.observe() is already started.' ):0;
@@ -320,7 +409,14 @@ let mainNetatmo = {
 	},
 
 
-	// 監視をやめる
+	/**
+	 * @func stopObservation
+	 * @desc 監視をやめる
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stopObservation: function() {
 		config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.stop() observation.' ):0;
 

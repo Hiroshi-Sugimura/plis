@@ -13,7 +13,7 @@ const request = require('request');
 const cron = require('node-cron');
 require('date-utils'); // for log
 const { Sequelize, sqlite3, jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel } = require('./models/localDBModels');   // DBデータと連携
-const {objectSort, getNow, getToday, isObjEmpty, mergeDeeply} = require('./mainSubmodule');
+const {isObjEmpty, mergeDeeply} = require('./mainSubmodule');
 
 let sendIPCMessage = null;
 const store = new Store();
@@ -29,6 +29,7 @@ let persist = {};
 
 //////////////////////////////////////////////////////////////////////
 // config
+
 let mainJma = {
 	isRun: false,
 	abstURL:   "https://www.jma.go.jp/bosai/forecast/data/overview_forecast/",
@@ -92,7 +93,14 @@ let mainJma = {
 
 	//////////////////////////////////////////////////////////////////////
 	// 気象庁の処理
-
+	/**
+	 * @func start
+	 * @desc start
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	// 重複起動してもよい
 	start: function ( _sendIPCMessage ) {
 		sendIPCMessage = _sendIPCMessage;
@@ -235,6 +243,14 @@ let mainJma = {
 
 
 	// ---------------------------------------------------------------
+	/**
+	 * @func gets
+	 * @desc gets
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	// inner functions
 	gets: function() {
 		request( { url: mainJma.abstURL + config.code + ".json", method: 'GET', json:true }, function (error, response, body ) {
@@ -254,6 +270,14 @@ let mainJma = {
 		});
 	},
 
+	/**
+	 * @func parseAbstRaw
+	 * @desc parseAbstRaw
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	// getしたbodyを使い物になる形に変える
 	parseAbstRaw: function(body) {
 		return {
@@ -265,6 +289,14 @@ let mainJma = {
 		};
 	},
 
+	/**
+	 * @func parseAbst
+	 * @desc parseAbst
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	parseAbst: function(body) {
 		return {
 			reportDatetime: body.reportDatetime,
@@ -275,6 +307,14 @@ let mainJma = {
 		}
 	},
 
+	/**
+	 * @func parseDetailRaw
+	 * @desc parseDetailRaw
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	parseDetailRaw: function(body) {
 		let w = body[0];  // json[1]はちょっとよくわからんので
 		let publishingOffice = w.publishingOffice;
@@ -289,6 +329,14 @@ let mainJma = {
 		};
 	},
 
+	/**
+	 * @func parseDetail
+	 * @desc parseDetail
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	parseDetail: function(body) {
 		// console.log( body );
 		let res = {weather:[], pops:[], temperature:[]};
@@ -345,6 +393,14 @@ let mainJma = {
 	},
 
 
+	/**
+	 * @func setObserve
+	 * @desc setObserve
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	// 監視開始する
 	setObserve: function() {
 		mainJma.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.setObserve() start.' ):0;
@@ -360,6 +416,14 @@ let mainJma = {
 		})
 	},
 
+	/**
+	 * @func stopObservation
+	 * @desc stopObservation
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	// 監視をやめる
 	stopObservation: function() {
 		mainJma.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.stopObservation() observation.' ):0;
@@ -370,6 +434,14 @@ let mainJma = {
 		}
 	},
 
+	/**
+	 * @func stop
+	 * @desc stop
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	// interface
 	// 機能を停止する
 	stop: async function () {
@@ -380,11 +452,27 @@ let mainJma = {
 		await mainJma.stopObservation();
 	},
 
+	/**
+	 * @func stopWithoutSave
+	 * @desc stopWithoutSave
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stopWithoutSave: async function () {
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.stopWithoutSave()'):0;
 		await mainJma.stopObservation();
 	},
 
+	/**
+	 * @func setConfig
+	 * @desc setConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	setConfig: async function  ( _config ) {
 		if( _config ) {
 			config = mergeDeeply( config, _config );
@@ -393,10 +481,26 @@ let mainJma = {
 		sendIPCMessage( "configSaved", 'JMA' );  // 保存したので画面に通知
 	},
 
+	/**
+	 * @func getConfig
+	 * @desc getConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getConfig: function () {
 		return config;
 	},
 
+	/**
+	 * @func getPersist
+	 * @desc getPersist
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getPersist: function() {
 		return persist;
 	}
