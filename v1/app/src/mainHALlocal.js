@@ -35,8 +35,14 @@ let config = {  // デフォルト値
 
 //////////////////////////////////////////////////////////////////////
 // Local function
-
-// 今日の日付 ("YYYY-MM-DD")
+/**
+ * @func getToday
+ * @desc 今日の日付 ("YYYY-MM-DD")
+ * @async
+ * @param {void} 
+ * @return void
+ * @throw error
+ */
 let getToday = function() {
 	let now = new Date();
 	let today = [
@@ -49,14 +55,28 @@ let getToday = function() {
 
 
 //////////////////////////////////////////////////////////////////////
-// HAL, Home-life Assessment Listの処理
+/**
+ * @func initialize
+ * @desc HAL, Home-life Assessment Listの処理
+ * @async
+ * @param {void} 
+ * @return void
+ * @throw error
+ */
 mainHALlocal.initialize = async function() {
 	config = await store.get('config.HAL', config);
 };
 
 
 //////////////////////////////////////////////////////////////////////
-// アンケート回答したので処理
+/**
+ * @func submitQuestionnaire
+ * @desc アンケート回答したので処理
+ * @async
+ * @param {void} 
+ * @return void
+ * @throw error
+ */
 mainHALlocal.submitQuestionnaire = async function( arg, succeessFunc, errorFunc ) {
 	config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALlocal.submitQuestionnaire()' ):0;
 	// console.dir( arg );
@@ -213,7 +233,14 @@ mainHALlocal.submitQuestionnaire = async function( arg, succeessFunc, errorFunc 
 	}
 };
 
-// アンケート回答から Major 成績データを計算する
+/**
+ * @func calcMajorResults
+ * @desc アンケート回答から Major 成績データを計算する
+ * @async
+ * @param {void} 
+ * @return void
+ * @throw error
+ */
 mainHALlocal.calcMajorResults = function(q_data) {
 	// console.log( '-- calcMajorResults()' );
 	// console.dir( q_data );
@@ -309,13 +336,28 @@ mainHALlocal.calcMajorResults = function(q_data) {
 	return data;
 }
 
+/**
+ * @func roundMajorFloat
+ * @desc roundMajorFloat
+ * @async
+ * @param {void} 
+ * @return void
+ * @throw error
+ */
 mainHALlocal.roundMajorFloat = function(n, digit) {
 	return parseFloat(n.toFixed(2));
 }
 
 
 
-// HALの最新データを取得
+/**
+ * @func getLastData
+ * @desc HALの最新データを取得
+ * @async
+ * @param {void} 
+ * @return void
+ * @throw error
+ */
 mainHALlocal.getLastData = async function() {
 	let halData       = {};
 	let MajorResults  = {};
@@ -374,8 +416,15 @@ mainHALlocal.getLastData = async function() {
 };
 
 
-// SQLite のデータベースのレコードの削除処理
-// データがたまりすぎるので古いものを定期的に消す
+/**
+ * @func truncatelogs
+ * @desc SQLite のデータベースのレコードの削除処理
+ * データがたまりすぎるので古いものを定期的に消す
+ * @async
+ * @param {void} 
+ * @return void
+ * @throw error
+ */
 mainHALlocal.truncatelogs = async function() {
 
 	// eldata テーブルのレコード削除
