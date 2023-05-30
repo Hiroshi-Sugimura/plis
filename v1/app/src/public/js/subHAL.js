@@ -2,6 +2,9 @@
 //	Copyright (C) SUGIMURA Lab. 2021.11.05
 //	HAL 表示関係の処理
 //////////////////////////////////////////////////////////////////////
+/**
+ * @module subHAL
+ */
 'use strict'
 
 
@@ -67,8 +70,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	let btnSetHalApiToken = document.getElementById('btnSetHalApiToken');  // API Key登録ボタン
 	let btnHALSync = document.getElementById('btnHALSync');  // HAL同期ボタン
 
-
-	// 内部関数
+	/** 
+	 * @func renewMajorResults
+	 * @desc 内部関数
+	 * @param {void}
+	 * @return {void}
+	 */
 	let renewMajorResults = function () {
 		if (!majorResults) return;
 		let clothingRatio = ranking(majorResults.clothingPoint);
@@ -132,7 +139,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		divComment.innerHTML = majorResults.comments ? majorResults.comments : "この調子で頑張ろう！";
 	};
 
-	// 内部関数
+	/** 
+	 * @func renewMinorResults
+	 * @desc 内部関数
+	 * @param {void}
+	 * @return {void}
+	 */
 	let renewMinorResults = function () {
 		if (!minorResults) return;
 
@@ -370,7 +382,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		});
 	};
 
-	// 内部関数，ランク付け
+	/** 
+	 * @func ranking
+	 * @desc 内部関数，ランク付け
+	 * @param {void}
+	 * @return {void}
+	 */
 	let ranking = function (point) {
 		return point >= 90 ? 'SSS'
 			: point >= 80 ? 'SS'
@@ -384,7 +401,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	// Profileもらって画面更新
+	/** 
+	 * @func window.renewHALProfile
+	 * @desc Profileもらって画面更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewHALProfile = function (_profile) {
 		profile = _profile;
 		divId.innerHTML = profile.name;
@@ -401,13 +423,25 @@ window.addEventListener('DOMContentLoaded', function () {
 	////////////////////////////////////////////////////////////////////////////////
 	// GUIのボタン
 
-	// HAL API トークン設定削除ボタンが押されたときの処理
+	/** 
+	 * @func window.btnDeleteHalApiToken_Click
+	 * @desc HAL API トークン設定削除ボタンが押されたときの処理
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.btnDeleteHalApiToken_Click = function () {
 		window.ipc.HALdeleteApiToken();
 	};
 
 	// HAL API Key登録ボタンクリック
 	let timer;  // HALからの応答待ち、タイムアウトタイマー
+
+	/** 
+	 * @func window.btnSetHalApiTokenBtn_Click
+	 * @desc window.btnSetHalApiTokenBtn_Click
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.btnSetHalApiTokenBtn_Click = function () {
 		pSetHalApiTokenErr.textContent = '';
 		btnSetHalApiToken.disabled = true;
@@ -436,7 +470,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.ipc.HALsetApiTokenRequest(HALtoken);
 	};
 
-	// HAL同期ボタンが押されたときの処理
+	/** 
+	 * @func window.btnHALsync_Click
+	 * @desc HAL同期ボタンが押されたときの処理
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.btnHALsync_Click = function () {
 		btnHALSync.disabled = true;
 		btnHALSync.textContent = '同期中…';
@@ -448,7 +487,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	// mainプロセスから呼ばれるやつ
 
 	//----------------------------------------------------------------
-	// configデータをもらって画面更新
+	/** 
+	 * @func window.renewHALConfigView
+	 * @desc configデータをもらって画面更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewHALConfigView = function (config) {
 		// 取得したトークンが有効かどうかを確認するために HAL ユーザープロファイルを取得
 		if (config.halApiToken) {
@@ -459,7 +503,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
-	// HAL Tokenに変更があったら呼ばれる
+	/** 
+	 * @func window.renewHALToken
+	 * @desc HAL Tokenに変更があったら呼ばれる
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewHALToken = async function (HALtoken) {
 		console.log('renewHALToken(): HALtoken:', HALtoken);
 
@@ -475,7 +524,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	//----------------------------------------------------------------
-	// データをもらって画面更新
+	/** 
+	 * @func window.renewHAL
+	 * @desc データをもらって画面更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewHAL = function (MajorResults, MinorResults, MinorkeyMeans) {
 		majorResults = MajorResults;
 		renewMajorResults();
@@ -489,7 +543,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------
-	// HAL cloud: 同期の応答、同期処理終了
+	/** 
+	 * @func window.HALsyncResponse
+	 * @desc HAL cloud: 同期の応答、同期処理終了
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.HALsyncResponse = function ( arg ) {
 		console.log( 'main -> HALsyncResponse:' );
 		if(arg?.error) {
@@ -502,7 +561,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	}
 
 	//----------------------------------------------------------------
-	// HAL API登録完了したら呼ばれる
+	/** 
+	 * @func window.HALsetApiTokenResponse
+	 * @desc HAL API登録完了したら呼ばれる
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.HALsetApiTokenResponse = function (res) {
 		console.log('window.HALsetApiTokenResponse() res:', res);
 
@@ -528,7 +592,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------
-	// HAL API トークン設定削除の応答、HALとの同期をやめた場合、mainから応答があって実行
+	/** 
+	 * @func window.HALdeleteApiTokenResponse
+	 * @desc HAL API トークン設定削除の応答、HALとの同期をやめた場合、mainから応答があって実行
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.HALdeleteApiTokenResponse = function () {
 		console.log('window.HALdeleteApiTokenResponse()');
 		divHALArea.style.display = 'none';  // 同期ボタン非表示
@@ -538,7 +607,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------
-	// HAL ユーザープロファイル取得の応答
+	/** 
+	 * @func window.HALgetUserProfileResponse
+	 * @desc HAL ユーザープロファイル取得の応答
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.HALgetUserProfileResponse = function (res) {
 		console.log('window.HALgetUserProfileResponse() res:', res);
 		// 取得したトークンが有効かどうかを確認するために HAL ユーザープロファイルを取得
@@ -566,8 +640,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//================================================================
-	// local HAL
-	// アンケート回答の投稿ボタンを押したときの処理
+	/** 
+	 * @func btnQuestionnaireSubmit.addEventListener
+	 * @desc local HAL, アンケート回答の投稿ボタンを押したときの処理
+	 * @param {void}
+	 * @return {void}
+	 */
 	btnQuestionnaireSubmit.addEventListener('click', function () {
 		let submitData = window.getQuestionnaire();
 

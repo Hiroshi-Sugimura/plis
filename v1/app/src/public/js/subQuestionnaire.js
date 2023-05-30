@@ -2,6 +2,9 @@
 //	Copyright (C) SUGIMURA Lab. 2021.11.05
 //	アンケート関係の処理
 //////////////////////////////////////////////////////////////////////
+/**
+ * @module subQuestionnaire
+ */
 'use strict'
 
 
@@ -10,7 +13,12 @@
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subQuestionnaire.js');
 
-	// アンケート回答の投稿ボタンを押したときの処理
+	/** 
+	 * @func getQuestionnaire
+	 * @desc アンケート回答の投稿ボタンを押したときの処理
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.getQuestionnaire = function () {
 		// 大項目ごとの小項目の数の上限の定義
 		const qnums = {

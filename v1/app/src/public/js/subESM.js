@@ -2,6 +2,9 @@
 //	Copyright (C) SUGIMURA Lab. 2022.10.01
 //	esm関係の処理
 //////////////////////////////////////////////////////////////////////
+/**
+ * @module subESM
+ */
 'use strict'
 
 
@@ -41,13 +44,23 @@ window.addEventListener('DOMContentLoaded', function () {
 	let divControlESM = document.getElementById('divControlESM');
 
 	//----------------------------------------------------------------------------------------------
-	// R相、T相を数値に
+	/** 
+	 * @func convRT
+	 * @desc R相、T相を数値に
+	 * @param {void}
+	 * @return {void}
+	 */
 	let convRT = function (str) {
 		let n = str.split('[')[0];
 		return parseFloat(n).toFixed(2);
 	};
 
-	// ESM デバイス情報のrenew
+	/** 
+	 * @func window.renewESM
+	 * @desc ESM デバイス情報のrenew
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewESM = function (arg) {
 		// console.log( 'window.renewESM() arg:', arg );
 		facilitiesESM = arg;
@@ -90,7 +103,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
-	// 左のボタンからグラフ制御
+	/** 
+	 * @func window.esmDocSectionClicked
+	 * @desc 左のボタンからグラフ制御
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.esmDocSectionClicked = function (t) {
 		myChartESM._metasets.forEach((v) => {
 			if (v.label != t) {
@@ -102,7 +120,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		myChartESM.update();
 	};
 
-	// ESM USBと切断
+	/** 
+	 * @func window.disconnectedESM
+	 * @desc ESM USBと切断
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.disconnectedESM = function () {
 		H3ESM.style.display = 'none';
 		canEnergyChart.style.display = 'none';
@@ -111,7 +134,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	//----------------------------------------------------------------------------------------------
-	// ESM config
+	/** 
+	 * @func window.btnESMConfigSet_Click
+	 * @desc ESM config
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.btnESMConfigSet_Click = function (checkBox) {
 		if (inESMUse.checked == false) {
 			window.ipc.ESMnotUse(inDongleType.value, inESMId.value, inESMPassword.value);  // ESM 連携停止
@@ -130,7 +158,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
-	// 設定完了
+	/** 
+	 * @func window.ESMConfigSaved
+	 * @desc 設定完了
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.ESMConfigSaved = function () {
 		btnESMConfigSet.disabled = false;
 		btnESMConfigSet.textContent = '設定';
@@ -138,7 +171,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast('Info', 'ESM 設定を保存しました。');
 	};
 
-	// mainプロセスから設定値をもらったので画面を更新
+	/** 
+	 * @func window.renewESMConfigView
+	 * @desc mainプロセスから設定値をもらったので画面を更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewESMConfigView = function (arg) {
 		inESMUse.checked = arg.enabled ? true : false;
 		inDongleType.value = arg.dongleType;
@@ -273,6 +311,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	// 表示データ（動的）
 	let datasetsESM = [];
 
+	/** 
+	 * @func renewCanvasESM
+	 * @desc renewCanvasESM
+	 * @param {void}
+	 * @return {void}
+	 */
 	let renewCanvasESM = function () {
 		if (myChartESM) { myChartESM.destroy(); }  // chartがすでにctxを使っていると、リエントラントで"Canvas is already in use."のエラーが出る
 
@@ -288,7 +332,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//////////////////////////////////////////////////////////////////
-	// データをもらって画面更新
+	/** 
+	 * @func window.renewEnergy
+	 * @desc データをもらって画面更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewEnergy = function (_envDataArray) {
 		// console.log( 'window.renewEnergy() _envDataArray', _envDataArray );
 		let envDataArray = JSON.parse(_envDataArray);

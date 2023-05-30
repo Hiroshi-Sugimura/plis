@@ -1,7 +1,10 @@
 //////////////////////////////////////////////////////////////////////
 //	Copyright (C) SUGIMURA Lab. 2022.08.30
-//	SwitchBot関係の処理
+//	Calendar関係の処理
 //////////////////////////////////////////////////////////////////////
+/**
+ * @module subCalendar
+ */
 'use strict'
 
 
@@ -22,32 +25,57 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 
-	// 祝日取得
+	/** 
+	 * @func window.renewCalendar
+	 * @desc 祝日取得
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewCalendar = function ( _cal ) {
 		holiday = _cal;
 		showProcess(today);
 	};
 
-	// 前の月表示
+	/** 
+	 * @func window.calendarPrev
+	 * @desc 前の月表示
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.calendarPrev = function () {
 		showDate.setMonth( showDate.getMonth() - 1 );
 		showProcess(showDate);
 	};
 
-	// 次の月表示
+	/** 
+	 * @func window.calendarNext
+	 * @desc 次の月表示
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.calendarNext = function () {
 		showDate.setMonth(showDate.getMonth() + 1);
 		showProcess(showDate);
 	};
 
-	// 祝日の再取得ボタンクリック
+	/** 
+	 * @func window.btnCalendarRenewSyukujitsu_Click
+	 * @desc 祝日の再取得ボタンクリック
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.btnCalendarRenewSyukujitsu_Click = function() {
 		console.log('# btnCalendarRenewSyukujitsu_Click');
 		window.ipc.CalendarRenewHolidays();  // 祝日データ再取得
 	};
 
 
-	// カレンダー表示
+	/** 
+	 * @func showProcess
+	 * @desc カレンダー表示
+	 * @param {void}
+	 * @return {void}
+	 */
 	function showProcess(date) {
 		let year = date.getFullYear();
 		let month = date.getMonth(); // 0始まり
@@ -57,7 +85,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		document.querySelector('#calendar').innerHTML = calendar;
 	}
 
-	// カレンダー作成
+	/** 
+	 * @func createProcess
+	 * @desc カレンダー作成
+	 * @param {void}
+	 * @return {void}
+	 */
 	function createProcess(year, month) {
 		// 曜日
 		let calendar = "<table class='calendar'><tr class='dayOfWeek'>";
@@ -102,7 +135,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		return calendar;
 	}
 
-	// 日付チェック
+	/** 
+	 * @func checkDate
+	 * @desc 日付チェック
+	 * @param {void}
+	 * @return {void}
+	 */
 	function checkDate(year, month, day) {
 		if(isToday(year, month, day)){
 			return {
@@ -120,14 +158,24 @@ window.addEventListener('DOMContentLoaded', function () {
 		};
 	}
 
-	// 当日かどうか
+	/** 
+	 * @func isToday
+	 * @desc 当日かどうか
+	 * @param {void}
+	 * @return {void}
+	 */
 	function isToday(year, month, day) {
 		return (year == today.getFullYear()
 				&& month == (today.getMonth())
 				&& day == today.getDate());
 	}
 
-	// 祝日かどうか
+	/** 
+	 * @func isHoliday
+	 * @desc 祝日かどうか
+	 * @param {void}
+	 * @return {void}
+	 */
 	function isHoliday(year, month, day) {
 		let checkDate = year + '/' + (month + 1) + '/' + day;
 		let dateList = holiday.split('\n');

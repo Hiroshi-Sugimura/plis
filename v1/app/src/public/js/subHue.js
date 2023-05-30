@@ -2,6 +2,9 @@
 //	Copyright (C) SUGIMURA Lab. 2022.08.30
 //	hue関係の処理
 //////////////////////////////////////////////////////////////////////
+/**
+ * @module subHue
+ */
 'use strict'
 
 
@@ -29,7 +32,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	let dlgHuePush      = document.getElementById('dlgHuePush');  // 設定サポートダイアログ
 
 
-	// mainからの情報で，hue関係のhtmlを変更する
+	/** 
+	 * @func window.renewFacilitiesHue
+	 * @desc mainからの情報で，hue関係のhtmlを変更する
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewFacilitiesHue = function ( arg ) { //facilitiesHue = json = arg; // 機器情報確保
 		facilitiesHue = arg;
 		// console.log( 'window.renewFacilitiesHue() arg:', arg );
@@ -88,12 +96,22 @@ window.addEventListener('DOMContentLoaded', function () {
 		divControlHue.innerHTML = doc;
 	};
 
-	// configタブのデバッグログ
+	/** 
+	 * @func window.renewHueLog
+	 * @desc configタブのデバッグログ
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewHueLog = function( text ) {
 		txtHueLog.value = text;
 	};
 
-	// hueとリンクしたのでGUI表示する
+	/** 
+	 * @func hueLinked
+	 * @desc hueとリンクしたのでGUI表示する
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.hueLinked = function (key) {
 		hueConnected = true;
 		dlgHuePush.close();
@@ -101,7 +119,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	//----------------------------------------------------------------------------------------------
-	// Hue link unlink
+	/** 
+	 * @func btnHueConfigSet_Click
+	 * @desc Hue link unlink
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.btnHueConfigSet_Click = function () {
 		console.log( 'window.btnHueConfigSet_Click():', inHueUse.checked );
 
@@ -124,7 +147,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
-	// キャンセルボタンを押したとき
+	/** 
+	 * @func btnHueUseCancel_Click
+	 * @desc キャンセルボタンを押したとき
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.btnHueUseCancel_Click = function () {
 		console.log('window.btnHueUseCancel_Click');
 		inHueUse.checked = false;
@@ -132,7 +160,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		dlgHuePush.close();
 	};
 
-	// エスケープキーでキャンセルしたとき
+	/** 
+	 * @func oncancel
+	 * @desc エスケープキーでキャンセルしたとき
+	 * @param {void}
+	 * @return {void}
+	 */
 	dlgHuePush.oncancel = function () {
 		console.log('dlgHuePush.oncancel');
 		inHueUse.checked = false;
@@ -140,7 +173,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	// 設定完了通知で、設定ボタンの復活（連打防止）
+	/** 
+	 * @func HueConfigSaved
+	 * @desc 設定完了通知で、設定ボタンの復活（連打防止）
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.HueConfigSaved = function () {
 		btnHueConfigSet.disabled    = false;
 		btnHueConfigSet.textContent = '設定';
@@ -148,7 +186,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast( 'Info', 'Hue 設定を保存しました。');
 	};
 
-	// mainプロセスから設定値をもらったので画面を更新
+	/** 
+	 * @func renewHueConfigView
+	 * @desc mainプロセスから設定値をもらったので画面を更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewHueConfigView = function (arg) {
 		inHueUse.checked   = arg.enabled;
 		inHueKey.value     = arg.key;
@@ -169,6 +212,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	// -----------------------------------------------------
 	// Hue control
+	/** 
+	 * @func HuePowButton
+	 * @desc HuePowButton
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.HuePowButton = function (btn) {
 		let cmd = btn.value.split(",");
 
@@ -188,7 +237,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	// hue rename dlgを開く
+	/** 
+	 * @func hue rename dlgを開く
+	 * @desc openHueRenameDlg
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.openHueRenameDlg = function( id ) {
 		let spanHueRenameBtn   = document.getElementById('spanHueRenameBtn');  // 更新ボタン
 		let dlgHueRenameDialog = document.getElementById('dlgHueRenameDialog');  // 開くダイアログ
@@ -198,7 +252,13 @@ window.addEventListener('DOMContentLoaded', function () {
 		dlgHueRenameDialog.showModal();
 	};
 
-	// Hue control
+	/** 
+	 * @func HueRename
+	 * @desc Hue control
+	 * @param {void}
+	 * @return {void}
+	 */
+	// 
 	window.HueRename = function ( id ) {
 		let newName = document.getElementById('hueNewName').value;
 

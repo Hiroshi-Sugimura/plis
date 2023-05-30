@@ -2,6 +2,9 @@
 //	Copyright (C) SUGIMURA Lab. 2022.08.30
 //	気象庁（JMA, Japan Meteorological Agency）関係の処理
 //////////////////////////////////////////////////////////////////////
+/**
+ * @module subJma
+ */
 'use strict'
 
 
@@ -910,7 +913,13 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-	// JMA 表示更新
+	// 
+	/** 
+	 * @func renewJmaAbst
+	 * @desc JMA 表示更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewJmaAbst = function( arg ) {
 		weatherAbst = '';
 		abstTargetArea = arg.targetArea;
@@ -921,7 +930,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.renewJma();
 	};
 
-	// JMA 詳細表示
+	/** 
+	 * @func renewJmaDetail
+	 * @desc JMA 詳細表示
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewJmaDetail = function( arg ) {
 		weatherDetail = '';
 
@@ -1021,7 +1035,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	// 天気予報の更新、全体(上記のEntry)
+	/** 
+	 * @func renewJma
+	 * @desc 天気予報の更新、全体(上記renewJmaDetailのEntry)
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewJma = function() {
 		// return;  // @@@ まだ途中
 
@@ -1033,7 +1052,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	//----------------------------------------------------------------------------------------------
-	// jma config
+	/** 
+	 * @func btnJmaConfigSet_Click
+	 * @desc jma config
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.btnJmaConfigSet_Click = function() {
 		btnJmaConfigSet.disabled = true;
 		btnJmaConfigSet.textContent = '保存中…';
@@ -1042,7 +1066,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.ipc.JmaConfigSave( inJmaArea.options[inJmaArea.selectedIndex].text, inJmaArea.value );
 	};
 
-	// 設定完了
+	/** 
+	 * @func JmaConfigSaved
+	 * @desc 設定完了
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.JmaConfigSaved = function () {
 		btnJmaConfigSet.disabled    = false;
 		btnJmaConfigSet.textContent = '設定';
@@ -1050,19 +1079,34 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast( 'Info', 'JMA 設定を保存しました。');
 	};
 
-	// mainプロセスから設定値をもらったので画面を更新
+	/** 
+	 * @func renewJmaConfigView
+	 * @desc mainプロセスから設定値をもらったので画面を更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewJmaConfigView = function( arg ) {
 		inJmaArea.value      = arg.code;
 		divJmaCode.innerHTML = inJmaArea.value;
 	};
 
 
-	// セレクトボックスの変更
+	/** 
+	 * @func inJmaArea_Change
+	 * @desc セレクトボックスの変更
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.inJmaArea_Change = function () {
 		divJmaCode.innerHTML = inJmaArea.value;
 	};
 
-	// make jma selector
+	/** 
+	 * @func makeJmaArea
+	 * @desc make jma selector
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.makeJmaArea = function () {
 		// console.log('window.makeJmaArea()');
 		for( let i in areaCodes ) {

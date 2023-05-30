@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>public/js/subOmron.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav class="wrap">
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://hiroshi-sugimura.github.io/plis/" target="_blank" class="menu-item" id="forum_link" >Website</a></h2><h2><a href="https://github.com/Hiroshi-Sugimura/plis" target="_blank" class="menu-item" id="website_link" >Github</a></h2><h3>Classes</h3><ul><li><a href="module-mainArp-mainArp.html">mainArp</a></li></ul><h3>Modules</h3><ul><li><a href="module-main.html">main</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-main.html#~createShortCut">createShortCut</a></li><li data-type='method' style='display: none;'><a href="module-main.html#~createWindow">createWindow</a></li><li data-type='method' style='display: none;'><a href="module-main.html#~menuInitialize">menuInitialize</a></li><li data-type='method' style='display: none;'><a href="module-main.html#~saveConfig">saveConfig</a></li><li data-type='method' style='display: none;'><a href="module-main.html#~savePersist">savePersist</a></li></ul></li><li><a href="module-mainArp.html">mainArp</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainArp.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainArp.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainArp.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainArp.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainArp.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainArp.html#~stopObservation">stopObservation</a></li><li data-type='method' style='display: none;'><a href="module-mainArp.html#~stopWithoutSave">stopWithoutSave</a></li><li data-type='method' style='display: none;'><a href="module-mainArp.html#~toMAC">toMAC</a></li></ul></li><li><a href="module-mainCalendar.html">mainCalendar</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainCalendar.html#~getHolidays">getHolidays</a></li><li data-type='method' style='display: none;'><a href="module-mainCalendar.html#~start">start</a></li></ul></li><li><a href="module-mainEL.html">mainEL</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainEL.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~getStatic">getStatic</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~getTodayElectricEnergy_submeter">getTodayElectricEnergy_submeter</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~init">init</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~observation">observation</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~received">received</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~search">search</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~sendMsg">sendMsg</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~sendOPC1">sendOPC1</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~sendTodayEnergy">sendTodayEnergy</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~setCron">setCron</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~sleep">sleep</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~stopObservation">stopObservation</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainESM.html">mainESM</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainESM.html#~getCases">getCases</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~getRows">getRows</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~getTodayElectricEnergy">getTodayElectricEnergy</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~observe">observe</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~received">received</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~renewPortList">renewPortList</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~sendTodayEnergy">sendTodayEnergy</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~startCore">startCore</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~stopObservation">stopObservation</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainHALlocal.html">mainHALlocal</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainHALlocal.html#~calcMajorResults">calcMajorResults</a></li><li data-type='method' style='display: none;'><a href="module-mainHALlocal.html#~getLastData">getLastData</a></li><li data-type='method' style='display: none;'><a href="module-mainHALlocal.html#~getToday">getToday</a></li><li data-type='method' style='display: none;'><a href="module-mainHALlocal.html#~initialize">initialize</a></li><li data-type='method' style='display: none;'><a href="module-mainHALlocal.html#~roundMajorFloat">roundMajorFloat</a></li><li data-type='method' style='display: none;'><a href="module-mainHALlocal.html#~submitQuestionnaire">submitQuestionnaire</a></li><li data-type='method' style='display: none;'><a href="module-mainHALlocal.html#~truncatelogs">truncatelogs</a></li></ul></li><li><a href="module-mainHALsync.html">mainHALsync</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~ConfigSave">ConfigSave</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~deleteHalApiToken">deleteHalApiToken</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~getHalUserProfileRequest">getHalUserProfileRequest</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~httpGetRequest">httpGetRequest</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~httpPostRequest">httpPostRequest</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~renewConfigView">renewConfigView</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~setHalApiTokenRequest">setHalApiTokenRequest</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~startSync">startSync</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~startUploadEldata">startUploadEldata</a></li></ul></li><li><a href="module-mainHue.html">mainHue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainHue.html#~cancel">cancel</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~control">control</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~dummy">dummy</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~received">received</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~startCore">startCore</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~startObserve">startObserve</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~stopObserve">stopObserve</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainIkea.html">mainIkea</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~observe">observe</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~received">received</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~startCore">startCore</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainJma.html">mainJma</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainJma.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~gets">gets</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~parseAbst">parseAbst</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~parseAbstRaw">parseAbstRaw</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~parseDetail">parseDetail</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~parseDetailRaw">parseDetailRaw</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~setObserve">setObserve</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~stopObservation">stopObservation</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainNetatmo.html">mainNetatmo</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~getCases">getCases</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~getRows">getRows</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~getTodayRoomEnv">getTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~sendTodayRoomEnv">sendTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~setObserve">setObserve</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~stopObservation">stopObservation</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainOmron.html">mainOmron</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getCases">getCases</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getRows">getRows</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getTodayRoomEnv">getTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~sendTodayRoomEnv">sendTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainOwm.html">mainOwm</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~setObserve">setObserve</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~startCore">startCore</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~stopObservation">stopObservation</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainSubmodule.html">mainSubmodule</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getNow">getNow</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getToday">getToday</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~isObjEmpty">isObjEmpty</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~mergeDeeply">mergeDeeply</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~objectSort">objectSort</a></li></ul></li><li><a href="module-mainSwitchBot.html">mainSwitchBot</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~control">control</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getCases">getCases</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getHumidityRows">getHumidityRows</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getMeterList">getMeterList</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getTempratureRows">getTempratureRows</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getTodayRoomEnvSwitchBot">getTodayRoomEnvSwitchBot</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~renewFacilities">renewFacilities</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~sendTodayRoomEnv">sendTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~stopObservation">stopObservation</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~stopWithoutSave">stopWithoutSave</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~storeData">storeData</a></li></ul></li><li><a href="module-mainSystem.html">mainSystem</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainSystem.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainSystem.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainSystem.html#~stop">stop</a></li></ul></li><li><a href="module-mainUser.html">mainUser</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainUser.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainUser.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainUser.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainUser.html#~stop">stop</a></li></ul></li><li><a href="module-subCalendar.html">subCalendar</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subCalendar.html#~checkDate">checkDate</a></li><li data-type='method' style='display: none;'><a href="module-subCalendar.html#~checkDate">checkDate</a></li><li data-type='method' style='display: none;'><a href="module-subCalendar.html#~createProcess">createProcess</a></li><li data-type='method' style='display: none;'><a href="module-subCalendar.html#~createProcess">createProcess</a></li><li data-type='method' style='display: none;'><a href="module-subCalendar.html#~isHoliday">isHoliday</a></li><li data-type='method' style='display: none;'><a href="module-subCalendar.html#~isHoliday">isHoliday</a></li><li data-type='method' style='display: none;'><a href="module-subCalendar.html#~isToday">isToday</a></li><li data-type='method' style='display: none;'><a href="module-subCalendar.html#~isToday">isToday</a></li><li data-type='method' style='display: none;'><a href="module-subCalendar.html#~showProcess">showProcess</a></li><li data-type='method' style='display: none;'><a href="module-subCalendar.html#~showProcess">showProcess</a></li></ul></li><li></li><li><a href="module-subEL.html">subEL</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subEL.html#~convRT">convRT</a></li><li data-type='method' style='display: none;'><a href="module-subEL.html#~convRT">convRT</a></li><li data-type='method' style='display: none;'><a href="module-subEL.html#~renewCanvasSubESM">renewCanvasSubESM</a></li><li data-type='method' style='display: none;'><a href="module-subEL.html#~renewCanvasSubESM">renewCanvasSubESM</a></li><li data-type='method' style='display: none;'><a href="module-subEL.html#~renewIkeaConfigView">renewIkeaConfigView</a></li><li data-type='method' style='display: none;'><a href="module-subEL.html#~renewIkeaConfigView">renewIkeaConfigView</a></li></ul></li><li></li><li><a href="module-subELcontrol.html">subELcontrol</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subELcontrol.html#~colorButton">colorButton</a></li><li data-type='method' style='display: none;'><a href="module-subELcontrol.html#~colorButton">colorButton</a></li></ul></li><li></li><li><a href="module-subESM.html">subESM</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subESM.html#~convRT">convRT</a></li><li data-type='method' style='display: none;'><a href="module-subESM.html#~convRT">convRT</a></li><li data-type='method' style='display: none;'><a href="module-subESM.html#~renewCanvasESM">renewCanvasESM</a></li><li data-type='method' style='display: none;'><a href="module-subESM.html#~renewCanvasESM">renewCanvasESM</a></li></ul></li><li></li><li><a href="module-subHAL.html">subHAL</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subHAL.html#~ranking">ranking</a></li><li data-type='method' style='display: none;'><a href="module-subHAL.html#~ranking">ranking</a></li><li data-type='method' style='display: none;'><a href="module-subHAL.html#~renewMajorResults">renewMajorResults</a></li><li data-type='method' style='display: none;'><a href="module-subHAL.html#~renewMajorResults">renewMajorResults</a></li><li data-type='method' style='display: none;'><a href="module-subHAL.html#~renewMinorResults">renewMinorResults</a></li><li data-type='method' style='display: none;'><a href="module-subHAL.html#~renewMinorResults">renewMinorResults</a></li></ul></li><li></li><li><a href="module-subHue.html">subHue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subHue.html#~HueConfigSaved">HueConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~HueConfigSaved">HueConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~HuePowButton">HuePowButton</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~HuePowButton">HuePowButton</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~HueRename">HueRename</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~HueRename">HueRename</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~btnHueConfigSet_Click">btnHueConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~btnHueConfigSet_Click">btnHueConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~btnHueUseCancel_Click">btnHueUseCancel_Click</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~btnHueUseCancel_Click">btnHueUseCancel_Click</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~huerenamedlg%25E3%2582%2592%25E9%2596%258B%25E3%2581%258F">hue rename dlgを開く</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~huerenamedlg%25E3%2582%2592%25E9%2596%258B%25E3%2581%258F">hue rename dlgを開く</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~hueLinked">hueLinked</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~hueLinked">hueLinked</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~oncancel">oncancel</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~oncancel">oncancel</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~renewHueConfigView">renewHueConfigView</a></li><li data-type='method' style='display: none;'><a href="module-subHue.html#~renewHueConfigView">renewHueConfigView</a></li></ul></li><li></li><li><a href="module-subIkea.html">subIkea</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subIkea.html#~IkeaConfigSaved">IkeaConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subIkea.html#~IkeaConfigSaved">IkeaConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subIkea.html#~IkeaPowButton">IkeaPowButton</a></li><li data-type='method' style='display: none;'><a href="module-subIkea.html#~IkeaPowButton">IkeaPowButton</a></li><li data-type='method' style='display: none;'><a href="module-subIkea.html#~btnIkeaConfigSet_Click">btnIkeaConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subIkea.html#~btnIkeaConfigSet_Click">btnIkeaConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subIkea.html#~ikeaLinked">ikeaLinked</a></li><li data-type='method' style='display: none;'><a href="module-subIkea.html#~ikeaLinked">ikeaLinked</a></li><li data-type='method' style='display: none;'><a href="module-subIkea.html#~renewFacilitiesIkea">renewFacilitiesIkea</a></li><li data-type='method' style='display: none;'><a href="module-subIkea.html#~renewFacilitiesIkea">renewFacilitiesIkea</a></li><li data-type='method' style='display: none;'><a href="module-subIkea.html#~renewIkeaConfigView">renewIkeaConfigView</a></li><li data-type='method' style='display: none;'><a href="module-subIkea.html#~renewIkeaConfigView">renewIkeaConfigView</a></li><li data-type='method' style='display: none;'><a href="module-subIkea.html#~renewIkeaLog">renewIkeaLog</a></li><li data-type='method' style='display: none;'><a href="module-subIkea.html#~renewIkeaLog">renewIkeaLog</a></li></ul></li><li></li><li><a href="module-subJma.html">subJma</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subJma.html#~JmaConfigSaved">JmaConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subJma.html#~JmaConfigSaved">JmaConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subJma.html#~btnJmaConfigSet_Click">btnJmaConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subJma.html#~btnJmaConfigSet_Click">btnJmaConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subJma.html#~inJmaArea_Change">inJmaArea_Change</a></li><li data-type='method' style='display: none;'><a href="module-subJma.html#~inJmaArea_Change">inJmaArea_Change</a></li><li data-type='method' style='display: none;'><a href="module-subJma.html#~makeJmaArea">makeJmaArea</a></li><li data-type='method' style='display: none;'><a href="module-subJma.html#~makeJmaArea">makeJmaArea</a></li><li data-type='method' style='display: none;'><a href="module-subJma.html#~renewJma">renewJma</a></li><li data-type='method' style='display: none;'><a href="module-subJma.html#~renewJma">renewJma</a></li><li data-type='method' style='display: none;'><a href="module-subJma.html#~renewJmaAbst">renewJmaAbst</a></li><li data-type='method' style='display: none;'><a href="module-subJma.html#~renewJmaAbst">renewJmaAbst</a></li><li data-type='method' style='display: none;'><a href="module-subJma.html#~renewJmaConfigView">renewJmaConfigView</a></li><li data-type='method' style='display: none;'><a href="module-subJma.html#~renewJmaConfigView">renewJmaConfigView</a></li><li data-type='method' style='display: none;'><a href="module-subJma.html#~renewJmaDetail">renewJmaDetail</a></li><li data-type='method' style='display: none;'><a href="module-subJma.html#~renewJmaDetail">renewJmaDetail</a></li></ul></li><li></li><li><a href="module-subNetatmo.html">subNetatmo</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~NetatmoConfigSaved">NetatmoConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~NetatmoConfigSaved">NetatmoConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~btnNetatmoConfigSet_Click">btnNetatmoConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~btnNetatmoConfigSet_Click">btnNetatmoConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~netatmoDocSectionClicked">netatmoDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~netatmoDocSectionClicked">netatmoDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~renewCanvasNetatmo">renewCanvasNetatmo</a></li><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~renewCanvasNetatmo">renewCanvasNetatmo</a></li><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~renewNetatmo">renewNetatmo</a></li><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~renewNetatmo">renewNetatmo</a></li><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~renewNetatmoConfigView">renewNetatmoConfigView</a></li><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~renewNetatmoConfigView">renewNetatmoConfigView</a></li><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~renewRoomEnvNetatmo">renewRoomEnvNetatmo</a></li><li data-type='method' style='display: none;'><a href="module-subNetatmo.html#~renewRoomEnvNetatmo">renewRoomEnvNetatmo</a></li></ul></li><li></li><li><a href="module-subOmron.html">subOmron</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subOmron.html#~OmronConfigSaved">OmronConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~OmronConfigSaved">OmronConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~btnOmronConfigSet_Click">btnOmronConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~btnOmronConfigSet_Click">btnOmronConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~disconnectedOmron">disconnectedOmron</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~disconnectedOmron">disconnectedOmron</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~omronDocSectionClicked">omronDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~omronDocSectionClicked">omronDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~renewCanvasOmron">renewCanvasOmron</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~renewCanvasOmron">renewCanvasOmron</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~renewOmron">renewOmron</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~renewOmron">renewOmron</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~renewOmronConfigView">renewOmronConfigView</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~renewOmronConfigView">renewOmronConfigView</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~renewRoomEnvOmron">renewRoomEnvOmron</a></li><li data-type='method' style='display: none;'><a href="module-subOmron.html#~renewRoomEnvOmron">renewRoomEnvOmron</a></li></ul></li><li></li><li><a href="module-subOwm.html">subOwm</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subOwm.html#~OwmConfigSaved">OwmConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subOwm.html#~OwmConfigSaved">OwmConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subOwm.html#~btnOwmConfigSet_Click">btnOwmConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subOwm.html#~btnOwmConfigSet_Click">btnOwmConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subOwm.html#~renewOwm">renewOwm</a></li><li data-type='method' style='display: none;'><a href="module-subOwm.html#~renewOwm">renewOwm</a></li><li data-type='method' style='display: none;'><a href="module-subOwm.html#~renewOwmConfigView">renewOwmConfigView</a></li><li data-type='method' style='display: none;'><a href="module-subOwm.html#~renewOwmConfigView">renewOwmConfigView</a></li></ul></li><li></li><li><a href="module-subQuestionnaire.html">subQuestionnaire</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subQuestionnaire.html#~getQuestionnaire">getQuestionnaire</a></li><li data-type='method' style='display: none;'><a href="module-subQuestionnaire.html#~getQuestionnaire">getQuestionnaire</a></li></ul></li><li></li><li><a href="module-subSwitchBot.html">subSwitchBot</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~SwitchBotConfigSaved">SwitchBotConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~SwitchBotConfigSaved">SwitchBotConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~SwitchBotPlug">SwitchBotPlug</a></li><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~SwitchBotPlug">SwitchBotPlug</a></li><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~btnSwitchBotConfigSet_Click">btnSwitchBotConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~btnSwitchBotConfigSet_Click">btnSwitchBotConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~renewCanvasSwitchBot">renewCanvasSwitchBot</a></li><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~renewCanvasSwitchBot">renewCanvasSwitchBot</a></li><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~renewFacilitiesSwitchBot">renewFacilitiesSwitchBot</a></li><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~renewFacilitiesSwitchBot">renewFacilitiesSwitchBot</a></li><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~renewRoomEnvSwitchBot">renewRoomEnvSwitchBot</a></li><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~renewRoomEnvSwitchBot">renewRoomEnvSwitchBot</a></li><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~renewSwitchBotConfigView">renewSwitchBotConfigView</a></li><li data-type='method' style='display: none;'><a href="module-subSwitchBot.html#~renewSwitchBotConfigView">renewSwitchBotConfigView</a></li></ul></li><li></li><li><a href="module-subSystem.html">subSystem</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subSystem.html#~SystemConfigSaved">SystemConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subSystem.html#~SystemConfigSaved">SystemConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subSystem.html#~URLopen">URLopen</a></li><li data-type='method' style='display: none;'><a href="module-subSystem.html#~URLopen">URLopen</a></li><li data-type='method' style='display: none;'><a href="module-subSystem.html#~btnNetworkConfigSet_Click">btnNetworkConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subSystem.html#~btnNetworkConfigSet_Click">btnNetworkConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subSystem.html#~btnSystemConfigSet_Click">btnSystemConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subSystem.html#~btnSystemConfigSet_Click">btnSystemConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subSystem.html#~renewSystemConfigView">renewSystemConfigView</a></li><li data-type='method' style='display: none;'><a href="module-subSystem.html#~renewSystemConfigView">renewSystemConfigView</a></li></ul></li><li></li><li><a href="module-subToast.html">subToast</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subToast.html#~addToast">addToast</a></li><li data-type='method' style='display: none;'><a href="module-subToast.html#~addToast">addToast</a></li><li data-type='method' style='display: none;'><a href="module-subToast.html#~redrawToast">redrawToast</a></li><li data-type='method' style='display: none;'><a href="module-subToast.html#~redrawToast">redrawToast</a></li></ul></li><li></li><li><a href="module-subUser.html">subUser</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-subUser.html#~UserConfigSaved">UserConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subUser.html#~UserConfigSaved">UserConfigSaved</a></li><li data-type='method' style='display: none;'><a href="module-subUser.html#~btnUserProfileSet_Click">btnUserProfileSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subUser.html#~btnUserProfileSet_Click">btnUserProfileSet_Click</a></li><li data-type='method' style='display: none;'><a href="module-subUser.html#~renewUserConfigView">renewUserConfigView</a></li><li data-type='method' style='display: none;'><a href="module-subUser.html#~renewUserConfigView">renewUserConfigView</a></li></ul></li><li></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">public/js/subOmron.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>//////////////////////////////////////////////////////////////////////
+//	Copyright (C) SUGIMURA Lab. 2022.08.30
+//	omron関係の処理
+//////////////////////////////////////////////////////////////////////
+/**
+ * @module subOmron
+ */
+'use strict'
+
+
+////////////////////////////////////////////////////////////////////////////////
+// HTMLロードしたら準備
+window.addEventListener('DOMContentLoaded', function () {
+	console.dir('## DOMContentLoaded subOmron.js');
+
+	let facilitiesOmron; // 宅内情報（omron）
+	let H3Omron = document.getElementById('H3Omron');
+	let divOmronAbst	= document.getElementById('divOmronAbst');
+	let divOmronSuggest = document.getElementById('divOmronSuggest');
+
+	// config
+	let inOmronUse        = document.getElementById('inOmronUse'); // omron; use or not check box
+	let inOmronPlace      = document.getElementById('inOmronPlace'); // omron; place
+	let btnOmronConfigSet = document.getElementById('btnOmronConfigSet'); // 設定ボタン
+
+	// header
+	let spanOmronPlace  = document.getElementById('spanOmronPlace');
+	let spanOmronTime   = document.getElementById('spanOmronTime');
+
+	// abst data
+	let spanOmronTemperature     = document.getElementById('spanOmronTemperature');
+	let spanOmronHumidity        = document.getElementById('spanOmronHumidity');
+	let spanOmronPressure        = document.getElementById('spanOmronPressure');
+	let spanOmronNoise           = document.getElementById('spanOmronNoise');
+	let spanOmronAnbientLight    = document.getElementById('spanOmronAnbientLight');
+	let spanOmronDiscomfortIndex = document.getElementById('spanOmronDiscomfortIndex');
+	let spanOmronHeatStroke      = document.getElementById('spanOmronHeatStroke');
+	let spanOmronHeat_stroke_desc = document.getElementById('spanOmronHeat_stroke_desc');
+
+	//----------------------------------------------------------------------------------------------
+	/** 
+	 * @func renewOmron
+	 * @desc Omron デバイス情報のrenew
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.renewOmron = function( arg ) {
+		facilitiesOmron = arg;
+
+		// console.log('renewOmron() facilitiesOmron:', facilitiesOmron );  // ログ5s毎なので多すぎるから、必要な時だけ有効にして
+
+		if( inOmronUse.checked == false || Object.keys(facilitiesOmron).length === 0 ) {
+			return;
+		}
+
+		// 熱中症警戒度の意味
+		let heat_stroke_color = '';
+		let heat_stroke_desc = '';
+		if (facilitiesOmron.heat_stroke &lt; 25) {
+			heat_stroke_color = 'has-background-success-light';
+			heat_stroke_desc = '注意';
+		} else if (facilitiesOmron.heat_stroke &lt; 28) {
+			heat_stroke_color = 'has-background-warning-light';
+			heat_stroke_desc = '警戒';
+		} else if (facilitiesOmron.heat_stroke &lt; 31) {
+			heat_stroke_color = 'has-background-warning';
+			heat_stroke_desc = '厳重警戒';
+		} else {
+			heat_stroke_color = 'has-background-danger';
+			heat_stroke_desc = '危険';
+		}
+
+		spanOmronPlace.innerHTML = inOmronPlace.value;
+		spanOmronTime.innerHTML  = facilitiesOmron.time;
+
+		spanOmronTemperature.innerHTML     = facilitiesOmron.temperature;
+		spanOmronHumidity.innerHTML        = facilitiesOmron.humidity;
+		spanOmronPressure.innerHTML        = facilitiesOmron.pressure;
+		spanOmronNoise.innerHTML           = facilitiesOmron.noise;
+		spanOmronAnbientLight.innerHTML    = facilitiesOmron.anbient_light;
+		spanOmronDiscomfortIndex.innerHTML = facilitiesOmron.discomfort_index;
+		spanOmronHeatStroke.innerHTML      = facilitiesOmron.heat_stroke;
+		spanOmronHeat_stroke_desc.innerHTML = heat_stroke_desc;
+	};
+
+
+	/** 
+	 * @func disconnectedOmron
+	 * @desc Omron USBと切断
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.disconnectedOmron = function () {
+		H3Omron.style.display = 'none';
+		canRoomEnvChartOmron.style.display = 'none';
+		divOmronSuggest.style.display = 'block';
+		inOmronUse.checked = false;
+	};
+
+	/** 
+	 * @func omronDocSectionClicked
+	 * @desc 左のボタンからグラフ制御
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.omronDocSectionClicked = function (t) {
+		// console.log('t:', t);
+
+		console.log('data:', myChartOmron._metasets);
+		myChartOmron._metasets.forEach( (v) => {
+			if( v.label != t ) {
+				v.hidden = true;
+			}else{
+				v.hidden = false;
+			}
+		});
+		myChartOmron.update();
+	};
+
+
+	//----------------------------------------------------------------------------------------------
+	// Omron config
+
+	/** 
+	 * @func btnOmronConfigSet_Click
+	 * @desc 設定ボタン
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.btnOmronConfigSet_Click = function(checkBox) {
+		if( inOmronUse.checked == false ) {
+			renewOmron();
+			window.ipc.OmronStop( inOmronPlace.value );  // OWMの監視をstopする
+			return; // falseなら外すだけ
+		}
+
+		window.ipc.OmronUse( inOmronPlace.value );
+
+	};
+
+	/** 
+	 * @func OmronConfigSaved
+	 * @desc 設定完了通知
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.OmronConfigSaved = function () {
+		btnOmronConfigSet.disabled    = false;
+		btnOmronConfigSet.textContent = '設定';
+
+		window.addToast( 'Info', 'Omron 設定を保存しました。');
+	};
+
+	/** 
+	 * @func renewOmronConfigView
+	 * @desc mainプロセスから設定値をもらったので画面を更新
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.renewOmronConfigView = function( arg ) {
+		inOmronUse.checked = arg.enabled;
+		inOmronPlace.value = arg.place;
+
+		if( inOmronUse.checked ) { // 利用するので表示する
+			H3Omron.style.display = 'block';
+			divOmronAbst.style.display = 'block';
+			canRoomEnvChartOmron.style.display = 'block';
+			divOmronSuggest.style.display = 'none';
+		}else{
+			H3Omron.style.display = 'none';
+			divOmronAbst.style.display = 'none';
+			canRoomEnvChartOmron.style.display = 'none';
+			divOmronSuggest.style.display = 'block';
+		}
+	};
+
+
+	//----------------------------------------------------------------------------------------------
+	// Omron chart
+
+	// 内部変数
+	let oTemperature = [];
+	let oHumidity = [];
+	let oPressure = [];
+	let oAnbientLight = [];
+	let oNoise = [];
+	// let oCO2 = [];  // 表示しない
+	// let oTVOC = []; //表示しない
+	let oDiscomfortIndex = [];
+	let oHeatStroke = [];
+
+	/*
+	const LABEL_X = [
+		'00:00', '00:15', '00:30', '00:45', '01:00', '01:15', '01:30', '01:45', '02:00', '02:15', '02:30', '02:45',
+		'03:00', '03:15', '03:30', '03:45', '04:00', '04:15', '04:30', '04:45', '05:00', '05:15', '05:30', '05:45',
+		'06:00', '06:15', '06:30', '06:45', '07:00', '07:15', '07:30', '07:45', '08:00', '08:15', '08:30', '08:45',
+		'09:00', '09:15', '09:30', '09:45', '10:00', '10:15', '10:30', '10:45', '11:00', '11:15', '11:30', '11:45',
+		'12:00', '12:15', '12:30', '12:45', '13:00', '13:15', '13:30', '13:45', '14:00', '14:15', '14:30', '14:45',
+		'15:00', '15:15', '15:30', '15:45', '16:00', '16:15', '16:30', '16:45', '17:00', '17:15', '17:30', '17:45',
+		'18:00', '18:15', '18:30', '18:45', '19:00', '19:15', '19:30', '19:45', '20:00', '20:15', '20:30', '20:45',
+		'21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45', '23:00', '23:15', '23:30', '23:45', '24:00']; */
+
+	/** 
+	 * @func newLegendClickHandler
+	 * @desc newLegendClickHandler
+	 * @param {void}
+	 * @return {void}
+	 */
+	let newLegendClickHandler = function(e, legendItem) {
+		let index = legendItem.datasetIndex;
+		let ci = this.chart;
+		let meta = ci.getDatasetMeta(index);
+
+		meta.hidden = meta.hidden === null? !ci.data.datasets[index].hidden : null;
+
+		ci.update();	// データセットを非表示にしました。チャートを再表示してください。
+
+		console.log( 'newLegendClickHandler() legendItem:', legendItem );
+
+		switch( legendItem.text ) {
+			case "温度 [℃]":
+			if( legendItem.hidden ) {
+				const omronDocTempSec = document.getElementById('omronDocTempSec');
+				omronDocTempSec.classList.add("temp_color");
+				omronDocTempSec.classList.remove("disabled_color");
+			}else{
+				const omronDocTempSec = document.getElementById('omronDocTempSec');
+				omronDocTempSec.classList.remove("temp_color");
+				omronDocTempSec.classList.add("disabled_color");
+			}
+			break;
+
+			case "湿度 [%RH]":
+			if( legendItem.hidden ) {
+				const omronDocHumSec = document.getElementById('omronDocHumSec');
+				omronDocHumSec.classList.add("hum_color");
+				omronDocHumSec.classList.remove("disabled_color");
+			}else{
+				const omronDocHumSec = document.getElementById('omronDocHumSec');
+				omronDocHumSec.classList.remove("hum_color");
+				omronDocHumSec.classList.add("disabled_color");
+			}
+			break;
+
+			case "気圧 [hPa]":
+			if( legendItem.hidden ) {
+				const omronDocPressSec = document.getElementById('omronDocPressSec');
+				omronDocPressSec.classList.add("pressure_color");
+				omronDocPressSec.classList.remove("disabled_color");
+			}else{
+				const omronDocPressSec = document.getElementById('omronDocPressSec');
+				omronDocPressSec.classList.remove("pressure_color");
+				omronDocPressSec.classList.add("disabled_color");
+			}
+			break;
+
+			case "光 [lx]":
+			if( legendItem.hidden ) {
+				const omronDocAnbientSec = document.getElementById('omronDocAnbientSec');
+				omronDocAnbientSec.classList.add("anbientLight_color");
+				omronDocAnbientSec.classList.remove("disabled_color");
+			}else{
+				const omronDocAnbientSec = document.getElementById('omronDocAnbientSec');
+				omronDocAnbientSec.classList.remove("anbientLight_color");
+				omronDocAnbientSec.classList.add("disabled_color");
+			}
+			break;
+
+			case "騒音 [dB]":
+			if( legendItem.hidden ) {
+				const omronDocNoiseSec = document.getElementById('omronDocNoiseSec');
+				omronDocNoiseSec.classList.add("noise_color");
+				omronDocNoiseSec.classList.remove("disabled_color");
+			}else{
+				const omronDocNoiseSec = document.getElementById('omronDocNoiseSec');
+				omronDocNoiseSec.classList.remove("noise_color");
+				omronDocNoiseSec.classList.add("disabled_color");
+			}
+			break;
+
+			// eCO2は数値が頼れないので表示しない
+			case "eCO2 [ppm]":
+			/*
+			if( legendItem.hidden ) {
+				const omronDocCo2Sec = document.getElementById('omronDocCo2Sec');
+				omronDocCo2Sec.classList.add("co2_color");
+				omronDocCo2Sec.classList.remove("disabled_color");
+			}else{
+				const omronDocCo2Sec = document.getElementById('omronDocCo2Sec');
+				omronDocCo2Sec.classList.remove("co2_color");
+				omronDocCo2Sec.classList.add("disabled_color");
+			}
+			*/
+			break;
+
+			// eTVOCはあまり参考にならない
+			case "eTVOC [ppb]":
+			/*
+			if( legendItem.hidden ) {
+				const omronDocTvocSec = document.getElementById('omronDocTvocSec');
+				omronDocTvocSec.classList.add("tvoc_color");
+				omronDocTvocSec.classList.remove("disabled_color");
+			}else{
+				const omronDocTvocSec = document.getElementById('omronDocTvocSec');
+				omronDocTvocSec.classList.remove("tvoc_color");
+				omronDocTvocSec.classList.add("disabled_color");
+			}
+			*/
+			break;
+
+			case "不快指数":
+			if( legendItem.hidden ) {
+				const omronDocDiscomfortSec = document.getElementById('omronDocDiscomfortSec');
+				omronDocDiscomfortSec.classList.add("discomfort_color");
+				omronDocDiscomfortSec.classList.remove("disabled_color");
+			}else{
+				const omronDocDiscomfortSec = document.getElementById('omronDocDiscomfortSec');
+				omronDocDiscomfortSec.classList.remove("discomfort_color");
+				omronDocDiscomfortSec.classList.add("disabled_color");
+			}
+			break;
+
+			case "熱中症警戒度":
+			if( legendItem.hidden ) {
+				const omronDocHeatStrokeSec = document.getElementById('omronDocHeatStrokeSec');
+				omronDocHeatStrokeSec.classList.add("heatStroke_color");
+				omronDocHeatStrokeSec.classList.remove("disabled_color");
+			}else{
+				const omronDocHeatStrokeSec = document.getElementById('omronDocHeatStrokeSec');
+				omronDocHeatStrokeSec.classList.remove("heatStroke_color");
+				omronDocHeatStrokeSec.classList.add("disabled_color");
+			}
+			break;
+
+			default:
+			break;
+		}
+	};
+
+
+	// HTML内部とリンク
+	const canRoomEnvChartOmron = document.getElementById('canRoomEnvChartOmron');  // 部屋環境グラフ
+	const ctxOmron = canRoomEnvChartOmron.getContext('2d');
+	let myChartOmron = null;
+
+	// 複数軸用の、軸オプション
+	let complexChartOption = {
+		responsive: true,
+		plugins: {
+			legend: {
+				display: true,
+				position: 'top',
+				onClick: newLegendClickHandler
+			}
+		},
+		scales: {
+			"y-axis-left": {
+				type: "linear",   // linear固定
+				position: "left", // どちら側に表示される軸か？
+				// suggestedMax: 110,
+				min: 0,
+				title: { display: true, text: 'Temperature[℃], Humidity[%RH], Noize[dB], DiscomfortIndex, HeatStroke' }
+			},
+			"y-axis-right": {
+				type: "linear",
+				position: "right",
+				// suggestedMax: 1100,
+				min: 0,
+				title: { display: true, text: 'Air-pressure[hPa], Anbient Light[lx], eTOC[ppb]' }
+				// title: { display: true, text: 'Air-pressure[hPa], Anbient Light[lx], CO2[ppm], eTOC[ppb]' }  // CO2表示しない
+			},
+			"x": {
+				type: 'time',
+				time: {
+					unit: 'minutes',
+					parser: 'HH:mm',
+					displayFormats: {
+						minute: 'HH:mm',
+						hour: 'HH:mm'
+					}
+				},
+				min: '00:00',
+				max: '24:00',
+				ticks: {
+					autoSkip: false,
+					maxTicksLimit: 49,   // 24h * 2 + 1
+					maxRotation: 90,
+					callback: function( value, index, ticks ) {
+						return moment.tz(value, 'Asia/Tokyo').format('HH:mm');
+					}
+				}
+			}
+		}
+	};
+
+	// 表示データ（動的）
+	let datasetsOmron = [];
+
+	/** 
+	 * @func renewCanvasOmron
+	 * @desc renewCanvasOmron
+	 * @param {void}
+	 * @return {void}
+	 */
+	let renewCanvasOmron = function() {
+		canRoomEnvChartOmron.style.display = 'block';
+
+		if( myChartOmron ) {
+			// すでにチャートがあればアップデートだけ
+			myChartOmron.data.datasets = datasetsOmron;
+			myChartOmron.update();
+		}else{
+			// 初回起動はチャートオブジェクトを作る
+			myChartOmron = new Chart( ctxOmron, {
+				type: 'line',
+				data: {
+					// labels: LABEL_X,
+					datasets: datasetsOmron
+				},
+				options: complexChartOption
+			});
+		}
+	};
+
+
+	//////////////////////////////////////////////////////////////////
+	/** 
+	 * @func renewRoomEnvOmron
+	 * @desc データをもらって画面更新
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.renewRoomEnvOmron = function ( _envDataArray ) {
+		let envDataArray = JSON.parse( _envDataArray );
+		// console.log( 'window.renewRoomEnvOnron()', envDataArray );
+
+		datasetsOmron = [];
+
+		if( envDataArray ) {
+			oTemperature = [];
+			oHumidity = [];
+			oPressure = [];
+			oAnbientLight = [];
+			oNoise = [];
+			// oCO2 = [];  // 表示しない
+			// oTVOC = [];
+			oDiscomfortIndex = [];
+			oHeatStroke = [];
+
+			for( const d of envDataArray ) {
+				oTemperature.push( { x:moment(d.time), y:d.temperature} );
+				oHumidity.push( { x:moment(d.time), y:d.humidity} );
+				oPressure.push( { x:moment(d.time), y:d.pressure} );
+				oAnbientLight.push( { x:moment(d.time), y:d.anbientLight} );
+				oNoise.push( { x:moment(d.time), y:d.noise} );
+				// oCO2.push( { x:moment(d.time), y:d.CO2} );  // 表示しない
+				// oTVOC.push( { x:moment(d.time), y:d.TVOC} ); // 表示しない
+				oDiscomfortIndex.push( { x:moment(d.time), y:d.discomfortIndex} );
+				oHeatStroke.push( { x:moment(d.time), y:d.heatStroke} );
+			}
+
+			datasetsOmron.push(
+				{ label: '温度 [℃]',    type: 'line', data: oTemperature, borderColor: "rgba(255,178,178,1.0)", backgroundColor: "rgba(255,178,178,1.0)",
+					radius:1.5, borderWidth:1, yAxisID: 'y-axis-left', xAxisID:'x', borderDash: [2,1] },
+				{ label: '湿度 [%RH]',   type: 'line', data: oHumidity, borderColor: "rgba(255,178,255,1.0)", backgroundColor: "rgba(255,178,255,1.0)",
+					radius:1.5, borderWidth:1, yAxisID: 'y-axis-left',  xAxisID:'x', borderDash: [2,1]},
+				{ label: '気圧 [hPa]',   type: 'line', data: oPressure, borderColor: "rgba(178,178,255,1.0)", backgroundColor: "rgba(178,178,255,1.0)",
+					radius:1.5, borderWidth:1, yAxisID: 'y-axis-right', xAxisID:'x', borderDash: [2,1]},
+				{ label: '光 [lx]',      type: 'line', data: oAnbientLight, borderColor: "rgba(255,196,137,1.0)", backgroundColor: "rgba(178,178,255,1.0)",
+					radius:1.5, borderWidth:1, yAxisID: 'y-axis-right', xAxisID:'x', borderDash: [2,1]},
+				{ label: '騒音 [dB]',    type: 'line', data: oNoise, borderColor: "rgba(70,70,220,1.0)", backgroundColor: "rgba(70,70,220,1.0)",
+					radius:1.5, borderWidth:1, yAxisID: 'y-axis-left', xAxisID:'x', borderDash: [2,1] },
+				// eCO2は数値が頼れないので表示しない
+				// { label: 'eCO2 [ppm]',   type: 'line', data: oCO2, borderColor: "rgba(50,100,0,1.0)", backgroundColor: "rgba(50,100,0,1.0)",
+				// radius:1.5, borderWidth:1, yAxisID: 'y-axis-right', xAxisID:'x', borderDash: [2,1]},
+				// { label: 'eTVOC [ppb]',  type: 'line', data: oTVOC, borderColor: "rgba(178,255,255,1.0)", backgroundColor: "rgba(255,137,196,1.0)",
+				// radius:1.5, borderWidth:1, yAxisID: 'y-axis-right', xAxisID:'x', borderDash: [2,1]},
+				{ label: '不快指数',     type: 'line', data: oDiscomfortIndex, borderColor: "rgba(196,137,255,1.0)", backgroundColor: "rgba(150,81,77,1.0)",
+					radius:1.5, borderWidth:1, yAxisID: 'y-axis-left', xAxisID:'x', borderDash: [2,1]},
+				{ label: '熱中症警戒度', type: 'line', data: oHeatStroke, borderColor: "rgba(137,196,255,1.0)", backgroundColor: "rgba(44,79,84,1.0)",
+					radius:1.5, borderWidth:1, yAxisID: 'y-axis-left', xAxisID:'x', borderDash: [2,1] }
+				);
+		}
+
+		renewCanvasOmron();
+	};
+
+} );
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Tue May 30 2023 17:02:24 GMT+0900 (日本標準時) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

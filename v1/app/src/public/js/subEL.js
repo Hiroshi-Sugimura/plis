@@ -10,12 +10,6 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
-/**
- * Add two numbers together. (JSDoc test)
- * @param {number} a - The first number. (JSDoc test)
- * @param {number} b - The second number. (JSDoc test)
- * @returns {number} The sum of the two numbers. (JSDoc test)
- */
 window.addEventListener('DOMContentLoaded', function () {
 	console.log('## DOMContentLoaded subEL.js');
 
@@ -57,6 +51,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
+	/** 
+	 * @func renewIkeaConfigView
+	 * @desc renewIkeaConfigView
+	 * @param {void}
+	 * @return {void}
+	 */
 	// EL デバイス情報のrenew
 	// mainからの情報で，EL関係のhtmlを変更する
 	window.renewFacilitiesEL = function (arg) { //facilitiesHue = json = arg; // 機器情報確保
@@ -140,7 +140,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	// ECHONET Lite Config
+	/** 
+	 * @func window.btnELConfigSet_Click
+	 * @desc ECHONET Lite Config
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.btnELConfigSet_Click = function () {
 		console.log('window.btnELConfigSet_Click() inELUse:', inELUse.checked);
 		btnELConfigSet.disabled = false;
@@ -157,7 +162,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	// 設定完了通知
+	/** 
+	 * @func window.ELConfigSaved
+	 * @desc 設定完了通知
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.ELConfigSaved = function () {
 		btnELConfigSet.disabled = false;
 		btnELConfigSet.textContent = '設定';
@@ -165,7 +175,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast('Info', 'EL 設定を保存しました。');
 	};
 
-	// mainプロセスから設定値をもらったので画面を更新
+	/** 
+	 * @func window.renewELConfigView
+	 * @desc mainプロセスから設定値をもらったので画面を更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewELConfigView = function (arg) {
 		inELUse.checked = arg.enabled;
 
@@ -186,8 +201,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-	// ECHONET Lite Conntrol
-	// マルチキャストボタン
+	/** 
+	 * @func multicastSearch.addEventListener
+	 * @desc ECHONET Lite Conntrol, マルチキャストボタン
+	 * @param {void}
+	 * @return {void}
+	 */
 	multicastSearch.addEventListener('click', function () {
 		window.ipc.ELsearch();
 	});
@@ -196,13 +215,24 @@ window.addEventListener('DOMContentLoaded', function () {
 	//----------------------------------------------------------------------------------------------
 	// サブメータ関連
 
-	// R相、T相を数値に
+	/** 
+	 * @func convRT
+	 * @desc R相、T相を数値に
+	 * @param {void}
+	 * @return {void}
+	 */
 	let convRT = function (str) {
 		let n = str.split('[')[0];
 		return parseFloat(n).toFixed(2);
 	};
 
 
+	/** 
+	 * @func window.renewSubESM
+	 * @desc window.renewSubESM
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewSubESM = function (arg) {
 		console.log('window.renewSubESM() arg:', arg);
 		facilitiesSubESM = arg;
@@ -355,11 +385,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	let datasetsSubESM = [];
 
 	/**
- * Add two numbers together. (JSDoc test)
- * @param {number} a - The first number. (JSDoc test)
- * @param {number} b - The second number. (JSDoc test)
- * @returns {number} The sum of the two numbers. (JSDoc test)
- */
+	 * @func renewCanvasSubESM
+	 * @desc renewCanvasSubESM
+	 * @param {number} a - The first number. (JSDoc test)
+	 * @param {number} b - The second number. (JSDoc test)
+	 * @returns {number} The sum of the two numbers. (JSDoc test)
+	 */
 	let renewCanvasSubESM = function () {
 		// タイトルとチャート表示
 		divSubESMH3.style.display = 'block';
@@ -382,7 +413,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//////////////////////////////////////////////////////////////////
-	// データをもらって画面更新
+	/** 
+	 * @func window.renewEnergySubmeter
+	 * @desc データをもらって画面更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewEnergySubmeter = function (_envDataArray) {
 		// console.log('window.renewEnergySubmeter(); _envDataArray', _envDataArray);
 		let envDataArray = JSON.parse(_envDataArray);

@@ -1,7 +1,10 @@
 //////////////////////////////////////////////////////////////////////
 //	Copyright (C) SUGIMURA Lab. 2022.08.30
-//	netatmo関係の処理
+//	OpenWeatherMap 関係の処理
 //////////////////////////////////////////////////////////////////////
+/**
+ * @module subOwm
+ */
 'use strict'
 
 
@@ -26,8 +29,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-	// OWM デバイス情報のrenew
-	// OpenWeatherMap
+	/** 
+	 * @func renewOwm
+	 * @desc OpenWeatherMap デバイス情報のrenew
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewOwm = function( arg ) {
 		console.log('window.renewOwm() arg:', arg);
 		weather = arg;
@@ -77,8 +84,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-	// Open Weather Map
-	// 設定ボタン
+	/** 
+	 * @func btnOwmConfigSet_Click
+	 * @desc 設定ボタン
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.btnOwmConfigSet_Click = function() {
 		btnOwmConfigSet.disabled = true;
 		btnOwmConfigSet.textContent = '保存中…';
@@ -98,7 +109,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
-	// 設定完了
+	/** 
+	 * @func OwmConfigSaved
+	 * @desc 設定完了
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.OwmConfigSaved = function () {
 		btnOwmConfigSet.disabled    = false;
 		btnOwmConfigSet.textContent = '設定';
@@ -106,7 +122,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast( 'Info', 'OWM 設定を保存しました。');
 	};
 
-	// mainプロセスから設定値をもらったので画面を更新
+	/** 
+	 * @func renewOwmConfigView
+	 * @desc mainプロセスから設定値をもらったので画面を更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewOwmConfigView = function( arg ) {
 		btnOwmConfigSet.disabled    = false;
 		btnOwmConfigSet.textContent = '設定';
@@ -127,7 +148,5 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	// OWM chart
-
-
 
 } );

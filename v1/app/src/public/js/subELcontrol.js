@@ -1,6 +1,9 @@
 //////////////////////////////////////////////////////////////////////
 //	Copyright (C) SUGIMURA Lab. 2022.08.26
 //////////////////////////////////////////////////////////////////////
+/**
+ * @module subELcontrol
+ */
 'use strict'
 
 
@@ -13,7 +16,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	////////////////////////////////////////////////////////////////////////////////
-	// ECHONET Lite, Each control interface
+	/** 
+	 * @func window.createControlELButton
+	 * @desc ECHONET Lite, Each control interface
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.createControlELButton = function (_facilitiesEL, ip, eoj) {
 		facilitiesEL = _facilitiesEL; // ボタン更新とともに、facilitiesELも更新しておく
 
@@ -363,7 +371,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////
-	// GUIイベント，関数で閉じてしまっているので，Global変数のWindowからアクセスできるようにしておく
+	/** 
+	 * @func window.ELSettings
+	 * @desc GUIイベント，関数で閉じてしまっているので，Global変数のWindowからアクセスできるようにしておく
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.ELSettings = function (ip, obj) {
 		let eoj = obj.split(/\(|\)/)[1];  // マルかっこで分割
 		console.log('ELSettings ip:', ip, 'obj:', obj, 'eoj:', eoj);
@@ -403,7 +416,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		ELSettingsDialog.showModal();
 	};
 
-	// 設定更新ボタン
+	/** 
+	 * @func window.ELUpdateSettings
+	 * @desc 設定更新ボタン
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.ELUpdateSettings = function (ip, eoj) {
 		console.log("window.ELUpdateSettings");
 		let newLocation = document.getElementById('UpdateInstLocation');
@@ -411,20 +429,35 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	// 送信ボタンが押された
+	/** 
+	 * @func window.ELSendTest
+	 * @desc 送信ボタンが押された
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.ELSendTest = function () {
 		let msg = "10810000" + eltestSEOJ.value + eltestDEOJ.value + eltestESV.value + "01" + eltestEPC.value + eltestDETAILs.value;
 		window.ipc.Elsend(toIP.value, msg);
 	};
 
-	// 電源ボタンが押された
+	/** 
+	 * @func window.ELpowButton
+	 * @desc 電源ボタンが押された
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.ELpowButton = function (btn) {
 		let cmd = btn.value.split(",");
 		let msg = "1081000005ff01" + cmd[1] + "6101" + cmd[2] + "01" + cmd[3];
 		window.ipc.Elsend(cmd[0], msg);
 	};
 
-	// 色変化
+	/** 
+	 * @func colorButton
+	 * @desc 色変化
+	 * @param {void}
+	 * @return {void}
+	 */
 	let colorButton = function (btn) {
 		let cmd = btn.name.split(",");
 		let col = btn.value;
@@ -433,13 +466,24 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.ipc.ELsend(cmd[0], msg);
 	};
 
+	/** 
+	 * @func window.ELLightingScineButton
+	 * @desc window.ELLightingScineButton
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.ELLightingScineButton = function (btn) {
 		let cmd = btn.value.split(",");
 		let msg = "1081000005ff01" + cmd[1] + "6101" + cmd[2] + "01" + cmd[3];
 		window.ipc.Elsend(cmd[0], msg);
 	};
 
-	// 設置場所変更
+	/** 
+	 * @func window.ELUpdateLocation
+	 * @desc 設置場所変更
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.ELUpdateLocation = function (ip, eoj, location) {
 		console.log(ip, eoj, location);
 		let msg = "1081000005ff01" + eoj + "61018101" + location;
@@ -447,7 +491,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		// window.ipc.ElsendOPC1(ip, [0x05,0xff,0x01], eoj, 0x61, 0x81, location );  // HTML内部の文字を数値&配列にするのがめんどい
 	};
 
-	// エアコンの詳細コントロールダイアログを表示
+	/** 
+	 * @func window.ELAirconShowControlDialog
+	 * @desc エアコンの詳細コントロールダイアログを表示
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.ELAirconShowControlDialog = function (ip, obj) {
 		let eoj = obj.split(/\(|\)/)[1];  // 丸括弧 = Parenthesisで分割
 		// console.log('ELAirconShowControlDialog:', ip, eoj);
@@ -478,7 +527,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		ELSettingsDialog.showModal();
 	}
 
-	// エアコンのモード切り替え（詳細コントロールダイアログから呼ばれる）
+	/** 
+	 * @func window.ELAAirconChangeMode
+	 * @desc エアコンのモード切り替え（詳細コントロールダイアログから呼ばれる）
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.ELAAirconChangeMode = function (radio, ip, eoj) {
 		// console.log(ip, eoj, radio.value);
 		let msg = "1081000005ff01" + eoj + "6101B001";
@@ -497,7 +551,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	}
 
 
-	// 電源ボタンが押された
+	/** 
+	 * @func window.ELpowButton
+	 * @desc 電源ボタンが押された
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.ELpowButton = function (btn) {
 		let cmd = btn.value.split(",");
 		let msg = "1081000005ff01" + cmd[1] + "6101" + cmd[2] + "01" + cmd[3];

@@ -2,6 +2,9 @@
 //	Copyright (C) SUGIMURA Lab. 2022.11.28
 //	Ikea関係の処理
 //////////////////////////////////////////////////////////////////////
+/**
+ * @module subIkea
+ */
 'use strict'
 
 
@@ -28,7 +31,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	let inIkeaPsk        = document.getElementById('inIkeaPsk');
 	let btnIkeaConfigSet = document.getElementById('btnIkeaConfigSet');
 
-	// mainからの情報で，ikea関係のhtmlを変更する
+	/** 
+	 * @func renewFacilitiesIkea
+	 * @desc mainからの情報で，ikea関係のhtmlを変更する
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewFacilitiesIkea = function ( arg ) { //facilitiesIkea = json = arg; // 機器情報確保
 		facilitiesIkea = arg;
 		// console.log( 'window.renewFacilitiesIkea() arg:', arg );
@@ -89,12 +97,22 @@ window.addEventListener('DOMContentLoaded', function () {
 		divControlIkea.innerHTML = doc;
 	}
 
-	// configタブのデバッグログ
+	/** 
+	 * @func renewIkeaLog
+	 * @desc configタブのデバッグログ
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewIkeaLog = function( text ) {
 		txtIkeaLog.value = text;
 	}
 
-	// ikeaとリンクしたのでGUI表示する
+	/** 
+	 * @func ikeaLinked
+	 * @desc ikeaとリンクしたのでGUI表示する
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.ikeaLinked = function () {
 		if( H2ControlIkea.style.display == 'none' ) {
 			H2ControlIkea.style.display = '';
@@ -108,7 +126,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	// Ikea
+	/** 
+	 * @func IkeaPowButton
+	 * @desc IkeaPowButton
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.IkeaPowButton = function (btn) {
 		let cmd = btn.value.split(",");
 
@@ -127,7 +150,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
-	// 設定ボタン
+	/** 
+	 * @func btnIkeaConfigSet_Click
+	 * @desc 設定ボタン
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.btnIkeaConfigSet_Click = function () {
 		// console.log( 'window.ikeaUseCheck() checkBox:', checkBox.checked );
 
@@ -149,7 +177,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	// 設定完了通知
+	/** 
+	 * @func IkeaConfigSaved
+	 * @desc 設定完了通知
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.IkeaConfigSaved = function () {
 		btnIkeaConfigSet.disabled    = false;
 		btnIkeaConfigSet.textContent = '設定';
@@ -157,7 +190,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast( 'Info', 'IKEA 設定を保存しました。');
 	};
 
-	// mainプロセスから設定値をもらったので画面を更新
+	/** 
+	 * @func renewIkeaConfigView
+	 * @desc renewIkeaConfigView
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewIkeaConfigView = function( arg ) {
 		inIkeaUse.checked = arg.enabled;
 		inIkeaSecurityCode.value = arg.securityCode;

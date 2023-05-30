@@ -2,6 +2,9 @@
 //	Copyright (C) SUGIMURA Lab. 2022.08.26
 //	toast関係の処理
 //////////////////////////////////////////////////////////////////////
+/**
+ * @module subToast
+ */
 'use strict'
 
 
@@ -14,7 +17,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	let divToast        = document.getElementById('divToast');
 	let toastMessages   = [];
 
-	// トーストする文字列をキューイングする、インタフェース
+	/** 
+	 * @func addToast
+	 * @desc トーストする文字列をキューイングする、インタフェース
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.addToast = function( type, message ) {
 		let t = '';
 
@@ -37,8 +45,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		}, 3000);
 	};
 
-
-	// トーストは表示タイミングで位置合わせをする、内部関数
+	/** 
+	 * @func redrawToast
+	 * @desc トーストは表示タイミングで位置合わせをする、内部関数
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.redrawToast = function() {
 		let disp = "";
 		// console.dir( toastMessages );
