@@ -3,7 +3,7 @@
 //	System Config関係の処理
 //////////////////////////////////////////////////////////////////////
 /**
- * @module subSystem
+ * @namespace subSystem
  */
 'use strict'
 

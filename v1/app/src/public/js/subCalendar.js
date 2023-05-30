@@ -3,7 +3,7 @@
 //	Calendar関係の処理
 //////////////////////////////////////////////////////////////////////
 /**
- * @module subCalendar
+ * @namespace subCalendar
  */
 'use strict'
 

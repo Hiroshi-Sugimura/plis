@@ -3,7 +3,7 @@
 //	SwitchBot関係の処理
 //////////////////////////////////////////////////////////////////////
 /**
- * @module subSwitchBot
+ * @namespace subSwitchBot
  */
 'use strict'
 

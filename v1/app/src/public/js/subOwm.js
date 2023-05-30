@@ -3,7 +3,7 @@
 //	OpenWeatherMap 関係の処理
 //////////////////////////////////////////////////////////////////////
 /**
- * @module subOwm
+ * @namespace subOwm
  */
 'use strict'
 

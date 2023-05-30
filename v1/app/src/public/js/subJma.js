@@ -3,7 +3,7 @@
 //	気象庁（JMA, Japan Meteorological Agency）関係の処理
 //////////////////////////////////////////////////////////////////////
 /**
- * @module subJma
+ * @namespace subJma
  */
 'use strict'
 

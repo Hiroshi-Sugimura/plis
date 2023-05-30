@@ -3,7 +3,7 @@
 //	ECHONET Lite関係
 //////////////////////////////////////////////////////////////////////
 /**
- * @module subEL
+ * @namespace subEL
  */
 'use strict'
 
@@ -52,13 +52,11 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @func renewIkeaConfigView
-	 * @desc renewIkeaConfigView
+	 * @memberof window#
+	 * @desc EL デバイス情報のrenew、mainからの情報で，EL関係のhtmlを変更する
 	 * @param {void}
 	 * @return {void}
 	 */
-	// EL デバイス情報のrenew
-	// mainからの情報で，EL関係のhtmlを変更する
 	window.renewFacilitiesEL = function (arg) { //facilitiesHue = json = arg; // 機器情報確保
 		txtELLog.value = JSON.stringify(arg, null, '  ');
 
@@ -202,10 +200,10 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @func multicastSearch.addEventListener
+	 * @type {HTMLElement}
+	 * @listens multicastSearch#click
+	 * @event multicastSearch#click
 	 * @desc ECHONET Lite Conntrol, マルチキャストボタン
-	 * @param {void}
-	 * @return {void}
 	 */
 	multicastSearch.addEventListener('click', function () {
 		window.ipc.ELsearch();
@@ -218,6 +216,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func convRT
 	 * @desc R相、T相を数値に
+	 * @memberof subEL#
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -228,7 +227,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	/** 
-	 * @func window.renewSubESM
+	 * @fires window.renewSubESM
 	 * @desc window.renewSubESM
 	 * @param {void}
 	 * @return {void}
@@ -386,9 +385,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	/**
 	 * @func renewCanvasSubESM
-	 * @desc renewCanvasSubESM
-	 * @param {number} a - The first number. (JSDoc test)
-	 * @param {number} b - The second number. (JSDoc test)
+	 * @desc 内部関数
+	 * @param {void}
 	 * @returns {number} The sum of the two numbers. (JSDoc test)
 	 */
 	let renewCanvasSubESM = function () {

@@ -3,7 +3,7 @@
 //	アンケート関係の処理
 //////////////////////////////////////////////////////////////////////
 /**
- * @module subQuestionnaire
+ * @namespace subQuestionnaire
  */
 'use strict'
 

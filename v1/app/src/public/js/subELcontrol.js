@@ -2,7 +2,7 @@
 //	Copyright (C) SUGIMURA Lab. 2022.08.26
 //////////////////////////////////////////////////////////////////////
 /**
- * @module subELcontrol
+ * @namespace subELcontrol
  */
 'use strict'
 
@@ -528,7 +528,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	}
 
 	/** 
-	 * @func window.ELAAirconChangeMode
+	 * @func ELAAirconChangeMode
+	 * @memberof window#
 	 * @desc エアコンのモード切り替え（詳細コントロールダイアログから呼ばれる）
 	 * @param {void}
 	 * @return {void}

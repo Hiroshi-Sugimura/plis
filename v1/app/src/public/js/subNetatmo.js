@@ -3,7 +3,7 @@
 //	netatmo関係の処理
 //////////////////////////////////////////////////////////////////////
 /**
- * @module subNetatmo
+ * @namespace subNetatmo
  */
 'use strict'
 
