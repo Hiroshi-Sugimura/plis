@@ -1,16 +1,35 @@
-# README for PLIS developper
+# README for PLIS developpers
+
+このWebサイトはPLIS開発者のための情報をまとめています。
+開発にドキュメントが追い付いていかないことが多々ありますがご了承ください。
 
 # Source Code
 
-[Source Code](https://github.com/Hiroshi-Sugimura/plis)
+ソースコードはMITライセンスで、Githubで提供してます。
 
-## License
+[Github](https://github.com/Hiroshi-Sugimura/plis)
 
-PLISのソースコードはMITライセンスにて配布しています。
+# Database Schima (ER diagram)
 
+PLISが実行されるPCでは、通信ログをデータベースで記録しています。
+このDBのスキーマは次のようになっています。
+
+<embed src='../lifelog.pdf' width='220' height='317'>
+
+[Download](https://github.com/Hiroshi-Sugimura/plis/v1/docs/lifelog.pdf)
+
+
+# License
+
+PLISは各種モジュールや各社のIoTサービス及びプロトコルを利用しています。
+従って、PLISのソースコードを利用した商用ソフトウェア開発をする場合は、PLISのライセンスのみならず、各社のライセンスやプロトコルの認証などを必要とします。
+下記に外観を示します。
+
+## PLIS
+
+PLISのアプリケーション及びソースコードはMITライセンスにて配布しています。
 
 [LICENSE file](https://github.com/Hiroshi-Sugimura/plis/LICENSE)
-
 
 正確には原文を読んで欲しいのですが、簡単に表現すれば次のようになります。
 
@@ -24,14 +43,21 @@ PLISのソースコードはMITライセンスにて配布しています。
 保証無し。このソフトを利用して問題が起きた際に、私たちは一切の責任を負いません。
 ```
 
-なお、他のモジュールのライセンスに関しては各モジュールのライセンスをご確認ください。
+## Other modules
+
+PLISは他のモジュールを含んでおり、それらのライセンスに関しては各モジュールのライセンスをご確認ください。
 利用しているモジュール群は下記ファイルにまとめています。
 
 [Modules.json](https://hiroshi-sugimura.github.io/plis/v1/app/src/modules.json)
 
-# API manual
+基本的にはPLIS作成時において、利用している全モジュールが著作権をクリアしていることを確認しているつもりですが、各モジュール開発者がバージョンアップによってライセンスを変更した場合に追従できていない可能性はあります。
+およその場合は、個人利用＆非商用において問題になることはないと思いますが、PLISのソースコードを利用して商用ソフトウェアを開発する場合には各社で知財を確認して保証する必要があります。
 
-[API manual](https://hiroshi-sugimura.github.io/plis/v1/docs/jsdoc/index.html)
+
+## APIs and certifications
+
+PLISでは多種多様なIoT商品のAPI及びプロトコルを利用していますが、もしも商品提供している会社側のAPIが変更や廃止となった場合に、その機能が利用できなくなることがあります。
+
 
 # Logs
 
@@ -45,20 +71,48 @@ PLISのソースコードはMITライセンスにて配布しています。
 
 Copyright © 2023-Now Sugimura Laboratory, KAIT All Rights Reserved.
 
+# Development Environment
+
+## PLISの開発
+
+このソフトはNode.js、Electronをベースにしています。
+
+1. Node.js（LTS板がおすすめ）をインストールしておく
+2. ```~/<github>/plis/v1/app``` で ```npm i``` を実行しておく
+3. Windowsなら```npm run win```、Macなら```npm run mac```で起動する
+4. Buildする場合、```npm run make```でコンパイルできる。
+
+
+## API Documentsの自動生成
+
+このAPIマニュアルはJSDocで自動生成しています。
+
+1. ```~/<github>/plis/v1/docs```で```npm i```を実行してJSDocをインストールする
+2. ```npm start```で生成する。
+
+## lifelog.dbのER図自動生成
+
+lifelog.dbのER図はA5:SQL Mk-2で自動生成しています。
+
+1. A5:SQL Mk-2をインストールしておく
+[A5:SQL Mk-2 (x64, for Win)](ms-windows-store://pdp/?productid=9NSBB9XTJW86)
+2. PLISを実行し、```~/PLIS/lifelog.db```をA5で開く
+3. さらに、```~/<github>/plis/v1/docs/lifelog.aSer```を開く
+
 
 # Work around
 
 - node-gyp (windows + sqlite3モジュールで発生しやすい)
 
-エラー内容
+開発開始時、下記のようなエラーが出ることが良くあるが、これは開発環境がきちんと整っていない場合に出る。
 
 ```
-? Checking your system
-? Locating application
-? Loading configuration
-? Preparing native dependencies: 0 / 1
-  ? node-gyp failed to rebuild '~\plis\v1\app\node_modules\sqlite3'
-?? Running generateAssets hook
+o Checking your system
+o Locating application
+o Loading configuration
+x Preparing native dependencies: 0 / 1
+  x node-gyp failed to rebuild '~\plis\v1\app\node_modules\sqlite3'
+- Running generateAssets hook
 
 node-gyp failed to rebuild sqlite3
 ```
