@@ -5,7 +5,7 @@
 /**
  * @module main
  */
- 
+
 
 'use strict'
 
@@ -432,7 +432,8 @@ ipcMain.handle('SwitchBotControl', async (event, arg) => {
 // foreground
 // ここがEntrypointと考えても良い
 /**
- * Add two numbers together. (JSDoc test)
+ * @func createWindow
+ * @desc Add two numbers together. (JSDoc test)
  * @param {number} a - The first number. (JSDoc test)
  * @param {number} b - The second number. (JSDoc test)
  * @returns {number} The sum of the two numbers. (JSDoc test)
@@ -660,7 +661,14 @@ const menuItems = [
 			}]
 	}];
 
-
+/**
+ * @func menuInitialize
+ * @desc menuInitialize
+ * @async
+ * @param {void} 
+ * @return void
+ * @throw error
+ */
 function menuInitialize() {
 	let menu = Menu.buildFromTemplate(menuItems);
 	Menu.setApplicationMenu(menu);
@@ -668,7 +676,14 @@ function menuInitialize() {
 };
 
 
-// デスクトップにショートカット作成、スタートメニューに登録
+/**
+ * @func createShortCut
+ * @desc デスクトップにショートカット作成、スタートメニューに登録
+ * @async
+ * @param {void} 
+ * @return void
+ * @throw error
+ */
 function createShortCut() {
 	// windows用
 	if (isWin) {
@@ -689,6 +704,14 @@ function createShortCut() {
 	}
 };
 
+/**
+ * @func saveConfig
+ * @desc saveConfig
+ * @async
+ * @param {void} 
+ * @return void
+ * @throw error
+ */
 async function saveConfig() {
 	let _config = {};
 	_config.system = mainSystem.getConfig();  // system
@@ -707,6 +730,14 @@ async function saveConfig() {
 	await store.set('config', _config);
 };
 
+/**
+ * @func savePersist
+ * @desc savePersist
+ * @async
+ * @param {void} 
+ * @return void
+ * @throw error
+ */
 async function savePersist() {
 	persist.Arp = mainArp.getPersist();
 	persist.EL = mainEL.getPersist();

@@ -47,6 +47,14 @@ let mainESM = {
 	// 電力スマートメーターの処理
 
 	// interfaces
+	/**
+	 * @func start
+	 * @desc 初期化
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	start: function( _sendIPCMessage ) {
 		sendIPCMessage = _sendIPCMessage;
 
@@ -200,7 +208,14 @@ let mainESM = {
 	},
 
 
-	// シリアルポートを開放して連携終了
+	/**
+	 * @func stop
+	 * @desc シリアルポートを開放して連携終了
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stop: async function () {
 		mainESM.isRun = false;
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.stop()'):0;
@@ -212,6 +227,14 @@ let mainESM = {
 		await store.set('persist.ESM', persist);
 	},
 
+	/**
+	 * @func stopWithoutSave
+	 * @desc stopWithoutSave
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stopWithoutSave: async function () {
 		mainESM.isRun = false;
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.stopWithoutSave()'):0;
@@ -221,6 +244,14 @@ let mainESM = {
 		await eSM.release();
 	},
 
+	/**
+	 * @func setConfig
+	 * @desc setConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	setConfig: async function  ( _config ) {
 		if( _config ) {
 			config = mergeDeeply( config, _config );
@@ -231,10 +262,26 @@ let mainESM = {
 		sendIPCMessage( "configSaved", 'ESM' );  // 保存したので画面に通知
 	},
 
+	/**
+	 * @func getConfig
+	 * @desc getConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getConfig: function () {
 		return config;
 	},
 
+	/**
+	 * @func getPersist
+	 * @desc getPersist
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getPersist: function() {
 		return persist;
 	},
@@ -242,6 +289,14 @@ let mainESM = {
 
 	//////////////////////////////////////////////////////////////////////
 	// Entry point
+	/**
+	 * @func startCore
+	 * @desc startCore
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	startCore: async function( _receiveCallback, _changeCallback ) {
 		// pre-conditions
 		if( !config.dongleType )  { throw new Error('mainESM.startCore(); config.dongleType is null.'); }
@@ -277,12 +332,27 @@ let mainESM = {
 
 	//////////////////////////////////////////////////////////////////////
 	// inner functions
+	/**
+	 * @func renewPortList
+	 * @desc renewPortList
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	renewPortList: async function () {
 		return await eSM.renewPortList();
 	},
 
 
-	// 受信の処理
+	/**
+	 * @func received
+	 * @desc 受信の処理
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	received: function ( sm, rinfo, els, error ) {
 		// わからんエラー
 		if( error ) {
@@ -335,8 +405,14 @@ let mainESM = {
 
 	//////////////////////////////////////////////////////////////////////
 	// 定時処理のインタフェース
-
-	// スマートメータを監視する、初回受信時にトリガー
+	/**
+	 * @func observe
+	 * @desc スマートメータを監視する、初回受信時にトリガー
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	observe: function() {
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.observe() start.' ):0;
 
@@ -366,7 +442,14 @@ let mainESM = {
 	},
 
 
-	// 監視をやめる
+	/**
+	 * @func stopObservation
+	 * @desc 監視をやめる
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stopObservation: function() {
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.stopObserve() observation.' ):0;
 
@@ -378,7 +461,6 @@ let mainESM = {
 
 
 	//////////////////////////////////////////////////////////////////////
-	// 定時処理、スマートメータのデータ送信
 	/*
 	getCases
 	input
@@ -392,6 +474,14 @@ let mainESM = {
 		when createdAt >= "2023-01-06 23:54" and createdAt < "2023-01-06 23:57" then "23:57"
 		else "24:00"
 	*/
+	/**
+	 * @func getCases
+	 * @desc 定時処理、スマートメータのデータ送信
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getCases: function ( date ) {
 		let T1 = new Date(date);
 		let T2 = new Date(date);
@@ -418,7 +508,15 @@ let mainESM = {
 		return ret + 'ELSE "24:00"';
 	},
 
-	// DBからテーブル取得
+
+	/**
+	 * @func getRows
+	 * @desc DBからテーブル取得
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getRows: async function() {
 		try {
 			let now = new Date();  // 現在
@@ -455,7 +553,14 @@ let mainESM = {
 	},
 
 
-	// 電力
+	/**
+	 * @func getTodayElectricEnergy
+	 * @desc 電力
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getTodayElectricEnergy: async function( ) {
 		// 画面に今日のデータを送信するためのデータ作る
 		try {
@@ -502,7 +607,14 @@ let mainESM = {
 		}
 	},
 
-	// 全体
+	/**
+	 * @func sendTodayEnergy
+	 * @desc 全体
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	sendTodayEnergy: async function( ) {
 		let arg = { };
 

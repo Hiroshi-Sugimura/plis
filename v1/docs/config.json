@@ -36,6 +36,8 @@
             "Interfaces"
         ],
         "search": true,
+        "collapse": true,
+        "wrap": true,
         "menu": {
             "Website": {
                 "href": "https://hiroshi-sugimura.github.io/plis/",

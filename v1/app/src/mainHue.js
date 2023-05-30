@@ -36,7 +36,14 @@ let mainHue = {
 
 	//////////////////////////////////////////////////////////////////////
 	// Philips hueの処理
-
+	/**
+	 * @func start
+	 * @desc start
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	// interfaces
 	start: async function ( _sendIPCMessage ) {
 		sendIPCMessage = _sendIPCMessage;
@@ -95,6 +102,14 @@ let mainHue = {
 		}
 	},
 
+	/**
+	 * @func stop
+	 * @desc stop
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stop: async function () {
 		mainHue.isRun = false;
 
@@ -108,6 +123,14 @@ let mainHue = {
 		}
 	},
 
+	/**
+	 * @func stopWithoutSave
+	 * @desc stopWithoutSave
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stopWithoutSave: async function () {
 		mainHue.isRun = false;
 
@@ -120,10 +143,26 @@ let mainHue = {
 		}
 	},
 
+	/**
+	 * @func control
+	 * @desc control
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	control: function ( _url, _json) {
 		Hue.setState( _url, JSON.stringify(_json) );
 	},
 
+	/**
+	 * @func setConfig
+	 * @desc setConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	setConfig: async function(_config) {
 		config = mergeDeeply( config, _config );
 		await store.set('config.Hue', config);
@@ -131,17 +170,39 @@ let mainHue = {
 		sendIPCMessage( "configSaved", 'Hue' );  // 保存したので画面に通知
 	},
 
+	/**
+	 * @func getConfig
+	 * @desc getConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getConfig: function () {
 		return config;
 	},
 
+	/**
+	 * @func getPersist
+	 * @desc getPersist
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	getPersist: function() {
 		return persist;
 	},
 
 	//////////////////////////////////////////////////////////////////////
-	// inner functions
-	// Hue受信の処理
+	/**
+	 * @func received
+	 * @desc Hue受信の処理, inner functions
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	received: function(gwIP, response, error) {
 		if( error ) {
 			// console.error( gwIP );
@@ -170,11 +231,27 @@ let mainHue = {
 		}
 	},
 
+	/**
+	 * @func dummy
+	 * @desc dummy
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	dummy: function(json) {
 		// console.dir(json);
 	},
 
 
+	/**
+	 * @func startCore
+	 * @desc startCore
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	startCore: async function( linked_cb, change_cb ) {
 		mainHue.callback = change_cb == undefined || change_cb == '' ? dummy : change_cb;
 
@@ -200,12 +277,27 @@ let mainHue = {
 		return config.key;
 	},
 
+	/**
+	 * @func cancel
+	 * @desc cancel
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	cancel: function() {
 		Hue.initializeCancel();
 	},
 
 
-	// 監視する，自動取得開始
+	/**
+	 * @func startObserve
+	 * @desc 監視する，自動取得開始
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	startObserve: function() {
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.startObserve().' ):0;
 
@@ -221,7 +313,14 @@ let mainHue = {
 		mainHue.task.start();
 	},
 
-	// 監視をやめる，自動取得停止
+	/**
+	 * @func stopObserve
+	 * @desc 監視をやめる，自動取得停止
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
 	stopObserve: async function() {
 		config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.stopObserve().' ):0;
 

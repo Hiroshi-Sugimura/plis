@@ -1,8 +1,9 @@
 //////////////////////////////////////////////////////////////////////
-/** @file mainSwitchBot.js
- *  @author SUGIMURA Hiroshi
- *  @copyright © 2020.10.30 Sugimura Laboratory, KAIT
- *  @license MIT
+/** 
+ * @file mainSwitchBot.js
+ * @author SUGIMURA Hiroshi
+ * @copyright © 2020.10.30 Sugimura Laboratory, KAIT
+ * @license MIT
  */
 
 //////////////////////////////////////////////////////////////////////
