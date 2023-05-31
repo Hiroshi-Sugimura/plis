@@ -2,14 +2,14 @@
 //	Copyright (C) SUGIMURA Lab. 2022.08.30
 //	Calendar関係の処理
 //////////////////////////////////////////////////////////////////////
-/**
- * @namespace subCalendar
- */
 'use strict'
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subCalendar
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subCalendar.js');
 
@@ -70,7 +70,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	/** 
-	 * @func showProcess
+	 * @func
+	 * @memberof subCalendar
 	 * @desc カレンダー表示
 	 * @param {void}
 	 * @return {void}
@@ -85,7 +86,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	}
 
 	/** 
-	 * @func createProcess
+	 * @func
+	 * @memberof subCalendar
 	 * @desc カレンダー作成
 	 * @param {void}
 	 * @return {void}
@@ -136,6 +138,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	/** 
 	 * @func checkDate
+	 * @memberof subCalendar
 	 * @desc 日付チェック
 	 * @param {void}
 	 * @return {void}
@@ -159,6 +162,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	/** 
 	 * @func isToday
+	 * @memberof subCalendar
 	 * @desc 当日かどうか
 	 * @param {void}
 	 * @return {void}
@@ -171,6 +175,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	/** 
 	 * @func isHoliday
+	 * @memberof subCalendar
 	 * @desc 祝日かどうか
 	 * @param {void}
 	 * @return {void}

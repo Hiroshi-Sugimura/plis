@@ -2,14 +2,14 @@
 //	Copyright (C) SUGIMURA Lab. 2022.11.28
 //	Ikea関係の処理
 //////////////////////////////////////////////////////////////////////
-/**
- * @namespace subIkea
- */
 'use strict'
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subIkea
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subIkea.js');
 
@@ -32,7 +32,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	let btnIkeaConfigSet = document.getElementById('btnIkeaConfigSet');
 
 	/** 
-	 * @func renewFacilitiesIkea
+	 * @func window.renewFacilitiesIkea
 	 * @desc mainからの情報で，ikea関係のhtmlを変更する
 	 * @param {void}
 	 * @return {void}
@@ -98,7 +98,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	}
 
 	/** 
-	 * @func renewIkeaLog
+	 * @func window.renewIkeaLog
 	 * @desc configタブのデバッグログ
 	 * @param {void}
 	 * @return {void}
@@ -108,7 +108,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	}
 
 	/** 
-	 * @func ikeaLinked
+	 * @func window.ikeaLinked
 	 * @desc ikeaとリンクしたのでGUI表示する
 	 * @param {void}
 	 * @return {void}
@@ -127,7 +127,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @func IkeaPowButton
+	 * @func window.IkeaPowButton
 	 * @desc IkeaPowButton
 	 * @param {void}
 	 * @return {void}
@@ -151,7 +151,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func btnIkeaConfigSet_Click
+	 * @func window.btnIkeaConfigSet_Click
 	 * @desc 設定ボタン
 	 * @param {void}
 	 * @return {void}
@@ -178,7 +178,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	/** 
-	 * @func IkeaConfigSaved
+	 * @func window.IkeaConfigSaved
 	 * @desc 設定完了通知
 	 * @param {void}
 	 * @return {void}
@@ -191,7 +191,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func renewIkeaConfigView
+	 * @func window.renewIkeaConfigView
 	 * @desc renewIkeaConfigView
 	 * @param {void}
 	 * @return {void}

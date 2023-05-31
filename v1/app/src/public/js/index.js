@@ -6,13 +6,17 @@
  * @namespace window
  * @desc index.js
  */
+
+/**
+ * @namespace window.ipc
+ * @desc index.js
+ */
 'use strict'
 
 ////////////////////////////////////////////////////////////////////////////////
-// 内部
 /** 
- * @Func Window.Renewcalendar
- * @Desc 祝日取得
+ * @Func isObjEmpty
+ * @Desc 内部
  * @Param {Void}
  * @Return {Void}
  */
@@ -51,12 +55,12 @@ function onLoad() {
 
 	//////////////////////////////////////////////////////////////////
 	/** 
-	 * @Func Window.Renewcalendar
-	 * @Desc 祝日取得
+	 * @event
+	 * @name window.ipc.to-renderer
+	 * @Desc MainProcessからのメッセージ振り分け
 	 * @Param {Void}
 	 * @Return {Void}
 	 */
-	// MainProcessからのメッセージ振り分け
 	window.ipc.on('to-renderer', (event, obj) => {
 		// console.log( '->', obj );
 		let c = JSON.parse(obj);    // obj = {cmd, arg} の形式でくる

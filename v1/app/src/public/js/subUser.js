@@ -2,14 +2,14 @@
 //	Copyright (C) SUGIMURA Lab. 2022.08.30
 //	User Config関係の処理
 //////////////////////////////////////////////////////////////////////
-/**
- * @namespace subUser
- */
 'use strict'
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subUser
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subUser.js');
 
@@ -23,7 +23,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @func btnUserProfileSet_Click
+	 * @func 
 	 * @desc User Profileの設定ボタンクリック
 	 * @param {void}
 	 * @return {void}
@@ -35,7 +35,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	/** 
-	 * @func UserConfigSaved
+	 * @func 
 	 * @desc 保存通知
 	 * @param {void}
 	 * @return {void}
@@ -45,7 +45,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func renewUserConfigView
+	 * @func 
 	 * @desc 保存通知
 	 * HALと連携していたらHALからプロファイルを取得
 	 * 連携してなければconfigファイルの中に書いてあるもの

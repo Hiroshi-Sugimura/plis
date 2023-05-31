@@ -2,14 +2,14 @@
 //	Copyright (C) SUGIMURA Lab. 2022.08.30
 //	気象庁（JMA, Japan Meteorological Agency）関係の処理
 //////////////////////////////////////////////////////////////////////
-/**
- * @namespace subJma
- */
 'use strict'
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subJma
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subJma.js');
 
@@ -915,7 +915,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	//----------------------------------------------------------------------------------------------
 	// 
 	/** 
-	 * @func renewJmaAbst
+	 * @func window.renewJmaAbst
 	 * @desc JMA 表示更新
 	 * @param {void}
 	 * @return {void}
@@ -931,7 +931,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func renewJmaDetail
+	 * @func window.renewJmaDetail
 	 * @desc JMA 詳細表示
 	 * @param {void}
 	 * @return {void}
@@ -1036,7 +1036,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	/** 
-	 * @func renewJma
+	 * @func 
 	 * @desc 天気予報の更新、全体(上記renewJmaDetailのEntry)
 	 * @param {void}
 	 * @return {void}
@@ -1053,7 +1053,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @func btnJmaConfigSet_Click
+	 * @func 
 	 * @desc jma config
 	 * @param {void}
 	 * @return {void}
@@ -1067,7 +1067,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func JmaConfigSaved
+	 * @func 
 	 * @desc 設定完了
 	 * @param {void}
 	 * @return {void}
@@ -1080,7 +1080,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func renewJmaConfigView
+	 * @func 
 	 * @desc mainプロセスから設定値をもらったので画面を更新
 	 * @param {void}
 	 * @return {void}
@@ -1092,7 +1092,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	/** 
-	 * @func inJmaArea_Change
+	 * @func 
 	 * @desc セレクトボックスの変更
 	 * @param {void}
 	 * @return {void}
@@ -1102,7 +1102,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func makeJmaArea
+	 * @func 
 	 * @desc make jma selector
 	 * @param {void}
 	 * @return {void}

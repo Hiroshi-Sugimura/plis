@@ -1,14 +1,14 @@
 //////////////////////////////////////////////////////////////////////
 //	Copyright (C) SUGIMURA Lab. 2022.08.26
 //////////////////////////////////////////////////////////////////////
-/**
- * @namespace subELcontrol
- */
 'use strict'
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subELcontrol
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subELcontrol.js');
 
@@ -455,6 +455,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func colorButton
 	 * @desc 色変化
+	 * @memberof subELcontrol
 	 * @param {void}
 	 * @return {void}
 	 */

@@ -2,19 +2,19 @@
 //	Copyright (C) SUGIMURA Lab. 2021.11.05
 //	アンケート関係の処理
 //////////////////////////////////////////////////////////////////////
-/**
- * @namespace subQuestionnaire
- */
 'use strict'
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subQuestionnaire
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subQuestionnaire.js');
 
 	/** 
-	 * @func getQuestionnaire
+	 * @func 
 	 * @desc アンケート回答の投稿ボタンを押したときの処理
 	 * @param {void}
 	 * @return {void}

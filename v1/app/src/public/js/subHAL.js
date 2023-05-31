@@ -2,14 +2,14 @@
 //	Copyright (C) SUGIMURA Lab. 2021.11.05
 //	HAL 表示関係の処理
 //////////////////////////////////////////////////////////////////////
-/**
- * @namespace subHAL
- */
 'use strict'
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subHAL
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subHAL.js');
 
@@ -73,6 +73,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func renewMajorResults
 	 * @desc 内部関数
+	 * @memberof subHAL
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -141,6 +142,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	/** 
 	 * @func renewMinorResults
+	 * @memberof subHAL
 	 * @desc 内部関数
 	 * @param {void}
 	 * @return {void}
@@ -384,6 +386,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	/** 
 	 * @func ranking
+	 * @memberof subHAL
 	 * @desc 内部関数，ランク付け
 	 * @param {void}
 	 * @return {void}
@@ -641,7 +644,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//================================================================
 	/** 
-	 * @func btnQuestionnaireSubmit.addEventListener
+	 * @func btnQuestionnaireSubmit_click
+	 * @memberof subHAL
 	 * @desc local HAL, アンケート回答の投稿ボタンを押したときの処理
 	 * @param {void}
 	 * @return {void}

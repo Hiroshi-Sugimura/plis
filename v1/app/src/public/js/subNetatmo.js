@@ -2,14 +2,14 @@
 //	Copyright (C) SUGIMURA Lab. 2022.08.30
 //	netatmo関係の処理
 //////////////////////////////////////////////////////////////////////
-/**
- * @namespace subNetatmo
- */
 'use strict'
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subNetatmo
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subNetatmo.js');
 
@@ -44,7 +44,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @func renewNetatmo
+	 * @func 
 	 * @desc Netatmo デバイス情報のrenew
 	 * @param {void}
 	 * @return {void}
@@ -70,7 +70,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	}
 
 	/** 
-	 * @func netatmoDocSectionClicked
+	 * @func 
 	 * @desc 左のボタンからグラフ制御
 	 * @param {void}
 	 * @return {void}
@@ -93,7 +93,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	// Netatmo config
 
 	/** 
-	 * @func btnNetatmoConfigSet_Click
+	 * @func 
 	 * @desc 左のボタンからグラフ制御
 	 * @param {void}
 	 * @return {void}
@@ -115,7 +115,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func NetatmoConfigSaved
+	 * @func 
 	 * @desc 設定完了通知
 	 * @param {void}
 	 * @return {void}
@@ -128,7 +128,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func renewNetatmoConfigView
+	 * @func 
 	 * @desc mainプロセスから設定値をもらったので画面を更新
 	 * @param {void}
 	 * @return {void}
@@ -178,6 +178,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func newLegendClickHandler
 	 * @desc newLegendClickHandler
+	 * @memberof subNetatmo
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -316,8 +317,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	/** 
-	 * @func renewCanvasNetatmo
+	 * @func 
 	 * @desc 内部関数
+	 * @memberof subNetatmo
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -335,7 +337,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func renewRoomEnvNetatmo
+	 * @func 
 	 * @desc データをもらって画面更新
 	 * @param {void}
 	 * @return {void}

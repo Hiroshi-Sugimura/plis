@@ -2,14 +2,14 @@
 //	Copyright (C) SUGIMURA Lab. 2022.10.01
 //	esm関係の処理
 //////////////////////////////////////////////////////////////////////
-/**
- * @namespace subESM
- */
 'use strict'
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subESM
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subESM.js');
 
@@ -47,6 +47,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func convRT
 	 * @desc R相、T相を数値に
+	 * @memberof subESM
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -314,6 +315,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func renewCanvasESM
 	 * @desc renewCanvasESM
+ 	 * @memberof subESM
 	 * @param {void}
 	 * @return {void}
 	 */

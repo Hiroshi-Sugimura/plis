@@ -2,14 +2,14 @@
 //	Copyright (C) SUGIMURA Lab. 2022.08.30
 //	ECHONET Lite関係
 //////////////////////////////////////////////////////////////////////
-/**
- * @namespace subEL
- */
 'use strict'
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subEL
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.log('## DOMContentLoaded subEL.js');
 
@@ -52,7 +52,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @memberof window#
+	 * @func
+	 * @memberof window
 	 * @desc EL デバイス情報のrenew、mainからの情報で，EL関係のhtmlを変更する
 	 * @param {void}
 	 * @return {void}
@@ -216,7 +217,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func convRT
 	 * @desc R相、T相を数値に
-	 * @memberof subEL#
+	 * @memberof subEL
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -385,6 +386,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	/**
 	 * @func renewCanvasSubESM
+	 * @memberof subEL
 	 * @desc 内部関数
 	 * @param {void}
 	 * @returns {number} The sum of the two numbers. (JSDoc test)

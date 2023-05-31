@@ -2,14 +2,14 @@
 //	Copyright (C) SUGIMURA Lab. 2022.08.30
 //	SwitchBot関係の処理
 //////////////////////////////////////////////////////////////////////
-/**
- * @namespace subSwitchBot
- */
 'use strict'
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subSwitchBot
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subSwitchBot.js');
 
@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @func renewFacilitiesSwitchBot
+	 * @func 
 	 * @desc SwitchBot デバイス情報のrenew
 	 * @param {void}
 	 * @return {void}
@@ -187,7 +187,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @func btnSwitchBotConfigSet_Click
+	 * @func 
 	 * @desc SwitchBot config
 	 * @param {void}
 	 * @return {void}
@@ -206,7 +206,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func SwitchBotConfigSaved
+	 * @func 
 	 * @desc 設定完了通知で、設定ボタンの復活（連打防止）
 	 * @param {void}
 	 * @return {void}
@@ -219,7 +219,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func renewSwitchBotConfigView
+	 * @func 
 	 * @desc mainプロセスから設定値をもらったので画面を更新
 	 * @param {void}
 	 * @return {void}
@@ -245,7 +245,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @func SwitchBotPlug
+	 * @func 
 	 * @desc SwitchBot control
 	 * @param {void}
 	 * @return {void}
@@ -262,8 +262,9 @@ window.addEventListener('DOMContentLoaded', function () {
 	let spanSwitchBotTime = document.getElementById('spanSwitchBotTime');
 
 	/** 
-	 * @func newLegendClickHandler
+	 * @func 
 	 * @desc newLegendClickHandler
+	 * @memberof subSwitchBot
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -380,8 +381,9 @@ window.addEventListener('DOMContentLoaded', function () {
 	let datasetsSwitchBot = [];
 
 	/** 
-	 * @func renewCanvasSwitchBot
+	 * @func 
 	 * @desc renewCanvasSwitchBot
+	 * @memberof subSwitchBot
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -407,7 +409,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//////////////////////////////////////////////////////////////////
 	/** 
-	 * @func renewRoomEnvSwitchBot
+	 * @func 
 	 * @desc データをもらって画面更新
 	 * @param {void}
 	 * @return {void}

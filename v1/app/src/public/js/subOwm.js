@@ -2,14 +2,14 @@
 //	Copyright (C) SUGIMURA Lab. 2022.08.30
 //	OpenWeatherMap 関係の処理
 //////////////////////////////////////////////////////////////////////
-/**
- * @namespace subOwm
- */
 'use strict'
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subOwm
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subOwm.js');
 
@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @func renewOwm
+	 * @func 
 	 * @desc OpenWeatherMap デバイス情報のrenew
 	 * @param {void}
 	 * @return {void}
@@ -85,7 +85,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @func btnOwmConfigSet_Click
+	 * @func 
 	 * @desc 設定ボタン
 	 * @param {void}
 	 * @return {void}
@@ -110,7 +110,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func OwmConfigSaved
+	 * @func 
 	 * @desc 設定完了
 	 * @param {void}
 	 * @return {void}
@@ -123,7 +123,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func renewOwmConfigView
+	 * @func 
 	 * @desc mainプロセスから設定値をもらったので画面を更新
 	 * @param {void}
 	 * @return {void}

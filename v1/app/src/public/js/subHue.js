@@ -2,14 +2,14 @@
 //	Copyright (C) SUGIMURA Lab. 2022.08.30
 //	hue関係の処理
 //////////////////////////////////////////////////////////////////////
-/**
- * @namespace subHue
- */
 'use strict'
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subHue
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subHue.js');
 
@@ -107,7 +107,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func hueLinked
+	 * @func window.hueLinked
 	 * @desc hueとリンクしたのでGUI表示する
 	 * @param {void}
 	 * @return {void}
@@ -120,7 +120,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @func btnHueConfigSet_Click
+	 * @func window.btnHueConfigSet_Click
 	 * @desc Hue link unlink
 	 * @param {void}
 	 * @return {void}
@@ -148,7 +148,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func btnHueUseCancel_Click
+	 * @func windo.btnHueUseCancel_Click
 	 * @desc キャンセルボタンを押したとき
 	 * @param {void}
 	 * @return {void}
@@ -161,7 +161,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func oncancel
+	 * @func dlgHuePush_oncancel
+	 * @memberof subHue
 	 * @desc エスケープキーでキャンセルしたとき
 	 * @param {void}
 	 * @return {void}
@@ -174,7 +175,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	/** 
-	 * @func HueConfigSaved
+	 * @func window.HueConfigSaved
 	 * @desc 設定完了通知で、設定ボタンの復活（連打防止）
 	 * @param {void}
 	 * @return {void}
@@ -187,7 +188,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func renewHueConfigView
+	 * @func window.renewHueConfigView
 	 * @desc mainプロセスから設定値をもらったので画面を更新
 	 * @param {void}
 	 * @return {void}
@@ -213,7 +214,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	// -----------------------------------------------------
 	// Hue control
 	/** 
-	 * @func HuePowButton
+	 * @func window.HuePowButton
 	 * @desc HuePowButton
 	 * @param {void}
 	 * @return {void}
@@ -238,8 +239,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	/** 
-	 * @func hue rename dlgを開く
-	 * @desc openHueRenameDlg
+	 * @func window.openHueRenameDlg
+	 * @desc hue rename dlgを開く
+	 * openHueRenameDlg
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -253,7 +255,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func HueRename
+	 * @func window.HueRename
 	 * @desc Hue control
 	 * @param {void}
 	 * @return {void}

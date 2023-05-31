@@ -2,14 +2,14 @@
 //	Copyright (C) SUGIMURA Lab. 2022.08.30
 //	System Config関係の処理
 //////////////////////////////////////////////////////////////////////
-/**
- * @namespace subSystem
- */
 'use strict'
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subSystem
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subSystem.js');
 
@@ -29,7 +29,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @func btnSystemConfigSet_Click
+	 * @func 
 	 * @desc Systemの設定ボタンクリック
 	 * @param {void}
 	 * @return {void}
@@ -75,7 +75,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func btnNetworkConfigSet_Click
+	 * @func 
 	 * @desc Networkの設定ボタンクリック
 	 * @param {void}
 	 * @return {void}
@@ -86,7 +86,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func SystemConfigSaved
+	 * @func 
 	 * @desc 保存通知
 	 * @param {void}
 	 * @return {void}
@@ -96,7 +96,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func renewSystemConfigView
+	 * @func 
 	 * @desc renewSystemConfigView
 	 * @param {void}
 	 * @return {void}
@@ -116,7 +116,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func URLopen
+	 * @func 
 	 * @desc URLを外部ブラウザで開く
 	 * @param {void}
 	 * @return {void}

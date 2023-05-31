@@ -2,14 +2,14 @@
 //	Copyright (C) SUGIMURA Lab. 2022.08.30
 //	omron関係の処理
 //////////////////////////////////////////////////////////////////////
-/**
- * @namespace subOmron
- */
 'use strict'
 
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subOmron
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subOmron.js');
 
@@ -39,7 +39,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @func renewOmron
+	 * @func 
 	 * @desc Omron デバイス情報のrenew
 	 * @param {void}
 	 * @return {void}
@@ -85,7 +85,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	/** 
-	 * @func disconnectedOmron
+	 * @func 
 	 * @desc Omron USBと切断
 	 * @param {void}
 	 * @return {void}
@@ -98,7 +98,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func omronDocSectionClicked
+	 * @func 
 	 * @desc 左のボタンからグラフ制御
 	 * @param {void}
 	 * @return {void}
@@ -122,7 +122,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	// Omron config
 
 	/** 
-	 * @func btnOmronConfigSet_Click
+	 * @func 
 	 * @desc 設定ボタン
 	 * @param {void}
 	 * @return {void}
@@ -139,7 +139,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func OmronConfigSaved
+	 * @func 
 	 * @desc 設定完了通知
 	 * @param {void}
 	 * @return {void}
@@ -152,7 +152,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	/** 
-	 * @func renewOmronConfigView
+	 * @func 
 	 * @desc mainプロセスから設定値をもらったので画面を更新
 	 * @param {void}
 	 * @return {void}
@@ -201,8 +201,9 @@ window.addEventListener('DOMContentLoaded', function () {
 		'21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45', '23:00', '23:15', '23:30', '23:45', '24:00']; */
 
 	/** 
-	 * @func newLegendClickHandler
+	 * @func 
 	 * @desc newLegendClickHandler
+	 * @memberof subOmron
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -397,8 +398,9 @@ window.addEventListener('DOMContentLoaded', function () {
 	let datasetsOmron = [];
 
 	/** 
-	 * @func renewCanvasOmron
+	 * @func 
 	 * @desc renewCanvasOmron
+	 * @memberof subOmron
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -425,7 +427,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//////////////////////////////////////////////////////////////////
 	/** 
-	 * @func renewRoomEnvOmron
+	 * @func 
 	 * @desc データをもらって画面更新
 	 * @param {void}
 	 * @return {void}
