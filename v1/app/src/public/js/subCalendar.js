@@ -24,12 +24,11 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-
 	/** 
-	 * @func window.renewCalendar
-	 * @desc 祝日取得
-	 * @param {void}
-	 * @return {void}
+	 * @Func Window.Renewcalendar
+	 * @Desc 祝日取得
+	 * @Param {Void}
+	 * @Return {Void}
 	 */
 	window.renewCalendar = function ( _cal ) {
 		holiday = _cal;

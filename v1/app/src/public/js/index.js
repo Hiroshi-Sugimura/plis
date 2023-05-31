@@ -10,17 +10,29 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // 内部
+/** 
+ * @Func Window.Renewcalendar
+ * @Desc 祝日取得
+ * @Param {Void}
+ * @Return {Void}
+ */
 function isObjEmpty(obj) {
 	return Object.keys(obj).length === 0;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// HTMLがロードされたら実行，EventListenerとしてはDOMContentLoadedのあとloadする。
-// このシステムとしてはindex.jsが最後実行してほしいのでloadとし、
-// 他のサブモジュールをDOMContentLoadedにする
 window.addEventListener('load', onLoad);
 
+/** 
+ * @Func window.onLoad
+ * @Desc ドキュメントがロードされたら呼ばれる
+ * HTMLがロードされたら実行，EventListenerとしてはDOMContentLoadedのあとloadする。
+ * このシステムとしてはindex.jsが最後実行してほしいのでloadとし、
+ * 他のサブモジュールをDOMContentLoadedにする
+ * @Param {Void}
+ * @Return {Void}
+ */
 function onLoad() {
 	console.log('## onLoad index.js');
 
@@ -38,6 +50,12 @@ function onLoad() {
 	let syncBtn = document.getElementById('syncBtn');
 
 	//////////////////////////////////////////////////////////////////
+	/** 
+	 * @Func Window.Renewcalendar
+	 * @Desc 祝日取得
+	 * @Param {Void}
+	 * @Return {Void}
+	 */
 	// MainProcessからのメッセージ振り分け
 	window.ipc.on('to-renderer', (event, obj) => {
 		// console.log( '->', obj );
@@ -321,6 +339,12 @@ function onLoad() {
 	////////////////////////////////////////////////////////////////////////////////
 	// user profile関係
 
+	/** 
+	 * @Func renewLicenses
+	 * @Desc ライセンス
+	 * @Param {Void}
+	 * @Return {Void}
+	 */
 	let renewLicenses = function() {
 		// console.log( licenses );
 		let doc = `<table class="sorttbl" id="tblLicenses">`
@@ -344,7 +368,12 @@ function onLoad() {
 	//////////////////////////////////////////////////////////////////////
 	// ボタン
 
-	// テキストエリアを見せたり隠したり
+	/** 
+	 * @Func window.pushHideButton
+	 * @Desc テキストエリアを見せたり隠したり
+	 * @Param {Void}
+	 * @Return {Void}
+	 */
 	window.pushHideButton = function( field ) {
 		let txtPass = document.getElementById( field );
 		let btnEye  = document.getElementById( field + "ButtonEye");

@@ -528,8 +528,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	}
 
 	/** 
-	 * @func ELAAirconChangeMode
-	 * @memberof window#
+	 * @func
 	 * @desc エアコンのモード切り替え（詳細コントロールダイアログから呼ばれる）
 	 * @param {void}
 	 * @return {void}
