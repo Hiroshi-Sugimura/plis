@@ -26,9 +26,6 @@ let persist = {};
 let sendIPCMessage = null;
 
 //////////////////////////////////////////////////////////////////////
-/**
- * @class
- */
 let mainArp = {
 	isRun: false,  // 機能が利用可能になったか？
 	table: null,
