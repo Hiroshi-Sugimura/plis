@@ -7,6 +7,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subNetatmo
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subNetatmo.js');
 
@@ -40,7 +43,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-	// Netatmo デバイス情報のrenew
+	/** 
+	 * @func 
+	 * @desc Netatmo デバイス情報のrenew
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewNetatmo = function( arg ) {
 		facilitiesNetatmo = arg;
 
@@ -61,7 +69,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		spanNetatmoNoise.innerHTML			= facilitiesNetatmo[0].dashboard_data.Noise;
 	}
 
-	// 左のボタンからグラフ制御
+	/** 
+	 * @func 
+	 * @desc 左のボタンからグラフ制御
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.netatmoDocSectionClicked = function (t) {
 		console.log('t:', t);
 
@@ -79,6 +92,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	//----------------------------------------------------------------------------------------------
 	// Netatmo config
 
+	/** 
+	 * @func 
+	 * @desc 左のボタンからグラフ制御
+	 * @param {void}
+	 * @return {void}
+	 */
 	// 設定ボタン
 	window.btnNetatmoConfigSet_Click = function(checkBox) {
 		if( inNetatmoUse.checked == false ) {
@@ -95,7 +114,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
-	// 設定完了通知
+	/** 
+	 * @func 
+	 * @desc 設定完了通知
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.NetatmoConfigSaved = function () {
 		btnNetatmoConfigSet.disabled    = false;
 		btnNetatmoConfigSet.textContent = '設定';
@@ -103,7 +127,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast( 'Info', 'Netatmo 設定を保存しました。');
 	};
 
-	// mainプロセスから設定値をもらったので画面を更新
+	/** 
+	 * @func 
+	 * @desc mainプロセスから設定値をもらったので画面を更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewNetatmoConfigView = function( arg ) {
 		inNetatmoUse.checked = arg.enabled;
 		inNetatmoID.value = arg.id;
@@ -146,6 +175,13 @@ window.addEventListener('DOMContentLoaded', function () {
 		'18:00', '18:15', '18:30', '18:45', '19:00', '19:15', '19:30', '19:45', '20:00', '20:15', '20:30', '20:45',
 		'21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45', '23:00', '23:15', '23:30', '23:45', '24:00'];
 
+	/** 
+	 * @func newLegendClickHandler
+	 * @desc newLegendClickHandler
+	 * @memberof subNetatmo
+	 * @param {void}
+	 * @return {void}
+	 */
 	let newLegendClickHandler = function(e, legendItem) {
 		let index = legendItem.datasetIndex;
 		let ci = this.chart;
@@ -280,7 +316,13 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	// 内部関数
+	/** 
+	 * @func 
+	 * @desc 内部関数
+	 * @memberof subNetatmo
+	 * @param {void}
+	 * @return {void}
+	 */
 	let renewCanvasNetatmo = function() {
 		if( myChartNetatmo ) { myChartNetatmo.destroy(); }  // chartがすでにctxを使っていると、リエントラントで"Canvas is already in use."のエラーが出る
 
@@ -294,7 +336,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		});
 	};
 
-	// データをもらって画面更新
+	/** 
+	 * @func 
+	 * @desc データをもらって画面更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewRoomEnvNetatmo = function ( _envDataArray ) {
 		let envDataArray = JSON.parse( _envDataArray );
 		// console.log( 'window.renewRoomEnvNetatmo()', _envDataArray );
@@ -331,7 +378,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
 		renewCanvasNetatmo();
 	};
-
 
 
 } );

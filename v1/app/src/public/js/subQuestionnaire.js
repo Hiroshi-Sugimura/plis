@@ -7,10 +7,18 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subQuestionnaire
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subQuestionnaire.js');
 
-	// アンケート回答の投稿ボタンを押したときの処理
+	/** 
+	 * @func 
+	 * @desc アンケート回答の投稿ボタンを押したときの処理
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.getQuestionnaire = function () {
 		// 大項目ごとの小項目の数の上限の定義
 		const qnums = {

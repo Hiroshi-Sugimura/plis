@@ -7,6 +7,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subToast
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded toast.js');
 
@@ -14,7 +17,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	let divToast        = document.getElementById('divToast');
 	let toastMessages   = [];
 
-	// トーストする文字列をキューイングする、インタフェース
+	/** 
+	 * @func 
+	 * @desc トーストする文字列をキューイングする、インタフェース
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.addToast = function( type, message ) {
 		let t = '';
 
@@ -37,8 +45,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		}, 3000);
 	};
 
-
-	// トーストは表示タイミングで位置合わせをする、内部関数
+	/** 
+	 * @func 
+	 * @desc トーストは表示タイミングで位置合わせをする、内部関数
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.redrawToast = function() {
 		let disp = "";
 		// console.dir( toastMessages );

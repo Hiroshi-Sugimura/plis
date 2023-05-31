@@ -1,8 +1,7 @@
 {
     "source": {
         "include": [
-            "../app/src",
-            "../app/src/public/js"
+            "../app/src"
         ],
         "exclude": [
             "node_modules"
@@ -37,7 +36,7 @@
         ],
         "search": true,
         "collapse": true,
-        "wrap": true,
+        "wrap": false,
         "menu": {
             "Website": {
                 "href": "https://hiroshi-sugimura.github.io/plis/",

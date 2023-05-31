@@ -1,3 +1,8 @@
+/**
+ * @namespace subClock
+ */
+// 'use strict'
+
 (function (d) {
 
 	//canvas要素を取得

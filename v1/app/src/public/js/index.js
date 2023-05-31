@@ -2,21 +2,41 @@
 //	Copyright (C) Hiroshi SUGIMURA 2013.09.27.
 //	Last updated: 2022.08.24
 //////////////////////////////////////////////////////////////////////
+/**
+ * @namespace window
+ * @desc index.js
+ */
+
+/**
+ * @namespace window.ipc
+ * @desc index.js
+ */
 'use strict'
 
 ////////////////////////////////////////////////////////////////////////////////
-// 内部
+/** 
+ * @Func isObjEmpty
+ * @Desc 内部
+ * @Param {Void}
+ * @Return {Void}
+ */
 function isObjEmpty(obj) {
 	return Object.keys(obj).length === 0;
 }
 
 
 ////////////////////////////////////////////////////////////////////////////////
-// HTMLがロードされたら実行，EventListenerとしてはDOMContentLoadedのあとloadする。
-// このシステムとしてはindex.jsが最後実行してほしいのでloadとし、
-// 他のサブモジュールをDOMContentLoadedにする
 window.addEventListener('load', onLoad);
 
+/** 
+ * @Func window.onLoad
+ * @Desc ドキュメントがロードされたら呼ばれる
+ * HTMLがロードされたら実行，EventListenerとしてはDOMContentLoadedのあとloadする。
+ * このシステムとしてはindex.jsが最後実行してほしいのでloadとし、
+ * 他のサブモジュールをDOMContentLoadedにする
+ * @Param {Void}
+ * @Return {Void}
+ */
 function onLoad() {
 	console.log('## onLoad index.js');
 
@@ -34,7 +54,13 @@ function onLoad() {
 	let syncBtn = document.getElementById('syncBtn');
 
 	//////////////////////////////////////////////////////////////////
-	// MainProcessからのメッセージ振り分け
+	/** 
+	 * @event
+	 * @name window.ipc.to-renderer
+	 * @Desc MainProcessからのメッセージ振り分け
+	 * @Param {Void}
+	 * @Return {Void}
+	 */
 	window.ipc.on('to-renderer', (event, obj) => {
 		// console.log( '->', obj );
 		let c = JSON.parse(obj);    // obj = {cmd, arg} の形式でくる
@@ -317,6 +343,12 @@ function onLoad() {
 	////////////////////////////////////////////////////////////////////////////////
 	// user profile関係
 
+	/** 
+	 * @Func renewLicenses
+	 * @Desc ライセンス
+	 * @Param {Void}
+	 * @Return {Void}
+	 */
 	let renewLicenses = function() {
 		// console.log( licenses );
 		let doc = `<table class="sorttbl" id="tblLicenses">`
@@ -340,7 +372,12 @@ function onLoad() {
 	//////////////////////////////////////////////////////////////////////
 	// ボタン
 
-	// テキストエリアを見せたり隠したり
+	/** 
+	 * @Func window.pushHideButton
+	 * @Desc テキストエリアを見せたり隠したり
+	 * @Param {Void}
+	 * @Return {Void}
+	 */
 	window.pushHideButton = function( field ) {
 		let txtPass = document.getElementById( field );
 		let btnEye  = document.getElementById( field + "ButtonEye");

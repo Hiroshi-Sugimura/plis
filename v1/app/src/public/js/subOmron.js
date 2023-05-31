@@ -7,6 +7,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subOmron
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subOmron.js');
 
@@ -35,7 +38,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	let spanOmronHeat_stroke_desc = document.getElementById('spanOmronHeat_stroke_desc');
 
 	//----------------------------------------------------------------------------------------------
-	// Omron デバイス情報のrenew
+	/** 
+	 * @func 
+	 * @desc Omron デバイス情報のrenew
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewOmron = function( arg ) {
 		facilitiesOmron = arg;
 
@@ -76,7 +84,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	// Omron USBと切断
+	/** 
+	 * @func 
+	 * @desc Omron USBと切断
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.disconnectedOmron = function () {
 		H3Omron.style.display = 'none';
 		canRoomEnvChartOmron.style.display = 'none';
@@ -84,7 +97,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		inOmronUse.checked = false;
 	};
 
-	// 左のボタンからグラフ制御
+	/** 
+	 * @func 
+	 * @desc 左のボタンからグラフ制御
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.omronDocSectionClicked = function (t) {
 		// console.log('t:', t);
 
@@ -103,7 +121,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	//----------------------------------------------------------------------------------------------
 	// Omron config
 
-	// 設定ボタン
+	/** 
+	 * @func 
+	 * @desc 設定ボタン
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.btnOmronConfigSet_Click = function(checkBox) {
 		if( inOmronUse.checked == false ) {
 			renewOmron();
@@ -115,7 +138,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	};
 
-	// 設定完了通知
+	/** 
+	 * @func 
+	 * @desc 設定完了通知
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.OmronConfigSaved = function () {
 		btnOmronConfigSet.disabled    = false;
 		btnOmronConfigSet.textContent = '設定';
@@ -123,7 +151,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast( 'Info', 'Omron 設定を保存しました。');
 	};
 
-	// mainプロセスから設定値をもらったので画面を更新
+	/** 
+	 * @func 
+	 * @desc mainプロセスから設定値をもらったので画面を更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewOmronConfigView = function( arg ) {
 		inOmronUse.checked = arg.enabled;
 		inOmronPlace.value = arg.place;
@@ -167,6 +200,13 @@ window.addEventListener('DOMContentLoaded', function () {
 		'18:00', '18:15', '18:30', '18:45', '19:00', '19:15', '19:30', '19:45', '20:00', '20:15', '20:30', '20:45',
 		'21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45', '23:00', '23:15', '23:30', '23:45', '24:00']; */
 
+	/** 
+	 * @func 
+	 * @desc newLegendClickHandler
+	 * @memberof subOmron
+	 * @param {void}
+	 * @return {void}
+	 */
 	let newLegendClickHandler = function(e, legendItem) {
 		let index = legendItem.datasetIndex;
 		let ci = this.chart;
@@ -357,6 +397,13 @@ window.addEventListener('DOMContentLoaded', function () {
 	// 表示データ（動的）
 	let datasetsOmron = [];
 
+	/** 
+	 * @func 
+	 * @desc renewCanvasOmron
+	 * @memberof subOmron
+	 * @param {void}
+	 * @return {void}
+	 */
 	let renewCanvasOmron = function() {
 		canRoomEnvChartOmron.style.display = 'block';
 
@@ -379,7 +426,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//////////////////////////////////////////////////////////////////
-	// データをもらって画面更新
+	/** 
+	 * @func 
+	 * @desc データをもらって画面更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewRoomEnvOmron = function ( _envDataArray ) {
 		let envDataArray = JSON.parse( _envDataArray );
 		// console.log( 'window.renewRoomEnvOnron()', envDataArray );

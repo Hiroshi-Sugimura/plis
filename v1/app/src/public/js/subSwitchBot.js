@@ -7,6 +7,9 @@
 
 ////////////////////////////////////////////////////////////////////////////////
 // HTMLロードしたら準備
+/**
+ * @namespace subSwitchBot
+ */
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subSwitchBot.js');
 
@@ -26,7 +29,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	let divSwitchBotSuggest   =  document.getElementById('divSwitchBotSuggest'); // switchBot; サジェスト
 
 	//----------------------------------------------------------------------------------------------
-	// SwitchBot デバイス情報のrenew
+	/** 
+	 * @func 
+	 * @desc SwitchBot デバイス情報のrenew
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewFacilitiesSwitchBot = function( arg ) {
 		// console.log('window.renewFacilitiesSwitchBot() arg:', arg);
 		facilitiesSwitchBot = arg;
@@ -178,7 +186,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-	// SwitchBot config
+	/** 
+	 * @func 
+	 * @desc SwitchBot config
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.btnSwitchBotConfigSet_Click = function (){
 		btnSwitchBotConfigSet.disabled    = true;
 		btnSwitchBotConfigSet.textContent = '設定中...';
@@ -192,7 +205,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.ipc.SwitchBotUse( inSwitchBotToken.value );
 	};
 
-	// 設定完了通知で、設定ボタンの復活（連打防止）
+	/** 
+	 * @func 
+	 * @desc 設定完了通知で、設定ボタンの復活（連打防止）
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.SwitchBotConfigSaved = function () {
 		btnSwitchBotConfigSet.disabled    = false;
 		btnSwitchBotConfigSet.textContent = '設定';
@@ -200,7 +218,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast( 'Info', 'SwitchBot 設定を保存しました。');
 	};
 
-	// mainプロセスから設定値をもらったので画面を更新
+	/** 
+	 * @func 
+	 * @desc mainプロセスから設定値をもらったので画面を更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewSwitchBotConfigView = function( arg ) {
 		inSwitchBotUse.checked = arg.enabled;
 		inSwitchBotToken.value = arg.token;
@@ -221,7 +244,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	//----------------------------------------------------------------------------------------------
-	// SwitchBot control
+	/** 
+	 * @func 
+	 * @desc SwitchBot control
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.SwitchBotPlug = function (btn) {
 		let v = btn.value.split(',');
 		let c = { command: v[1] };
@@ -233,6 +261,13 @@ window.addEventListener('DOMContentLoaded', function () {
 	// SwitchBot chart
 	let spanSwitchBotTime = document.getElementById('spanSwitchBotTime');
 
+	/** 
+	 * @func 
+	 * @desc newLegendClickHandler
+	 * @memberof subSwitchBot
+	 * @param {void}
+	 * @return {void}
+	 */
 	let newLegendClickHandler = function(e, legendItem) {
 		let index = legendItem.datasetIndex;
 		let ci    = this.chart;
@@ -345,6 +380,13 @@ window.addEventListener('DOMContentLoaded', function () {
 	// 表示データ（動的）
 	let datasetsSwitchBot = [];
 
+	/** 
+	 * @func 
+	 * @desc renewCanvasSwitchBot
+	 * @memberof subSwitchBot
+	 * @param {void}
+	 * @return {void}
+	 */
 	let renewCanvasSwitchBot = function() {
 		if( myChartSwitchBot ) {
 			// すでにチャートがあればアップデートだけ
@@ -366,7 +408,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	const pointStyleList = ['circle','triangle','cross','rect','star','dash','rectRounded','crossRot','rectRot','line'];
 
 	//////////////////////////////////////////////////////////////////
-	// データをもらって画面更新
+	/** 
+	 * @func 
+	 * @desc データをもらって画面更新
+	 * @param {void}
+	 * @return {void}
+	 */
 	window.renewRoomEnvSwitchBot = function ( _envDataObj ) {
 		let envDataObj = JSON.parse( _envDataObj );
 
