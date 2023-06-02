@@ -1,4 +1,6 @@
-# PLIS User's Manual
+<img src='https://hiroshi-sugimura.github.io/plis/v1/img/plis_main_yoko_c.png' alt='logo'>
+
+# User's Manual
 
 Platform for Life Improvement and Support
 
