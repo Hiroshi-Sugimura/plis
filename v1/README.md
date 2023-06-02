@@ -1,3 +1,5 @@
+<img src='https://hiroshi-sugimura.github.io/plis/v1/img/plis_main_yoko.png' alt='logo'>
+
 # README for PLIS developpers
 
 このWebサイトはPLIS開発者のための情報をまとめています。
