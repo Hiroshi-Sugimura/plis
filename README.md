@@ -1,29 +1,26 @@
 <img src='https://hiroshi-sugimura.github.io/plis/v1/img/plis_main_yoko_c.png' alt='logo'>
 
+PLIS (Platform for Life Improvement and Support)
+
 # User's Manual
 
-Platform for Life Improvement and Support
+- [This page (User's Manual)](https://plis.sugi-lab.net/)
 
-# Links
+# Developper's Manual
 
-- [This page (User's Manual)](https://hiroshi-sugimura.github.io/plis/)
 - [for PLIS developper's README](https://hiroshi-sugimura.github.io/plis//v1/docs/jsdoc/)
 
 # Releases
 
 
-# プライバシーポリシー
-
-**作成中**
-
 # Licenses
 
-ライセンスや著作権に関してはご自身でよく確認してお使いください。
+ライセンスや著作権に関する概要は下記に記しておきます。詳細はご自身でよく確認してお使いください。
 PLISは個人利用を前提に提供しております。
 そのまま販売するなどの直接的な商用利用行為は禁止します。
 
 
-## PLIS
+## License of the PLIS
 
 PLISのアプリケーション及びソースコードはMITライセンスにて配布しています。
 
@@ -41,7 +38,7 @@ PLISのアプリケーション及びソースコードはMITライセンスに�
 保証無し。このソフトを利用して問題が起きた際に、私たちは一切の責任を負いません。
 ```
 
-## Other modules
+## Licenses of Other modules
 
 PLISは他のモジュールを含んでおり、それらのライセンスに関しては各モジュールのライセンスをご確認ください。
 利用しているモジュール群は下記ファイルにまとめています。
@@ -64,6 +61,6 @@ PLISでは多種多様なIoT商品のAPI及びプロトコルを利用してい�
 
 # Copyright
 
-Copyright © 2023-Now Sugimura Laboratory, KAIT All Rights Reserved.
+Copyright © 2023 Sugimura Laboratory All Rights Reserved.
 
 

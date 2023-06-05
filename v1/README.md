@@ -4,6 +4,7 @@
 
 このWebサイトはPLIS開発者のための情報をまとめています。
 開発にドキュメントが追い付いていかないことが多々ありますがご了承ください。
+一般ユーザーは [User's Manual](https://plis.sugi-lab.net) を参照してください。
 
 # Source Code
 
@@ -27,7 +28,7 @@ PLISは各種モジュールや各社のIoTサービス及びプロトコルを�
 従って、PLISのソースコードを利用した商用ソフトウェア開発をする場合は、PLISのライセンスのみならず、各社のライセンスやプロトコルの認証などを必要とします。
 下記に外観を示します。
 
-## PLIS
+## License of the PLIS
 
 PLISのアプリケーション及びソースコードはMITライセンスにて配布しています。
 
@@ -45,7 +46,7 @@ PLISのアプリケーション及びソースコードはMITライセンスに�
 保証無し。このソフトを利用して問題が起きた際に、私たちは一切の責任を負いません。
 ```
 
-## Other modules
+## Licenses of Other modules
 
 PLISは他のモジュールを含んでおり、それらのライセンスに関しては各モジュールのライセンスをご確認ください。
 利用しているモジュール群は下記ファイルにまとめています。
@@ -72,6 +73,7 @@ PLISでは多種多様なIoT商品のAPI及びプロトコルを利用してい�
 # Copyright
 
 Copyright © 2023-Now Sugimura Laboratory, KAIT All Rights Reserved.
+
 
 # Development Environment
 
