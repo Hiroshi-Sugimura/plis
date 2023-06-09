@@ -1,24 +1,36 @@
 module.exports = {
-  packagerConfig: {},
+  packagerConfig: {
+    icon: 'src/icons/plis'
+  },
   rebuildConfig: {},
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
       config: {
-		  target: 'portable'
-	  },
+        target: 'portable'
+      },
     },
     {
-      name: '@electron-forge/maker-zip',
-      platforms: ['darwin'],
+      name: '@electron-forge/maker-dmg',
+      config: {
+        format: 'ULFO'
+      }
     },
     {
       name: '@electron-forge/maker-deb',
-      config: {},
+      config: {
+        options: {
+          icon: 'src/icons/plis_linux_icon.png'
+        }
+      },
     },
     {
       name: '@electron-forge/maker-rpm',
-      config: {},
+      config: {
+        options: {
+          icon: 'src/icons/plis_linux_icon.png'
+        }
+      },
     },
   ],
 };
