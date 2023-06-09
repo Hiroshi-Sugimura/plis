@@ -431,7 +431,7 @@
     "path": "C:\\Users\\HiroshiSUGIMURA\\Documents\\plis\\v1\\app\\node_modules\\@types\\yauzl",
     "licenseFile": "C:\\Users\\HiroshiSUGIMURA\\Documents\\plis\\v1\\app\\node_modules\\@types\\yauzl\\LICENSE"
   },
-  "PLIS@0.4.0": {
+  "PLIS@1.0.0": {
     "licenses": "MIT",
     "publisher": "SUGIMURA Hiroshi",
     "email": "hiroshi.sugimura@gmail.com",
@@ -1231,7 +1231,7 @@
     "path": "C:\\Users\\HiroshiSUGIMURA\\Documents\\plis\\v1\\app\\node_modules\\electron-winstaller",
     "licenseFile": "C:\\Users\\HiroshiSUGIMURA\\Documents\\plis\\v1\\app\\node_modules\\electron-winstaller\\LICENCE.md"
   },
-  "electron@24.4.0": {
+  "electron@25.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/electron",
     "publisher": "Electron Community",
@@ -3487,7 +3487,7 @@
     "path": "C:\\Users\\HiroshiSUGIMURA\\Documents\\plis\\v1\\app\\node_modules\\sequelize-pool",
     "licenseFile": "C:\\Users\\HiroshiSUGIMURA\\Documents\\plis\\v1\\app\\node_modules\\sequelize-pool\\LICENSE"
   },
-  "sequelize@6.31.1": {
+  "sequelize@6.32.0": {
     "licenses": "MIT",
     "repository": "https://github.com/sequelize/sequelize",
     "path": "C:\\Users\\HiroshiSUGIMURA\\Documents\\plis\\v1\\app\\node_modules\\sequelize",
