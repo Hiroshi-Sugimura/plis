@@ -35,7 +35,7 @@
     "node-cron": "^3.0.2",
     "node-tradfri-client": "^3.2.0",
     "request-promise-native": "^0.0.0",
-    "sequelize": "^6.31.1",
+    "sequelize": "^6.32.0",
     "sqlite3": "^5.1.6",
     "switchbot-client": "^0.2.0",
     "tradfri-handler": "^0.5.3",
@@ -48,6 +48,6 @@
     "@electron-forge/maker-rpm": "^6.1.1",
     "@electron-forge/maker-squirrel": "^6.1.1",
     "@electron-forge/maker-zip": "^6.1.1",
-    "electron": "24.4.0"
+    "electron": "25.1.0"
   }
 }
