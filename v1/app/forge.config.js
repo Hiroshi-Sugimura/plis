@@ -7,7 +7,8 @@ module.exports = {
     {
       name: '@electron-forge/maker-squirrel',
       config: {
-        target: 'portable'
+        target: 'portable',
+        setupIcon: 'src/icons/plis.ico'
       },
     },
     {
