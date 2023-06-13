@@ -1,6 +1,18 @@
 module.exports = {
   packagerConfig: {
-    icon: 'src/icons/plis'
+    icon: 'src/icons/plis',
+    osxSign: {
+      identity: process.env.APPLE_IDENTITY,
+      hardenedRuntime: true,
+      entitlements: "entitlements.plist",
+      'entitlements-inherit': "entitlements.plist"
+    },
+    osxNotarize: {
+      tool: 'notarytool',
+      appleId: process.env.APPLE_ID,
+      appleIdPassword: process.env.APPLE_ID_PASSWORD,
+      teamId: process.env.APPLE_TEAMID
+    }
   },
   rebuildConfig: {},
   makers: [
