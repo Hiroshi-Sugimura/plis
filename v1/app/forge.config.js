@@ -24,6 +24,16 @@ module.exports = {
       },
     },
     {
+      name: '@electron-forge/maker-appx',
+      config: {
+        identityName: "Dept.ofHomeElectronicsKAI.PLIS",
+        applicationId: "Dept.ofHomeElectronicsKAI.PLIS",
+        publisherDisplayName: "Dept. of HomeElectronics, KAIT",
+        publisher: 'CN=C750459E-8B61-41D7-B726-8ED587655544',
+        languages: ["JA-JP", "EN-US"]
+      }
+    },
+    {
       name: '@electron-forge/maker-dmg',
       config: {
         format: 'ULFO'
