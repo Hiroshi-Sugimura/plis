@@ -688,10 +688,11 @@ function createShortCut() {
 	// windows用
 	if (isWin) {
 		let dist = path.join(userHome, 'Desktop', 'PLIS.lnk');		// 作成したいショートカットのパス (末尾の.lnkが必要)
-		let source = path.join(userHome, 'AppData', 'Local', 'HEMS_Logger', 'PLIS.exe'); // リンク元としたいディレクトリorファイルパス（本体）
+		let source = path.join(userHome, 'AppData', 'Local', 'PLIS', 'PLIS.exe'); // リンク元としたいディレクトリorファイルパス（本体）
+		let icon = path.join(userHome, 'AppData', 'Local', 'PLIS', 'plis.ico'); // アイコン元としたいディレクトリorファイルパス（本体）
 
 		// ショートカット作成コマンド
-		let command = `$WshShell = New-Object -ComObject WScript.Shell; $ShortCut = $WshShell.CreateShortcut("${dist}"); $ShortCut.TargetPath = "${source}"; $ShortCut.Save();`;
+		let command = `$WshShell = New-Object -ComObject WScript.Shell; $ShortCut = $WshShell.CreateShortcut("${dist}"); $ShortCut.TargetPath = "${source}"; $Shortcut.IconLocation = "${icon}";$ShortCut.Save();`;
 
 		// 第2引数でPowershellを指定して実行
 		exec(command, { "shell": "powershell.exe" }, (error, stdout, stderror) => {
