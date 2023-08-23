@@ -1,4 +1,4 @@
-<img src='https://hiroshi-sugimura.github.io/plis/v1/img/plis_main_yoko_c.png' alt='logo'>
+<img src='https://hiroshi-sugimura.github.io/plis/v1/img/plis_main_yoko_w.png' alt='logo'>
 
 # README for PLIS developpers
 
