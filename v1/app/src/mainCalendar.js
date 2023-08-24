@@ -56,6 +56,8 @@ let mainCalendar = {
 		fs.readFile( path.join(databaseDir, "syukujitsu.csv"), "utf-8", (err, data) => {
 			if (err) {
 				console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar() syukujitsu.csv is NOT found. error:', err);
+				console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| ', err);
+				mainCalendar.getHolidays();  // カレンダーデータ無いから取得する
 				return;
 			}
 			sendIPCMessage('renewCalendar', data );

@@ -1,7 +1,7 @@
 {
   "name": "PLIS",
   "productName": "PLIS",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Platform for Life Improvement and Support",
   "main": "src/main.js",
   "scripts": {
@@ -48,6 +48,6 @@
     "@electron-forge/maker-rpm": "^6.4.1",
     "@electron-forge/maker-squirrel": "^6.4.1",
     "@electron-forge/maker-zip": "^6.4.1",
-    "electron": "26.0.0"
+    "electron": "26.1.0"
   }
 }

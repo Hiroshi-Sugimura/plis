@@ -648,16 +648,28 @@ const menuItems = [
 		label: 'Information',
 		submenu: [
 			{
-				label: 'Terms and Conditions (to be prepared)',
-				click(item, focusedWindow) { if (focusedWindow) focusedWindow.reload() }
+				label: 'About PLIS (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/'); }
 			},
 			{
-				label: 'Accnkowledgement (to be prepared)',
-				click(item, focusedWindow) { if (focusedWindow) focusedWindow.reload() }
+				label: 'User manual (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/userManual.html'); }
 			},
 			{
-				label: 'About and License (to be prepared)',
-				click(item, focusedWindow) { if (focusedWindow) focusedWindow.reload() }
+				label: 'Developper manual (External contents)',
+				click: function () { shell.openExternal('https://hiroshi-sugimura.github.io/plis//v1/docs/jsdoc/'); }
+			},
+			{
+				label: 'Terms (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/terms.html'); }
+			},
+			{
+				label: 'Privacy Policy (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/privacyPolicy.html'); }
+			},
+			{
+				label: 'EURA (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/eula.html'); }
 			}]
 	}];
 
