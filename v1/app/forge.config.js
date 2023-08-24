@@ -1,6 +1,18 @@
 module.exports = {
   packagerConfig: {
-    icon: 'src/icons/plis'
+    icon: 'src/icons/plis',
+    osxSign: {
+      identity: process.env.APPLE_IDENTITY,
+      hardenedRuntime: true,
+      entitlements: "entitlements.plist",
+      'entitlements-inherit': "entitlements.plist"
+    },
+    osxNotarize: {
+      tool: 'notarytool',
+      appleId: process.env.APPLE_ID,
+      appleIdPassword: process.env.APPLE_ID_PASSWORD,
+      teamId: process.env.APPLE_TEAMID
+    }
   },
   rebuildConfig: {},
   makers: [
@@ -10,6 +22,16 @@ module.exports = {
         target: 'portable',
         setupIcon: 'src/icons/plis.ico'
       },
+    },
+    {
+      name: '@electron-forge/maker-appx',
+      config: {
+        identityName: "Dept.ofHomeElectronicsKAI.PLIS",
+        applicationId: "Dept.ofHomeElectronicsKAI.PLIS",
+        publisherDisplayName: "神奈川工科大学",
+        publisher: 'CN=C750459E-8B61-41D7-B726-8ED587655544',
+        languages: ["JA-JP", "EN-US"]
+      }
     },
     {
       name: '@electron-forge/maker-dmg',

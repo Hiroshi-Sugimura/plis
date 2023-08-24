@@ -648,16 +648,28 @@ const menuItems = [
 		label: 'Information',
 		submenu: [
 			{
-				label: 'Terms and Conditions (to be prepared)',
-				click(item, focusedWindow) { if (focusedWindow) focusedWindow.reload() }
+				label: 'About PLIS (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/'); }
 			},
 			{
-				label: 'Accnkowledgement (to be prepared)',
-				click(item, focusedWindow) { if (focusedWindow) focusedWindow.reload() }
+				label: 'User manual (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/userManual.html'); }
 			},
 			{
-				label: 'About and License (to be prepared)',
-				click(item, focusedWindow) { if (focusedWindow) focusedWindow.reload() }
+				label: 'Developper manual (External contents)',
+				click: function () { shell.openExternal('https://hiroshi-sugimura.github.io/plis//v1/docs/jsdoc/'); }
+			},
+			{
+				label: 'Terms (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/terms.html'); }
+			},
+			{
+				label: 'Privacy Policy (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/privacyPolicy.html'); }
+			},
+			{
+				label: 'EURA (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/eula.html'); }
 			}]
 	}];
 
@@ -665,7 +677,7 @@ const menuItems = [
  * @func menuInitialize
  * @desc menuInitialize
  * @async
- * @param {void} 
+ * @param {void}
  * @return void
  * @throw error
  */
@@ -680,7 +692,7 @@ function menuInitialize() {
  * @func createShortCut
  * @desc デスクトップにショートカット作成、スタートメニューに登録
  * @async
- * @param {void} 
+ * @param {void}
  * @return void
  * @throw error
  */
@@ -688,7 +700,7 @@ function createShortCut() {
 	// windows用
 	if (isWin) {
 		let dist = path.join(userHome, 'Desktop', 'PLIS.lnk');		// 作成したいショートカットのパス (末尾の.lnkが必要)
-		let source = path.join(userHome, 'AppData', 'Local', 'HEMS_Logger', 'PLIS.exe'); // リンク元としたいディレクトリorファイルパス（本体）
+		let source = path.join(userHome, 'AppData', 'Local', 'PLIS', 'PLIS.exe'); // リンク元としたいディレクトリorファイルパス（本体）
 
 		// ショートカット作成コマンド
 		let command = `$WshShell = New-Object -ComObject WScript.Shell; $ShortCut = $WshShell.CreateShortcut("${dist}"); $ShortCut.TargetPath = "${source}"; $ShortCut.Save();`;
@@ -708,7 +720,7 @@ function createShortCut() {
  * @func saveConfig
  * @desc saveConfig
  * @async
- * @param {void} 
+ * @param {void}
  * @return void
  * @throw error
  */
@@ -734,7 +746,7 @@ async function saveConfig() {
  * @func savePersist
  * @desc savePersist
  * @async
- * @param {void} 
+ * @param {void}
  * @return void
  * @throw error
  */
