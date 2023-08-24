@@ -28,7 +28,7 @@ module.exports = {
       config: {
         identityName: "Dept.ofHomeElectronicsKAI.PLIS",
         applicationId: "Dept.ofHomeElectronicsKAI.PLIS",
-        publisherDisplayName: "Dept. of HomeElectronics, KAIT",
+        publisherDisplayName: "神奈川工科大学",
         publisher: 'CN=C750459E-8B61-41D7-B726-8ED587655544',
         languages: ["JA-JP", "EN-US"]
       }
