@@ -6,7 +6,6 @@
  * @module main
  */
 
-
 'use strict'
 
 //////////////////////////////////////////////////////////////////////
@@ -35,6 +34,7 @@ const databaseDir = path.join(userHome, appname);  // SQLite3ファイルの置�
 const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron');
 app.disableHardwareAcceleration(); // electron設定とmain window
 const Store = require('electron-store');
+
 const { sqlite3 } = require('./models/localDBModels');   // DBデータと連携
 const mainSystem = require('./mainSystem');  // System configの管理
 const mainUser = require('./mainUser');     // User configの管理
@@ -449,7 +449,8 @@ async function createWindow() {
 				contextIsolation: true, // default:true
 				worldSafeExecuteJavaScript: true,
 				preload: path.join(__dirname, 'preload.js')
-			}
+			},
+			icon: path.join(__dirname, "assets/icon.png")
 		});
 		menuInitialize();
 		// mainWindow.loadURL(path.join(__dirname, 'public', 'index.htm'));  // MacだとloadURL聞かない
@@ -485,7 +486,9 @@ async function createWindow() {
 // ready: Electronの初期化完了後に実行される
 // activate: Mac only, MacはWindowが無くてもプロセスを終了しないでおいておくことができ、その際の再度起動の時よばれる
 // did-become-active: Mac only
-//
+
+// windows用デスクトップとスタートメニューにショートカットを追加する
+if(require('electron-squirrel-startup')) return;
 
 // Entry point
 app.on('ready', async () => {
@@ -527,10 +530,11 @@ app.on('ready', async () => {
 
 	// 初回起動時はショートカットをデスクトップに配置、初回起動かどうかはconfigファイルの有無で判定
 	// windowsのみ
-	if (isWin && !fs.existsSync(path.join(store.path, 'config.json'))) {
+	// electron-squirrel-startupにした
+	// if (isWin && !fs.existsSync(path.join(store.path, 'config.json'))) {
 		// console.log( '初回起動' );
-		createShortCut();
-	}
+		// createShortCut();
+	// }
 
 	await mainHALlocal.initialize(); // HALのDBを準備して最終データを取得しておく
 	await sqlite3.sync().then(() => {

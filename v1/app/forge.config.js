@@ -1,6 +1,6 @@
 module.exports = {
   packagerConfig: {
-    icon: 'src/icons/plis',
+    icon: './src/icons/plis',
     osxSign: {
       identity: process.env.APPLE_IDENTITY,
       hardenedRuntime: true,
@@ -26,11 +26,15 @@ module.exports = {
     {
       name: '@electron-forge/maker-appx',
       config: {
-        identityName: "Dept.ofHomeElectronicsKAI.PLIS",
         applicationId: "Dept.ofHomeElectronicsKAI.PLIS",
-        publisherDisplayName: "神奈川工科大学",
+        displayName: "PLIS",
+        identityName: "Dept.ofHomeElectronicsKAI.PLIS",
         publisher: 'CN=C750459E-8B61-41D7-B726-8ED587655544',
-        languages: ["JA-JP", "EN-US"]
+        publisherDisplayName: "神奈川工科大学",
+        languages: ["JA-JP", "EN-US"],
+        customExtensionsPath: "./appmanifest.xml",
+        Square150x150Logo: "./assets/PLIS.150x150.png",
+        expandedBaseImage: "./assets"
       }
     },
     {
