@@ -11,7 +11,7 @@
     <DisplayName>${packageDisplayName}</DisplayName>
     <PublisherDisplayName>${publisherDisplayName}</PublisherDisplayName>
     <Description>No description entered</Description>
-    <Logo>assets\PLIS.50x50.png</Logo>
+    <Logo>appx\assets\PLIS.50x50.png</Logo>
   </Properties>
   <Resources>
     <Resource Language="en-us" />
@@ -27,10 +27,10 @@
       <uap:VisualElements
        BackgroundColor="${packageBackgroundColor}"
        DisplayName="${packageDisplayName}"
-       Square150x150Logo="assets\PLIS.150x150.png"
-       Square44x44Logo="assets\PLIS.44x44.png"
+       Square150x150Logo="appx\assets\PLIS.150x150.png"
+       Square44x44Logo="appx\assets\PLIS.44x44.png"
        Description="${packageDescription}">
-        <uap:DefaultTile Wide310x150Logo="assets\PLIS.310x150.png" />
+        <uap:DefaultTile Wide310x150Logo="appx\assets\PLIS.310x150.png" />
       </uap:VisualElements>
     </Application>
   </Applications>
