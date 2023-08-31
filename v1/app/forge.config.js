@@ -4,8 +4,8 @@ module.exports = {
     osxSign: {
       identity: process.env.APPLE_IDENTITY,
       hardenedRuntime: true,
-      entitlements: "entitlements.plist",
-      'entitlements-inherit': "entitlements.plist"
+      entitlements: "macOS/entitlements.plist",
+      "entitlements-inherit": "macOS/entitlements.plist"
     },
     osxNotarize: {
       tool: 'notarytool',
@@ -32,9 +32,11 @@ module.exports = {
         publisher: 'CN=C750459E-8B61-41D7-B726-8ED587655544',
         publisherDisplayName: "神奈川工科大学",
         languages: ["JA-JP", "EN-US"],
-        customExtensionsPath: "./appmanifest.xml",
-        Square150x150Logo: "./assets/PLIS.150x150.png",
-        expandedBaseImage: "./assets"
+        assets: "appx/assets",
+        Square150x150Logo: "appx/assets/PLIS.150x150.png",
+        makeVersionWinStoreCompatible: "true",
+        packageDescription: "Platform for Life Improvement and Support",
+        manifest: "appx/appxmanifest.xml"
       }
     },
     {
