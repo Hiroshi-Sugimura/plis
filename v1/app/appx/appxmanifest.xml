@@ -10,7 +10,7 @@
   <Properties>
     <DisplayName>${packageDisplayName}</DisplayName>
     <PublisherDisplayName>${publisherDisplayName}</PublisherDisplayName>
-    <Description>No description entered</Description>
+    <Description>Platform for Life Improvement and Support</Description>
     <Logo>appx\assets\PLIS.50x50.png</Logo>
   </Properties>
   <Resources>
