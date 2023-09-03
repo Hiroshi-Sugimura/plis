@@ -17,7 +17,7 @@
     "lint": "echo \"No linting configured\"",
     "license-check": "license-checker --json > ./src/modules.json",
     "build-appx": "npx electron-builder -w --x64 && electron-windows-store --input-directory ./dist/win-unpacked --output-directory ./dist/appx --package-name PLIS --package-display-name PLIS --package-version 1.1.0.0 --publisher-display-name SUGIMURA Hiroshi (Kanagawa Institute of Technology) --identity-name 9NQ6XZG0KPL3.Dept.ofHomeElectronicsKAI.PLIS",
-    "store": "npx electron-windows-store --input-directory ./out/PLIS-win32-x64 --output-directory ./out/appx --package-version 1.1.0.0 --package-name PLIS",
+    "store": "npx electron-windows-store --input-directory ./out/PLIS-win32-x64 --output-directory ./out/appx --package-version 1.1.0.0 --package-name PLIS --identity-name Dept.ofHomeElectronicsKAI.PLIS --windows-kit \"C:\\Program Files (x86)\\Windows Kits\\10\\bin\\10.0.19041.0\\x64\"",
     "build-appx2": "npx electron-builder -w appx"
   },
   "keywords": [],
@@ -31,10 +31,7 @@
       "applicationId": "Dept.ofHomeElectronicsKAI.PLIS",
       "publisherDisplayName": "神奈川工科大学",
       "publisher": "CN=C750459E-8B61-41D7-B726-8ED587655544",
-      "languages": [
-        "JA-JP",
-        "EN-US"
-      ]
+      "languages": [ "JA-JP" ]
     }
   },
   "license": "MIT",

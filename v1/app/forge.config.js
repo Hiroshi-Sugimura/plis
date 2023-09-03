@@ -21,7 +21,7 @@ module.exports = {
       config: {
         target: 'portable',
         setupIcon: 'src/icons/plis.ico'
-      },
+      }
     },
     {
       name: '@electron-forge/maker-appx',
@@ -31,12 +31,11 @@ module.exports = {
         identityName: "Dept.ofHomeElectronicsKAI.PLIS",
         publisher: 'CN=C750459E-8B61-41D7-B726-8ED587655544',
         publisherDisplayName: "神奈川工科大学",
-        languages: ["JA-JP", "EN-US"],
+        languages: ["JA-JP"],
         assets: "appx/assets",
         Square150x150Logo: "appx/assets/PLIS.150x150.png",
         makeVersionWinStoreCompatible: "true",
-        packageDescription: "Platform for Life Improvement and Support",
-        manifest: "appx/appxmanifest.xml"
+        packageDescription: "Platform for Life Improvement and Support"
       }
     },
     {
