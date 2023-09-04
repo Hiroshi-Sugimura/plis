@@ -25,15 +25,6 @@
     "name": "SUGIMURA Hiroshi (Kanagawa Institute of Technology)",
     "email": "hiroshi.sugimura@gmail.com"
   },
-  "build": {
-    "appx": {
-      "identityName": "Dept.ofHomeElectronicsKAI.PLIS",
-      "applicationId": "Dept.ofHomeElectronicsKAI.PLIS",
-      "publisherDisplayName": "神奈川工科大学",
-      "publisher": "CN=C750459E-8B61-41D7-B726-8ED587655544",
-      "languages": [ "JA-JP" ]
-    }
-  },
   "license": "MIT",
   "dependencies": {
     "@network-utils/arp-lookup": "^2.0.2",

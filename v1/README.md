@@ -107,6 +107,31 @@ lifelog.dbのER図はA5:SQL Mk-2で自動生成しています。
 3. さらに、```~/<github>/plis/v1/docs/lifelog.aSer```を開く
 
 
+## Maximum sizes of images for UWP （未確認情報）
+
+- StoreLogo.png — 200x200 (original: 50x50) = 50, 100, 200
+- Square150x150Logo.png — 600x600 (original: 150x150) = 150, 300, 600
+- Square44x44Logo.png — 256x256 (original: 44x44 more info): 44, 88, 176では？
+- Wide310x150Logo.png — 1240x600 (original: 310x150): 310x150, 620x300, 1240x600
+- SmallTile.png (Square71x71Logo) — 284x284 (original: 71x71): 71, 142, 284
+- LargeTile.png (Square310x310Logo) — 1240x1240 (original: 310x310): 310, 620, 1240
+- SplashScreen — 2480x1200 (original: 620x300 more info): 620x300, 1240x600, 2480x1200
+
+
+参考: https://learn.microsoft.com/ja-jp/windows/apps/design/shell/tiles-and-notifications/creating-tiles
+
+```
+ロゴ イメージ:
+
+ここに挙げた画像を、自分で用意したものに置き換えます。 さまざまな倍率に応じて複数の画像を指定することができますが、必ずしもすべて指定する必要はありません。 多種多様なデバイスでアプリを適切に表示するために、各画像の複数のスケール バージョン (100%、200%、400%) を用意することをお勧めします。 これらのアセットの生成について詳しくは、「アプリのアイコンとロゴ」を参照してください。
+
+拡大/縮小された画像の名前付け規則は次のとおりです。
+
+<image name.scale-scale><factor>。<イメージ ファイル拡張子>
+
+例: SplashScreen.scale-100.png
+```
+
 # Work around
 
 - node-gyp (windows + sqlite3モジュールで発生しやすい)
