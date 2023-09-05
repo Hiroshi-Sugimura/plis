@@ -12,7 +12,10 @@ module.exports = {
       appleId: process.env.APPLE_ID,
       appleIdPassword: process.env.APPLE_ID_PASSWORD,
       teamId: process.env.APPLE_TEAMID
-    }
+    },
+	 extraResources: [
+	    "./appx/vcruntime140.dll"
+	]
   },
   rebuildConfig: {},
   makers: [
@@ -35,7 +38,8 @@ module.exports = {
         assets: "appx/assets",
         Square150x150Logo: "appx/assets/PLIS.150x150.png",
         makeVersionWinStoreCompatible: "true",
-        packageDescription: "Platform for Life Improvement and Support"
+        packageDescription: "Platform for Life Improvement and Support",
+        manifest: "appx/appxmanifest.xml"
       }
     },
     {
