@@ -6,7 +6,7 @@
   "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
-    "preinstall": "npm i -g license-checker npm-check-updates",
+    "preinstall": "npm i -g license-checker npm-check-updates & pushd . & cd src & npm i & popd",
     "win": "chcp 65001 && npm run license-check && electron-forge start",
     "mac": "npm run license-check && electron-forge start",
     "package": "electron-forge package",
@@ -25,26 +25,10 @@
     "name": "SUGIMURA Hiroshi (Kanagawa Institute of Technology)",
     "email": "hiroshi.sugimura@gmail.com"
   },
-  "license": "MIT",
-  "dependencies": {
-    "@network-utils/arp-lookup": "^2.0.2",
-    "date-utils": "^1.2.21",
-    "e-smartmeter-echonet-lite": "^2.7.6",
-    "echonet-lite": "^2.16.1",
-    "echonet-lite-conv": "^1.8.1",
-    "electron-squirrel-startup": "^1.0.0",
-    "electron-store": "^8.1.0",
-    "hue-handler": "^2.1.0",
-    "netatmo": "^2.4.0",
-    "node-cron": "^3.0.2",
-    "node-tradfri-client": "^3.2.0",
-    "request-promise-native": "^0.0.0",
-    "sequelize": "^6.32.1",
-    "sqlite3": "^5.1.6",
-    "switchbot-client": "^0.2.0",
-    "tradfri-handler": "^0.5.3",
-    "usb-2jcie-bu": "^1.2.0"
+  "build": {
+    "asar": false
   },
+  "license": "MIT",
   "devDependencies": {
     "@electron-forge/cli": "^6.4.1",
     "@electron-forge/maker-appx": "^6.4.1",
@@ -55,6 +39,6 @@
     "@electron-forge/maker-zip": "^6.4.1",
     "@electron-forge/publisher-github": "^6.4.1",
     "electron": "26.1.0",
-    "electron-builder": "^24.6.3"
+    "electron-builder": "^24.6.4"
   }
 }
