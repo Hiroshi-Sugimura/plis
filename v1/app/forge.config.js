@@ -1,3 +1,6 @@
+const path = require('path');
+const fs = require('fs');
+
 module.exports = {
   packagerConfig: {
     asar: true,
@@ -14,7 +17,7 @@ module.exports = {
       appleIdPassword: process.env.APPLE_ID_PASSWORD,
       teamId: process.env.APPLE_TEAMID
     },
-    extraResources: [
+    extraFiles: [
       "./appx/vcruntime140.dll"
     ]
   },
@@ -78,5 +81,14 @@ module.exports = {
         draft: true
       }
     }
-  ]
+  ],
+  hooks: {
+    postPackage: async (config, packageResult) => {
+      if (packageResult.platform == 'win32') {
+        let src = path.join(__dirname, 'appx', 'vcruntime140.dll');
+        let dst = path.join(__dirname, 'out', 'PLIS-win32-x64', 'vcruntime140.dll');
+        fs.copyFileSync(src, dst);
+      }
+    }
+  }
 };
