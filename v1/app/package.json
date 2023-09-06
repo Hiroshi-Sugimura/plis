@@ -22,9 +22,6 @@
     "name": "SUGIMURA Hiroshi (Kanagawa Institute of Technology)",
     "email": "hiroshi.sugimura@gmail.com"
   },
-  "build": {
-    "asar": true
-  },
   "license": "MIT",
   "devDependencies": {
     "@electron-forge/cli": "^6.4.1",

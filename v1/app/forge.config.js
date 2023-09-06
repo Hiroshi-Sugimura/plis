@@ -1,5 +1,6 @@
 module.exports = {
   packagerConfig: {
+    asar: true,
     icon: './src/icons/plis',
     osxSign: {
       identity: process.env.APPLE_IDENTITY,
@@ -13,9 +14,9 @@ module.exports = {
       appleIdPassword: process.env.APPLE_ID_PASSWORD,
       teamId: process.env.APPLE_TEAMID
     },
-	 extraResources: [
-	    "./appx/vcruntime140.dll"
-	]
+    extraResources: [
+      "./appx/vcruntime140.dll"
+    ]
   },
   rebuildConfig: {},
   makers: [
