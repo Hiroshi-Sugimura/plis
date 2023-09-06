@@ -1,4 +1,7 @@
 
+説明
+PLISは、Home Energy Management System（HEMS）やIoT機器を統合管理、通信実験ができるネットワークツールです。国際標準規格であるECHONET Liteプロトコルのテストや、IoT機器メーカーの提供するオープンなAPIのテストができます。簡単なHEMS、スマートホーム構築にも役に立ちます。
+
 認定の注意書き
 
 ・HEMSの国際標準規格ECHONET Liteに対応していますので、この通信テストをするためには該当の製品が必要です。

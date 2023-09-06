@@ -16,10 +16,7 @@ module.exports = {
       appleId: process.env.APPLE_ID,
       appleIdPassword: process.env.APPLE_ID_PASSWORD,
       teamId: process.env.APPLE_TEAMID
-    },
-    extraFiles: [
-      "./appx/vcruntime140.dll"
-    ]
+    }
   },
   rebuildConfig: {},
   makers: [
@@ -80,6 +77,12 @@ module.exports = {
         prerelease: false,
         draft: true
       }
+    }
+  ],
+  plugins: [
+    {
+      name: '@electron-forge/plugin-auto-unpack-natives',
+      config: {}
     }
   ],
   hooks: {

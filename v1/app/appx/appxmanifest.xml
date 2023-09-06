@@ -6,7 +6,7 @@
   <Identity Name="Dept.ofHomeElectronicsKAI.PLIS"
     ProcessorArchitecture="x64"
     Publisher="CN=C750459E-8B61-41D7-B726-8ED587655544"
-    Version="1.1.0.0" />
+    Version="1.1.1.0" />
   <Properties>
     <DisplayName>PLIS</DisplayName>
     <PublisherDisplayName>神奈川工科大学</PublisherDisplayName>
