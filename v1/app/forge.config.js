@@ -1,11 +1,15 @@
+const path = require('path');
+const fs = require('fs');
+
 module.exports = {
   packagerConfig: {
-    icon: 'src/icons/plis',
+    asar: true,
+    icon: './src/icons/plis',
     osxSign: {
       identity: process.env.APPLE_IDENTITY,
       hardenedRuntime: true,
-      entitlements: "entitlements.plist",
-      'entitlements-inherit': "entitlements.plist"
+      entitlements: "macOS/entitlements.plist",
+      "entitlements-inherit": "macOS/entitlements.plist"
     },
     osxNotarize: {
       tool: 'notarytool',
@@ -21,16 +25,22 @@ module.exports = {
       config: {
         target: 'portable',
         setupIcon: 'src/icons/plis.ico'
-      },
+      }
     },
     {
       name: '@electron-forge/maker-appx',
       config: {
-        identityName: "Dept.ofHomeElectronicsKAI.PLIS",
         applicationId: "Dept.ofHomeElectronicsKAI.PLIS",
+        displayName: "PLIS",
+        identityName: "Dept.ofHomeElectronicsKAI.PLIS",
+        publisher: process.env.PLISPublisher,
         publisherDisplayName: "神奈川工科大学",
-        publisher: 'CN=C750459E-8B61-41D7-B726-8ED587655544',
-        languages: ["JA-JP", "EN-US"]
+        languages: ["JA-JP"],
+        assets: "appx/assets",
+        Square150x150Logo: "appx/assets/PLIS.150x150.png",
+        makeVersionWinStoreCompatible: "true",
+        packageDescription: "Platform for Life Improvement and Support",
+        manifest: "appx/appxmanifest.xml"
       }
     },
     {
@@ -56,4 +66,32 @@ module.exports = {
       },
     },
   ],
+  publishers: [
+    {
+      name: '@electron-forge/publisher-github',
+      config: {
+        repository: {
+          owner: 'github-user-name',
+          name: 'github-repo-name'
+        },
+        prerelease: false,
+        draft: true
+      }
+    }
+  ],
+  plugins: [
+    {
+      name: '@electron-forge/plugin-auto-unpack-natives',
+      config: {}
+    }
+  ],
+  hooks: {
+    postPackage: async (config, packageResult) => {
+      if (packageResult.platform == 'win32') {
+        let src = path.join(__dirname, 'appx', 'vcruntime140.dll');
+        let dst = path.join(__dirname, 'out', 'PLIS-win32-x64', 'vcruntime140.dll');
+        fs.copyFileSync(src, dst);
+      }
+    }
+  }
 };
