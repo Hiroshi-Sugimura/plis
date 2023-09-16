@@ -133,11 +133,11 @@ window.addEventListener('DOMContentLoaded', function () {
 					control = `<button onClick="window.SwitchBotPlug(this);" value="${d.deviceId},turnOn">ON</button>`;
 					icon = 'fa-plug';
 				}
-				doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${control}`;
-				doc += `voltage: ${devState.voltage}<br>`;
-				doc += `weight: ${devState.weight}<br>`;
-				doc += `electricityOfDay: ${devState.electricityOfDay}<br>`;
-				doc += `electricCurrent: ${devState.electricCurrent}`;
+				doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>`;
+					doc += `${control}<br>`;
+				doc += `${devState.voltage} [V] / ${devState.electricCurrent} [A]<br>`
+					doc += `${devState.weight} [W]<br>`;
+				doc += `Duration: ${devState.electricityOfDay} min<br>`;
 				break;
 
 				case 'Plug':
