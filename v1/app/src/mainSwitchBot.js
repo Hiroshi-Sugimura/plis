@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-/** 
+/**
  * @file mainSwitchBot.js
  * @author SUGIMURA Hiroshi
  * @copyright © 2020.10.30 Sugimura Laboratory, KAIT
@@ -116,7 +116,7 @@ let mainSwitchBot = {
 			console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.start() error:\x1b[32m', error, '\x1b[0m');
 		}
 	},
-	
+
 	/**
 	 * @async
 	 * @function stop
@@ -314,6 +314,44 @@ let mainSwitchBot = {
 					deviceName: d.deviceName,
 					property:   'power',
 					value:      det.power
+				});
+				break;
+
+				case 'Plug Mini (JP)':
+				switchBotDataModel.create({
+					deviceId:   d.deviceId,
+					deviceType: d.deviceType,
+					deviceName: d.deviceName,
+					property:   'power',
+					value:      det.power
+				});
+				switchBotDataModel.create({
+					deviceId:   d.deviceId,
+					deviceType: d.deviceType,
+					deviceName: d.deviceName,
+					property:   'voltage',
+					value:      det.voltage
+				});
+				switchBotDataModel.create({
+					deviceId:   d.deviceId,
+					deviceType: d.deviceType,
+					deviceName: d.deviceName,
+					property:   'weight',
+					value:      det.weight
+				});
+				switchBotDataModel.create({
+					deviceId:   d.deviceId,
+					deviceType: d.deviceType,
+					deviceName: d.deviceName,
+					property:   'electricityOfDay',
+					value:      det.electricityOfDay
+				});
+				switchBotDataModel.create({
+					deviceId:   d.deviceId,
+					deviceType: d.deviceType,
+					deviceName: d.deviceName,
+					property:   'electricCurrent',
+					value:      det.electricCurrent
 				});
 				break;
 

@@ -33,7 +33,7 @@ module.exports = {
         applicationId: "Dept.ofHomeElectronicsKAI.PLIS",
         displayName: "PLIS",
         identityName: "Dept.ofHomeElectronicsKAI.PLIS",
-        publisher: process.env.PLISPublisher,
+        publisher: "CN=C750459E-8B61-41D7-B726-8ED587655544",
         publisherDisplayName: "神奈川工科大学",
         languages: ["JA-JP"],
         assets: "appx/assets",

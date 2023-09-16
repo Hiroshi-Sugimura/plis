@@ -29,8 +29,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	let divSwitchBotSuggest   =  document.getElementById('divSwitchBotSuggest'); // switchBot; サジェスト
 
 	//----------------------------------------------------------------------------------------------
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc SwitchBot デバイス情報のrenew
 	 * @param {void}
 	 * @return {void}
@@ -126,6 +126,20 @@ window.addEventListener('DOMContentLoaded', function () {
 
 				case 'Plug Mini (US)':
 				case 'Plug Mini (JP)':
+				if( devState.power == 'on' ) {
+					control = `<button onClick="window.SwitchBotPlug(this);" value="${d.deviceId},turnOff">OFF</button>`;
+					icon = 'fa-plug-circle-bolt';
+				}else{
+					control = `<button onClick="window.SwitchBotPlug(this);" value="${d.deviceId},turnOn">ON</button>`;
+					icon = 'fa-plug';
+				}
+				doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${control}`;
+				doc += `voltage: ${devState.voltage}<br>`;
+				doc += `weight: ${devState.weight}<br>`;
+				doc += `electricityOfDay: ${devState.electricityOfDay}<br>`;
+				doc += `electricCurrent: ${devState.electricCurrent}`;
+				break;
+
 				case 'Plug':
 				if( devState.power == 'on' ) {
 					control = `<button onClick="window.SwitchBotPlug(this);" value="${d.deviceId},turnOff">OFF</button>`;
@@ -186,8 +200,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc SwitchBot config
 	 * @param {void}
 	 * @return {void}
@@ -205,8 +219,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.ipc.SwitchBotUse( inSwitchBotToken.value );
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 設定完了通知で、設定ボタンの復活（連打防止）
 	 * @param {void}
 	 * @return {void}
@@ -218,8 +232,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast( 'Info', 'SwitchBot 設定を保存しました。');
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc mainプロセスから設定値をもらったので画面を更新
 	 * @param {void}
 	 * @return {void}
@@ -244,8 +258,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	//----------------------------------------------------------------------------------------------
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc SwitchBot control
 	 * @param {void}
 	 * @return {void}
@@ -261,8 +275,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	// SwitchBot chart
 	let spanSwitchBotTime = document.getElementById('spanSwitchBotTime');
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc newLegendClickHandler
 	 * @memberof subSwitchBot
 	 * @param {void}
@@ -380,8 +394,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	// 表示データ（動的）
 	let datasetsSwitchBot = [];
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc renewCanvasSwitchBot
 	 * @memberof subSwitchBot
 	 * @param {void}
@@ -408,8 +422,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	const pointStyleList = ['circle','triangle','cross','rect','star','dash','rectRounded','crossRot','rectRot','line'];
 
 	//////////////////////////////////////////////////////////////////
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc データをもらって画面更新
 	 * @param {void}
 	 * @return {void}
