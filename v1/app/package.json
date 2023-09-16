@@ -1,7 +1,7 @@
 {
   "name": "PLIS",
   "productName": "PLIS",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Platform for Life Improvement and Support",
   "main": "src/main.js",
   "scripts": {
