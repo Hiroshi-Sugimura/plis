@@ -27,14 +27,14 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func 
 	 * @desc エラーログを表示
-	 * @param {void}
+	 * @param errorMsg {datetime, moduleName, stackLog}
 	 * @return {void}
 	 */
 	window.addError = function (errorMsg) {
 		// errorArray 100行にする
-		let a1 = errorMsg.split(' | ');
-		let a2 = a1.split(':');
-		errorArray.push({ datetime: a1[0], moduleName: a2[0], stackLog: a2[1] });
+		window.addToast('Error', errorMsg.stackLog);
+
+		errorArray.push(errorMsg);
 
 		if (errorArray.length > 100) {
 			errorArray.length = 100;

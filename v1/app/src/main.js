@@ -234,8 +234,8 @@ ipcMain.handle('HALrenew', async (event, arg) => {
 ipcMain.handle('HALsubmitQuestionnaire', async (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALsubmitQuestionnaire, arg:', arg) : 0;
 	mainHALlocal.submitQuestionnaire(arg,
-		() => { sendIPCMessage('INF', 'アンケートを保存しました。'); },
-		() => { sendIPCMessage('INF', 'Error: ' + error.message); });
+		() => { sendIPCMessage('Info', 'アンケートを保存しました。'); },
+		() => { sendIPCMessage('Error', {datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'main', stackLog: error.message} ); } );
 });
 
 //----------------------------------

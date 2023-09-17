@@ -99,6 +99,7 @@ let mainESM = {
 				});
 		}catch(error){
 			console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start() error:', error);
+			sendIPCMessage('Error', {datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainESM.start()', stackLog: error} );
 			mainESM.isRun = false;
 			throw error;
 		}

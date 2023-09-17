@@ -330,7 +330,8 @@ function onLoad() {
 
 			case "Error":
 				console.log('main -> Error:', c.arg);
-				window.addToast('Error', c.arg);
+				// c.arg = {datetime, moduleName, stackLog}
+				window.addError(c.arg);  // このメソド内でToastする
 				break;
 
 			default:
