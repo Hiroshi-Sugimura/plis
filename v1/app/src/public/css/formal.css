@@ -5,7 +5,7 @@
  *********************************************************************/
 /* 変数定義 */
 :root {
-	--main-bg: #F0F0F0;															/* うすい灰色 */
+	--main-bg: #F0F0F0;														/* うすい灰色 */
 	--main-text: #000000;														/* 黒 */
 	--sub-bg: #ffdddd;															/* 薄ピンク */
 	--sub-text: #bb4444;														/* エンジ */
@@ -1261,6 +1261,32 @@ td.today {
 .clock {
 	display: block;
 	margin: auto;
+}
+
+
+/*********************************************************************/
+/* ソートテーブル、ライセンスリスト */
+.sort_table {
+	border-collapse: collapse;
+	background-color: var(--inner-bg);
+}
+
+.sort_table th {
+	cursor: pointer;
+	font-size: 13px;
+	background-color: var(--sub-bg);
+	border: solid 1px var(--accent);
+	min-width: 5em;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.sort_table td {
+	font-size: 13px;
+	background-color: var(--inner-bg);
+	border: solid 1px var(--accent);
+	padding-left: 5px;
+	padding-right: 5px;
 }
 
 
