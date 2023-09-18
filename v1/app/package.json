@@ -35,5 +35,8 @@
     "@electron-forge/publisher-github": "^6.4.1",
     "electron": "26.1.0",
     "electron-builder": "^24.6.4"
+  },
+  "dependencies": {
+    "about-window": "^1.15.2"
   }
 }

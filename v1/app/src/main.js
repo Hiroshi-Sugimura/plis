@@ -35,6 +35,7 @@ const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron');
 app.disableHardwareAcceleration(); // electron設定とmain window
 const Store = require('electron-store');
 
+const openAboutWindow = require('about-window').default;  // このアプリについて
 const { sqlite3 } = require('./models/localDBModels');   // DBデータと連携
 const mainSystem = require('./mainSystem');  // System configの管理
 const mainUser = require('./mainUser');     // User configの管理
@@ -127,11 +128,17 @@ ipcMain.handle('URLopen', async (event, arg) => {
 });
 
 
+// ページ内検索
+ipcMain.handle('OpenSearchDialog', (event, message) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- OpenSearchDialog, arg:', arg) : 0;
+    // _searchDialog.openDialog();
+} );
+
+
 // System / Calendar 祝日再取得
 ipcMain.handle('CalendarRenewHolidays', async (event, arg) => {
 	mainCalendar.getHolidays();
 });
-
 
 
 // System設定関連
@@ -635,6 +642,11 @@ const menuItems = [
 				click: function (item, focusedWindow) { if (focusedWindow) focusedWindow.reload() }
 			},
 			{
+				label: 'Search in page (future reserved)',
+				accelerator: isMac ? 'Command+S' : 'Control+S',
+				click: function (item, focusedWindow) {  }
+			},
+			{
 				label: 'Toggle Full Screen',
 				accelerator: isMac ? 'Ctrl+Command+F' : 'F11',
 				click: function () { mainWindow.setFullScreen(!mainWindow.isFullScreen()); }
@@ -651,6 +663,14 @@ const menuItems = [
 	}, {
 		label: 'Information',
 		submenu: [
+			{
+				label: 'About PLIS',
+				click: function () { openAboutWindow({
+					icon_path: path.join(__dirname, 'icons', 'plis_linux_icon.png'),
+					copyright: 'Copyright (c) 2023 Sugimura Lab.',
+					package_json_dir: __dirname
+				}); }
+			},
 			{
 				label: 'About PLIS (External contents)',
 				click: function () { shell.openExternal('https://plis.sugi-lab.net/'); }
