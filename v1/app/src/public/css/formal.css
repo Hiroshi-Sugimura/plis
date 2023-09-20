@@ -1290,6 +1290,25 @@ td.today {
 }
 
 
+/*********************************************************************/
+#searchBox {
+	display: none;
+	background-color: var(--inner-bg);
+	border: solid 1px var(--accent);
+	padding: 5px 5px;
+	position: fixed;
+    right: 5px;
+    top: 20px;
+	height: 50px;
+	text-align: center;
+}
+
+#searchBox:focus {
+	border: solid #83bffc 1px;
+}
+
+
+
 /*********************************************************************
 	EOF
  *********************************************************************/

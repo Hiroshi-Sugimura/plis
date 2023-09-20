@@ -36,6 +36,7 @@ app.disableHardwareAcceleration(); // electron設定とmain window
 const Store = require('electron-store');
 
 const openAboutWindow = require('about-window').default;  // このアプリについて
+
 const { sqlite3 } = require('./models/localDBModels');   // DBデータと連携
 const mainSystem = require('./mainSystem');  // System configの管理
 const mainUser = require('./mainUser');     // User configの管理
@@ -55,6 +56,7 @@ const mainCalendar = require('./mainCalendar'); // カレンダー準備
 const licenses = require('./modules.json');  // モジュールのライセンス
 
 let mainWindow = null; // electronのmain window
+
 let localaddresses = [];  // NICリスト
 
 // 管理しているデバイスやサービスのリストにユーザが名前を付けたい
@@ -129,10 +131,37 @@ ipcMain.handle('URLopen', async (event, arg) => {
 
 
 // ページ内検索
-ipcMain.handle('OpenSearchDialog', (event, message) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- OpenSearchDialog, arg:', arg) : 0;
-    // _searchDialog.openDialog();
-} );
+ipcMain.handle('PageInSearch', (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearch, arg:', arg) : 0;
+	const requestId = mainWindow.webContents.findInPage(arg, {
+        forward: true,
+		findNext: true,
+        matchCase: false
+    });
+});
+
+ipcMain.handle('PageInSearchNext', (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearchNext, arg:', arg) : 0;
+	const requestId = mainWindow.webContents.findInPage(arg, {
+        forward: true,
+		findNext: false,
+        matchCase: false
+    });
+});
+
+ipcMain.handle('PageInSearchPrev', (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearchPrev, arg:', arg) : 0;
+	const requestId = mainWindow.webContents.findInPage(arg, {
+        forward: false,
+		findNext: false,
+        matchCase: false
+    });
+});
+
+ipcMain.handle('PageInSearchStop', (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearchStop') : 0;
+    mainWindow.webContents.stopFindInPage('clearSelection');
+});
 
 
 // System / Calendar 祝日再取得
@@ -242,7 +271,7 @@ ipcMain.handle('HALsubmitQuestionnaire', async (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALsubmitQuestionnaire, arg:', arg) : 0;
 	mainHALlocal.submitQuestionnaire(arg,
 		() => { sendIPCMessage('Info', 'アンケートを保存しました。'); },
-		() => { sendIPCMessage('Error', {datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'main', stackLog: error.message} ); } );
+		() => { sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'main', stackLog: error.message }); });
 });
 
 //----------------------------------
@@ -467,6 +496,14 @@ async function createWindow() {
 			mainWindow.webContents.openDevTools();
 		}
 
+		// PageInSearchして発見したときに呼ばれる
+		mainWindow.webContents.on('found-in-page', (event, result) => {
+			console.log('event:', event, 'result:', result);
+			if (result.finalUpdate) {
+				mainWindow.webContents.stopFindInPage('keepSelection');
+			}
+		});
+
 		mainWindow.on('close', async () => {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.close') : 0;
 			config.windowWidth = mainWindow.getSize()[0];
@@ -495,7 +532,7 @@ async function createWindow() {
 // did-become-active: Mac only
 
 // windows用デスクトップとスタートメニューにショートカットを追加する
-if(require('electron-squirrel-startup')) return;
+if (require('electron-squirrel-startup')) return;
 
 // Entry point
 app.on('ready', async () => {
@@ -539,8 +576,8 @@ app.on('ready', async () => {
 	// windowsのみ
 	// electron-squirrel-startupにした
 	// if (isWin && !fs.existsSync(path.join(store.path, 'config.json'))) {
-		// console.log( '初回起動' );
-		// createShortCut();
+	// console.log( '初回起動' );
+	// createShortCut();
 	// }
 
 	await mainHALlocal.initialize(); // HALのDBを準備して最終データを取得しておく
@@ -643,8 +680,8 @@ const menuItems = [
 			},
 			{
 				label: 'Search in page (future reserved)',
-				accelerator: isMac ? 'Command+S' : 'Control+S',
-				click: function (item, focusedWindow) {  }
+				accelerator: isMac ? 'Command+F' : 'Control+F',
+				click: function (item, focusedWindow) { sendIPCMessage("openSearch", '') }
 			},
 			{
 				label: 'Toggle Full Screen',
@@ -665,11 +702,13 @@ const menuItems = [
 		submenu: [
 			{
 				label: 'About PLIS',
-				click: function () { openAboutWindow({
-					icon_path: path.join(__dirname, 'icons', 'plis_linux_icon.png'),
-					copyright: 'Copyright (c) 2023 Sugimura Lab.',
-					package_json_dir: __dirname
-				}); }
+				click: function () {
+					openAboutWindow({
+						icon_path: path.join(__dirname, 'icons', 'plis_linux_icon.png'),
+						copyright: 'Copyright (c) 2023 Sugimura Lab.',
+						package_json_dir: __dirname
+					});
+				}
 			},
 			{
 				label: 'About PLIS (External contents)',

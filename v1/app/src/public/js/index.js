@@ -63,7 +63,9 @@ function onLoad() {
 	 */
 	window.ipc.on('to-renderer', (event, obj) => {
 		// console.log( '->', obj );
+		// console.log('to-renderer, event:', event); eventは 'to-renderer' が入ってる
 		let c = JSON.parse(obj);    // obj = {cmd, arg} の形式でくる
+		// console.log(c);
 
 		switch (c.cmd) {
 			//----------------------------------------------
@@ -71,6 +73,16 @@ function onLoad() {
 			case "renewSystemConfigView":  // システム設定の画面表示変更
 				console.log('main -> renewSystemConfigView:', c.arg);
 				window.renewSystemConfigView(c.arg);
+				break;
+
+			case 'openSearch':
+				console.log('openSearch');
+				const searchBox = document.getElementById('searchBox');
+				if (searchBox.style.display === 'block') {
+					searchBox.style.display = 'none';
+				} else {
+					searchBox.style.display = 'block';
+				}
 				break;
 
 			//----------------------------------------------
@@ -469,6 +481,28 @@ function onLoad() {
 		return 0;
 	}
 
+	//////////////////////////////////////////////////////////////////////
+	// ページ内検索
+	let searchInput = document.getElementById('searchInput');
+
+	window.onChangeSearchText = function (text) {
+		console.log(text);
+		window.ipc.PageInSearch(text);
+	}
+
+	window.btnSearchNext_Click = function () {
+		window.ipc.PageInSearch(searchInput.value);
+	}
+
+	window.btnSearchPrev_Click = function () {
+		window.ipc.PageInSearch(searchInput.value);
+	}
+
+	window.btnSearchStop_Click = function () {
+		window.ipc.PageInSearchStop();
+	}
+
+	//////////////////////////////////////////////////////////////////////
 	// この関数の最後に呼ぶ
 	// 準備できたことをmainプロセスに伝える
 	window.ipc.already();
