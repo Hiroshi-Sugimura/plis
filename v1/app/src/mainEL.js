@@ -26,6 +26,7 @@ const store = new Store();
 
 let config = {
 	enabled: true,
+	oldSearch: false,
 	debug: false
 };
 
@@ -108,7 +109,7 @@ let mainEL = {
 		}
 
 		EL.sendOPC1('224.0.23.0', [0x0e, 0xf0, 0x01], [0x0e, 0xf0, 0x01], 0x60, 0x80, [0x30]);// 立ち上がったのでONの宣言
-		EL.search();
+		mainEL.search();
 
 		mainEL.setCron();		// 定時処理設定
 	},
@@ -298,6 +299,10 @@ let mainEL = {
 	 */
 	search: function () {
 		EL.search();
+
+		if( config.oldSearch ) {  // Ver. 1.0系Search有効時
+			EL.sendOPC1(EL.EL_Multi, '0ef001', '0ef001', '63', 'd5', '00');
+		}
 	},
 
 

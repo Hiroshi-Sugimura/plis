@@ -36,21 +36,39 @@ contextBridge.exposeInMainWorld('ipc', {
 	/**
 	 * @func 
 	 * @desc ページ内検索
-	 * @param {void} 
+	 * @param {text} 
 	 * @return void
 	 */
 	PageInSearch: (text) => {
 		ipcRenderer.invoke('PageInSearch', text);
 	},
 
+	/**
+	 * @func 
+	 * @desc ページ内検索前方
+	 * @param {text} 
+	 * @return void
+	 */
 	PageInSearchNext: (text) => {
 		ipcRenderer.invoke('PageInSearchNext', text);
 	},
 
+	/**
+	 * @func 
+	 * @desc ページ内検索後方
+	 * @param {text} 
+	 * @return void
+	 */
 	PageInSearchPrev: (text) => {
 		ipcRenderer.invoke('PageInSearchPrev', text);
 	},
 
+	/**
+	 * @func 
+	 * @desc ページ内検索停止
+	 * @param {void} 
+	 * @return void
+	 */
 	PageInSearchStop: () => {
 		ipcRenderer.invoke('PageInSearchStop');
 	},
@@ -383,7 +401,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	//----------------------------------------------------------------------------------------------
 	/**
 	 * @func 
-	 * @desc EL関連
+	 * @desc EL利用開始
 	 * @param {void} 
 	 * @return void
 	 */
@@ -393,12 +411,32 @@ contextBridge.exposeInMainWorld('ipc', {
 
 	/**
 	 * @func 
-	 * @desc EL関連
+	 * @desc EL利用停止
 	 * @param {void} 
 	 * @return void
 	 */
 	ELStop: () => {
 		ipcRenderer.invoke('ELStop');
+	},
+
+	/**
+	 * @func 
+	 * @desc EL旧バージョン検索有効
+	 * @param {void} 
+	 * @return void
+	 */
+	ELUseOldSearch: () => {
+		ipcRenderer.invoke('ELUseOldSearch');
+	},
+
+	/**
+	 * @func 
+	 * @desc EL旧バージョン検索無効
+	 * @param {void} 
+	 * @return void
+	 */
+	ELStopOldSearch: () => {
+		ipcRenderer.invoke('ELStopOldSearch');
 	},
 
 	/**

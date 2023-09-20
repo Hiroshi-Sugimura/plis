@@ -288,6 +288,16 @@ ipcMain.handle('ELStop', async (event, arg) => {
 	mainEL.stop();
 });
 
+ipcMain.handle('ELUseOldSearch', async (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ELUseOldSearch, arg:', arg) : 0;
+	await mainEL.setConfig({ oldSearch: true });  // arg = undef
+});
+
+ipcMain.handle('ELStopOldSearch', async (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ELStopOldSearch, arg', arg) : 0;
+	await mainEL.setConfig({ oldSearch: false });  // arg = undef
+});
+
 ipcMain.handle('Elsend', async (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- Elsend, arg:\x1b[32m', arg, '\x1b[0m') : 0;
 	mainEL.sendMsg(arg.ip, arg.msg);
