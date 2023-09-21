@@ -515,6 +515,14 @@ function onLoad() {
 		window.ipc.PageInSearchStop();
 	}
 
+	// escape key
+	searchInput.addEventListener("keydown", (key) => {
+		console.log(key.code);
+		if( key.code == 'Escape' ) {
+			window.btnSearchStop_Click();
+		}
+	});
+
 	//////////////////////////////////////////////////////////////////////
 	// この関数の最後に呼ぶ
 	// 準備できたことをmainプロセスに伝える

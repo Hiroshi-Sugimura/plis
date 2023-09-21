@@ -133,34 +133,38 @@ ipcMain.handle('URLopen', async (event, arg) => {
 // ページ内検索
 ipcMain.handle('PageInSearch', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearch, arg:', arg) : 0;
-	const requestId = mainWindow.webContents.findInPage(arg, {
-        forward: true,
-		findNext: false,
-        matchCase: false
-    });
+	try {
+		const requestId = mainWindow.webContents.findInPage(arg, {
+			forward: true,
+			findNext: false,
+			matchCase: false
+		});
+	} catch (error) {
+		sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'main.PageInSearch', stackLog: error.message } );
+	}
 });
 
 ipcMain.handle('PageInSearchNext', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearchNext, arg:', arg) : 0;
 	const requestId = mainWindow.webContents.findInPage(arg, {
-        forward: true,
+		forward: true,
 		findNext: true,
-        matchCase: false
-    });
+		matchCase: false
+	});
 });
 
 ipcMain.handle('PageInSearchPrev', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearchPrev, arg:', arg) : 0;
 	const requestId = mainWindow.webContents.findInPage(arg, {
-        forward: false,
+		forward: false,
 		findNext: true,
-        matchCase: false
-    });
+		matchCase: false
+	});
 });
 
 ipcMain.handle('PageInSearchStop', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearchStop') : 0;
-    mainWindow.webContents.stopFindInPage('clearSelection');
+	mainWindow.webContents.stopFindInPage('clearSelection');
 });
 
 
