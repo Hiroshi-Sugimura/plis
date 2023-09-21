@@ -39,6 +39,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		if (errorArray.length > 100) {
 			errorArray.length = 100;
 		}
+
+		window.renewLogText();
 	};
 
 	//
@@ -46,10 +48,10 @@ window.addEventListener('DOMContentLoaded', function () {
 		let t = ""
 
 		errorArray.forEach( (elem) => {
-			t += elem.datetime + ' | ' + elem.moduleName + ': ' + stackLog;
+			t = elem.datetime + ' | ' + elem.moduleName + ': ' + elem.stackLog + '\n' + t;
 		});
 
-		errorArray.value = t;
+		txtErrLog.value = t;
 	};
 
 });

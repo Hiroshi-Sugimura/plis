@@ -517,7 +517,7 @@ function onLoad() {
 
 	// escape key
 	searchInput.addEventListener("keydown", (key) => {
-		console.log(key.code);
+		// console.log(key.code);
 		if( key.code == 'Escape' ) {
 			window.btnSearchStop_Click();
 		}
