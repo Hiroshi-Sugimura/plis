@@ -1531,7 +1531,8 @@
 							ECHONET Lite機器を利用したくないかたは、チェックボックスを無効にしてください。（default: checked）<br>
 							<br>
 							<label><input type="checkbox" id="inELUse">Use ECHONET Lite</label><br>
-							<label><input type="checkbox" id="inELUseOldSearch">Additional old version discovery</label><br>
+							<label><input type="checkbox" id="inELUseOldSearch">Additional old version
+								discovery</label><br>
 							<button id="btnELConfigSet" onclick="window.btnELConfigSet_Click();">設定</button>
 						</div>
 					</details>
@@ -1764,12 +1765,18 @@
 
 			<!-- 検索ボックス -->
 			<div id="searchBox">
-				Page in search<br>
-				<input id="searchInput" class="searchInput inline" type="search" label="Search..." autocomplete="off" autofocus onChange="window.onChangeSearchText(this.value)"></input>
-				<div class="searchAttches inline">0/0</div>
-				<button class="searchPrev inline" onClick="window.btnSearchNext_Click()">&lt;</button>
-				<button class="searchNext inline" onClick="window.btnSearchPrev_Click()">&gt;</button>
-				<button class="searchStop inline" onClick="window.btnSearchStop_Click()">✕</button>
+				<form class="secretBorder inline" onSubmit="window.btnSearchStart_Click(); return false;"><input id="searchInput" class="inline" type="search" label="Search..."
+						autocomplete="off" autofocus onChange="window.btnSearchStart_Click()" /><span
+						class="fa-solid fa-magnifying-glass"
+						onclick="window.btnSearchStart_Click()"></span>
+				</form><br>
+				<div id="searchResult" class="searchAttches inline">0/0</div>
+				<button class="searchPrev inline" onClick="window.btnSearchPrev_Click()"><i
+						class="fa-solid fa-arrow-left"></i></button>
+				<button class="searchNext inline" onClick="window.btnSearchNext_Click()"><i
+						class="fa-solid fa-arrow-right"></i></button>
+				<button class="searchStop inline" onClick="window.btnSearchStop_Click()"><i
+						class="fa-solid fa-xmark"></i></button>
 			</div>
 		</webview>
 

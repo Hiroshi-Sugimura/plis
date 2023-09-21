@@ -53,6 +53,11 @@ function onLoad() {
 
 	let syncBtn = document.getElementById('syncBtn');
 
+	// 検索ダイアログ
+	const searchBox = document.getElementById('searchBox');
+	const searchInput = document.getElementById('searchInput');
+	const searchResult = document.getElementById('searchResult');
+
 	//////////////////////////////////////////////////////////////////
 	/** 
 	 * @event
@@ -76,13 +81,18 @@ function onLoad() {
 				break;
 
 			case 'openSearch':
-				console.log('openSearch');
-				const searchBox = document.getElementById('searchBox');
+				console.log('main -> openSearch:');
 				if (searchBox.style.display === 'block') {
 					searchBox.style.display = 'none';
 				} else {
 					searchBox.style.display = 'block';
+					searchInput.focus();  // 検索ボックスにフォーカスする
 				}
+				break;
+
+			case 'foundResultShow':
+				console.log('main -> foundResultShow:');
+				searchResult.innerHTML = `${c.arg.activeMatchOrdinal} / ${c.arg.matches}`;
 				break;
 
 			//----------------------------------------------
@@ -483,22 +493,25 @@ function onLoad() {
 
 	//////////////////////////////////////////////////////////////////////
 	// ページ内検索
-	let searchInput = document.getElementById('searchInput');
-
-	window.onChangeSearchText = function (text) {
-		console.log(text);
-		window.ipc.PageInSearch(text);
+	// 検索開始
+	window.btnSearchStart_Click = function () {
+		window.ipc.PageInSearch(searchInput.value);
 	}
 
+	// 順検索
 	window.btnSearchNext_Click = function () {
-		window.ipc.PageInSearch(searchInput.value);
+		window.ipc.PageInSearchNext(searchInput.value);
 	}
 
+	// 逆検索
 	window.btnSearchPrev_Click = function () {
-		window.ipc.PageInSearch(searchInput.value);
+		window.ipc.PageInSearchPrev(searchInput.value);
 	}
 
+	// 検索終了
 	window.btnSearchStop_Click = function () {
+		searchBox.style.display = 'none';
+		searchResult.innerHTML = '0 / 0';
 		window.ipc.PageInSearchStop();
 	}
 

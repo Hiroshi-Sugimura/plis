@@ -135,7 +135,7 @@ ipcMain.handle('PageInSearch', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearch, arg:', arg) : 0;
 	const requestId = mainWindow.webContents.findInPage(arg, {
         forward: true,
-		findNext: true,
+		findNext: false,
         matchCase: false
     });
 });
@@ -144,7 +144,7 @@ ipcMain.handle('PageInSearchNext', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearchNext, arg:', arg) : 0;
 	const requestId = mainWindow.webContents.findInPage(arg, {
         forward: true,
-		findNext: false,
+		findNext: true,
         matchCase: false
     });
 });
@@ -153,7 +153,7 @@ ipcMain.handle('PageInSearchPrev', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearchPrev, arg:', arg) : 0;
 	const requestId = mainWindow.webContents.findInPage(arg, {
         forward: false,
-		findNext: false,
+		findNext: true,
         matchCase: false
     });
 });
@@ -508,12 +508,14 @@ async function createWindow() {
 
 		// PageInSearchして発見したときに呼ばれる
 		mainWindow.webContents.on('found-in-page', (event, result) => {
-			console.log('event:', event, 'result:', result);
+			// console.log('event:', event, 'result:', result);
 			if (result.finalUpdate) {
 				mainWindow.webContents.stopFindInPage('keepSelection');
+				sendIPCMessage('foundResultShow', result);
 			}
 		});
 
+		// 閉じるときに呼ばれる
 		mainWindow.on('close', async () => {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.close') : 0;
 			config.windowWidth = mainWindow.getSize()[0];
@@ -522,6 +524,7 @@ async function createWindow() {
 			await mainSystem.setConfig(config);
 		});
 
+		// 閉じた後でよばれる
 		mainWindow.on('closed', () => {
 			console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.closed');
 			mainWindow = null;
@@ -689,7 +692,7 @@ const menuItems = [
 				click: function (item, focusedWindow) { if (focusedWindow) focusedWindow.reload() }
 			},
 			{
-				label: 'Search in page (future reserved)',
+				label: 'Search in page',
 				accelerator: isMac ? 'Command+F' : 'Control+F',
 				click: function (item, focusedWindow) { sendIPCMessage("openSearch", '') }
 			},
