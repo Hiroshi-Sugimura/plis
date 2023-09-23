@@ -187,7 +187,7 @@ window.addEventListener('DOMContentLoaded', function () {
 				break;
 
 				default:
-				console.log('subSwitchBot, unknown device, d:', d );
+				// console.log('subSwitchBot, unknown device, d:', d );
 				doc += `<div class="tooltip"><i class="fa-solid fa-circle-nodes switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}`;
 				break;
 			}
