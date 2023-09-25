@@ -593,6 +593,36 @@ let mainSwitchBot = {
 		}
 	},
 
+	// plugMiniListを取得
+	/**
+	 * @async
+	 * @function plugMiniList
+	 * @param {theDayBegin} [theDayBegin]
+	 * @param {theDayEnd} [theDayEnd]
+	 * @return {rows}
+	*/
+	getPlugMiniList: async function( theDayBegin, theDayEnd ) {
+		let list = [];
+		try{
+			// 1日分で記録があるデバイスリスト（プラグミニ）
+			let rows = [];
+			rows = await switchBotDataModel.findAll( {
+				attributes: ['deviceName' ],
+				group: ['deviceName'],
+				where: {
+					deviceType: { [Op.or]: ['Plug Mini (JP)','Plug Mini (US)'] },
+					createdAt: { [Op.between] : [theDayBegin.toISOString(), theDayEnd.toISOString()] }
+				}
+			} );
+			for( const row of rows ) {
+				list.push( row.dataValues.deviceName );
+			}
+			return list;
+		} catch( error ) {
+			console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.getPlugMiniList()', error);
+		}
+	},
+
 
 	// 3分毎のtemperature
 	/**
@@ -661,6 +691,114 @@ let mainSwitchBot = {
 	},
 
 
+
+
+	// 3分毎のvoltage
+	/**
+	 * @async
+	 * @function getVoltageRows
+	 * @param {theDayBegin} [theDayBegin]
+	 * @param {theDayEnd} [theDayEnd]
+	 * @param {plug} [plug]
+	 * @param {subQuery} [subQuery]
+	 * @return {rows}
+	*/
+	getVoltageRows: async function( theDayBegin, theDayEnd, plug, subQuery ) {
+		try{
+			// 3分毎データ tempreture
+			let rows = await switchBotDataModel.findAll( {
+				attributes: [
+					[Sequelize.fn('AVG', Sequelize.col('value')), 'avgVoltage'],
+					'createdAt',
+					[Sequelize.literal(subQuery), 'timeunit']
+					],
+				where: {
+					deviceType: { [Op.or]: ['Plug Mini (JP)','Plug Mini (US)'] },
+					deviceName: plug,
+					property:  'voltage',
+					createdAt: { [Op.between] : [theDayBegin.toISOString(), theDayEnd.toISOString()] }
+				},
+				group: ['timeunit']
+			} );
+
+			return rows;
+		} catch( error ) {
+			console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.getVoltageRows()', error);
+		}
+	},
+
+	// 3分毎のwatt
+	/**
+	 * @async
+	 * @function getWeightRows
+	 * @param {theDayBegin} [theDayBegin]
+	 * @param {theDayEnd} [theDayEnd]
+	 * @param {plug} [plug]
+	 * @param {subQuery} [subQuery]
+	 * @return {rows}
+	*/
+	getWeightRows: async function( theDayBegin, theDayEnd, plug, subQuery ) {
+		let ret = [];
+		try{
+			// 3分毎データ humidity
+			let rows = await switchBotDataModel.findAll( {
+				attributes: [
+					[Sequelize.fn('AVG', Sequelize.col('value')), 'avgWatt'],
+					'createdAt',
+					[Sequelize.literal(subQuery), 'timeunit']
+					],
+				where: {
+					deviceType: { [Op.or]: ['Plug Mini (JP)','Plug Mini (US)'] },
+					deviceName: plug,
+					property:  'weight',
+					createdAt: { [Op.between] : [theDayBegin.toISOString(), theDayEnd.toISOString()] }
+				},
+				group: ['timeunit']
+			} );
+
+			return rows;
+		} catch( error ) {
+			console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.getWeightRows()', error);
+		}
+	},
+
+	// 3分毎のAmpere
+	/**
+	 * @async
+	 * @function getCurrentRows
+	 * @param {theDayBegin} [theDayBegin]
+	 * @param {theDayEnd} [theDayEnd]
+	 * @param {plug} [plug]
+	 * @param {subQuery} [subQuery]
+	 * @return {rows}
+	*/
+	getCurrentRows: async function( theDayBegin, theDayEnd, plug, subQuery ) {
+		let ret = [];
+		try{
+			// 3分毎データ humidity
+			let rows = await switchBotDataModel.findAll( {
+				attributes: [
+					[Sequelize.fn('AVG', Sequelize.col('value')), 'avgAmpere'],
+					'createdAt',
+					[Sequelize.literal(subQuery), 'timeunit']
+					],
+				where: {
+					deviceType: { [Op.or]: ['Plug Mini (JP)','Plug Mini (US)'] },
+					deviceName: plug,
+					property:  'electricCurrent',
+					createdAt: { [Op.between] : [theDayBegin.toISOString(), theDayEnd.toISOString()] }
+				},
+				group: ['timeunit']
+			} );
+
+			return rows;
+		} catch( error ) {
+			console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.getCurrentRows()', error);
+		}
+	},
+
+
+
 	// DBからテーブル取得
 	/**
 	 * @async
@@ -670,7 +808,7 @@ let mainSwitchBot = {
 	*/
 	getTodayRoomEnvSwitchBot: async function() {
 		// 画面に今日のデータを送信するためのデータ作る
-		let ret = {	srcType: 'switchBot', meterList:[] }; // 戻り値  // { meterList:[], meter1:[], meter2[], .... }
+		let ret = {	srcType: 'switchBot', meterList:[], plugList:[] }; // 戻り値  // { meterList:[], meter1:[], meter2[], .... }
 
 		try {
 			let now = new Date();  // 現在
@@ -679,13 +817,13 @@ let mainSwitchBot = {
 			let end = new Date(begin);  // 現在時刻UTCで取得
 			end.setHours( begin.getHours() + 25, 0, 0, 0 ); // 次の日の00:00:00にする
 
-			// 温湿度計のリストを取得
-			ret.meterList = await mainSwitchBot.getMeterList( begin, end );
+			ret.meterList	 = await mainSwitchBot.getMeterList( begin, end );		// 温湿度計のリストを取得
+			ret.plugMiniList = await mainSwitchBot.getPlugMiniList( begin, end );		// Plug Miniのリストを取得
 
 			//------------------------------------------------------------
 			// 温湿度計毎にデータ作る
-			let cases = mainSwitchBot.getCases( now );
-			let subQuery = `CASE ${cases} END`;
+			const cases = mainSwitchBot.getCases( now );
+			const subQuery = `CASE ${cases} END`;
 
 			for( const meter of ret.meterList ) {
 				let rowsT = await mainSwitchBot.getTempratureRows( begin, end, meter, subQuery );			// 3分毎データ tempreture
@@ -730,6 +868,67 @@ let mainSwitchBot = {
 				}
 
 				ret[meter] = array;
+			}
+
+
+			//------------------------------------------------------------
+			// プラグ毎にデータ作る
+			for( const plug of ret.plugMiniList ) {
+				let rowsV = await mainSwitchBot.getVoltageRows( begin, end, plug, subQuery );			// 3分毎データ volt
+				let rowsW = await mainSwitchBot.getWeightRows( begin, end, plug, subQuery );			// 3分毎データ watt
+				let rowsC = await mainSwitchBot.getCurrentRows( begin, end, plug, subQuery );			// 3分毎データ ampere
+
+				console.log( rowsV );
+				console.log( rowsW );
+				console.log( rowsC );
+
+				let T1 = new Date();
+				T1.setHours( 0, 0, 0);
+				let array = [];
+				for( let t=0; t<480; t+=1 ) {
+					let pushRow = {
+						id: t,
+						time: T1.toISOString()
+					}
+
+					// volt
+					if( rowsV ) {
+						let row = rowsV.find( (row) => row.dataValues.timeunit == T1.toFormat('HH24:MI') );
+
+						if( row ) {
+							pushRow.voltage = row.dataValues.avgVoltage;
+						}else{
+							pushRow.voltage = null;
+						}
+					}
+
+					// watt
+					if( rowsW ) {
+						let row = rowsW.find( (row) => row.dataValues.timeunit == T1.toFormat('HH24:MI') );
+
+						if( row ) {
+							pushRow.watt = row.dataValues.avgWatt;
+						}else{
+							pushRow.watt = null;
+						}
+					}
+
+					// ampere
+					if( rowsC ) {
+						let row = rowsC.find( (row) => row.dataValues.timeunit == T1.toFormat('HH24:MI') );
+
+						if( row ) {
+							pushRow.ampere = row.dataValues.avgAmpere;
+						}else{
+							pushRow.ampere = null;
+						}
+					}
+
+					array.push( pushRow );
+					T1.setMinutes( T1.getMinutes() +3 ); // + 3 min
+				}
+
+				ret[plug] = array;
 			}
 
 			return ret;

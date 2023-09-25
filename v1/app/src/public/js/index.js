@@ -14,7 +14,7 @@
 'use strict'
 
 ////////////////////////////////////////////////////////////////////////////////
-/** 
+/**
  * @Func isObjEmpty
  * @Desc 内部
  * @Param {Void}
@@ -28,7 +28,7 @@ function isObjEmpty(obj) {
 ////////////////////////////////////////////////////////////////////////////////
 window.addEventListener('load', onLoad);
 
-/** 
+/**
  * @Func window.onLoad
  * @Desc ドキュメントがロードされたら呼ばれる
  * HTMLがロードされたら実行，EventListenerとしてはDOMContentLoadedのあとloadする。
@@ -59,7 +59,7 @@ function onLoad() {
 	const searchResult = document.getElementById('searchResult');
 
 	//////////////////////////////////////////////////////////////////
-	/** 
+	/**
 	 * @event
 	 * @name window.ipc.to-renderer
 	 * @Desc MainProcessからのメッセージ振り分け
@@ -157,7 +157,7 @@ function onLoad() {
 			//----------------------------------------------
 			// 電力スマメ関連
 			case "fclESM":
-				console.log('main -> fclESM:', c.arg);
+				// console.log('main -> fclESM:', c.arg);
 				window.renewESM(c.arg);
 				break;
 
@@ -267,7 +267,7 @@ function onLoad() {
 			//----------------------------------------------
 			// SwitchBot関連
 			case "fclSwitchBot":
-				console.log('main -> fclSwitchBot:', c.arg);
+				// console.log('main -> fclSwitchBot:', c.arg);
 				window.renewFacilitiesSwitchBot(c.arg);
 				break;
 
@@ -277,8 +277,8 @@ function onLoad() {
 				break;
 
 			case "renewRoomEnvSwitchBot":
-				// console.log( 'main -> renewRoomEnvSwitchBot:', c.arg );
-				console.log('main -> renewRoomEnvSwitchBot');
+				console.log( 'main -> renewRoomEnvSwitchBot:', c.arg );
+				// console.log( 'main -> renewRoomEnvSwitchBot' );
 				window.renewRoomEnvSwitchBot(c.arg);
 				break;
 
@@ -366,7 +366,7 @@ function onLoad() {
 	////////////////////////////////////////////////////////////////////////////////
 	// user profile関係
 
-	/** 
+	/**
 	 * @Func renewLicenses
 	 * @Desc ライセンス
 	 * @Param {Void}
@@ -391,7 +391,7 @@ function onLoad() {
 	//////////////////////////////////////////////////////////////////////
 	// ボタン
 
-	/** 
+	/**
 	 * @Func window.pushHideButton
 	 * @Desc テキストエリアを見せたり隠したり
 	 * @Param {Void}

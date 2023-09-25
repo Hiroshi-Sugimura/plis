@@ -390,7 +390,7 @@
 						<div id="divControlSwitchBot" class="LinearLayoutParent" style="display: none;"></div>
 					</div>
 
-					<!-- SwitchBotChart -->
+					<!-- SwitchBotChart Env -->
 					<h3 id="H3SwitchBot" class="none"><i class='fa-solid fa-person-shelter'></i> 屋内環境：SwitchBot （<span
 							id="spanSwitchBotTime">取得中</span>） <span class="f_right"><a href="#"
 								onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;"><i
@@ -399,6 +399,17 @@
 					<div class="p">
 						<canvas id="canRoomEnvChartSwitchBot" class="none canRoomEnvChart"></canvas>
 					</div>
+
+					<!-- SwitchBotChart Power -->
+					<h3 id="H3SwitchBotPower" class="none"><i class='fa-solid fa-person-shelter'></i> 電力：SwitchBot （<span
+							id="spanSwitchBotPowerTime">取得中</span>） <span class="f_right"><a href="#"
+								onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;"><i
+									class="fa-solid fa-gear right"></i></a></span></h3>
+					<!-- graph -->
+					<div class="p">
+						<canvas id="canRoomPowerChartSwitchBot" class="none canRoomPowerChart"></canvas>
+					</div>
+
 
 					<div id="divELSuggest">
 						<h3><i class='fa-solid fa-person-shelter'></i> ECHONET Lite</h3>
@@ -1765,9 +1776,9 @@
 
 			<!-- 検索ボックス -->
 			<div id="searchBox">
-				<form class="secretBorder inline" onSubmit="window.btnSearchStart_Click(); return false;"><input id="searchInput" class="inline" type="search" label="Search..."
-						autocomplete="off" autofocus onChange="window.btnSearchStart_Click()" /><span
-						class="fa-solid fa-magnifying-glass"
+				<form class="secretBorder inline" onSubmit="window.btnSearchStart_Click(); return false;"><input
+						id="searchInput" class="inline" type="search" label="Search..." autocomplete="off" autofocus
+						onChange="window.btnSearchStart_Click()" /><span class="fa-solid fa-magnifying-glass"
 						onclick="window.btnSearchStart_Click()"></span>
 				</form><br>
 				<div id="searchResult" class="searchAttches inline">0/0</div>
