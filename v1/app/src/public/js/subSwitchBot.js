@@ -273,7 +273,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	// SwitchBot chart
-	let spanSwitchBotTime = document.getElementById('spanSwitchBotTime');
+	let spanSwitchBotTime = document.getElementById('spanSwitchBotTime');  // env
+	let spanSwitchBotPwerTime = document.getElementById('spanSwitchBotPwerTime');  // power
 
 	/**
 	 * @func
@@ -324,9 +325,69 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
+	/**
+	 * @func
+	 * @desc newPowerLegendClickHandler
+	 * @memberof subSwitchBot
+	 * @param {void}
+	 * @return {void}
+	 */
+	let newPowerLegendClickHandler = function(e, legendItem) {
+		let index = legendItem.datasetIndex;
+		let ci    = this.chart;
+		let meta  = ci.getDatasetMeta(index);
+
+		meta.hidden = meta.hidden === null? !ci.data.datasets[index].hidden : null;
+
+		ci.update();	// データセットを非表示にしました。チャートを再表示してください。
+
+		console.log( 'newPowerLegendClickHandler() legendItem:', legendItem );
+
+		switch( legendItem.text ) {
+			case "ワット [W]":
+			const switchBotDocWattSec = document.getElementById('switchBotDocWattSec');
+			if( legendItem.hidden ) {
+				switchBotDocWattSec.classList.add("watt_color");
+				switchBotDocWattSec.classList.remove("disabled_color");
+			}else{
+				switchBotDocWattSec.classList.remove("watt_color");
+				switchBotDocWattSec.classList.add("disabled_color");
+			}
+			break;
+
+			case "ボルト [V]":
+			const switchBotDocVoltSec = document.getElementById('switchBotDocVoltSec');
+			if( legendItem.hidden ) {
+				switchBotDocVoltSec.classList.add("vold_color");
+				switchBotDocVoltSec.classList.remove("disabled_color");
+			}else{
+				switchBotDocVoltSec.classList.remove("volt_color");
+				switchBotDocVoltSec.classList.add("disabled_color");
+			}
+			break;
+
+			case "アンペア [A]":
+			const switchBotDocAmpereSec = document.getElementById('switchBotDocAmpereSec');
+			if( legendItem.hidden ) {
+				switchBotDocAmpereSec.classList.add("ampere_color");
+				switchBotDocAmpereSec.classList.remove("disabled_color");
+			}else{
+				switchBotDocAmpereSec.classList.remove("ampere_color");
+				switchBotDocAmpereSec.classList.add("disabled_color");
+			}
+			break;
+
+			default:
+			break;
+		}
+	};
+
+
 	// HTML内部とリンク
-	const ctxSwitchBot = canRoomEnvChartSwitchBot.getContext('2d');
-	let myChartSwitchBot = null;
+	const ctxSwitchBot      = canRoomEnvChartSwitchBot.getContext('2d');
+	const ctxSwitchBotPower = canRoomPowerChartSwitchBot.getContext('2d');
+	let myChartSwitchBot      = null;
+	let myPowerChartSwitchBot = null;
 
 	// 複数軸用の、軸オプション
 	let complexChartOption = {
@@ -391,8 +452,83 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
+	// 複数軸用の、軸オプション (Power)
+	let complexPowerChartOption = {
+		responsive: true,
+		plugins: {
+			legend: {
+				display: true,
+				position: 'top',
+				onClick: newPowerLegendClickHandler
+			}
+		},
+		scales: {
+			"y-axis-left-w": {  // watt
+				type: "linear",   // linear固定
+				position: "left", // どちら側に表示される軸か？
+				suggestedMax: 3000,
+				min: 0,
+				title: { display: true, text: 'Watt [W]' },
+				grid: {
+					color: 'rgba(255,0,0,0.1)',
+					borderColor: 'rgba(255,0,0,1.0)'
+				}
+			},
+			"y-axis-left-a": {  // ampere
+				type: "linear",   // linear固定
+				position: "left", // どちら側に表示される軸か？
+				suggestedMax: 30,
+				min: 0,
+				title: { display: true, text: 'Ampere [A]' },
+				grid: {
+					color: 'rgba(255,0,0,0.1)',
+					borderColor: 'rgba(255,0,0,1.0)'
+				}
+			},
+			"y-axis-right": {
+				type: "linear",
+				position: "right",
+				suggestedMax: 110,
+				min: 0,
+				title: { display: true, text: 'Voltage [V]' },
+				grid: {
+					borderColor: 'rgba(0,0,255,1.0)'
+				}
+			},
+			"x": {
+				type: 'time',
+				time: {
+					unit: 'minutes',
+					parser: 'HH:mm',
+					displayFormats: {
+						minute: 'HH:mm',
+						hour: 'HH:mm'
+					}
+				},
+				min: '00:00',
+				max: '24:00',
+				ticks: {
+					// autoSkip: false,
+					maxTicksLimit: 24*2+1,   // 24h * 30min + 00:00
+					maxRotation: 90,
+					// stepSize: 120,
+					beginAtZero: true,
+					callback: function( value, index, ticks ) {
+						return moment.tz(value, 'Asia/Tokyo').format('HH:mm');
+						// return ( index % 60 == 0 ? moment.tz(value, 'Asia/Tokyo').format('HH:mm') : '' );
+					}
+				},
+				grid: {
+					color: 'rgba(0,0,0,0.3)',
+					borderColor: 'rgba(0,0,0,1.0)'
+				}
+			}
+		}
+	};
+
 	// 表示データ（動的）
-	let datasetsSwitchBot = [];
+	let datasetsSwitchBot = [];  //
+	let datasetsSwitchBotPower = [];
 
 	/**
 	 * @func
@@ -419,6 +555,33 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
+
+	/**
+	 * @func
+	 * @desc renewPowerCanvasSwitchBot
+	 * @memberof subSwitchBot
+	 * @param {void}
+	 * @return {void}
+	 */
+	let renewPowerCanvasSwitchBot = function() {
+		if( myPowerChartSwitchBot ) {
+			// すでにチャートがあればアップデートだけ
+			myPowerChartSwitchBot.data.datasets = datasetsSwitchBotPower;
+			myPowerChartSwitchBot.update();
+		}else{
+			// 初回起動はチャートオブジェクトを作る
+			myPowerChartSwitchBot = new Chart( ctxSwitchBotPower, {
+				type: 'line',
+				data: {
+					// labels: LABEL_X,
+					datasets: datasetsSwitchBotPower
+				},
+				options: complexPowerChartOption
+			});
+		}
+	};
+
+
 	const pointStyleList = ['circle','triangle','cross','rect','star','dash','rectRounded','crossRot','rectRot','line'];
 
 	//////////////////////////////////////////////////////////////////
@@ -443,6 +606,9 @@ window.addEventListener('DOMContentLoaded', function () {
 			if( envDataArray ) {
 				let oTemperature = new Array();
 				let oHumidity = new Array();
+				let oWatt     = new Array();
+				let oVoltage  = new Array();
+				let oAmpere   = new Array();
 
 				for( const d of envDataArray ) {
 					oTemperature.push( { x:moment(d.time), y:d.temperature} );
@@ -459,8 +625,39 @@ window.addEventListener('DOMContentLoaded', function () {
 				pointStyle = pointStyle == 9 ? 0 : pointStyle += 1;  // 9なら0に戻る、でなければ次のスタイルへ
 			}
 		}
-
 		renewCanvasSwitchBot();
+
+		for( const plug of envDataObj.plugMiniList ) {
+			let envDataArray = envDataObj[plug];
+			console.log( 'window.renewRoomEnvSwitchBot() plug:', plug, ', envDataArray:', envDataArray );
+
+			spanPowerSwitchBotTime.innerHTML = moment().format("YYYY/MM/DD HH:mm:ss取得");
+
+			if( envDataArray ) {
+				let oWatt     = new Array();
+				let oVoltage  = new Array();
+				let oAmpere   = new Array();
+
+				for( const d of envDataArray ) {
+					oWatt.push( { x:moment(d.time), y:d.watt} );
+					oVoltage.push( { x:moment(d.time), y:d.voltage} );
+					oAmpere.push( { x:moment(d.time), y:d.ampere} );
+				}
+
+				datasetsSwitchBotPower.push(
+					{ label: plug + '：電力 [W]',    type: 'line', data: oWatt, borderColor: "rgba(255,70,70,1.0)", backgroundColor: "rgba(255,178,178,1.0)",
+						radius:4, borderWidth:1, yAxisID: 'y-axis-left-w', xAxisID:'x', pointStyle: pointStyleList[pointStyle] },
+					{ label: plug + '：電圧 [V]',   type: 'line', data: oVoltage, borderColor: "rgba(70,70,255,1.0)", backgroundColor: "rgba(178,178,255,1.0)",
+						radius:4, borderWidth:1, yAxisID: 'y-axis-right',  xAxisID:'x', pointStyle: pointStyleList[pointStyle] },
+					{ label: plug + '：電流 [A]',   type: 'line', data: oAmpere, borderColor: "rgba(70,70,255,1.0)", backgroundColor: "rgba(178,178,255,1.0)",
+						radius:4, borderWidth:1, yAxisID: 'y-axis-left-a',  xAxisID:'x', pointStyle: pointStyleList[pointStyle] }
+					);
+
+				pointStyle = pointStyle == 9 ? 0 : pointStyle += 1;  // 9なら0に戻る、でなければ次のスタイルへ
+			}
+		}
+
+		renewPowerCanvasSwitchBot();
 	};
 
 } );
