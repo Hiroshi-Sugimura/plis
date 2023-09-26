@@ -878,9 +878,9 @@ let mainSwitchBot = {
 				let rowsW = await mainSwitchBot.getWeightRows( begin, end, plug, subQuery );			// 3分毎データ watt
 				let rowsC = await mainSwitchBot.getCurrentRows( begin, end, plug, subQuery );			// 3分毎データ ampere
 
-				console.log( rowsV );
-				console.log( rowsW );
-				console.log( rowsC );
+				// console.log( rowsV );
+				// console.log( rowsW );
+				// console.log( rowsC );
 
 				let T1 = new Date();
 				T1.setHours( 0, 0, 0);

@@ -14,7 +14,10 @@ window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subSwitchBot.js');
 
 	let facilitiesSwitchBot; // 宅内情報（switchBot）
-	let divSwitchBotH3      = document.getElementById('divSwitchBotH3');
+
+	let H3SwitchBot      = document.getElementById('H3SwitchBot');
+	let H3SwitchBotPower = document.getElementById('H3SwitchBotPower');
+
 	let divSwitchBot        = document.getElementById('divSwitchBot');  // switchBotのセンサデータ
 
 	// config
@@ -273,7 +276,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	// SwitchBot chart
-	let spanSwitchBotTime = document.getElementById('spanSwitchBotTime');  // env
+	let spanSwitchBotTime     = document.getElementById('spanSwitchBotTime');  // env
 	let spanSwitchBotPwerTime = document.getElementById('spanSwitchBotPwerTime');  // power
 
 	/**
@@ -538,6 +541,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	let renewCanvasSwitchBot = function() {
+		H3SwitchBot.style.display = 'block';
 		if( myChartSwitchBot ) {
 			// すでにチャートがあればアップデートだけ
 			myChartSwitchBot.data.datasets = datasetsSwitchBot;
@@ -564,6 +568,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	let renewPowerCanvasSwitchBot = function() {
+		H3SwitchBotPower.style.display = 'block';
 		if( myPowerChartSwitchBot ) {
 			// すでにチャートがあればアップデートだけ
 			myPowerChartSwitchBot.data.datasets = datasetsSwitchBotPower;
@@ -629,7 +634,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 		for( const plug of envDataObj.plugMiniList ) {
 			let envDataArray = envDataObj[plug];
-			console.log( 'window.renewRoomEnvSwitchBot() plug:', plug, ', envDataArray:', envDataArray );
+			// console.log( 'window.renewRoomEnvSwitchBot() plug:', plug, ', envDataArray:', envDataArray );
 
 			spanPowerSwitchBotTime.innerHTML = moment().format("YYYY/MM/DD HH:mm:ss取得");
 

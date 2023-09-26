@@ -725,6 +725,21 @@ const menuItems = [
 				click: function () { mainWindow.setFullScreen(!mainWindow.isFullScreen()); }
 			},
 			{
+				label: 'Zoom (+)',
+				accelerator: isMac ? 'Command+plus' : 'Control+plus',
+				click: function () { mainWindow.webContents.setZoomFactor(  mainWindow.webContents.getZoomFactor() + 0.1 ); }
+			},
+			{
+				label: 'Zoom (-)',
+				accelerator: isMac ? 'Command+-' : 'Control+-',
+				click: function () { mainWindow.webContents.setZoomFactor(  mainWindow.webContents.getZoomFactor() - 0.1); }
+			},
+			{
+				label: 'Zoom (Reset)',
+				accelerator: isMac ? 'Command+0' : 'Control+0',
+				click: function () { mainWindow.webContents.setZoomFactor(1); }
+			},
+			{
 				label: 'Create shortcut',
 				click: function () { createShortCut(); }
 			},

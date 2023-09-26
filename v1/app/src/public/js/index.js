@@ -295,8 +295,8 @@ function onLoad() {
 				break;
 
 			case "renewRoomEnvSwitchBot":
-				console.log('main -> renewRoomEnvSwitchBot:', c.arg);
-				// console.log( 'main -> renewRoomEnvSwitchBot' );
+				// console.log( 'main -> renewRoomEnvSwitchBot:', c.arg );
+				console.log( 'main -> renewRoomEnvSwitchBot' );
 				window.renewRoomEnvSwitchBot(c.arg);
 				break;
 

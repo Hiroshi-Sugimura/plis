@@ -244,7 +244,8 @@
 									<div class='LinearLayoutChild_Env'>
 										<section class='co2_color' id='co2sDocCo2Sec'
 											onClick='window.co2sDocSectionClicked("CO2 [ppm]");'>
-											<i class='fa-solid fa-circle-half-stroke env-icon'></i> CO2 (right axis):<br>
+											<i class='fa-solid fa-circle-half-stroke env-icon'></i> CO2 (right
+											axis):<br>
 											<span id="spanCo2sCo2"></span> ppm<span class='small'></span>
 										</section>
 									</div>
@@ -447,17 +448,30 @@
 					</div>
 
 					<!-- SwitchBotChart Env -->
-					<h3 id="H3SwitchBot" class="none"><i class='fa-solid fa-person-shelter'></i> 屋内環境：SwitchBot （<span
-							id="spanSwitchBotTime">取得中</span>） <span class="f_right"><a href="#"
-								onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;"><i
-									class="fa-solid fa-gear right"></i></a></span></h3>
+					<h3 id="H3SwitchBot" class="none">
+						<i class='fa-solid fa-person-shelter'></i> 屋内環境：SwitchBot （<span
+							id="spanSwitchBotTime">取得中</span>） <span class="f_right">
+							<a href="#"
+								onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;">
+								<i class="fa-solid fa-gear right"></i>
+							</a>
+						</span>
+					</h3>
 					<!-- graph -->
 					<div class="p">
 						<canvas id="canRoomEnvChartSwitchBot" class="none canRoomEnvChart"></canvas>
 					</div>
 
 					<!-- SwitchBotChart Power -->
-					屋内環境：SwitchBot （<span id="spanPowerSwitchBotTime">取得中</span>）
+					<h3 id="H3SwitchBotPower" class="none">
+						<i class='fa-solid fa-person-shelter'></i> 屋内環境：SwitchBot （<span
+							id="spanPowerSwitchBotTime">取得中</span>） <span class="f_right">
+							<a href="#"
+								onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;">
+								<i class="fa-solid fa-gear right"></i>
+							</a>
+						</span>
+					</h3>
 					<div class="p">
 						<canvas id="canRoomPowerChartSwitchBot" class="none canRoomPowerChart"></canvas>
 					</div>
