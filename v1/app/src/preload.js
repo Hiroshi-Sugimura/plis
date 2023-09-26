@@ -369,6 +369,27 @@ contextBridge.exposeInMainWorld('ipc', {
 	//----------------------------------------------------------------------------------------------
 	/**
 	 * @func 
+	 * @desc I/O DATA CO2S 関連
+	 * @param {void} 
+	 * @return void
+	 */
+	Co2sUse: (_place) => {
+		ipcRenderer.invoke('Co2sUse', { place: _place });
+	},
+
+	/**
+	 * @func 
+	 * @desc I/O DATA CO2S関連
+	 * @param {void} 
+	 * @return void
+	 */
+	Co2sStop: (_place) => {
+		ipcRenderer.invoke('Co2sStop', { place: _place });
+	},
+
+	//----------------------------------------------------------------------------------------------
+	/**
+	 * @func 
 	 * @desc SwitchBot関連
 	 * @param {void} 
 	 * @return void

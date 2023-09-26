@@ -215,6 +215,49 @@
 					</div>
 
 
+					<!-- I/O DATA UD-CO2S -->
+					<h3 id="H3Co2s" class="none"><i class='fa-solid fa-person-shelter'></i> 屋内環境：UD-CO2S, <span
+							id="spanCo2sPlace"></span> （<span id="spanCo2sTime"></span>） <span class="f_right"><a
+								href="#"
+								onClick="document.getElementById('configTab').checked=true; location.hash='Co2sConfig'; document.getElementById('Co2sConfigDetails').open=true;"><i
+									class="fa-solid fa-gear right"></i></a></span></h3>
+					<div class="LinearLayoutParent_split">
+						<!-- abst -->
+						<div class="LinearLayoutChild_left none" id="divCo2sAbst">
+							<div class='LinearLayoutParent'>
+								<section>
+									<i class='fa-brands fa-usb devTypeCo2s'></i><br>
+									<div class='LinearLayoutChild_Env'>
+										<section class='temp_color' id='co2sDocTempSec'
+											onClick='window.co2sDocSectionClicked("温度 [℃]");'>
+											<i class='fas fa-temperature-high mr-2 env-icon'></i> 温度 (left axis):<br>
+											<span id="spanCo2sTemperature"></span> ℃
+										</section>
+									</div>
+									<div class='LinearLayoutChild_Env'>
+										<section class='hum_color' id='co2sDocHumSec'
+											onClick='window.co2sDocSectionClicked("湿度 [%]");'>
+											<i class='fas fa-tint mr-2 env-icon'></i> 湿度 (left axis):<br> <span
+												id="spanCo2sHumidity"></span> %
+										</section>
+									</div>
+									<div class='LinearLayoutChild_Env'>
+										<section class='co2_color' id='co2sDocCo2Sec'
+											onClick='window.co2sDocSectionClicked("CO2 [ppm]");'>
+											<i class='fa-solid fa-circle-half-stroke env-icon'></i> CO2 (right axis):<br>
+											<span id="spanCo2sCo2"></span> ppm<span class='small'></span>
+										</section>
+									</div>
+								</section>
+							</div>
+						</div>
+						<!-- graph -->
+						<div class="LinearLayoutChild_right" id="divCo2sChart">
+							<canvas id="canRoomEnvChartCo2s" class="none canRoomEnvChart"></canvas>
+						</div>
+					</div>
+
+
 					<!-- スマート電力メータのグラフ、デフォルトで消えているけど、データが来たら表示、subESMで制御 -->
 					<h2 id="H3ESM" class="none"><i class='fa-solid fa-person-shelter'></i> 消費電力：Electric Smart
 						Meter<span class="f_right"><a href="#"
@@ -330,6 +373,19 @@
 									<strong>ConfigからOmronの情報を入力すると表示されます。</strong><br>
 									<button
 										onclick="document.getElementById('configTab').checked=true; location.hash='OmronConfig'; document.getElementById('OmronConfigDetails').open=true;">設定はこちら</button>
+								</section>
+							</div>
+						</div>
+					</div>
+
+					<div id="divCo2sSuggest">
+						<h3><i class='fa-solid fa-person-shelter'></i> 屋内環境</h3>
+						<div class='LinearLayoutParent'>
+							<div class='LinearLayoutChild'>
+								<section>
+									<strong>ConfigからI/O Data CO2センサーの情報を入力すると表示されます。</strong><br>
+									<button
+										onclick="document.getElementById('configTab').checked=true; location.hash='Co2sConfig'; document.getElementById('Co2sConfigDetails').open=true;">設定はこちら</button>
 								</section>
 							</div>
 						</div>
@@ -1466,39 +1522,6 @@
 						</div>
 					</details>
 
-					<!-- Omron -->
-					<a name="OmronConfig"></a>
-					<details class="config" id="OmronConfigDetails">
-						<summary class="config">OMRON USB Sensor</summary>
-						<div class="p">
-							OmronのUSBセンサをお持ちのかたは、デバイスドライバをインストールしてから、USBに挿してチェックボックスを有効にしてください。<br>
-							<br>
-							<label><input type="checkbox" id="inOmronUse">Use Omron</label><br>
-							<label>設置場所: </label><input type="text" id="inOmronPlace"><br>
-							<button id="btnOmronConfigSet" onclick="window.btnOmronConfigSet_Click();">設定</button>
-
-							<h3>対応センサ</h3>
-							バージョンアップで随時対応センサを増やしていく予定です。
-							<p>
-								- <a href="#OmronConfig"
-									onClick='window.URLopen("https://www.fa.omron.co.jp/products/family/3724/");'>2JCIE-BU
-									環境センサ (USB型)</a><br>
-							</p>
-							<p>
-								お使いの際にはドライバをインストールしてください。
-							<ol>
-								<li>上記ページの右側のボタン ソフトウェアダウンロード</li>
-								<li>使用許諾契約を読み、同意できる場合にのみ「ご承諾事項に同意します」にチェック</li>
-								<li>ダウンロードページを開く</li>
-								<li>USBドライバ 「2jcie-bu01_usbdriver.zip」 をダウンロード</li>
-								<li>ダウンロードしたファイルを展開する</li>
-								<li>2jcieport.inf を右クリックし、「その他のオプション」から「インストール」する</li>
-							</ol>
-							</p>
-						</div>
-					</details>
-
-
 					<!-- SwitchBot -->
 					<a name="SwitchBotConfig"></a>
 					<details class="config" id="SwitchBotConfigDetails">
@@ -1543,6 +1566,60 @@
 							<button id="btnELConfigSet" onclick="window.btnELConfigSet_Click();">設定</button>
 						</div>
 					</details>
+
+					<!-- Omron -->
+					<a name="OmronConfig"></a>
+					<details class="config" id="OmronConfigDetails">
+						<summary class="config">OMRON USB Sensor</summary>
+						<div class="p">
+							OmronのUSBセンサをお持ちのかたは、デバイスドライバをインストールしてから、USBに挿してチェックボックスを有効にしてください。<br>
+							<br>
+							<label><input type="checkbox" id="inOmronUse">Use Omron</label><br>
+							<label>設置場所: </label><input type="text" id="inOmronPlace"><br>
+							<button id="btnOmronConfigSet" onclick="window.btnOmronConfigSet_Click();">設定</button>
+
+							<h3>対応センサ</h3>
+							バージョンアップで随時対応センサを増やしていく予定です。
+							<p>
+								- <a href="#OmronConfig"
+									onClick='window.URLopen("https://www.fa.omron.co.jp/products/family/3724/");'>2JCIE-BU
+									環境センサ (USB型)</a><br>
+							</p>
+							<p>
+								お使いの際にはドライバをインストールしてください。
+							<ol>
+								<li>上記ページの右側のボタン ソフトウェアダウンロード</li>
+								<li>使用許諾契約を読み、同意できる場合にのみ「ご承諾事項に同意します」にチェック</li>
+								<li>ダウンロードページを開く</li>
+								<li>USBドライバ 「2jcie-bu01_usbdriver.zip」 をダウンロード</li>
+								<li>ダウンロードしたファイルを展開する</li>
+								<li>2jcieport.inf を右クリックし、「その他のオプション」から「インストール」する</li>
+							</ol>
+							</p>
+						</div>
+					</details>
+
+					<!-- I/O DATA, UD-CO2S -->
+					<a name="Co2sConfig"></a>
+					<details class="config" id="Co2sConfigDetails">
+						<summary class="config">I/O DATA CO2センサー USB Sensor</summary>
+						<div class="p">
+							I/O DATAのUSBセンサ (UD-CO2S)をお持ちのかたは、USBに挿してチェックボックスを有効にしてください。<br>
+							<br>
+							<label><input type="checkbox" id="inCo2sUse">Use UD-CO2S</label><br>
+							<label>設置場所: </label><input type="text" id="inCo2sPlace"><br>
+							<button id="btnCo2sConfigSet" onclick="window.btnCo2sConfigSet_Click();">設定</button>
+
+							<h3>対応センサ</h3>
+							バージョンアップで随時対応センサを増やしていく予定です。
+							<p>
+								- <a href="#Co2sConfig"
+									onClick='window.URLopen("https://www.iodata.jp/product/tsushin/iot/ud-co2s/index.htm");'>UD-CO2S
+									高感度 CO2センサ</a><br>
+							</p>
+						</div>
+					</details>
+
 
 					<!-- System -->
 					<a name="SystemConfig"></a>
@@ -1838,6 +1915,7 @@
 <script src="./js/subIkea.js"></script>
 <script src="./js/subNetatmo.js"></script>
 <script src="./js/subOmron.js"></script>
+<script src="./js/subCo2s.js"></script>
 <script src="./js/subOwm.js"></script>
 <script src="./js/subJma.js"></script>
 <script src="./js/subESM.js"></script>

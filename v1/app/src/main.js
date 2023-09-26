@@ -53,6 +53,7 @@ const mainHALsync = require('./mainHALsync');  // HAL，連携する部分
 const mainJma = require('./mainJma');    // 天気予報、気象庁
 const mainSwitchBot = require('./mainSwitchBot'); // SwitchBot
 const mainCalendar = require('./mainCalendar'); // カレンダー準備
+const mainCo2s = require('./mainCo2s');  // usb-ud-co2センサー
 const licenses = require('./modules.json');  // モジュールのライセンス
 
 let mainWindow = null; // electronのmain window
@@ -106,6 +107,7 @@ ipcMain.handle('already', async (event, arg) => {
 	mainIkea.start(sendIPCMessage);
 	mainESM.start(sendIPCMessage);
 	mainOmron.start(sendIPCMessage);
+	mainCo2s.start(sendIPCMessage);
 	mainSwitchBot.start(sendIPCMessage);
 	mainCalendar.start(sendIPCMessage);
 	mainHALsync.start(sendIPCMessage);
@@ -451,6 +453,22 @@ ipcMain.handle('OmronStop', async (event, arg) => {
 });
 
 //----------------------------------
+// I/O DATA CO2S関連
+ipcMain.handle('Co2sUse', async (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- Co2sUse, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	arg.enabled = true;
+	await mainCo2s.setConfig(arg); // Omron
+	mainCo2s.start(sendIPCMessage);
+});
+
+ipcMain.handle('Co2sStop', async (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- Co2sStop, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	arg.enabled = false;
+	await mainCo2s.setConfig(arg); // Co2s
+	mainCo2s.stop();
+});
+
+//----------------------------------
 // SwitchBot関連
 ipcMain.handle('SwitchBotUse', async (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- SwitchBotUse, token:\x1b[32m', arg.token, '\x1b[0m') : 0;
@@ -642,6 +660,7 @@ app.once('before-quit', async () => {
 	await mainOwm.stopWithoutSave();
 	await mainJma.stopWithoutSave();
 	await mainOmron.stopWithoutSave();
+	await mainCo2s.stopWithoutSave();
 	await mainIkea.stopWithoutSave();
 	await mainSwitchBot.stopWithoutSave();
 	await mainUser.stop();
@@ -815,6 +834,7 @@ async function saveConfig() {
 	_config.Netatmo = mainNetatmo.getConfig();  // netatmo
 	_config.EL = mainEL.getConfig();  // EL
 	_config.Omron = mainOmron.getConfig(); // Omron
+	_config.Co2s = mainCo2s.getConfig(); // Co2s
 	_config.JMA = mainJma.getConfig(); // JMA
 	_config.SwitchBot = mainSwitchBot.getConfig(); // SwitchBot
 	_config.system = mainSystem.getConfig(); // system settings
@@ -839,6 +859,7 @@ async function savePersist() {
 	persist.OWM = mainOwm.getPersist();
 	persist.JMA = mainJma.getPersist();
 	persist.Omron = mainOmron.getPersist();
+	persist.Co2s = mainCo2s.getPersist();
 	persist.Ikea = mainIkea.getPersist();
 	persist.SwitchBot = mainSwitchBot.getPersist();
 	// userはpersistなし

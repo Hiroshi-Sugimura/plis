@@ -265,6 +265,24 @@ function onLoad() {
 
 
 			//----------------------------------------------
+			// UD-CO2S関連
+			case "renewCo2s": // Co2sのデータをもらった
+				// console.log( 'main -> renewCo2s:', c.arg );  // ログ多過ぎるので必要な時だけ有効にする
+				window.renewCo2s(c.arg);
+				break;
+
+			case "co2sDisconnected": // Co2s切断
+				console.log('main -> co2sDisconnected:');  // ログ多過ぎるので必要な時だけ有効にする
+				window.disconnectedCo2s();
+				break;
+
+			case "renewCo2sConfigView": // Co2sの設定データをもらった
+				console.log('main -> renewCo2sConfigView:', c.arg);
+				window.renewCo2sConfigView(c.arg);
+				break;
+
+
+			//----------------------------------------------
 			// SwitchBot関連
 			case "fclSwitchBot":
 				// console.log('main -> fclSwitchBot:', c.arg);
@@ -277,7 +295,7 @@ function onLoad() {
 				break;
 
 			case "renewRoomEnvSwitchBot":
-				console.log( 'main -> renewRoomEnvSwitchBot:', c.arg );
+				console.log('main -> renewRoomEnvSwitchBot:', c.arg);
 				// console.log( 'main -> renewRoomEnvSwitchBot' );
 				window.renewRoomEnvSwitchBot(c.arg);
 				break;
@@ -295,6 +313,12 @@ function onLoad() {
 				// console.log( 'main -> newRoomEnvOmron:', c.arg);   // ログ多すぎる
 				console.log('main -> newRoomEnvOmron');
 				window.renewRoomEnvOmron(c.arg);
+				break;
+
+			case "renewRoomEnvCo2s":
+				// console.log( 'main -> renewRoomEnvCo2s:', c.arg);   // ログ多すぎる
+				console.log('main -> renewRoomEnvCo2s');
+				window.renewRoomEnvCo2s(c.arg);
 				break;
 
 			case "renewTodayElectricEnergy_submeter":  // Ether サブメータ
@@ -518,7 +542,7 @@ function onLoad() {
 	// escape key
 	searchInput.addEventListener("keydown", (key) => {
 		// console.log(key.code);
-		if( key.code == 'Escape' ) {
+		if (key.code == 'Escape') {
 			window.btnSearchStop_Click();
 		}
 	});
