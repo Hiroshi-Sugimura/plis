@@ -17,6 +17,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	// config tab
 	let inELUse = document.getElementById('inELUse'); // check box; use or not
+	let inELUseOldSearch = document.getElementById('inELUseOldSearch'); // check box; use old search or not
 	let btnELConfigSet = document.getElementById('btnELConfigSet'); // 設定ボタン
 	let ELSettingsContents = document.getElementById('ELSettingsContents');	// dialog
 
@@ -150,14 +151,22 @@ window.addEventListener('DOMContentLoaded', function () {
 		btnELConfigSet.disabled = false;
 		btnELConfigSet.textContent = '設定';
 
+		// EL use or not
 		if (inELUse.checked == false) {
 			window.ipc.ELStop();  // ELをstopする
 			facilitiesEL = {};
 			divControlEL.innerHTML = '';
-			return;
+		}else{
+			window.ipc.ELUse();
 		}
 
-		window.ipc.ELUse();
+		// old search or not
+		if (inELUseOldSearch.checked == false) {
+			window.ipc.ELStopOldSearch();  // ELをstopする
+		}else{
+			window.ipc.ELUseOldSearch();
+		}
+
 	};
 
 
@@ -182,6 +191,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.renewELConfigView = function (arg) {
 		inELUse.checked = arg.enabled;
+		inELUseOldSearch.checked = arg.oldSearch;
 
 		btnELConfigSet.disabled = false;
 		btnELConfigSet.textContent = '設定';

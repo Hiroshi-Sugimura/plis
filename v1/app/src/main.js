@@ -35,6 +35,8 @@ const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron');
 app.disableHardwareAcceleration(); // electron設定とmain window
 const Store = require('electron-store');
 
+const openAboutWindow = require('about-window').default;  // このアプリについて
+
 const { sqlite3 } = require('./models/localDBModels');   // DBデータと連携
 const mainSystem = require('./mainSystem');  // System configの管理
 const mainUser = require('./mainUser');     // User configの管理
@@ -51,9 +53,11 @@ const mainHALsync = require('./mainHALsync');  // HAL，連携する部分
 const mainJma = require('./mainJma');    // 天気予報、気象庁
 const mainSwitchBot = require('./mainSwitchBot'); // SwitchBot
 const mainCalendar = require('./mainCalendar'); // カレンダー準備
+const mainCo2s = require('./mainCo2s');  // usb-ud-co2センサー
 const licenses = require('./modules.json');  // モジュールのライセンス
 
 let mainWindow = null; // electronのmain window
+
 let localaddresses = [];  // NICリスト
 
 // 管理しているデバイスやサービスのリストにユーザが名前を付けたい
@@ -103,6 +107,7 @@ ipcMain.handle('already', async (event, arg) => {
 	mainIkea.start(sendIPCMessage);
 	mainESM.start(sendIPCMessage);
 	mainOmron.start(sendIPCMessage);
+	mainCo2s.start(sendIPCMessage);
 	mainSwitchBot.start(sendIPCMessage);
 	mainCalendar.start(sendIPCMessage);
 	mainHALsync.start(sendIPCMessage);
@@ -127,11 +132,48 @@ ipcMain.handle('URLopen', async (event, arg) => {
 });
 
 
+// ページ内検索
+ipcMain.handle('PageInSearch', (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearch, arg:', arg) : 0;
+	try {
+		const requestId = mainWindow.webContents.findInPage(arg, {
+			forward: true,
+			findNext: false,
+			matchCase: false
+		});
+	} catch (error) {
+		sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'main.PageInSearch', stackLog: error.message } );
+	}
+});
+
+ipcMain.handle('PageInSearchNext', (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearchNext, arg:', arg) : 0;
+	const requestId = mainWindow.webContents.findInPage(arg, {
+		forward: true,
+		findNext: true,
+		matchCase: false
+	});
+});
+
+ipcMain.handle('PageInSearchPrev', (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearchPrev, arg:', arg) : 0;
+	const requestId = mainWindow.webContents.findInPage(arg, {
+		forward: false,
+		findNext: true,
+		matchCase: false
+	});
+});
+
+ipcMain.handle('PageInSearchStop', (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearchStop') : 0;
+	mainWindow.webContents.stopFindInPage('clearSelection');
+});
+
+
 // System / Calendar 祝日再取得
 ipcMain.handle('CalendarRenewHolidays', async (event, arg) => {
 	mainCalendar.getHolidays();
 });
-
 
 
 // System設定関連
@@ -234,8 +276,8 @@ ipcMain.handle('HALrenew', async (event, arg) => {
 ipcMain.handle('HALsubmitQuestionnaire', async (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALsubmitQuestionnaire, arg:', arg) : 0;
 	mainHALlocal.submitQuestionnaire(arg,
-		() => { sendIPCMessage('INF', 'アンケートを保存しました。'); },
-		() => { sendIPCMessage('INF', 'Error: ' + error.message); });
+		() => { sendIPCMessage('Info', 'アンケートを保存しました。'); },
+		() => { sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'main', stackLog: error.message }); });
 });
 
 //----------------------------------
@@ -250,6 +292,16 @@ ipcMain.handle('ELStop', async (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ELStop, arg', arg) : 0;
 	await mainEL.setConfig({ enabled: false });  // arg = undef
 	mainEL.stop();
+});
+
+ipcMain.handle('ELUseOldSearch', async (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ELUseOldSearch, arg:', arg) : 0;
+	await mainEL.setConfig({ oldSearch: true });  // arg = undef
+});
+
+ipcMain.handle('ELStopOldSearch', async (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ELStopOldSearch, arg', arg) : 0;
+	await mainEL.setConfig({ oldSearch: false });  // arg = undef
 });
 
 ipcMain.handle('Elsend', async (event, arg) => {
@@ -401,6 +453,22 @@ ipcMain.handle('OmronStop', async (event, arg) => {
 });
 
 //----------------------------------
+// I/O DATA CO2S関連
+ipcMain.handle('Co2sUse', async (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- Co2sUse, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	arg.enabled = true;
+	await mainCo2s.setConfig(arg); // Omron
+	mainCo2s.start(sendIPCMessage);
+});
+
+ipcMain.handle('Co2sStop', async (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- Co2sStop, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	arg.enabled = false;
+	await mainCo2s.setConfig(arg); // Co2s
+	mainCo2s.stop();
+});
+
+//----------------------------------
 // SwitchBot関連
 ipcMain.handle('SwitchBotUse', async (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- SwitchBotUse, token:\x1b[32m', arg.token, '\x1b[0m') : 0;
@@ -460,6 +528,16 @@ async function createWindow() {
 			mainWindow.webContents.openDevTools();
 		}
 
+		// PageInSearchして発見したときに呼ばれる
+		mainWindow.webContents.on('found-in-page', (event, result) => {
+			// console.log('event:', event, 'result:', result);
+			if (result.finalUpdate) {
+				mainWindow.webContents.stopFindInPage('keepSelection');
+				sendIPCMessage('foundResultShow', result);
+			}
+		});
+
+		// 閉じるときに呼ばれる
 		mainWindow.on('close', async () => {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.close') : 0;
 			config.windowWidth = mainWindow.getSize()[0];
@@ -468,6 +546,7 @@ async function createWindow() {
 			await mainSystem.setConfig(config);
 		});
 
+		// 閉じた後でよばれる
 		mainWindow.on('closed', () => {
 			console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.closed');
 			mainWindow = null;
@@ -488,7 +567,7 @@ async function createWindow() {
 // did-become-active: Mac only
 
 // windows用デスクトップとスタートメニューにショートカットを追加する
-if(require('electron-squirrel-startup')) return;
+if (require('electron-squirrel-startup')) return;
 
 // Entry point
 app.on('ready', async () => {
@@ -532,8 +611,8 @@ app.on('ready', async () => {
 	// windowsのみ
 	// electron-squirrel-startupにした
 	// if (isWin && !fs.existsSync(path.join(store.path, 'config.json'))) {
-		// console.log( '初回起動' );
-		// createShortCut();
+	// console.log( '初回起動' );
+	// createShortCut();
 	// }
 
 	await mainHALlocal.initialize(); // HALのDBを準備して最終データを取得しておく
@@ -581,6 +660,7 @@ app.once('before-quit', async () => {
 	await mainOwm.stopWithoutSave();
 	await mainJma.stopWithoutSave();
 	await mainOmron.stopWithoutSave();
+	await mainCo2s.stopWithoutSave();
 	await mainIkea.stopWithoutSave();
 	await mainSwitchBot.stopWithoutSave();
 	await mainUser.stop();
@@ -635,9 +715,29 @@ const menuItems = [
 				click: function (item, focusedWindow) { if (focusedWindow) focusedWindow.reload() }
 			},
 			{
+				label: 'Search in page',
+				accelerator: isMac ? 'Command+F' : 'Control+F',
+				click: function (item, focusedWindow) { sendIPCMessage("openSearch", '') }
+			},
+			{
 				label: 'Toggle Full Screen',
 				accelerator: isMac ? 'Ctrl+Command+F' : 'F11',
 				click: function () { mainWindow.setFullScreen(!mainWindow.isFullScreen()); }
+			},
+			{
+				label: 'Zoom (+)',
+				accelerator: isMac ? 'Command+plus' : 'Control+plus',
+				click: function () { mainWindow.webContents.setZoomFactor(  mainWindow.webContents.getZoomFactor() + 0.1 ); }
+			},
+			{
+				label: 'Zoom (-)',
+				accelerator: isMac ? 'Command+-' : 'Control+-',
+				click: function () { mainWindow.webContents.setZoomFactor(  mainWindow.webContents.getZoomFactor() - 0.1); }
+			},
+			{
+				label: 'Zoom (Reset)',
+				accelerator: isMac ? 'Command+0' : 'Control+0',
+				click: function () { mainWindow.webContents.setZoomFactor(1); }
 			},
 			{
 				label: 'Create shortcut',
@@ -651,6 +751,16 @@ const menuItems = [
 	}, {
 		label: 'Information',
 		submenu: [
+			{
+				label: 'About PLIS',
+				click: function () {
+					openAboutWindow({
+						icon_path: path.join(__dirname, 'icons', 'plis_linux_icon.png'),
+						copyright: 'Copyright (c) 2023 Sugimura Lab.',
+						package_json_dir: __dirname
+					});
+				}
+			},
 			{
 				label: 'About PLIS (External contents)',
 				click: function () { shell.openExternal('https://plis.sugi-lab.net/'); }
@@ -739,6 +849,7 @@ async function saveConfig() {
 	_config.Netatmo = mainNetatmo.getConfig();  // netatmo
 	_config.EL = mainEL.getConfig();  // EL
 	_config.Omron = mainOmron.getConfig(); // Omron
+	_config.Co2s = mainCo2s.getConfig(); // Co2s
 	_config.JMA = mainJma.getConfig(); // JMA
 	_config.SwitchBot = mainSwitchBot.getConfig(); // SwitchBot
 	_config.system = mainSystem.getConfig(); // system settings
@@ -763,6 +874,7 @@ async function savePersist() {
 	persist.OWM = mainOwm.getPersist();
 	persist.JMA = mainJma.getPersist();
 	persist.Omron = mainOmron.getPersist();
+	persist.Co2s = mainCo2s.getPersist();
 	persist.Ikea = mainIkea.getPersist();
 	persist.SwitchBot = mainSwitchBot.getPersist();
 	// userはpersistなし

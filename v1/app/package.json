@@ -6,11 +6,11 @@
   "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
-    "preinstall": "npm i -g license-checker npm-check-updates & pushd . & cd src & npm i & popd",
+    "preinstall": "npm i license-checker npm-check-updates & pushd . & cd src & npm i & popd",
     "win": "chcp 65001 && npm run license-check && electron-forge start",
-    "mac": "npm run license-check && electron-forge start",
+    "mac": "npx license-checker --json > ./src/modules.json && electron-forge start",
     "package": "electron-forge package",
-    "make": "license-checker --json > ./src/modules.json && electron-forge make",
+    "make": "npx license-checker --json > ./src/modules.json && electron-forge make",
     "publish": "electron-forge publish",
     "macsign": "electron-osx-sign ./out/PLIS-darwin-arm64/PLIS.app --identity='Developer ID Application' --no-gatekeeper-assess",
     "winsign": "mmc",
@@ -24,16 +24,17 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@electron-forge/cli": "^6.4.1",
-    "@electron-forge/maker-appx": "^6.4.1",
-    "@electron-forge/maker-deb": "^6.4.1",
-    "@electron-forge/maker-dmg": "^6.4.1",
-    "@electron-forge/maker-rpm": "^6.4.1",
-    "@electron-forge/maker-squirrel": "^6.4.1",
-    "@electron-forge/maker-zip": "^6.4.1",
-    "@electron-forge/plugin-auto-unpack-natives": "^6.4.1",
-    "@electron-forge/publisher-github": "^6.4.1",
-    "electron": "26.1.0",
-    "electron-builder": "^24.6.4"
+    "@electron-forge/cli": "^6.4.2",
+    "@electron-forge/maker-appx": "^6.4.2",
+    "@electron-forge/maker-deb": "^6.4.2",
+    "@electron-forge/maker-dmg": "^6.4.2",
+    "@electron-forge/maker-rpm": "^6.4.2",
+    "@electron-forge/maker-squirrel": "^6.4.2",
+    "@electron-forge/maker-zip": "^6.4.2",
+    "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
+    "@electron-forge/publisher-github": "^6.4.2",
+    "electron": "26.2.2",
+    "electron-builder": "^24.6.4",
+    "license-checker": "^25.0.1"
   }
 }

@@ -30,7 +30,47 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @return void
 	 */
 	URLopen: (url) => {
-		ipcRenderer.invoke('URLopen', url );
+		ipcRenderer.invoke('URLopen', url);
+	},
+
+	/**
+	 * @func 
+	 * @desc ページ内検索
+	 * @param {text} 
+	 * @return void
+	 */
+	PageInSearch: (text) => {
+		ipcRenderer.invoke('PageInSearch', text);
+	},
+
+	/**
+	 * @func 
+	 * @desc ページ内検索前方
+	 * @param {text} 
+	 * @return void
+	 */
+	PageInSearchNext: (text) => {
+		ipcRenderer.invoke('PageInSearchNext', text);
+	},
+
+	/**
+	 * @func 
+	 * @desc ページ内検索後方
+	 * @param {text} 
+	 * @return void
+	 */
+	PageInSearchPrev: (text) => {
+		ipcRenderer.invoke('PageInSearchPrev', text);
+	},
+
+	/**
+	 * @func 
+	 * @desc ページ内検索停止
+	 * @param {void} 
+	 * @return void
+	 */
+	PageInSearchStop: () => {
+		ipcRenderer.invoke('PageInSearchStop');
 	},
 
 	/**
@@ -39,7 +79,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	CalendarRenewHolidays: ( ) => {
+	CalendarRenewHolidays: () => {
 		ipcRenderer.invoke('CalendarRenewHolidays', '');
 	},
 
@@ -49,8 +89,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	SystemSetConfig: ( _screenMode, _debug, _elLogExpireDays, _resultExpireDays, _IPver, _IPv4, _IPv6 ) => {
-		ipcRenderer.invoke('SystemSetConfig', { screenMode:_screenMode, debug:_debug, ellogExpireDays:_elLogExpireDays, resultExpireDays:_resultExpireDays, IPver:_IPver, IPv4:_IPv4, IPv6:_IPv6} );
+	SystemSetConfig: (_screenMode, _debug, _elLogExpireDays, _resultExpireDays, _IPver, _IPv4, _IPv6) => {
+		ipcRenderer.invoke('SystemSetConfig', { screenMode: _screenMode, debug: _debug, ellogExpireDays: _elLogExpireDays, resultExpireDays: _resultExpireDays, IPver: _IPver, IPv4: _IPv4, IPv6: _IPv6 });
 	},
 
 	/**
@@ -60,7 +100,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @return void
 	 */
 	ScreenMode: (_screenMode) => {
-		ipcRenderer.invoke('ScreenMode', {screenMode: _screenMode});
+		ipcRenderer.invoke('ScreenMode', { screenMode: _screenMode });
 	},
 
 	//----------------------------------------------------------------------------------------------
@@ -70,8 +110,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	userProfileSave: ( _nickname, _age, _height, _weight, _ampere ) => {
-		ipcRenderer.invoke('userProfileSave', { nickname: _nickname, age:_age, height:_height, weight:_weight, ampere:_ampere} );
+	userProfileSave: (_nickname, _age, _height, _weight, _ampere) => {
+		ipcRenderer.invoke('userProfileSave', { nickname: _nickname, age: _age, height: _height, weight: _weight, ampere: _ampere });
 	},
 
 
@@ -82,7 +122,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	HALsetApiTokenRequest: (HALtoken)=>{
+	HALsetApiTokenRequest: (HALtoken) => {
 		ipcRenderer.invoke('HALsetApiTokenRequest', HALtoken);
 	},
 
@@ -92,7 +132,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	HALgetApiTokenRequest: ()=>{
+	HALgetApiTokenRequest: () => {
 		ipcRenderer.invoke('HALgetApiTokenRequest', '');
 	},
 
@@ -112,7 +152,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	HALsync: ()=>{
+	HALsync: () => {
 		ipcRenderer.invoke('HALsync', '');
 	},
 
@@ -132,7 +172,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	HALsubmitQuestionnaire: (submitData)=>{
+	HALsubmitQuestionnaire: (submitData) => {
 		ipcRenderer.invoke('HALsubmitQuestionnaire', '');
 	},
 
@@ -142,7 +182,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	HALgetUserProfileRequest: async ()=>{
+	HALgetUserProfileRequest: async () => {
 		return await ipcRenderer.invoke('HALgetUserProfileRequest', '');
 	},
 
@@ -153,11 +193,12 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	ESMUse: (_dongleType, _id, _password )=>{
-		ipcRenderer.invoke('ESMUse',  {
+	ESMUse: (_dongleType, _id, _password) => {
+		ipcRenderer.invoke('ESMUse', {
 			dongleType: _dongleType,
 			id: _id,
-			password: _password});
+			password: _password
+		});
 	},
 
 	/**
@@ -166,11 +207,12 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	ESMnotUse: (_dongleType, _id, _password )=>{
+	ESMnotUse: (_dongleType, _id, _password) => {
 		ipcRenderer.invoke('ESMnotUse', {
 			dongleType: _dongleType,
 			id: _id,
-			password: _password});
+			password: _password
+		});
 	},
 
 	//----------------------------------------------------------------------------------------------
@@ -180,8 +222,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	HueUse: (_key)=>{
-		ipcRenderer.invoke('HueUse', {key: _key});
+	HueUse: (_key) => {
+		ipcRenderer.invoke('HueUse', { key: _key });
 	},
 
 	/**
@@ -190,8 +232,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	HueUseCancel: (_key)=>{
-		ipcRenderer.invoke('HueUseCancel', {key: _key});
+	HueUseCancel: (_key) => {
+		ipcRenderer.invoke('HueUseCancel', { key: _key });
 	},
 
 	/**
@@ -200,8 +242,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	HueUseStop: (_key)=>{
-		ipcRenderer.invoke('HueUseStop', {key: _key});
+	HueUseStop: (_key) => {
+		ipcRenderer.invoke('HueUseStop', { key: _key });
 	},
 
 	/**
@@ -210,9 +252,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	HueControl: (_url, _json )=>{
+	HueControl: (_url, _json) => {
 		console.log(_url, _json);
-		ipcRenderer.invoke('HueControl', {url: _url, json: _json});
+		ipcRenderer.invoke('HueControl', { url: _url, json: _json });
 	},
 
 	//----------------------------------------------------------------------------------------------
@@ -222,8 +264,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	IkeaUse: (_securityCode, _identity, _psk)=>{
-		ipcRenderer.invoke('IkeaUse', {securityCode:_securityCode, identity:_identity, psk:_psk});
+	IkeaUse: (_securityCode, _identity, _psk) => {
+		ipcRenderer.invoke('IkeaUse', { securityCode: _securityCode, identity: _identity, psk: _psk });
 	},
 
 	/**
@@ -232,8 +274,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	IkeaUseStop: (_securityCode, _identity, _psk)=>{
-		ipcRenderer.invoke('IkeaUseStop', {securityCode:_securityCode, identity:_identity, psk:_psk});
+	IkeaUseStop: (_securityCode, _identity, _psk) => {
+		ipcRenderer.invoke('IkeaUseStop', { securityCode: _securityCode, identity: _identity, psk: _psk });
 	},
 
 	/**
@@ -242,9 +284,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	IkeaSend: (url, json )=>{
+	IkeaSend: (url, json) => {
 		console.log(url, json);
-		ipcRenderer.invoke('IkeaSend', {url:url, json:json});
+		ipcRenderer.invoke('IkeaSend', { url: url, json: json });
 	},
 
 
@@ -256,7 +298,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @return void
 	 */
 	OwmUse: (_APIKey, _zipcode) => {
-		ipcRenderer.invoke('OwmUse', {APIKey:_APIKey, zipcode:_zipcode});
+		ipcRenderer.invoke('OwmUse', { APIKey: _APIKey, zipcode: _zipcode });
 	},
 
 	/**
@@ -266,7 +308,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @return void
 	 */
 	OwmStop: (_APIKey, _zipcode) => {
-		ipcRenderer.invoke('OwmStop', {APIKey:_APIKey, zipcode:_zipcode});
+		ipcRenderer.invoke('OwmStop', { APIKey: _APIKey, zipcode: _zipcode });
 	},
 
 	//----------------------------------------------------------------------------------------------
@@ -276,8 +318,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	JmaConfigSave: (_areaName, _areaCode)=>{
-		ipcRenderer.invoke('JmaConfigSave', {area:_areaName, code:_areaCode});
+	JmaConfigSave: (_areaName, _areaCode) => {
+		ipcRenderer.invoke('JmaConfigSave', { area: _areaName, code: _areaCode });
 	},
 
 
@@ -288,7 +330,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	NetatmoUse: ( _id, _secret, _username, _password) =>{
+	NetatmoUse: (_id, _secret, _username, _password) => {
 		ipcRenderer.invoke('NetatmoUse', { id: _id, secret: _secret, username: _username, password: _password });
 	},
 
@@ -298,7 +340,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	NetatmoStop: ( _id, _secret, _username, _password) =>{
+	NetatmoStop: (_id, _secret, _username, _password) => {
 		ipcRenderer.invoke('NetatmoStop', { id: _id, secret: _secret, username: _username, password: _password });
 	},
 
@@ -310,8 +352,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	OmronUse: ( _place ) =>{
-		ipcRenderer.invoke('OmronUse', {place: _place});
+	OmronUse: (_place) => {
+		ipcRenderer.invoke('OmronUse', { place: _place });
 	},
 
 	/**
@@ -320,8 +362,29 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	OmronStop: ( _place ) =>{
-		ipcRenderer.invoke('OmronStop', {place: _place});
+	OmronStop: (_place) => {
+		ipcRenderer.invoke('OmronStop', { place: _place });
+	},
+
+	//----------------------------------------------------------------------------------------------
+	/**
+	 * @func 
+	 * @desc I/O DATA CO2S 関連
+	 * @param {void} 
+	 * @return void
+	 */
+	Co2sUse: (_place) => {
+		ipcRenderer.invoke('Co2sUse', { place: _place });
+	},
+
+	/**
+	 * @func 
+	 * @desc I/O DATA CO2S関連
+	 * @param {void} 
+	 * @return void
+	 */
+	Co2sStop: (_place) => {
+		ipcRenderer.invoke('Co2sStop', { place: _place });
 	},
 
 	//----------------------------------------------------------------------------------------------
@@ -331,8 +394,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	SwitchBotUse: (_token)=>{
-		ipcRenderer.invoke('SwitchBotUse', {token: _token});
+	SwitchBotUse: (_token) => {
+		ipcRenderer.invoke('SwitchBotUse', { token: _token });
 	},
 
 	/**
@@ -341,8 +404,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	SwitchBotStop: (_token)=>{
-		ipcRenderer.invoke('SwitchBotStop', {token: _token});
+	SwitchBotStop: (_token) => {
+		ipcRenderer.invoke('SwitchBotStop', { token: _token });
 	},
 
 	/**
@@ -351,40 +414,50 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	SwitchBotControl: ( _id, _commandJson )=>{
+	SwitchBotControl: (_id, _commandJson) => {
 		// console.log( 'SwitchBotControl', { id:_id, command: _commandJson} );
-		ipcRenderer.invoke('SwitchBotControl', { id:_id, command: _commandJson} );
+		ipcRenderer.invoke('SwitchBotControl', { id: _id, command: _commandJson });
 	},
 
 	//----------------------------------------------------------------------------------------------
 	/**
 	 * @func 
-	 * @desc EL関連
+	 * @desc EL利用開始
 	 * @param {void} 
 	 * @return void
 	 */
-	ELUse: ( ) =>{
+	ELUse: () => {
 		ipcRenderer.invoke('ELUse');
 	},
 
 	/**
 	 * @func 
-	 * @desc EL関連
+	 * @desc EL利用停止
 	 * @param {void} 
 	 * @return void
 	 */
-	ELStop: () =>{
+	ELStop: () => {
 		ipcRenderer.invoke('ELStop');
 	},
 
 	/**
 	 * @func 
-	 * @desc EL関連制御
+	 * @desc EL旧バージョン検索有効
 	 * @param {void} 
 	 * @return void
 	 */
-	Elsend: (ip, sendmsg )=>{
-		ipcRenderer.invoke('Elsend', {ip:ip, msg:sendmsg});
+	ELUseOldSearch: () => {
+		ipcRenderer.invoke('ELUseOldSearch');
+	},
+
+	/**
+	 * @func 
+	 * @desc EL旧バージョン検索無効
+	 * @param {void} 
+	 * @return void
+	 */
+	ELStopOldSearch: () => {
+		ipcRenderer.invoke('ELStopOldSearch');
 	},
 
 	/**
@@ -393,8 +466,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	ElsendOPC1: (ip, seoj, deoj, esv, epc, edt )=>{
-		ipcRenderer.invoke('ElsendOPC1', {ip: ip, seoj: seoj, deoj: deoj, esv: esv, epc: epc, edt: edt});
+	Elsend: (ip, sendmsg) => {
+		ipcRenderer.invoke('Elsend', { ip: ip, msg: sendmsg });
 	},
 
 	/**
@@ -403,29 +476,40 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	ELsearch: ()=>{
+	ElsendOPC1: (ip, seoj, deoj, esv, epc, edt) => {
+		ipcRenderer.invoke('ElsendOPC1', { ip: ip, seoj: seoj, deoj: deoj, esv: esv, epc: epc, edt: edt });
+	},
+
+	/**
+	 * @func 
+	 * @desc EL関連制御
+	 * @param {void} 
+	 * @return void
+	 */
+	ELsearch: () => {
 		ipcRenderer.invoke('ELSearch', '');
 	},
 
 	//======================================================
 	// main to renderer
-	on: ( channel, callback ) => {
-		try{
-			ipcRenderer.on( channel, (event, obj ) => {
-				try{
-					callback( channel, obj );
-				}catch( error ) {
-					console.error( 'Error: preload.on.ipcRenderer.on()' );
-					console.error( error );
-					console.error( 'channel:', channel, 'obj:', obj );
+	on: (channel, callback) => {
+		try {
+			ipcRenderer.on(channel, (event, obj) => {
+				try {
+					callback(channel, obj);
+				} catch (error) {
+					console.error('Error: preload.on.ipcRenderer.on()');
+					console.error(error);
+					console.error('channel:', channel, 'obj:', obj);
 				}
 			});
-		}catch( error ) {
-			console.error( 'Error: preload.on()' );
-			console.error( error );
-			console.error( 'channel:', channel );
+		} catch (error) {
+			console.error('Error: preload.on()');
+			console.error(error);
+			console.error('channel:', channel);
 		}
 	}
 
 });
+
 
