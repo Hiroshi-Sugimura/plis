@@ -235,6 +235,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast( 'Info', 'SwitchBot 設定を保存しました。');
 	};
 
+	let spanSwitchBotTime      = document.getElementById('spanSwitchBotTime');       // abst
+
 	/**
 	 * @func
 	 * @desc mainプロセスから設定値をもらったので画面を更新
@@ -249,6 +251,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 		if( arg.enabled ) {  // 利用する場合
 			H2ControlSwitchBot.style.display = 'block';
+			spanSwitchBotTime.innerHTML = moment().format("YYYY/MM/DD HH:mm:ss取得");
 			divControlSwitchBot.style.display = '-webkit-flex';
 			canRoomEnvChartSwitchBot.style.display = 'block';
 			divSwitchBotSuggest.style.display = 'none';
@@ -276,8 +279,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	// SwitchBot chart
-	let spanSwitchBotTime     = document.getElementById('spanSwitchBotTime');  // env
-	let spanSwitchBotPwerTime = document.getElementById('spanSwitchBotPwerTime');  // power
+	let spanSwitchBotEnvTime   = document.getElementById('spanSwitchBotEnvTime');    // env
+	let spanSwitchBotPowerTime = document.getElementById('spanSwitchBotPowerTime');  // power
 
 	/**
 	 * @func
@@ -599,21 +602,18 @@ window.addEventListener('DOMContentLoaded', function () {
 	window.renewRoomEnvSwitchBot = function ( _envDataObj ) {
 		let envDataObj = JSON.parse( _envDataObj );
 
-		datasetsSwitchBot = [];  // データを一旦空に戻す
+		datasetsSwitchBot = [];  // データを一旦空に戻す env
 		let pointStyle = 0; // ポイントスタイル 0..9
 
 		for( const meter of envDataObj.meterList ) {
 			let envDataArray = envDataObj[meter];
 			// console.log( 'window.renewRoomEnvSwitchBot() meter:', meter, ', envDataArray:', envDataArray );
 
-			spanSwitchBotTime.innerHTML = moment().format("YYYY/MM/DD HH:mm:ss取得");
+			spanSwitchBotEnvTime.innerHTML = moment().format("YYYY/MM/DD HH:mm:ss取得");
 
 			if( envDataArray ) {
 				let oTemperature = new Array();
 				let oHumidity = new Array();
-				let oWatt     = new Array();
-				let oVoltage  = new Array();
-				let oAmpere   = new Array();
 
 				for( const d of envDataArray ) {
 					oTemperature.push( { x:moment(d.time), y:d.temperature} );
@@ -632,11 +632,14 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 		renewCanvasSwitchBot();
 
+		datasetsSwitchBotPower = []// データを一旦空に戻す power
+		pointStyle = 0; // ポイントスタイル 0..9
+
 		for( const plug of envDataObj.plugMiniList ) {
 			let envDataArray = envDataObj[plug];
 			// console.log( 'window.renewRoomEnvSwitchBot() plug:', plug, ', envDataArray:', envDataArray );
 
-			spanPowerSwitchBotTime.innerHTML = moment().format("YYYY/MM/DD HH:mm:ss取得");
+			spanSwitchBotPowerTime.innerHTML = moment().format("YYYY/MM/DD HH:mm:ss取得");
 
 			if( envDataArray ) {
 				let oWatt     = new Array();
