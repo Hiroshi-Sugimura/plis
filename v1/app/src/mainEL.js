@@ -70,7 +70,7 @@ let mainEL = {
 	 * @func start
 	 * @desc 初期化
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -119,7 +119,7 @@ let mainEL = {
 	 * @func stop
 	 * @desc ELの機能を停止する。
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -137,7 +137,7 @@ let mainEL = {
 	 * @func stopWithoutSave
 	 * @desc stopWithoutSave
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -152,7 +152,7 @@ let mainEL = {
 	 * @func setConfig
 	 * @desc setConfig
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -173,7 +173,7 @@ let mainEL = {
 	 * @func getConfig
 	 * @desc getConfig
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -185,7 +185,7 @@ let mainEL = {
 	 * @func getPersist
 	 * @desc getPersist
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -199,7 +199,7 @@ let mainEL = {
 	 * @func received
 	 * @desc EL受け取った後の処理
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -208,7 +208,9 @@ let mainEL = {
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.received() error:', error);
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.received() rinfo:', rinfo);
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.received() els:', els);
-			throw error;
+			sendIPCMessage('Error', {datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainEL.received()', stackLog: `EL packets that cannot be analyzed. From: ${rinfo.address}`, Detail: ${error} } );
+			// throw error;
+			return;
 		}
 
 		// EL controller
@@ -259,7 +261,7 @@ let mainEL = {
 	 * @func sendMsg
 	 * @desc sendMsg
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -281,7 +283,7 @@ let mainEL = {
 	 * @func sendOPC1
 	 * @desc sendOPC1
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -293,7 +295,7 @@ let mainEL = {
 	 * @func search
 	 * @desc search
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -310,7 +312,7 @@ let mainEL = {
 	 * @func sendTodayEnergy
 	 * @desc sendTodayEnergy
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -333,7 +335,7 @@ let mainEL = {
 	 * @func setCron
 	 * @desc 3分毎にチェックする
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -448,7 +450,7 @@ let mainEL = {
 	 * @func init
 	 * @desc ELの処理開始
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -514,7 +516,7 @@ let mainEL = {
 	 * @func getStatic
 	 * @desc 基礎的なデバイスの情報取得
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -531,7 +533,7 @@ let mainEL = {
 	 * @func observation
 	 * @desc 監視シーケンス
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -573,7 +575,7 @@ let mainEL = {
 	 * @func stopObservation
 	 * @desc 監視行動をやめて，タイマーも解放する
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -595,7 +597,7 @@ let mainEL = {
 	 * @func sleep
 	 * @desc Wait必要な時
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -607,7 +609,7 @@ let mainEL = {
 	 * @func getTodayElectricEnergy_submeter
 	 * @desc 定時処理用, 電力（サブメータ）
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
