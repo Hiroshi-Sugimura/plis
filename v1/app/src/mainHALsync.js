@@ -254,12 +254,17 @@ let mainHALsync = {
 			// mainWindow.webContents.send('to-renderer', JSON.stringify({ cmd: "Synced", arg: {} }));
 
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.startSync() error:', error);
+			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.startSync() ', error);
 			let arg = {
 				error: error.message
 			};
 
-			sendIPCMessage("HALsyncResponse", arg);
+			sendIPCMessage('Error', {
+				datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), 
+				moduleName: 'mainHALsync.startSync()', 
+				stackLog: `Detail: ${error}`
+			} );
+
 			// mainWindow.webContents.send('to-renderer', JSON.stringify({ cmd: "Synced", arg: arg }));
 		}
 	},
@@ -380,6 +385,7 @@ let mainHALsync = {
 						} catch (error) {
 							console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.httpPostRequest', error);
 						}
+
 						reject(new Error('Received an error response from HAL: ' + message));
 					}
 				});
@@ -535,6 +541,11 @@ let mainHALsync = {
 			// console.log('- Number of uploaded logs: ' + dlist.length);
 		} catch (error) {
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| ', error);
+			sendIPCMessage('Error', {
+				datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), 
+				moduleName: 'mainHALsync.startUploadEldata()', 
+				stackLog: `Detail: ${error}`
+			} );
 			setTimeout(mainHALsync.startUploadEldata, config.UPLOAD_START_INTERVAL, config);
 			return;
 		}

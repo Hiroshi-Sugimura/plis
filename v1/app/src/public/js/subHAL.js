@@ -481,7 +481,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.btnHALsync_Click = function () {
 		btnHALSync.disabled = true;
-		btnHALSync.textContent = '同期中…';
+		btnHALSync.textContent = 'HAL Cloud 同期中…';
 		window.ipc.HALsync();
 	};
 
@@ -557,8 +557,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		if(arg?.error) {
 			alert(arg.error);
 		}else{
-			syncBtn.disabled = false;
-			syncBtn.textContent = '同期開始';
+			btnHALSync.disabled = false;
+			btnHALSync.textContent = 'HAL Cloud 同期開始';
 			window.ipc.HALrenew();			// 同期成功したなら最新のHALもらう
 		}
 	}
@@ -588,7 +588,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 			// 同期もする
 			btnHALSync.disabled = true;
-			btnHALSync.textContent = '同期中…';
+			btnHALSync.textContent = 'HAL Cloud 同期中…';
 			window.ipc.HALsync();
 		}
 	};
