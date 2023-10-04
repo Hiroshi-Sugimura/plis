@@ -208,7 +208,11 @@ let mainEL = {
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.received() error:', error);
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.received() rinfo:', rinfo);
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.received() els:', els);
-			sendIPCMessage('Error', {datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainEL.received()', stackLog: `EL packets that cannot be analyzed. From: ${rinfo.address}`, Detail: ${error} } );
+			sendIPCMessage('Error', {
+				datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), 
+				moduleName: 'mainEL.received()', 
+				stackLog: `EL packets that cannot be analyzed. From: ${rinfo.address}, Detail: ${error}`
+			} );
 			// throw error;
 			return;
 		}
