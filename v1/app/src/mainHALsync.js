@@ -10,7 +10,6 @@
 // 基本ライブラリ
 const { eldataModel, IOT_MajorResultsModel, IOT_MinorResultsModel } = require('./models/localDBModels');   // DBデータと連携
 const { Op } = require("sequelize");
-// const http = require('http');
 const https = require('https');
 
 const Store = require('electron-store');
@@ -249,7 +248,7 @@ let mainHALsync = {
 			}
 			*/
 			// メインプロセスに同期完了のイベントを送信
-			sendIPCMessage("HALsyncResponse", {});
+			sendIPCMessage("HALSyncResponse", {});
 
 			// mainWindow.webContents.send('to-renderer', JSON.stringify({ cmd: "Synced", arg: {} }));
 

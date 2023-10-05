@@ -482,7 +482,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	window.btnHALsync_Click = function () {
 		btnHALSync.disabled = true;
 		btnHALSync.textContent = 'HAL Cloud 同期中…';
-		window.ipc.HALsync();
+		window.ipc.HALSyncRequeset();
 	};
 
 
@@ -528,12 +528,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------
 	/** 
-	 * @func window.renewHAL
+	 * @func window.HALRedraw
 	 * @desc データをもらって画面更新
 	 * @param {void}
 	 * @return {void}
 	 */
-	window.renewHAL = function (MajorResults, MinorResults, MinorkeyMeans) {
+	window.HALRedraw = function (MajorResults, MinorResults, MinorkeyMeans) {
 		majorResults = MajorResults;
 		renewMajorResults();
 
@@ -547,13 +547,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------
 	/** 
-	 * @func window.HALsyncResponse
+	 * @func window.HALSyncResponse
 	 * @desc HAL cloud: 同期の応答、同期処理終了
-	 * @param {void}
+	 * @param arg {arg.error} errorがあるときだけ入ってる予定、成功は空オブジェクト
 	 * @return {void}
 	 */
-	window.HALsyncResponse = function ( arg ) {
-		console.log( 'main -> HALsyncResponse:' );
+	window.HALSyncResponse = function ( arg ) {
 		if(arg?.error) {
 			alert(arg.error);
 		}else{

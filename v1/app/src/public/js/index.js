@@ -109,10 +109,10 @@ function onLoad() {
 				window.renewHALConfigView(c.arg);
 				break;
 
-			case "renewHAL": // HALのデータをもらった（評価値）
-				console.log('main -> renewHAL:', c.arg);
+			case "HALRenewResponse": // HALのデータをもらった（評価値）
+				console.log('main -> HALRenewResponse:', c.arg);
 				halData = c.arg;
-				window.renewHAL(halData.MajorResults, halData.MinorResults, halData.MinorkeyMeans);
+				window.HALRedraw( halData.MajorResults, halData.MinorResults, halData.MinorkeyMeans );
 				break;
 
 			case "HALgetApiTokenResponse": // HAL API トークン取得の応答
@@ -135,9 +135,9 @@ function onLoad() {
 				window.HALgetUserProfileResponse(c.arg);
 				break;
 
-			case "HALsyncResponse":  // HAL cloud: 同期の応答、同期処理終了
-				console.log('main -> HALsyncResponse:', c.arg);
-				window.HALsyncResponse(c.arg);
+			case "HALSyncResponse":  // HAL cloud: 同期の応答、同期処理終了
+				console.log('main -> HALSyncResponse:', c.arg);
+				window.HALSyncResponse(c.arg);
 				break;
 
 

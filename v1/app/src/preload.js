@@ -152,8 +152,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	HALsync: () => {
-		ipcRenderer.invoke('HALsync', '');
+	HALSyncRequeset: () => {
+		ipcRenderer.invoke('HALSyncRequeset', '');
 	},
 
 	/**

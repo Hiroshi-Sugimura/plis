@@ -113,7 +113,7 @@ ipcMain.handle('already', async (event, arg) => {
 	mainHALsync.start(sendIPCMessage);
 
 	persist.HAL = await mainHALlocal.getLastData();
-	sendIPCMessage("renewHAL", persist.HAL);
+	sendIPCMessage("HALRenewResponse", persist.HAL);
 });
 
 
@@ -254,8 +254,8 @@ ipcMain.handle('HALdeleteApiToken', async (event, arg) => {
 });
 
 // HAL同期ボタンとその応答
-ipcMain.handle('HALsync', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALsync.') : 0;
+ipcMain.handle('HALSyncRequeset', async (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALSyncRequeset.') : 0;
 	await mainHALsync.startSync();
 });
 
@@ -269,7 +269,7 @@ ipcMain.handle('HALgetUserProfileRequest', (event, arg) => {
 ipcMain.handle('HALrenew', async (event, arg) => {
 	persist.HAL = await mainHALlocal.getLastData();
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALrenew, halData:', persist.HAL) : 0;
-	sendIPCMessage("HALrenewResponse", persist.HAL);
+	sendIPCMessage("HALRenewResponse", persist.HAL);
 });
 
 // HAL local アンケート保存
