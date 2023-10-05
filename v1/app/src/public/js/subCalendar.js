@@ -20,9 +20,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	let holiday;
 
-	let btnCalendarRenewSyukujitsu   = document.getElementById('btnCalendarRenewSyukujitsu');  // カレンダーの祝日再取得
-
-
 	//----------------------------------------------------------------------------------------------
 	/** 
 	 * @Func Window.Renewcalendar
@@ -37,7 +34,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	/** 
 	 * @func window.calendarPrev
-	 * @desc 前の月表示
+	 * @desc 前の月表示ボタン
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -48,7 +45,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	/** 
 	 * @func window.calendarNext
-	 * @desc 次の月表示
+	 * @desc 次の月表示ボタン
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -59,7 +56,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	/** 
 	 * @func window.btnCalendarRenewSyukujitsu_Click
-	 * @desc 祝日の再取得ボタンクリック
+	 * @desc 祝日の再取得ボタン クリック
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -72,8 +69,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func
 	 * @memberof subCalendar
-	 * @desc カレンダー表示
-	 * @param {void}
+	 * @desc 指定した日時のカレンダー表示
+	 * @param date 日時
 	 * @return {void}
 	 */
 	function showProcess(date) {
@@ -136,10 +133,13 @@ window.addEventListener('DOMContentLoaded', function () {
 		return calendar;
 	}
 
+
+	//////////////////////////////////////////////////////////////////////
+	// 内部関数
 	/** 
 	 * @func checkDate
 	 * @memberof subCalendar
-	 * @desc 日付チェック
+	 * @desc 日付チェック、createProcessで呼ばれる
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -163,7 +163,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func isToday
 	 * @memberof subCalendar
-	 * @desc 当日かどうか
+	 * @desc 当日かどうかcheckDateで呼ばれる
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -176,7 +176,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func isHoliday
 	 * @memberof subCalendar
-	 * @desc 祝日かどうか
+	 * @desc 祝日かどうかcheckDateで呼ばれる
 	 * @param {void}
 	 * @return {void}
 	 */

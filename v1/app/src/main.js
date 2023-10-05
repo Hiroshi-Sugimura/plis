@@ -663,6 +663,7 @@ app.once('before-quit', async () => {
 	await mainCo2s.stopWithoutSave();
 	await mainIkea.stopWithoutSave();
 	await mainSwitchBot.stopWithoutSave();
+	await mainCalendar.stop();
 	await mainUser.stop();
 	await mainSystem.stop();
 });
