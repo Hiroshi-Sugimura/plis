@@ -47,14 +47,21 @@ window.addEventListener('DOMContentLoaded', function () {
 	let imgSugilab = document.getElementById("imgSugilab");
 
 	let canMajorRaderChart = document.getElementById("canMajorRaderChart");
+	let majorRaderChart = null;
 
 	// 詳細
 	let canClothingBarChart = document.getElementById("canClothingBarChart");
+	let clothingBarCart = null;
 	let canFoodBarChart = document.getElementById("canFoodBarChart");
+	let foodBarChart = null;
 	let canHousingBarChart = document.getElementById("canHousingBarChart");
+	let housingBarChart = null;
 	let canPhysicalBarChart = document.getElementById("canPhysicalBarChart");
+	let physicalBarChart = null;
 	let canMentalBarChart = document.getElementById("canMentalBarChart");
+	let mentalBarChart = null;
 	let canEcologyBarChart = document.getElementById("canEcologyBarChart");
+	let ecologyBarChart = null;
 
 	// config
 	let inHALApiKey = document.getElementById('inHALApiKey');  // HALApiKey
@@ -86,14 +93,16 @@ window.addEventListener('DOMContentLoaded', function () {
 		let mentalRatio = ranking(majorResults.mentalHealthPoint);
 		let ecologyRatio = ranking(majorResults.ecologyPoint);
 
-		let majorRaderChart = new Chart(canMajorRaderChart, {
+		if (majorRaderChart) { majorRaderChart.destroy(); }  // chartがすでにctxを使っていると、リエントラントで"Canvas is already in use."のエラーが出る
+
+		majorRaderChart = new Chart(canMajorRaderChart, {
 			type: 'radar',
 			data: {
 				labels: ["衣服・身だしなみ", "食事", "住居", "体の健康", "心の健康", "エコ度"],
 				datasets: [{
 					label: '今日のあなた',
 					data: [majorResults.clothingPoint, majorResults.foodPoint, majorResults.housingPoint,
-						   majorResults.physicalHealthPoint, majorResults.mentalHealthPoint, majorResults.ecologyPoint],
+					majorResults.physicalHealthPoint, majorResults.mentalHealthPoint, majorResults.ecologyPoint],
 					backgroundColor: 'RGBA(225,95,150, 0.5)',
 					borderColor: 'RGBA(225,95,150, 1)',
 					borderWidth: 1,
@@ -171,23 +180,23 @@ window.addEventListener('DOMContentLoaded', function () {
 			let d = minorkeyMeans[key];
 			switch (d.majorKey) {
 				case 1:
-				clothingLabels[d.minorKey - 1] = d.means;
-				break;
+					clothingLabels[d.minorKey - 1] = d.means;
+					break;
 				case 2:
-				foodLabels[d.minorKey - 1] = d.means;
-				break;
+					foodLabels[d.minorKey - 1] = d.means;
+					break;
 				case 3:
-				housingLabels[d.minorKey - 1] = d.means;
-				break;
+					housingLabels[d.minorKey - 1] = d.means;
+					break;
 				case 4:
-				physicalLabels[d.minorKey - 1] = d.means;
-				break;
+					physicalLabels[d.minorKey - 1] = d.means;
+					break;
 				case 5:
-				mentalLabels[d.minorKey - 1] = d.means;
-				break;
+					mentalLabels[d.minorKey - 1] = d.means;
+					break;
 				case 6:
-				ecologyLabels[d.minorKey - 1] = d.means;
-				break;
+					ecologyLabels[d.minorKey - 1] = d.means;
+					break;
 			}
 		});
 
@@ -195,29 +204,30 @@ window.addEventListener('DOMContentLoaded', function () {
 			let d = minorkeyMeans[key];
 			switch (d.majorKey) {
 				case 1:
-				clothingData[d.minorKey - 1] = minorResults['r_' + d.majorKey + '_' + d.minorKey];
-				break;
+					clothingData[d.minorKey - 1] = minorResults['r_' + d.majorKey + '_' + d.minorKey];
+					break;
 				case 2:
-				foodData[d.minorKey - 1] = minorResults['r_' + d.majorKey + '_' + d.minorKey];
-				break;
+					foodData[d.minorKey - 1] = minorResults['r_' + d.majorKey + '_' + d.minorKey];
+					break;
 				case 3:
-				housingData[d.minorKey - 1] = minorResults['r_' + d.majorKey + '_' + d.minorKey];
-				break;
+					housingData[d.minorKey - 1] = minorResults['r_' + d.majorKey + '_' + d.minorKey];
+					break;
 				case 4:
-				physicalData[d.minorKey - 1] = minorResults['r_' + d.majorKey + '_' + d.minorKey];
-				break;
+					physicalData[d.minorKey - 1] = minorResults['r_' + d.majorKey + '_' + d.minorKey];
+					break;
 				case 5:
-				mentalData[d.minorKey - 1] = minorResults['r_' + d.majorKey + '_' + d.minorKey];
-				break;
+					mentalData[d.minorKey - 1] = minorResults['r_' + d.majorKey + '_' + d.minorKey];
+					break;
 				case 6:
-				ecologyData[d.minorKey - 1] = minorResults['r_' + d.majorKey + '_' + d.minorKey];
-				break;
+					ecologyData[d.minorKey - 1] = minorResults['r_' + d.majorKey + '_' + d.minorKey];
+					break;
 			}
 		});
 
 
 		// 衣類
-		let clothingBarCart = new Chart(canClothingBarChart, {
+		if (clothingBarCart) { clothingBarCart.destroy(); }
+		clothingBarCart = new Chart(canClothingBarChart, {
 			type: 'bar',
 			data: {
 				labels: clothingLabels,
@@ -227,7 +237,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						data: clothingData,
 						backgroundColor: "#dda0dd"
 					}
-					]
+				]
 			},
 			options: {
 				title: {
@@ -245,7 +255,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 		// 食
-		let foodBarChart = new Chart(canFoodBarChart, {
+		if (foodBarChart) { foodBarChart.destroy(); }
+		foodBarChart = new Chart(canFoodBarChart, {
 			type: 'bar',
 			data: {
 				labels: foodLabels,
@@ -256,7 +267,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						backgroundColor: "#ffa500"
 
 					}
-					]
+				]
 			},
 			options: {
 				title: {
@@ -273,7 +284,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		});
 
 		// 住居
-		let housingBarChart = new Chart(canHousingBarChart, {
+		if (housingBarChart) { housingBarChart.destroy(); }
+		housingBarChart = new Chart(canHousingBarChart, {
 			type: 'bar',
 			data: {
 				labels: housingLabels,
@@ -284,7 +296,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						backgroundColor: "#6495ed"
 
 					}
-					]
+				]
 			},
 			options: {
 				title: {
@@ -301,7 +313,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		});
 
 		// 体
-		let physicalBarChart = new Chart(canPhysicalBarChart, {
+		if (physicalBarChart) { physicalBarChart.destroy(); }
+		physicalBarChart = new Chart(canPhysicalBarChart, {
 			type: 'bar',
 			data: {
 				labels: physicalLabels,
@@ -312,7 +325,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						backgroundColor: "#9acd32"
 
 					}
-					]
+				]
 			},
 			options: {
 				title: {
@@ -329,7 +342,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		});
 
 		// 心
-		let mentalBarChart = new Chart(canMentalBarChart, {
+		if (mentalBarChart) { mentalBarChart.destroy(); }
+		mentalBarChart = new Chart(canMentalBarChart, {
 			type: 'bar',
 			data: {
 				labels: mentalLabels,
@@ -340,7 +354,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						backgroundColor: "#ffc0cb"
 
 					}
-					]
+				]
 			},
 			options: {
 				title: {
@@ -357,7 +371,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		});
 
 		// エコ
-		let ecologyBarChart = new Chart(canEcologyBarChart, {
+		if (ecologyBarChart) { ecologyBarChart.destroy(); }
+		ecologyBarChart = new Chart(canEcologyBarChart, {
 			type: 'bar',
 			data: {
 				labels: ecologyLabels,
@@ -367,7 +382,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						data: ecologyData,
 						backgroundColor: "#c0c0c0"
 					}
-					]
+				]
 			},
 			options: {
 				title: {
@@ -501,7 +516,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		if (config.halApiToken) {
 			inHALApiKey.value = config.halApiToken;
 			window.ipc.HALgetUserProfileRequest();
-		}else{
+		} else {
 			inHALApiKey.value = "";  // undefined がテキストボックスに表示されないように
 		}
 	};
@@ -520,7 +535,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			inHALApiKey.value = HALtoken;
 			window.ipc.HALgetUserProfileRequest();
 		} else {
-			spanHALinfo.style.display     = 'none';  // 同期済み情報表示
+			spanHALinfo.style.display = 'none';  // 同期済み情報表示
 			spanHALsuggenst.style.display = 'block';   // 同期済み情報表示
 			inHALApiKey.value = "";  // undefined がテキストボックスに表示されないように
 		}
@@ -552,10 +567,10 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @param arg {arg.error} errorがあるときだけ入ってる予定、成功は空オブジェクト
 	 * @return {void}
 	 */
-	window.HALSyncResponse = function ( arg ) {
-		if(arg?.error) {
+	window.HALSyncResponse = function (arg) {
+		if (arg?.error) {
 			alert(arg.error);
-		}else{
+		} else {
 			btnHALSync.disabled = false;
 			btnHALSync.textContent = 'HAL Cloud 同期開始';
 			window.ipc.HALrenew();			// 同期成功したなら最新のHALもらう
@@ -578,8 +593,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		if (res.error) {
 			pSetHalApiTokenErr.textContent = res.error;
 		} else {
-			btnHALSync.style.display      = 'block';  // 同期ボタン表示
-			spanHALinfo.style.display     = 'block';  // 同期済み情報表示
+			btnHALSync.style.display = 'block';  // 同期ボタン表示
+			spanHALinfo.style.display = 'block';  // 同期済み情報表示
 			spanHALsuggenst.style.display = 'none';   // 同期済み情報表示
 			window.addToast('Info', 'HAL 連携が成功しました。');
 			window.renewHALToken(inHALApiKey.value);
