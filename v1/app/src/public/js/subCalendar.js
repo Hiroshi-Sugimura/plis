@@ -22,13 +22,23 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @Func Window.Renewcalendar
-	 * @Desc 祝日取得
+	 * @Func Window.createCalendar
+	 * @Desc カレンダー初期作成
 	 * @Param {Void}
 	 * @Return {Void}
 	 */
-	window.renewCalendar = function ( _cal ) {
+	window.createCalendar = function ( _cal ) {
 		holiday = _cal;
+		showProcess(today);
+	};
+
+	/** 
+	 * @Func Window.renewCalendar
+	 * @Desc カレンダー日替わり処理などで更新する
+	 * @Param {Void}
+	 * @Return {Void}
+	 */
+	window.renewCalendar = function () {
 		showProcess(today);
 	};
 

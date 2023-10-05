@@ -112,7 +112,7 @@ function onLoad() {
 			case "HALRenewResponse": // HALのデータをもらった（評価値）
 				console.log('main -> HALRenewResponse:', c.arg);
 				halData = c.arg;
-				window.HALRedraw( halData.MajorResults, halData.MinorResults, halData.MinorkeyMeans );
+				window.HALRedraw(halData.MajorResults, halData.MinorResults, halData.MinorkeyMeans);
 				break;
 
 			case "HALgetApiTokenResponse": // HAL API トークン取得の応答
@@ -296,7 +296,7 @@ function onLoad() {
 
 			case "renewRoomEnvSwitchBot":
 				// console.log( 'main -> renewRoomEnvSwitchBot:', c.arg );
-				console.log( 'main -> renewRoomEnvSwitchBot' );
+				console.log('main -> renewRoomEnvSwitchBot');
 				window.renewRoomEnvSwitchBot(c.arg);
 				break;
 
@@ -327,16 +327,23 @@ function onLoad() {
 
 
 			//----------------------------------------------
-			// PLIS全体
-			case "myIPaddr":
-				console.log('main -> myIPaddr:', c.arg);
-				myIPaddr.innerHTML = 'My IP address list: ' + c.arg;
+			// カレンダー
+			case "createCalendar":
+				console.log('main -> createCalendar:');
+				// console.log('main -> renewCalendar:', c.arg);
+				window.createCalendar(c.arg);
 				break;
 
 			case "renewCalendar":
 				console.log('main -> renewCalendar:');
-				// console.log('main -> renewCalendar:', c.arg);
-				window.renewCalendar(c.arg);
+				window.renewCalendar();
+				break;
+
+			//----------------------------------------------
+			// PLIS全体
+			case "myIPaddr":
+				console.log('main -> myIPaddr:', c.arg);
+				myIPaddr.innerHTML = 'My IP address list: ' + c.arg;
 				break;
 
 			case "configSaved": // 設定保存の応答
