@@ -11,6 +11,8 @@
 const path = require('path');
 const fs = require('fs');
 const axios = require('axios');
+const Store = require('electron-store');
+const store = new Store();
 const cron = require('node-cron');  
 require('date-utils'); // for log
 
@@ -50,6 +52,8 @@ let mainCalendar = {
 	start: function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
 
+		config.debug      = store.get('config.Calendar.debug', false);
+
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendarStart()') : 0;
 
 		if (mainCalendar.isRun) return;
@@ -69,17 +73,17 @@ let mainCalendar = {
 
 
 		// 日替わりでカレンダー更新
-		mainCalendar.observationTask = cron.schedule('0 0 * * *', async () => { // 毎日0時0分
+		mainCalendar.observationTask = cron.schedule('* * * * *', async () => { // 毎日0時0分
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendarStart.observationTask') : 0;
 			sendIPCMessage('renewCalendar');
 		});
 	},
 
 	/**
-	 * @func stop
+	 * @func stopWithoutSave
 	 * @desc stop observationJob
 	 */
-	stop: function () {
+	stopWithoutSave: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.stop()') : 0;
 
 		if (mainCalendar.observationJob) {
@@ -92,6 +96,47 @@ let mainCalendar = {
 
 		mainCalendar.isRun = false;
 	},
+
+	
+	/**
+	 * @func setConfig
+	 * @desc setConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
+	setConfig: async function(_config) {
+		config = mergeDeeply( config, _config );
+		await store.set('config.Calendar', config);
+		sendIPCMessage( "renewCalendarConfigView", config );
+		sendIPCMessage( "configSaved", 'Calendar' );  // 保存したので画面に通知
+	},
+
+	/**
+	 * @func getConfig
+	 * @desc getConfig
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
+	getConfig: function () {
+		return config;
+	},
+
+	/**
+	 * @func getPersist
+	 * @desc getPersist
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
+	getPersist: function() {
+		return persist;
+	},
+
 
 	//////////////////////////////////////////////////////////////////////
 	// 内部関数

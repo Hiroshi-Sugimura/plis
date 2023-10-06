@@ -663,7 +663,7 @@ app.once('before-quit', async () => {
 	await mainCo2s.stopWithoutSave();
 	await mainIkea.stopWithoutSave();
 	await mainSwitchBot.stopWithoutSave();
-	await mainCalendar.stop();
+	await mainCalendar.stopWithoutSave();
 	await mainUser.stop();
 	await mainSystem.stop();
 });
@@ -853,6 +853,7 @@ async function saveConfig() {
 	_config.Co2s = mainCo2s.getConfig(); // Co2s
 	_config.JMA = mainJma.getConfig(); // JMA
 	_config.SwitchBot = mainSwitchBot.getConfig(); // SwitchBot
+	_config.Calendar = mainCalendar.getConfig(); // Calendar settings
 	_config.system = mainSystem.getConfig(); // system settings
 	_config.user = mainUser.getConfig(); // user settings
 	await store.set('config', _config);
@@ -878,6 +879,7 @@ async function savePersist() {
 	persist.Co2s = mainCo2s.getPersist();
 	persist.Ikea = mainIkea.getPersist();
 	persist.SwitchBot = mainSwitchBot.getPersist();
+	// calendarはpersistなし
 	// userはpersistなし
 	// systemはpersistなし
 	await store.set('persist', persist);
