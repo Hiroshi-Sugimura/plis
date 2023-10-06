@@ -77,6 +77,8 @@ let mainCalendar = {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendarStart.observationTask') : 0;
 			sendIPCMessage('renewCalendar');
 		});
+
+		mainCalendar.observationTask.start();
 	},
 
 	/**
