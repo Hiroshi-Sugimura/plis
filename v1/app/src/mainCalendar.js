@@ -73,7 +73,7 @@ let mainCalendar = {
 
 
 		// 日替わりでカレンダー更新
-		mainCalendar.observationTask = cron.schedule('* * * * *', async () => { // 毎日0時0分
+		mainCalendar.observationTask = cron.schedule('0 0 * * *', async () => { // 毎日0時0分
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendarStart.observationTask') : 0;
 			sendIPCMessage('renewCalendar');
 		});
