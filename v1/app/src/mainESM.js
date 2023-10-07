@@ -13,9 +13,8 @@ const Store  = require('electron-store');
 const eSM    = require('e-smartmeter-echonet-lite');
 const EL     = require('echonet-lite');
 const ELconv = require('echonet-lite-conv');
-const mainEL = require('./mainEL');      // ELの管理
-const { Sequelize, Op, sqlite3, esmdataModel, esmrawModel, electricEnergyModel } = require('./models/localDBModels');   // DBデータと連携
-const { objectSort, getNow, getToday, isObjEmpty, mergeDeeply} = require('./mainSubmodule');
+const { Sequelize, Op, esmdataModel, esmrawModel, electricEnergyModel } = require('./models/localDBModels');   // DBデータと連携
+const { objectSort, isObjEmpty, mergeDeeply} = require('./mainSubmodule');
 
 let sendIPCMessage = null;
 const store = new Store();
@@ -44,14 +43,14 @@ let mainESM = {
 	connected: false, // 初回起動のみ実施するためのフラグ, flag for first connection
 
 	//////////////////////////////////////////////////////////////////////
-	// 電力スマートメーターの処理
-
 	// interfaces
+	//////////////////////////////////////////////////////////////////////
+
 	/**
 	 * @func start
-	 * @desc 初期化
+	 * @desc 初期化と開始
 	 * @async
-	 * @param {void} 
+	 * @param {sendIPCMessage} _sendIPCMessage IPC通信関数
 	 * @return void
 	 * @throw error
 	 */
@@ -107,115 +106,23 @@ let mainESM = {
 
 		//////////////////////////////////////////////////////////////////////
 		// 定時処理
-		// 1分毎にチェック
-		let task = cron.schedule('*/1 * * * *', async () => {
-			try{
-				config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() every min'):0;
-
-				let dt = new Date();
-
-				// Wi-SUN電力スマートメーターの状態のチェック
-				if( mainESM.connected && persist && persist.IPs && persist.IPs.length != 0 ) {
-					// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() persist:\x1b[32m', persist, '\x1b[0m' ):0;
-
-					let ip = persist.IPs[0];
-					let sm = persist[ip];
-					// 蓄積するほどデータがそろってない場合はスキップ
-					if( !sm || !sm['低圧スマート電力量メータ01(028801)']  ) {
-						config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() SumartMeter persist.esmData is Null.' ):0;
-
-					}else if( !sm['低圧スマート電力量メータ01(028801)']['設置場所(81)'] ) {  // 基本プロパティがなければ取り直す
-						config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() SumartMeter esmData.place is Null.' ):0;
-						eSM.getStatic();
-
-					}else if( isObjEmpty(sm.Means) ) {
-						config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() SumartMeter sm.Means is Empty.' ):0;
-
-					}else{
-						// merge用ベース
-						let means = {
-							'積算電力量計測値（正方向計測値）[kWh]': null,
-							'積算電力量計測値（逆方向計測値）[kWh]': null,
-							'定時積算電力量計測値正方向': {
-								'日時':null,
-								'計測値[kWh]':null
-							},
-							'定時積算電力量計測値逆方向': {
-								'日時':null,
-								'計測値[kWh]':null
-							}
-						};
-
-						// merge用ベースとesmDataとマージ
-						let mergeObj = mergeDeeply( means, sm.Means);
-						// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() ESM mergeObj \x1b[32m', mergeObj, '\x1b[0m' ):0;
-
-						let instantaneousPower = null;
-						if( sm['低圧スマート電力量メータ01(028801)']['瞬時電力計測値(E7)'] ) {
-							// console.log( 'E7:', sm['低圧スマート電力量メータ01(028801)']['瞬時電力計測値(E7)'] );
-							instantaneousPower = sm['低圧スマート電力量メータ01(028801)']['瞬時電力計測値(E7)'].split('W')[0];
-						}
-
-						let instantaneousCurrentsR = null;
-						if( sm['低圧スマート電力量メータ01(028801)']['瞬時電流計測値(E8)'] ) {
-							let e8 = JSON.parse( sm['低圧スマート電力量メータ01(028801)']['瞬時電流計測値(E8)'].split('(')[0] );
-							let rp = e8['RPhase'];
-							// console.log( rp );
-							instantaneousCurrentsR = rp.split('[A]')[0];
-						}
-
-						let instantaneousCurrentsT = null;
-						if( sm['低圧スマート電力量メータ01(028801)']['瞬時電流計測値(E8)'] ) {
-							let e8 = JSON.parse( sm['低圧スマート電力量メータ01(028801)']['瞬時電流計測値(E8)'].split('(')[0] );
-							let tp = e8['TPhase'];
-							// console.log( tp );
-							instantaneousCurrentsT = tp.split('[A]')[0];
-						}
-
-						//------------------------------------------------------------
-						// 整理されたデータベースにする
-						let q = {
-							dateTime: dt,
-							srcType: 'Meter',
-							place: sm['低圧スマート電力量メータ01(028801)']['設置場所(81)'],
-							commulativeAmountNormal: mergeObj['積算電力量計測値（正方向計測値）[kWh]'], // E0
-							commulativeAmountReverse: mergeObj['積算電力量計測値（逆方向計測値）[kWh]'], // E3
-							instantaneousPower: instantaneousPower,  // E7
-							instantaneousCurrentsR: instantaneousCurrentsR, // E8
-							instantaneousCurrentsT: instantaneousCurrentsT,  // E8
-							commulativeAmountsFixedTimeNormalDaytime: mergeObj['定時積算電力量計測値正方向']['日時'],  // EA
-							commulativeAmountsFixedTimeNormalPower: mergeObj['定時積算電力量計測値正方向']['計測値[kWh]'],
-							commulativeAmountsFixedTimeReverseDaytime: mergeObj['定時積算電力量計測値逆方向']['日時'], // EB
-							commulativeAmountsFixedTimeRiversePower: mergeObj['定時積算電力量計測値逆方向']['計測値[kWh]']
-						};
-
-						// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() ESM insert:\x1b[32m', q, '\x1b[0m' ):0;
-						electricEnergyModel.create( q );
-					}
-				};
-
-				mainESM.sendTodayEnergy(); 		// 本日のデータの定期的送信 スマートメータ分
-			} catch( error ) {
-				console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() each 3min, error:', error);
-				throw error;
-			}
-		});
+		// 1分毎に収集データをチェックしてDBにinsertする
+		let task = cron.schedule('*/1 * * * *',  mainESM.insertDB);
+		task.start();
 
 		if( persist ) {
 			sendIPCMessage( "fclESM", persist );
 		}
 		mainESM.sendTodayEnergy(); // 現在持っているデータを送っておく
-		task.start();
 	},
 
 
 	/**
 	 * @func stop
-	 * @desc シリアルポートを開放して連携終了
+	 * @desc シリアルポートを開放して連携終了、設定や現在の数値を永続化する
 	 * @async
 	 * @param {void} 
 	 * @return void
-	 * @throw error
 	 */
 	stop: async function () {
 		mainESM.isRun = false;
@@ -230,7 +137,7 @@ let mainESM = {
 
 	/**
 	 * @func stopWithoutSave
-	 * @desc stopWithoutSave
+	 * @desc シリアルポートを開放して連携終了、設定や現在の数値を永続化しない
 	 * @async
 	 * @param {void} 
 	 * @return void
@@ -247,9 +154,9 @@ let mainESM = {
 
 	/**
 	 * @func setConfig
-	 * @desc setConfig
+	 * @desc 設定をセットするとともに永続化する、引数なければ保存だけする
 	 * @async
-	 * @param {void} 
+	 * @param {config} _config 設定、nullなら保存のみ
 	 * @return void
 	 * @throw error
 	 */
@@ -265,11 +172,10 @@ let mainESM = {
 
 	/**
 	 * @func getConfig
-	 * @desc getConfig
+	 * @desc 現在の設定を取得する
 	 * @async
 	 * @param {void} 
-	 * @return void
-	 * @throw error
+	 * @return config config
 	 */
 	getConfig: function () {
 		return config;
@@ -277,11 +183,10 @@ let mainESM = {
 
 	/**
 	 * @func getPersist
-	 * @desc getPersist
+	 * @desc 現在のデータを取得する
 	 * @async
 	 * @param {void} 
-	 * @return void
-	 * @throw error
+	 * @return persist persist
 	 */
 	getPersist: function() {
 		return persist;
@@ -332,13 +237,171 @@ let mainESM = {
 
 
 	//////////////////////////////////////////////////////////////////////
-	// inner functions
+	// 定時処理のインタフェース
 	/**
-	 * @func renewPortList
-	 * @desc renewPortList
+	 * @func observe
+	 * @desc スマートメータを監視する、初回受信時にトリガー
 	 * @async
 	 * @param {void} 
 	 * @return void
+	 * @throw error
+	 */
+	observe: function() {
+		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.observe() start.' ):0;
+
+		if( mainESM.observationJob ) {
+			config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.observe() already started.' ):0;
+		}
+
+		// 監視はcronで実施、1分毎
+		mainESM.observationJob = cron.schedule('*/1 * * * *', () => {
+			config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.observe.cron.schedule()'):0;
+
+			// 既に接続していたら機器情報の変化をみる。接続していなかったら接続する。30秒に1回、ポートの状況を監視
+			// この処理はmainESM.start()でobserve serialportとして分割した。
+			// ここでは機器情報を1分に1回取得しに行く処理だけ書く
+
+			if( mainESM.connected ) {
+				// 機器情報の変化の監視
+				eSM.getMeasuredValues();  // 機器情報の変化を定期的にgetする
+				// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.observe().cron facilities:\x1b[32m', eSM.facilities, '\x1b[0m' ):0;
+				mainESM.changeCallback( eSM.facilities );
+
+			}else{
+				// 切断状態
+				config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.observe.cron.schedule() is NO connection.'):0;
+			}
+		});
+	},
+
+
+	/**
+	 * @func stopObservation
+	 * @desc 監視をやめる
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 */
+	stopObservation: function() {
+		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.stopObserve() observation.' ):0;
+
+		if( mainESM.observationJob ) {
+			mainESM.observationJob.stop();
+			mainESM.observationJob = null;
+		}
+	},
+
+
+	//////////////////////////////////////////////////////////////////////
+	// inner functions
+	//////////////////////////////////////////////////////////////////////
+
+	/**
+	 * @func insertDB
+	 * @desc 現在のデータをDBにinsertする、基本的には１分に１回呼ばれる
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 */
+	insertDB: async () => {
+		try{
+			config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() every min'):0;
+
+			let dt = new Date();
+
+			// Wi-SUN電力スマートメーターの状態のチェック
+			if( mainESM.connected && persist && persist.IPs && persist.IPs.length != 0 ) {
+				// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() persist:\x1b[32m', persist, '\x1b[0m' ):0;
+
+				let ip = persist.IPs[0];
+				let sm = persist[ip];
+				// 蓄積するほどデータがそろってない場合はスキップ
+				if( !sm || !sm['低圧スマート電力量メータ01(028801)']  ) {
+					config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() SumartMeter persist.esmData is Null.' ):0;
+
+				}else if( !sm['低圧スマート電力量メータ01(028801)']['設置場所(81)'] ) {  // 基本プロパティがなければ取り直す
+					config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() SumartMeter esmData.place is Null.' ):0;
+					eSM.getStatic();
+
+				}else if( isObjEmpty(sm.Means) ) {
+					config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() SumartMeter sm.Means is Empty.' ):0;
+
+				}else{
+					// merge用ベース
+					let means = {
+						'積算電力量計測値（正方向計測値）[kWh]': null,
+						'積算電力量計測値（逆方向計測値）[kWh]': null,
+						'定時積算電力量計測値正方向': {
+							'日時':null,
+							'計測値[kWh]':null
+						},
+						'定時積算電力量計測値逆方向': {
+							'日時':null,
+							'計測値[kWh]':null
+						}
+					};
+
+					// merge用ベースとesmDataとマージ
+					let mergeObj = mergeDeeply( means, sm.Means);
+					// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() ESM mergeObj \x1b[32m', mergeObj, '\x1b[0m' ):0;
+
+					let instantaneousPower = null;
+					if( sm['低圧スマート電力量メータ01(028801)']['瞬時電力計測値(E7)'] ) {
+						// console.log( 'E7:', sm['低圧スマート電力量メータ01(028801)']['瞬時電力計測値(E7)'] );
+						instantaneousPower = sm['低圧スマート電力量メータ01(028801)']['瞬時電力計測値(E7)'].split('W')[0];
+					}
+
+					let instantaneousCurrentsR = null;
+					if( sm['低圧スマート電力量メータ01(028801)']['瞬時電流計測値(E8)'] ) {
+						let e8 = JSON.parse( sm['低圧スマート電力量メータ01(028801)']['瞬時電流計測値(E8)'].split('(')[0] );
+						let rp = e8['RPhase'];
+						// console.log( rp );
+						instantaneousCurrentsR = rp.split('[A]')[0];
+					}
+
+					let instantaneousCurrentsT = null;
+					if( sm['低圧スマート電力量メータ01(028801)']['瞬時電流計測値(E8)'] ) {
+						let e8 = JSON.parse( sm['低圧スマート電力量メータ01(028801)']['瞬時電流計測値(E8)'].split('(')[0] );
+						let tp = e8['TPhase'];
+						// console.log( tp );
+						instantaneousCurrentsT = tp.split('[A]')[0];
+					}
+
+					//------------------------------------------------------------
+					// 整理されたデータベースにする
+					let q = {
+						dateTime: dt,
+						srcType: 'Meter',
+						place: sm['低圧スマート電力量メータ01(028801)']['設置場所(81)'],
+						commulativeAmountNormal: mergeObj['積算電力量計測値（正方向計測値）[kWh]'], // E0
+						commulativeAmountReverse: mergeObj['積算電力量計測値（逆方向計測値）[kWh]'], // E3
+						instantaneousPower: instantaneousPower,  // E7
+						instantaneousCurrentsR: instantaneousCurrentsR, // E8
+						instantaneousCurrentsT: instantaneousCurrentsT,  // E8
+						commulativeAmountsFixedTimeNormalDaytime: mergeObj['定時積算電力量計測値正方向']['日時'],  // EA
+						commulativeAmountsFixedTimeNormalPower: mergeObj['定時積算電力量計測値正方向']['計測値[kWh]'],
+						commulativeAmountsFixedTimeReverseDaytime: mergeObj['定時積算電力量計測値逆方向']['日時'], // EB
+						commulativeAmountsFixedTimeRiversePower: mergeObj['定時積算電力量計測値逆方向']['計測値[kWh]']
+					};
+
+					// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() ESM insert:\x1b[32m', q, '\x1b[0m' ):0;
+					electricEnergyModel.create( q );
+				}
+			};
+
+			mainESM.sendTodayEnergy(); 		// 本日のデータの定期的送信 スマートメータ分
+		} catch( error ) {
+			console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start.cron.schedule() each 3min, error:', error);
+			throw error;
+		}
+	},
+
+	/**
+	 * @func renewPortList
+	 * @desc シリアルポートリストを取得する
+	 * @async
+	 * @param {void} 
+	 * @return Array シリアルポートリスト
 	 * @throw error
 	 */
 	renewPortList: async function () {
@@ -348,9 +411,12 @@ let mainESM = {
 
 	/**
 	 * @func received
-	 * @desc 受信の処理
+	 * @desc 受信処理
 	 * @async
-	 * @param {void} 
+	 * @param {eSM} sm スマメオブジェクト
+	 * @param {rinfo} rinfo 送信元のIPアドレス
+	 * @param {ELStructure} els ECHONET Lite Structureの形で受信したデータ
+	 * @param {Error} error エラーオブジェクト、エラーがあったときに情報あり
 	 * @return void
 	 * @throw error
 	 */
@@ -404,85 +470,19 @@ let mainESM = {
 		}
 	},
 
-
-	//////////////////////////////////////////////////////////////////////
-	// 定時処理のインタフェース
-	/**
-	 * @func observe
-	 * @desc スマートメータを監視する、初回受信時にトリガー
-	 * @async
-	 * @param {void} 
-	 * @return void
-	 * @throw error
-	 */
-	observe: function() {
-		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.observe() start.' ):0;
-
-		if( mainESM.observationJob ) {
-			config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.observe() already started.' ):0;
-		}
-
-		// 監視はcronで実施、1分毎
-		mainESM.observationJob = cron.schedule('*/1 * * * *', () => {
-			config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.observe.cron.schedule()'):0;
-
-			// 既に接続していたら機器情報の変化をみる。接続していなかったら接続する。30秒に1回、ポートの状況を監視
-			// この処理はmainESM.start()でobserve serialportとして分割した。
-			// ここでは機器情報を1分に1回取得しに行く処理だけ書く
-
-			if( mainESM.connected ) {
-				// 機器情報の変化の監視
-				eSM.getMeasuredValues();  // 機器情報の変化を定期的にgetする
-				// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.observe().cron facilities:\x1b[32m', eSM.facilities, '\x1b[0m' ):0;
-				mainESM.changeCallback( eSM.facilities );
-
-			}else{
-				// 切断状態
-				config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.observe.cron.schedule() is NO connection.'):0;
-			}
-		});
-	},
-
-
-	/**
-	 * @func stopObservation
-	 * @desc 監視をやめる
-	 * @async
-	 * @param {void} 
-	 * @return void
-	 * @throw error
-	 */
-	stopObservation: function() {
-		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.stopObserve() observation.' ):0;
-
-		if( mainESM.observationJob ) {
-			mainESM.observationJob.stop();
-			mainESM.observationJob = null;
-		}
-	},
-
-
-	//////////////////////////////////////////////////////////////////////
-	/*
-	getCases
-	input
-		date: Date="2023-01-06"
-
-	output
-		when createdAt >= "2023-01-05 23:57" and createdAt < "2023-01-06 00:00" then "00:00"
-		when createdAt >= "2023-01-06 00:00" and createdAt < "2023-01-06 00:03" then "00:03"
-		when createdAt >= "2023-01-06 00:03" and createdAt < "2023-01-06 00:06" then "00:06"
-		...
-		when createdAt >= "2023-01-06 23:54" and createdAt < "2023-01-06 23:57" then "23:57"
-		else "24:00"
-	*/
 	/**
 	 * @func getCases
-	 * @desc 定時処理、スマートメータのデータ送信
+	 * @desc 或る日のデータを3分単位で取得するためのwhen文を生成する
 	 * @async
-	 * @param {void} 
-	 * @return void
-	 * @throw error
+	 * @param {string} date 或る日
+	 * 	date: Date="2023-01-06"
+	 * @return {string} when文の文字列
+	 * 	when createdAt >= "2023-01-05 23:57" and createdAt < "2023-01-06 00:00" then "00:00"
+	 *	when createdAt >= "2023-01-06 00:00" and createdAt < "2023-01-06 00:03" then "00:03"
+	 *	when createdAt >= "2023-01-06 00:03" and createdAt < "2023-01-06 00:06" then "00:06"
+	 *	...
+	 *	when createdAt >= "2023-01-06 23:54" and createdAt < "2023-01-06 23:57" then "23:57"
+	 *	else "24:00"
 	 */
 	getCases: function ( date ) {
 		let T1 = new Date(date);
@@ -513,11 +513,10 @@ let mainESM = {
 
 	/**
 	 * @func getRows
-	 * @desc DBからテーブル取得
+	 * @desc DBから今日のデータを取得
 	 * @async
 	 * @param {void} 
-	 * @return void
-	 * @throw error
+	 * @return Array[] rows
 	 */
 	getRows: async function() {
 		try {
@@ -550,17 +549,17 @@ let mainESM = {
 
 			return rows;
 		} catch( error ) {
-			console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.getTodayRoomEnvOmron()', error);
+			console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.getRows()', error);
 		}
 	},
 
 
 	/**
 	 * @func getTodayElectricEnergy
-	 * @desc 電力
+	 * @desc 今日のデータを配列として取得する
 	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @param {void}
+	 * @return Array[Object] 今日のデータ
 	 * @throw error
 	 */
 	getTodayElectricEnergy: async function( ) {
@@ -611,7 +610,7 @@ let mainESM = {
 
 	/**
 	 * @func sendTodayEnergy
-	 * @desc 全体
+	 * @desc 現在持っているデータをRendererに送る
 	 * @async
 	 * @param {void} 
 	 * @return void
