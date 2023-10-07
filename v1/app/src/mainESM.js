@@ -357,7 +357,8 @@ let mainESM = {
 	received: function ( sm, rinfo, els, error ) {
 		// わからんエラー
 		if( error ) {
-			sendIPCMessage( "Error", '' + error + '<br>スマートメータの設定をもう一度確認し、一度アプリを再起動してみてください。' );
+			sendIPCMessage('Error', {datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainESM.received()', stackLog: `${error}\nスマートメータの設定をもう一度確認し、一度アプリを再起動してみてください。または機器を再起動してください。`} );
+
 			console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.received() error:\x1b[32m', error, '\x1b[0m');
 			return;
 		}
