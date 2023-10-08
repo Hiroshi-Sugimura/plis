@@ -204,8 +204,8 @@ let mainESM = {
 			if (mainESM.connected) {
 				// 機器情報の変化の監視
 				eSM.getMeasuredValues();  // 機器情報の変化を定期的にgetする
-				mainESM.changeCallback(eSM.facilities);
-				mainESM.insertDB();
+				mainESM.changeCallback(eSM.facilities);  // 機器の変化の監視
+				mainESM.insertDB();  // データベースに登録
 
 			} else {
 				// 切断状態なら再接続？
@@ -393,7 +393,6 @@ let mainESM = {
 				mainESM.connected = true;  // 接続できたフラグ
 
 				eSM.getStatic(); // 初回接続時は静的プロパティをもらっておく
-				mainESM.observe(); // 監視も開始
 			}
 
 			if (els) {
