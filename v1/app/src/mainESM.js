@@ -38,8 +38,6 @@ let mainESM = {
 	isRun: false,  // 動作中
 	observationJob: null,
 	observationPort: null,
-	receiveCallback: null,
-	changeCallback: null,
 	connected: false, // 初回起動のみ実施するためのフラグ, flag for first connection
 
 	//////////////////////////////////////////////////////////////////////
@@ -84,28 +82,13 @@ let mainESM = {
 		}
 		mainESM.isRun = true;
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start()') : 0;
-
 		try {
-			mainESM.startCore(
-				mainESM.received,
-				(facilities) => {
-					ELconv.refer(objectSort(facilities), function (devs) {
-						// console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| ESMStart() devs:\x1b[32m', objectSort(devs), '\x1b[0m' );
-						persist = eSM.objectSort(devs);
-						sendIPCMessage("fclESM", persist);
-					});
-				});
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start()') : 0;
+			mainESM.startObserve();		// 定時処理
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start() error:', error);
-			sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainESM.start()', stackLog: error });
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start() startObserve error') : 0;
 			mainESM.isRun = false;
-			throw error;
 		}
-
-
-		//////////////////////////////////////////////////////////////////////
-		mainESM.startObserve();		// 定時処理
 
 		if (persist) {
 			sendIPCMessage("fclESM", persist);
@@ -190,48 +173,6 @@ let mainESM = {
 	},
 
 
-	//////////////////////////////////////////////////////////////////////
-	// Entry point
-	/**
-	 * @func startCore
-	 * @desc startCore
-	 * @async
-	 * @param {void} 
-	 * @return void
-	 * @throw error
-	 */
-	startCore: async function (_receiveCallback, _changeCallback) {
-		// pre-conditions
-		if (!config.dongleType) { throw new Error('mainESM.startCore(); config.dongleType is null.'); }
-		if (!config.id) { throw new Error('mainESM.startCore(); config.id is null.'); }
-		if (!config.password) { throw new Error('mainESM.startCore(); config.password is null.'); }
-		if (!_receiveCallback) { throw new Error('mainESM.startCore(); receiveCallback is null.'); }
-		if (!_changeCallback) { throw new Error('mainESM.startCore(); changeCallback is null.'); }
-
-		mainESM.receiveCallback = _receiveCallback;
-		mainESM.changeCallback = _changeCallback;
-
-		if (mainESM.observationPort) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startCore() already started.') : 0;
-		}
-
-		// 既に接続していたら機器情報の変化をみる。接続していなかったら接続する
-		// USB挿抜を30秒で監視
-		mainESM.observationPort = cron.schedule('*/30 * * * * *', async () => {
-			if (mainESM.connected) { // 接続してればなにもしない
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startCore().cron.schedule(), serialport has already connected.') : 0;
-			} else { // 接続してなければ初期化からやる
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startCore().cron.schedule(), serialport is NOT connected.') : 0;
-				try {
-					await eSM.initialize(config, mainESM.receiveCallback);  // ライブラリの方でリエントラント制御してるので、ここでは雑に呼ぶ
-				} catch (error) {
-					await eSM.release();
-					console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startCore() error:', error);
-				}
-			}
-		});
-	},
-
 
 	//////////////////////////////////////////////////////////////////////
 	// 定時処理のインタフェース
@@ -244,10 +185,10 @@ let mainESM = {
 	 * @throw error
 	 */
 	startObserve: function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.observe() start.') : 0;
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startObserve() start.') : 0;
 
 		if (mainESM.observationJob) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.observe() already started.') : 0;
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startObserve() already started.') : 0;
 		}
 
 		// 1分毎に監視タスクは動作する
@@ -255,7 +196,7 @@ let mainESM = {
 		// 機器情報の変化を意味付けする
 		// DBにinsertする
 		mainESM.observationJob = cron.schedule('*/1 * * * *', async () => {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.observe.cron.schedule()') : 0;
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startObserve.cron.schedule()') : 0;
 
 			// 既に接続していたら機器情報の変化をみる。接続していなかったら接続する
 			// この処理はmainESM.start()でobserve serialportとして分割した。
@@ -268,7 +209,13 @@ let mainESM = {
 
 			} else {
 				// 切断状態なら再接続？
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.observe.cron.schedule() is NO connection.') : 0;
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startObserve.cron.schedule() is NO connection.') : 0;
+
+				// 既に接続していたら機器情報の変化をみる。接続していなかったら接続する
+				if (eSM.state == 'disconnected') {
+					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startObserve.cron.schedule() eSM.state is disconnected.') : 0;
+					eSM.initialize(config, mainESM.received);  // ライブラリの方でリエントラント制御してるので、ここでは雑に呼ぶ
+				}
 			}
 		});
 
@@ -470,6 +417,22 @@ let mainESM = {
 			console.error(e);
 		}
 	},
+
+	/**
+	 * @func changeCallback
+	 * @desc 受信処理、変更があった場合に呼ばれる
+	 * @async
+	 * @param {facilities} facilities 変更後データ
+	 * @return void
+	 */
+	changeCallback: function (facilities) {
+		ELconv.refer(objectSort(facilities), function (devs) {
+			// console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| ESMStart() devs:\x1b[32m', objectSort(devs), '\x1b[0m' );
+			persist = eSM.objectSort(devs);
+			sendIPCMessage("fclESM", persist);
+		});
+	},
+
 
 	/**
 	 * @func getCases
