@@ -534,7 +534,7 @@ let mainESM = {
 			T1.setHours(0, 0, 0);
 
 			let array = [];
-			for (let t = 0; t < 480; t += 1) {
+			for (let t = 0; t < 480; t += 1) {  // 3分が480回で1440＝1日
 				let row = rows.find((row) => row.dataValues.timeunit == T1.toFormat('HH24:MI'));
 
 				if (row) {
