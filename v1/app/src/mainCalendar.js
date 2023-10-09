@@ -36,6 +36,7 @@ let sendIPCMessage = null;
 
 let mainCalendar = {
 	isRun: false,  // 多重起動防止
+	holidayData: null,
 	holidaysURL: 'https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv', // 内閣府
 	observationTask: null,  // cronオブジェクト
 
@@ -56,7 +57,10 @@ let mainCalendar = {
 
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendarStart()') : 0;
 
-		if (mainCalendar.isRun) return;
+		if (mainCalendar.isRun) {
+			sendIPCMessage('createCalendar', mainCalendar.holidayData);  // re-rentry
+			return;
+		}
 		mainCalendar.isRun = true;
 
 		//////////////////////////////////////////////////////////////////////
@@ -68,7 +72,8 @@ let mainCalendar = {
 				mainCalendar.getHolidays();  // カレンダーデータ無いから取得する
 				return;
 			}
-			sendIPCMessage('createCalendar', data);
+			mainCalendar.holidayData = data;
+			sendIPCMessage('createCalendar', mainCalendar.holidayData);
 		});
 
 
