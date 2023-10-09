@@ -18,6 +18,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	// config
 	let inESMUse = document.getElementById('inESMUse');  // config: 有効・無効
 	let inDongleType = document.getElementById('inDongleType');
+	let inConnectionType = document.getElementById('inConnectionType');
 	let inESMId = document.getElementById('inESMId');
 	let inESMPassword = document.getElementById('inESMPassword');
 	let inUserAmpere = document.getElementById('inUserAmpere');
@@ -154,7 +155,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			inESMUse.checked = false;
 			esmHelpDialog.showModal();
 		} else {  // 全情報あり
-			window.ipc.ESMUse(inDongleType.value, inESMId.value, inESMPassword.value);
+			window.ipc.ESMUse(inDongleType.value, inConnectionType.value, inESMId.value, inESMPassword.value);
 			window.addToast('Info', '電力スマートメーターとの連携を開始しました。実際の通信まで2分程度お待ちください。');
 		}
 	};
@@ -181,6 +182,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	window.renewESMConfigView = function (arg) {
 		inESMUse.checked = arg.enabled ? true : false;
 		inDongleType.value = arg.dongleType;
+		inConnectionType.value = arg.connectionType;
 		inESMId.value = arg.id;
 		inESMPassword.value = arg.password;
 		inUserAmpere.value = arg.userAmpere;
@@ -315,7 +317,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func renewCanvasESM
 	 * @desc renewCanvasESM
- 	 * @memberof subESM
+	 * @memberof subESM
 	 * @param {void}
 	 * @return {void}
 	 */
@@ -352,7 +354,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 		// 現在時刻で Breaker のラベル位置を変更
 		let datetime = new Date();
-		if ( datetime.getHours() > 12 ) {
+		if (datetime.getHours() > 12) {
 			complexChartOption.plugins.annotation.annotations.line1.label.position = 'start';
 		} else {
 			complexChartOption.plugins.annotation.annotations.line1.label.position = 'end';

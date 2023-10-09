@@ -193,9 +193,10 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	ESMUse: (_dongleType, _id, _password) => {
+	ESMUse: (_dongleType, _connectionType, _id, _password) => {
 		ipcRenderer.invoke('ESMUse', {
 			dongleType: _dongleType,
+			connectionType: _connectionType,
 			id: _id,
 			password: _password
 		});
@@ -207,9 +208,10 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	ESMnotUse: (_dongleType, _id, _password) => {
+	ESMnotUse: (_dongleType, _connectionType, _id, _password) => {
 		ipcRenderer.invoke('ESMnotUse', {
 			dongleType: _dongleType,
+			connectionType: _connectionType,
 			id: _id,
 			password: _password
 		});

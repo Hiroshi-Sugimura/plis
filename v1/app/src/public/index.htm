@@ -92,11 +92,15 @@
 					<h2 id="roomEnvTitle" class="none">屋内環境</h2>
 
 					<!-- Netatmo -->
-					<h3 id="H3Netatmo" class="none"><i class='fa-solid fa-person-shelter'></i> 屋内環境：Netatmo <span
-							id="spanNetatmoHomename"></span> (<span id="spanNetatmoTime"></span>) <span
-							class="f_right"><a href="#"
-								onClick="document.getElementById('configTab').checked=true; location.hash='NetatmoConfig'; document.getElementById('NetatmoConfigDetails').open=true;"><i
-									class="fa-solid fa-gear right"></i></a></span></h3>
+					<h3 id="H3Netatmo" class="none">
+						<i class='fa-solid fa-person-shelter'></i> 屋内環境：Netatmo <span id="spanNetatmoHomename"></span>
+						(<span id="spanNetatmoTime"></span>) <span class="f_right">
+							<a href="#"
+								onClick="document.getElementById('configTab').checked=true; location.hash='NetatmoConfig'; document.getElementById('NetatmoConfigDetails').open=true;">
+								<i class="fa-solid fa-gear right"></i>
+							</a>
+						</span>
+					</h3>
 					<div class="LinearLayoutParent_split">
 						<div class="LinearLayoutChild_left none" id="divNetatmoAbst"><!-- abst -->
 							<div class='LinearLayoutParent'>
@@ -149,7 +153,10 @@
 							id="spanOmronPlace"></span> （<span id="spanOmronTime"></span>） <span class="f_right"><a
 								href="#"
 								onClick="document.getElementById('configTab').checked=true; location.hash='OmronConfig'; document.getElementById('OmronConfigDetails').open=true;"><i
-									class="fa-solid fa-gear right"></i></a></span></h3>
+									class="fa-solid fa-gear right"></i>
+							</a>
+						</span>
+					</h3>
 					<div class="LinearLayoutParent_split">
 						<!-- abst -->
 						<div class="LinearLayoutChild_left none" id="divOmronAbst">
@@ -221,7 +228,10 @@
 							id="spanCo2sPlace"></span> （<span id="spanCo2sTime"></span>） <span class="f_right"><a
 								href="#"
 								onClick="document.getElementById('configTab').checked=true; location.hash='Co2sConfig'; document.getElementById('Co2sConfigDetails').open=true;"><i
-									class="fa-solid fa-gear right"></i></a></span></h3>
+									class="fa-solid fa-gear right"></i>
+							</a>
+						</span>
+					</h3>
 					<div class="LinearLayoutParent_split">
 						<!-- abst -->
 						<div class="LinearLayoutChild_left none" id="divCo2sAbst">
@@ -262,9 +272,13 @@
 
 					<!-- スマート電力メータのグラフ、デフォルトで消えているけど、データが来たら表示、subESMで制御 -->
 					<h2 id="H3ESM" class="none"><i class='fa-solid fa-person-shelter'></i> 消費電力：Electric Smart
-						Meter<span class="f_right"><a href="#"
+						Meter<span class="f_right">
+							<a href="#"
 								onClick="document.getElementById('configTab').checked=true; location.hash='ESMConfig'; document.getElementById('ESMConfigDetails').open=true;"><i
-									class="fa-solid fa-gear right"></i></a></span></h2>
+									class="fa-solid fa-gear right"></i>
+							</a>
+						</span>
+					</h2>
 					<div class="LinearLayoutParent_split">
 						<div class="LinearLayoutChild_lef none" id="divESMAbst"><!-- abst -->
 							<div class='LinearLayoutParent'>
@@ -323,7 +337,9 @@
 							<i class='fa-solid fa-person-shelter'></i> 消費電力：Electric Smart Sub Meter
 							<span class="f_right"><a href="#"
 									onClick="document.getElementById('configTab').checked=true; location.hash='userProfileConfig'; document.getElementById('userProfileDetail').open=true;"><i
-										class="fa-solid fa-gear right"></i></a></span>
+										class="fa-solid fa-gear right"></i>
+								</a>
+							</span>
 						</h2>
 					</div>
 					<div class="p">
@@ -415,7 +431,8 @@
 							<i class="fa-solid fa-arrows-rotate" onClick="window.ipc.ELsearch();"></i>
 							<a href="#"
 								onClick="document.getElementById('configTab').checked=true; location.hash='ELConfig'; document.getElementById('ELConfigDetails').open=true;"><i
-									class="fa-solid fa-gear right"></i></a>
+									class="fa-solid fa-gear right"></i>
+							</a>
 						</span>
 					</h2>
 					<div class="p">
@@ -427,7 +444,9 @@
 						Philips hue
 						<span class="f_right"><a href="#"
 								onClick="document.getElementById('configTab').checked=true; location.hash='HueConfig'; document.getElementById('HueConfigDetails').open=true;"><i
-									class="fa-solid fa-gear right"></i></a></span>
+									class="fa-solid fa-gear right"></i>
+							</a>
+						</span>
 					</h2>
 					<div class="p">
 						<div id="divControlHue" class="LinearLayoutParent" style="display:none;"></div>
@@ -443,7 +462,9 @@
 						SwitchBot (<span id="spanSwitchBotTime"></span>)
 						<span class="f_right"><a href="#"
 								onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;"><i
-									class="fa-solid fa-gear right"></i></a></span>
+									class="fa-solid fa-gear right"></i>
+							</a>
+						</span>
 					</h2>
 					<div class="p">
 						<div id="divControlSwitchBot" class="LinearLayoutParent" style="display: none;"></div>
@@ -1393,9 +1414,12 @@
 						<summary class="config">電力スマートメータ</summary>
 						<div class="p">
 							<label><input type="checkbox" id="inESMUse">Use Electric Smart Meter</label><br>
-							DonbleType: <select id="inDongleType" size="1" />
+							Donble Type: <select id="inDongleType" size="1" />
 							<option value="ROHM">ROHM</option>
 							<option value="TESSERA">TESSERA</option> </select> <br>
+							Connection Type: <select id="inConnectionType" size="1" />
+							<option value="stable">stable</option>
+							<option value="fast">fast</option> </select> <br>							
 							Bルート認証ID設定: <form class="secretBorder inline"><input id="inESMId" type="password" value=""
 									size="50" /><span id="inESMIdButtonEye" class="fa fa-eye"
 									onclick="window.pushHideButton('inESMId');"></span></form> <br>

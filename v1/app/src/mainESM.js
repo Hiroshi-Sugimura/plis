@@ -26,6 +26,7 @@ let config = {
 	password: '',   // Bルート認証パスワード設定, Your B route password.
 	userAmpere: '30', // ユーザの契約アンペア
 	EPANDESC: {},       // コネクション情報
+	connectionType: 'stable', // 接続方式, 'stable' or 'fast', stable:No use EPANDESC
 	debug: false     // スマメライブラリのデバッグ有効
 };
 
@@ -64,13 +65,15 @@ let mainESM = {
 			return;
 		}
 
-		config.enabled = store.get('config.ESM.enabled', false);
-		config.dongleType = store.get('config.ESM.dongleType', '');
-		config.id = store.get('config.ESM.id', '');
-		config.password = store.get('config.ESM.password', '');
-		config.userAmpere = store.get('config.ESM.userAmpere', '30');
-		config.EPANDESC = store.get('config.ESM.EPANDESC', {});
-		config.debug = store.get('config.ESM.debug', false);
+		config.enabled		= store.get('config.ESM.enabled', false);
+		config.dongleType	= store.get('config.ESM.dongleType', '');
+		config.id			= store.get('config.ESM.id', '');
+		config.password		= store.get('config.ESM.password', '');
+		config.userAmpere	= store.get('config.ESM.userAmpere', '30');
+		config.connectionType = store.get('config.ESM.connectionType', 'stable');
+		config.EPANDESC		= store.get('config.ESM.EPANDESC', {});
+		config.debug		= store.get('config.ESM.debug', false);
+
 		persist = store.get('persist.ESM', {});
 
 		sendIPCMessage("renewESMConfigView", config);
@@ -214,6 +217,9 @@ let mainESM = {
 				// 既に接続していたら機器情報の変化をみる。接続していなかったら接続する
 				if (eSM.state == 'disconnected') {
 					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startObserve.cron.schedule() eSM.state is disconnected.') : 0;
+					if( config.connectionType == 'stable' ) {
+						config.EPANDESC = {};
+					}
 					eSM.initialize(config, mainESM.received);  // ライブラリの方でリエントラント制御してるので、ここでは雑に呼ぶ
 				}
 			}
