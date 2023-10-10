@@ -223,6 +223,7 @@ let mainSwitchBot = {
 			switch(error) {
 				case 'Error: Http 401 Error. User permission is denied due to invalid token.':
 				console.log( JSON.stringify(_client) );
+				sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainSwitchBot.renewFacilities()', stackLog: `Http 401 Error. User permission is denied due to invalid token.\n${error}` });
 				break;
 			}
 
