@@ -23,6 +23,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	// config
 	let inSwitchBotUse      = document.getElementById('inSwitchBotUse'); // switchBot; use or not
 	let inSwitchBotToken    = document.getElementById('inSwitchBotToken'); // switchBot; token
+	let inSwitchBotSecret    = document.getElementById('inSwitchBotsecret'); // switchBot; secret
 	let btnSwitchBotConfigSet = document.getElementById('btnSwitchBotConfigSet'); // switchBot; 設定ボタン
 
 	// control tab
@@ -213,13 +214,13 @@ window.addEventListener('DOMContentLoaded', function () {
 		btnSwitchBotConfigSet.disabled    = true;
 		btnSwitchBotConfigSet.textContent = '設定中...';
 
-		if( !inSwitchBotUse.checked || inSwitchBotToken.value == '' ) {
-			window.ipc.SwitchBotStop( inSwitchBotToken.value );  // SwitchBot の監視を stopする
+		if( !inSwitchBotUse.checked || inSwitchBotToken.value == '' || inSwitchBotSecret.value == '') {
+			window.ipc.SwitchBotStop( inSwitchBotToken.value, inSwitchBotSecret.value );  // SwitchBot の監視を stopする
 			renewFacilitiesSwitchBot( facilitiesSwitchBot );
 			return; // falseなら外すだけ
 		}
 
-		window.ipc.SwitchBotUse( inSwitchBotToken.value );
+		window.ipc.SwitchBotUse( inSwitchBotToken.value, inSwitchBotSecret.value );
 	};
 
 	/**
@@ -246,6 +247,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	window.renewSwitchBotConfigView = function( arg ) {
 		inSwitchBotUse.checked = arg.enabled;
 		inSwitchBotToken.value = arg.token;
+		inSwitchBotSecret.value = arg.token;
 		btnSwitchBotConfigSet.disabled    = false;
 		btnSwitchBotConfigSet.textContent = '設定';
 

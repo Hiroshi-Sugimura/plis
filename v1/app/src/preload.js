@@ -396,8 +396,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	SwitchBotUse: (_token) => {
-		ipcRenderer.invoke('SwitchBotUse', { token: _token });
+	SwitchBotUse: (_token, _secret) => {
+		ipcRenderer.invoke('SwitchBotUse', { token: _token, secret:_secret });
 	},
 
 	/**
@@ -406,8 +406,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	SwitchBotStop: (_token) => {
-		ipcRenderer.invoke('SwitchBotStop', { token: _token });
+	SwitchBotStop: (_token, _secret) => {
+		ipcRenderer.invoke('SwitchBotStop', { token: _token, secret: _secret });
 	},
 
 	/**

@@ -9,8 +9,7 @@
 
 <head>
 	<meta charset="utf-8">
-	<meta http-equiv="Content-Security-Policy"
-		content="default-src 'self'; style-src 'self' 'unsafe-inline';script-src 'self' 'unsafe-inline';img-src 'self' http://openweathermap.org/  https://www.jma.go.jp/ data: base64" />
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline';script-src 'self' 'unsafe-inline';img-src 'self' http://openweathermap.org/  https://www.jma.go.jp/ data: base64" />
 
 	<title>PLIS</title>
 	<link rel="stylesheet" type="text/css" media="screen" href="./css/style.css" />
@@ -31,35 +30,28 @@
 			<div class="tab_area">
 				<!-- タブ -->
 				<input id="top" type="radio" name="tab_item" checked="checked">
-				<label class="tab_item" for="top"><img src="./img/home.png" class=tab-icon alt="home" align="top"> <span
-						class="omitable">TOP</span></label>
+				<label class="tab_item" for="top"><img src="./img/home.png" class=tab-icon alt="home" align="top"> <span class="omitable">TOP</span></label>
 
 				<input id="control" type="radio" name="tab_item">
-				<label class="tab_item" for="control"><img src="./img/set.png" class=tab-icon alt="set"
-						align="top"><span class="omitable">Control</span></label>
+				<label class="tab_item" for="control"><img src="./img/set.png" class=tab-icon alt="set" align="top"><span class="omitable">Control</span></label>
 
 				<input id="hal" type="radio" name="tab_item">
-				<label class="tab_item" for="hal"><img src="./img/chart.png" class=tab-icon alt="chart"
-						align="top"><span class="omitable">HAL</span></label>
+				<label class="tab_item" for="hal"><img src="./img/chart.png" class=tab-icon alt="chart" align="top"><span class="omitable">HAL</span></label>
 
 				<input id="questionnaire" type="radio" name="tab_item">
-				<label class="tab_item" for="questionnaire"><img src="./img/profile.png" class=tab-icon alt="hal"
-						align="top"><span class="omitable">Questionnaire</span></label>
+				<label class="tab_item" for="questionnaire"><img src="./img/profile.png" class=tab-icon alt="hal" align="top"><span class="omitable">Questionnaire</span></label>
 
 				<input id="details" type="radio" name="tab_item">
-				<label class="tab_item" for="details"><img src="./img/debug.png" class=tab-icon alt="debug"
-						align="top"><span class="omitable">Details</span></label>
+				<label class="tab_item" for="details"><img src="./img/debug.png" class=tab-icon alt="debug" align="top"><span class="omitable">Details</span></label>
 
 				<input id="configTab" type="radio" name="tab_item">
-				<label class="tab_item_config" for="configTab"> <i class="fa-solid fa-gear tab-icon" alt="top"
-						align="top"></i> </label>
+				<label class="tab_item_config" for="configTab"> <i class="fa-solid fa-gear tab-icon" alt="top" align="top"></i> </label>
 
 				<!-- topタブ開始 -->
 				<div class="tab_content" id="divTop_tab">
 
-					<h2><i class="fa-regular fa-clock"></i> Daytime <span class="f_right"><a href="#"
-								onClick="document.getElementById('configTab').checked=true; location.hash='SystemConfig'; document.getElementById('SystemConfigDetails').open=true;"><i
-									class="fa-solid fa-gear right"></i></a></span></h2>
+					<h2><i class="fa-regular fa-clock"></i> Daytime <span class="f_right"><a href="#" onClick="document.getElementById('configTab').checked=true; location.hash='SystemConfig'; document.getElementById('SystemConfigDetails').open=true;"><i class="fa-solid fa-gear right"></i></a></span>
+					</h2>
 
 					<div class="LinearLayoutParent_split">
 						<!-- 時計 -->
@@ -70,11 +62,9 @@
 						<div class="calendar-wrap LinearLayoutChild_right">
 							<!-- ボタンクリックで月移動 -->
 							<div id="next-prev-button">
-								<button id="calendarPrev" onclick="window.calendarPrev()"><i
-										class="fa-solid fa-angles-left"></i></button>
+								<button id="calendarPrev" onclick="window.calendarPrev()"><i class="fa-solid fa-angles-left"></i></button>
 								<strong id="year_month"></strong><!-- xxxx年xx月を表示 -->
-								<button id="calendarNext" onclick="window.calendarNext()"><i
-										class="fa-solid fa-angles-right"></i></button>
+								<button id="calendarNext" onclick="window.calendarNext()"><i class="fa-solid fa-angles-right"></i></button>
 							</div>
 							<!-- カレンダー -->
 							<div id="calendar">カレンダーの表示がない場合は設定から祝日データの再取得をしてください。</div>
@@ -95,8 +85,7 @@
 					<h3 id="H3Netatmo" class="none">
 						<i class='fa-solid fa-person-shelter'></i> 屋内環境：Netatmo <span id="spanNetatmoHomename"></span>
 						(<span id="spanNetatmoTime"></span>) <span class="f_right">
-							<a href="#"
-								onClick="document.getElementById('configTab').checked=true; location.hash='NetatmoConfig'; document.getElementById('NetatmoConfigDetails').open=true;">
+							<a href="#" onClick="document.getElementById('configTab').checked=true; location.hash='NetatmoConfig'; document.getElementById('NetatmoConfigDetails').open=true;">
 								<i class="fa-solid fa-gear right"></i>
 							</a>
 						</span>
@@ -106,36 +95,31 @@
 							<div class='LinearLayoutParent'>
 								<section><img src='./img/netatmo.svg' class='dev-type-icon'><br><br class='omitable'>
 									<div class='LinearLayoutChild_Env'>
-										<section class='temp_color' id='netatmoDocTempSec'
-											onClick='window.netatmoDocSectionClicked("温度 [℃]");'>
+										<section class='temp_color' id='netatmoDocTempSec' onClick='window.netatmoDocSectionClicked("温度 [℃]");'>
 											<i class='fas fa-temperature-high mr-2 env-icon'></i>
 											温度 (left axis):<br> <span id="spanNetatmoTemperature"></span> ℃
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='hum_color' id='netatmoDocHumSec'
-											onClick='window.netatmoDocSectionClicked("湿度 [%]");'>
+										<section class='hum_color' id='netatmoDocHumSec' onClick='window.netatmoDocSectionClicked("湿度 [%]");'>
 											<i class='fas fa-tint mr-2 env-icon'></i>
 											湿度 (left axis):<br> <span id="spanNetatmoHumidity"></span> %
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='pressure_color' id='netatmoDocPressSec'
-											onClick='window.netatmoDocSectionClicked("気圧 [mb]");'>
+										<section class='pressure_color' id='netatmoDocPressSec' onClick='window.netatmoDocSectionClicked("気圧 [mb]");'>
 											<i class='fa-solid fa-tent-arrow-down-to-line env-icon'></i>
 											気圧 (right axis):<br> <span id="spanNetatmoPressure"></span> mb (hPa)
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='co2_color' id='netatmoDocCo2Sec'
-											onClick='window.netatmoDocSectionClicked("CO2 [ppm]");'>
+										<section class='co2_color' id='netatmoDocCo2Sec' onClick='window.netatmoDocSectionClicked("CO2 [ppm]");'>
 											<i class='fas fa-head-side-cough mr-2 env-icon'></i>
 											CO2 (right axis):<br> <span id="spanNetatmoCO2"></span> ppm
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='noise_color' id='netatmoDocNoiseSec'
-											onClick='window.netatmoDocSectionClicked("騒音 [dB]");'>
+										<section class='noise_color' id='netatmoDocNoiseSec' onClick='window.netatmoDocSectionClicked("騒音 [dB]");'>
 											<i class='fas fa-volume-up mr-2 env-icon'></i>
 											騒音 (left axis):<br> <span id="spanNetatmoNoise"></span> dB
 										</section>
@@ -149,11 +133,8 @@
 					</div>
 
 					<!-- OMRON -->
-					<h3 id="H3Omron" class="none"><i class='fa-solid fa-person-shelter'></i> 屋内環境：Omron, <span
-							id="spanOmronPlace"></span> （<span id="spanOmronTime"></span>） <span class="f_right"><a
-								href="#"
-								onClick="document.getElementById('configTab').checked=true; location.hash='OmronConfig'; document.getElementById('OmronConfigDetails').open=true;"><i
-									class="fa-solid fa-gear right"></i>
+					<h3 id="H3Omron" class="none"><i class='fa-solid fa-person-shelter'></i> 屋内環境：Omron, <span id="spanOmronPlace"></span> （<span id="spanOmronTime"></span>） <span class="f_right"><a href="#"
+								onClick="document.getElementById('configTab').checked=true; location.hash='OmronConfig'; document.getElementById('OmronConfigDetails').open=true;"><i class="fa-solid fa-gear right"></i>
 							</a>
 						</span>
 					</h3>
@@ -164,53 +145,41 @@
 								<section>
 									<i class='fa-brands fa-usb devTypeOmron'></i><br>
 									<div class='LinearLayoutChild_Env'>
-										<section class='temp_color' id='omronDocTempSec'
-											onClick='window.omronDocSectionClicked("温度 [℃]");'>
+										<section class='temp_color' id='omronDocTempSec' onClick='window.omronDocSectionClicked("温度 [℃]");'>
 											<i class='fas fa-temperature-high mr-2 env-icon'></i> 温度 (left axis):<br>
 											<span id="spanOmronTemperature"></span> ℃
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='hum_color' id='omronDocHumSec'
-											onClick='window.omronDocSectionClicked("湿度 [%RH]");'>
-											<i class='fas fa-tint mr-2 env-icon'></i> 湿度 (left axis):<br> <span
-												id="spanOmronHumidity"></span> %RH
+										<section class='hum_color' id='omronDocHumSec' onClick='window.omronDocSectionClicked("湿度 [%RH]");'>
+											<i class='fas fa-tint mr-2 env-icon'></i> 湿度 (left axis):<br> <span id="spanOmronHumidity"></span> %RH
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='pressure_color' id='omronDocPressSec'
-											onClick='window.omronDocSectionClicked("気圧 [hPa]");'>
+										<section class='pressure_color' id='omronDocPressSec' onClick='window.omronDocSectionClicked("気圧 [hPa]");'>
 											<i class='fa-solid fa-tent-arrow-down-to-line env-icon'></i> 気圧 (right
 											axis):<br> <span id="spanOmronPressure"></span> hPa
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='noise_color' id='omronDocNoiseSec'
-											onClick='window.omronDocSectionClicked("騒音 [dB]");'>
-											<i class='fas fa-volume-up mr-2 env-icon'></i> 騒音 (left axis):<br> <span
-												id="spanOmronNoise"></span> dB
+										<section class='noise_color' id='omronDocNoiseSec' onClick='window.omronDocSectionClicked("騒音 [dB]");'>
+											<i class='fas fa-volume-up mr-2 env-icon'></i> 騒音 (left axis):<br> <span id="spanOmronNoise"></span> dB
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='anbientLight_color' id='omronDocAnbientSec'
-											onClick='window.omronDocSectionClicked("光 [lx]");'>
+										<section class='anbientLight_color' id='omronDocAnbientSec' onClick='window.omronDocSectionClicked("光 [lx]");'>
 											<i class='fa-solid fa-circle-half-stroke env-icon'></i> 照度 (right axis):<br>
 											<span id="spanOmronAnbientLight"></span> lx<span class='small'></span>
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='discomfort_color' id='omronDocDiscomfortSec'
-											onClick='window.omronDocSectionClicked("不快指数");'>
-											<i class='far fa-grin-beam-sweat env-icon'></i> 不快指数 (left axis):<br> <span
-												id="spanOmronDiscomfortIndex"></span> <span class='small'>(*参)</span>
+										<section class='discomfort_color' id='omronDocDiscomfortSec' onClick='window.omronDocSectionClicked("不快指数");'>
+											<i class='far fa-grin-beam-sweat env-icon'></i> 不快指数 (left axis):<br> <span id="spanOmronDiscomfortIndex"></span> <span class='small'>(*参)</span>
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='heatStroke_color' id='omronDocHeatStrokeSec'
-											onClick='window.omronDocSectionClicked("熱中症警戒度");'>
-											<i class='fas fa-sun mr-2 env-icon'></i> 熱中症度 (left axis):<br> <span
-												id="spanOmronHeatStroke"></span> [<span
-												id="spanOmronHeat_stroke_desc"></span>] <span class='small'>(*参)</span>
+										<section class='heatStroke_color' id='omronDocHeatStrokeSec' onClick='window.omronDocSectionClicked("熱中症警戒度");'>
+											<i class='fas fa-sun mr-2 env-icon'></i> 熱中症度 (left axis):<br> <span id="spanOmronHeatStroke"></span> [<span id="spanOmronHeat_stroke_desc"></span>] <span class='small'>(*参)</span>
 										</section>
 									</div>
 								</section>
@@ -224,11 +193,8 @@
 
 
 					<!-- I/O DATA UD-CO2S -->
-					<h3 id="H3Co2s" class="none"><i class='fa-solid fa-person-shelter'></i> 屋内環境：UD-CO2S, <span
-							id="spanCo2sPlace"></span> （<span id="spanCo2sTime"></span>） <span class="f_right"><a
-								href="#"
-								onClick="document.getElementById('configTab').checked=true; location.hash='Co2sConfig'; document.getElementById('Co2sConfigDetails').open=true;"><i
-									class="fa-solid fa-gear right"></i>
+					<h3 id="H3Co2s" class="none"><i class='fa-solid fa-person-shelter'></i> 屋内環境：UD-CO2S, <span id="spanCo2sPlace"></span> （<span id="spanCo2sTime"></span>） <span class="f_right"><a href="#"
+								onClick="document.getElementById('configTab').checked=true; location.hash='Co2sConfig'; document.getElementById('Co2sConfigDetails').open=true;"><i class="fa-solid fa-gear right"></i>
 							</a>
 						</span>
 					</h3>
@@ -239,22 +205,18 @@
 								<section>
 									<i class='fa-brands fa-usb devTypeCo2s'></i><br>
 									<div class='LinearLayoutChild_Env'>
-										<section class='temp_color' id='co2sDocTempSec'
-											onClick='window.co2sDocSectionClicked("温度 [℃]");'>
+										<section class='temp_color' id='co2sDocTempSec' onClick='window.co2sDocSectionClicked("温度 [℃]");'>
 											<i class='fas fa-temperature-high mr-2 env-icon'></i> 温度 (left axis):<br>
 											<span id="spanCo2sTemperature"></span> ℃
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='hum_color' id='co2sDocHumSec'
-											onClick='window.co2sDocSectionClicked("湿度 [%]");'>
-											<i class='fas fa-tint mr-2 env-icon'></i> 湿度 (left axis):<br> <span
-												id="spanCo2sHumidity"></span> %
+										<section class='hum_color' id='co2sDocHumSec' onClick='window.co2sDocSectionClicked("湿度 [%]");'>
+											<i class='fas fa-tint mr-2 env-icon'></i> 湿度 (left axis):<br> <span id="spanCo2sHumidity"></span> %
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='co2_color' id='co2sDocCo2Sec'
-											onClick='window.co2sDocSectionClicked("CO2 [ppm]");'>
+										<section class='co2_color' id='co2sDocCo2Sec' onClick='window.co2sDocSectionClicked("CO2 [ppm]");'>
 											<i class='fa-solid fa-circle-half-stroke env-icon'></i> CO2 (right
 											axis):<br>
 											<span id="spanCo2sCo2"></span> ppm<span class='small'></span>
@@ -273,9 +235,7 @@
 					<!-- スマート電力メータのグラフ、デフォルトで消えているけど、データが来たら表示、subESMで制御 -->
 					<h2 id="H3ESM" class="none"><i class='fa-solid fa-person-shelter'></i> 消費電力：Electric Smart
 						Meter<span class="f_right">
-							<a href="#"
-								onClick="document.getElementById('configTab').checked=true; location.hash='ESMConfig'; document.getElementById('ESMConfigDetails').open=true;"><i
-									class="fa-solid fa-gear right"></i>
+							<a href="#" onClick="document.getElementById('configTab').checked=true; location.hash='ESMConfig'; document.getElementById('ESMConfigDetails').open=true;"><i class="fa-solid fa-gear right"></i>
 							</a>
 						</span>
 					</h2>
@@ -285,41 +245,33 @@
 								<section>
 									<div class='tooltip'>
 										<img src='./img/electric.png' class='esm-icon' />
-										<div class='description'>設置場所: <span id="spanESMPlace"></span>, IP: <span
-												id="spanESMIP"></span>, Version: <span id="spanESMVersion" /></div>
+										<div class='description'>設置場所: <span id="spanESMPlace"></span>, IP: <span id="spanESMIP"></span>, Version: <span id="spanESMVersion" /></div>
 									</div><br>
 									<div class='LinearLayoutChild_Env'>
-										<section class='watt_color' id='esmDocWattSec'
-											onClick='window.esmDocSectionClicked("瞬時電力 [W]");'>
+										<section class='watt_color' id='esmDocWattSec' onClick='window.esmDocSectionClicked("瞬時電力 [W]");'>
 											<i class="fa-solid fa-bolt"></i> 瞬時電力<br><span id="spanESMWatt"></span> W
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='ampereR_color' id='esmDocAmpereRSec'
-											onClick='window.esmDocSectionClicked("瞬時電流R [A]");'>
+										<section class='ampereR_color' id='esmDocAmpereRSec' onClick='window.esmDocSectionClicked("瞬時電流R [A]");'>
 											<i class="fa-solid fa-bolt"></i> 瞬時電流R相<br><span id="spanESMAmpereR"></span>
 											A
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='ampereT_color' id='esmDocAmpereTSec'
-											onClick='window.esmDocSectionClicked("瞬時電流T [A]");'>
+										<section class='ampereT_color' id='esmDocAmpereTSec' onClick='window.esmDocSectionClicked("瞬時電流T [A]");'>
 											<i class="fa-solid fa-bolt"></i> 瞬時電流T相<br><span id="spanESMAmpereT"></span>
 											A
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='comWattNorm_color' id='esmDocComWattNormSec'
-											onClick='window.esmDocSectionClicked("積算電力量正方向 [kWh]");'>
-											<i class="fa-solid fa-bolt"></i> 積算電力量（正）<br><span
-												id="spanESMComWattNorm"></span> kWh
+										<section class='comWattNorm_color' id='esmDocComWattNormSec' onClick='window.esmDocSectionClicked("積算電力量正方向 [kWh]");'>
+											<i class="fa-solid fa-bolt"></i> 積算電力量（正）<br><span id="spanESMComWattNorm"></span> kWh
 										</section>
 									</div>
 									<div class='LinearLayoutChild_Env'>
-										<section class='comWattRev_color' id='esmDocComWattRevSec'
-											onClick='window.esmDocSectionClicked("積算電力量逆方向 [kWh]");'>
-											<i class="fa-solid fa-bolt"></i> 積算電力量（逆）<br><span
-												id="spanESMComWattRev"></span> kWh
+										<section class='comWattRev_color' id='esmDocComWattRevSec' onClick='window.esmDocSectionClicked("積算電力量逆方向 [kWh]");'>
+											<i class="fa-solid fa-bolt"></i> 積算電力量（逆）<br><span id="spanESMComWattRev"></span> kWh
 										</section>
 									</div>
 								</section>
@@ -335,9 +287,7 @@
 					<div id="divSubESMH3" class="none">
 						<h2>
 							<i class='fa-solid fa-person-shelter'></i> 消費電力：Electric Smart Sub Meter
-							<span class="f_right"><a href="#"
-									onClick="document.getElementById('configTab').checked=true; location.hash='userProfileConfig'; document.getElementById('userProfileDetail').open=true;"><i
-										class="fa-solid fa-gear right"></i>
+							<span class="f_right"><a href="#" onClick="document.getElementById('configTab').checked=true; location.hash='userProfileConfig'; document.getElementById('userProfileDetail').open=true;"><i class="fa-solid fa-gear right"></i>
 								</a>
 							</span>
 						</h2>
@@ -363,8 +313,7 @@
 							<div class='LinearLayoutChild'>
 								<section>
 									<strong>ConfigからOpenWeatherMapの情報を入力すると表示されます。</strong><br>
-									<button
-										onclick="document.getElementById('configTab').checked=true; location.hash='OpenWeatherMapConfig'; document.getElementById('OpenWeatherMapConfig').open=true;">設定はこちら</button>
+									<button onclick="document.getElementById('configTab').checked=true; location.hash='OpenWeatherMapConfig'; document.getElementById('OpenWeatherMapConfig').open=true;">設定はこちら</button>
 								</section>
 							</div>
 						</div>
@@ -376,8 +325,7 @@
 							<div class='LinearLayoutChild'>
 								<section>
 									<strong>ConfigからNetatmoの情報を入力すると表示されます。</strong><br>
-									<button
-										onclick="document.getElementById('configTab').checked=true; location.hash='NetatmoConfig'; document.getElementById('NetatmoConfigDetails').open=true;">設定はこちら</button>
+									<button onclick="document.getElementById('configTab').checked=true; location.hash='NetatmoConfig'; document.getElementById('NetatmoConfigDetails').open=true;">設定はこちら</button>
 								</section>
 							</div>
 						</div>
@@ -389,8 +337,7 @@
 							<div class='LinearLayoutChild'>
 								<section>
 									<strong>ConfigからOmronの情報を入力すると表示されます。</strong><br>
-									<button
-										onclick="document.getElementById('configTab').checked=true; location.hash='OmronConfig'; document.getElementById('OmronConfigDetails').open=true;">設定はこちら</button>
+									<button onclick="document.getElementById('configTab').checked=true; location.hash='OmronConfig'; document.getElementById('OmronConfigDetails').open=true;">設定はこちら</button>
 								</section>
 							</div>
 						</div>
@@ -402,8 +349,7 @@
 							<div class='LinearLayoutChild'>
 								<section>
 									<strong>ConfigからI/O Data CO2センサーの情報を入力すると表示されます。</strong><br>
-									<button
-										onclick="document.getElementById('configTab').checked=true; location.hash='Co2sConfig'; document.getElementById('Co2sConfigDetails').open=true;">設定はこちら</button>
+									<button onclick="document.getElementById('configTab').checked=true; location.hash='Co2sConfig'; document.getElementById('Co2sConfigDetails').open=true;">設定はこちら</button>
 								</section>
 							</div>
 						</div>
@@ -415,8 +361,7 @@
 							<div class='LinearLayoutChild'>
 								<section>
 									<strong>ConfigからESMの情報を入力すると表示されます。</strong><br>
-									<button
-										onclick="document.getElementById('configTab').checked=true; location.hash='ESMConfig'; document.getElementById('ESMConfigDetails').open=true;">設定はこちら</button>
+									<button onclick="document.getElementById('configTab').checked=true; location.hash='ESMConfig'; document.getElementById('ESMConfigDetails').open=true;">設定はこちら</button>
 								</section>
 							</div>
 						</div>
@@ -429,9 +374,7 @@
 						ECHONET Lite
 						<span class="f_right">
 							<i class="fa-solid fa-arrows-rotate" onClick="window.ipc.ELsearch();"></i>
-							<a href="#"
-								onClick="document.getElementById('configTab').checked=true; location.hash='ELConfig'; document.getElementById('ELConfigDetails').open=true;"><i
-									class="fa-solid fa-gear right"></i>
+							<a href="#" onClick="document.getElementById('configTab').checked=true; location.hash='ELConfig'; document.getElementById('ELConfigDetails').open=true;"><i class="fa-solid fa-gear right"></i>
 							</a>
 						</span>
 					</h2>
@@ -442,9 +385,7 @@
 
 					<h2 id="H2ControlHue" style="display:none;">
 						Philips hue
-						<span class="f_right"><a href="#"
-								onClick="document.getElementById('configTab').checked=true; location.hash='HueConfig'; document.getElementById('HueConfigDetails').open=true;"><i
-									class="fa-solid fa-gear right"></i>
+						<span class="f_right"><a href="#" onClick="document.getElementById('configTab').checked=true; location.hash='HueConfig'; document.getElementById('HueConfigDetails').open=true;"><i class="fa-solid fa-gear right"></i>
 							</a>
 						</span>
 					</h2>
@@ -460,9 +401,7 @@
 					<!-- SwitchBot Abst / Control -->
 					<h2 id="H2ControlSwitchBot" style="display: none;">
 						SwitchBot (<span id="spanSwitchBotTime"></span>)
-						<span class="f_right"><a href="#"
-								onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;"><i
-									class="fa-solid fa-gear right"></i>
+						<span class="f_right"><a href="#" onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;"><i class="fa-solid fa-gear right"></i>
 							</a>
 						</span>
 					</h2>
@@ -472,10 +411,8 @@
 
 					<!-- SwitchBotChart Env -->
 					<h3 id="H3SwitchBot" class="none">
-						<i class='fa-solid fa-person-shelter'></i> 屋内環境：SwitchBot （<span
-							id="spanSwitchBotEnvTime">取得中</span>） <span class="f_right">
-							<a href="#"
-								onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;">
+						<i class='fa-solid fa-person-shelter'></i> 屋内環境：SwitchBot （<span id="spanSwitchBotEnvTime">取得中</span>） <span class="f_right">
+							<a href="#" onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;">
 								<i class="fa-solid fa-gear right"></i>
 							</a>
 						</span>
@@ -487,10 +424,8 @@
 
 					<!-- SwitchBotChart Power -->
 					<h3 id="H3SwitchBotPower" class="none">
-						<i class='fa-solid fa-person-shelter'></i> 屋内環境：SwitchBot （<span
-							id="spanSwitchBotPowerTime">取得中</span>） <span class="f_right">
-							<a href="#"
-								onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;">
+						<i class='fa-solid fa-person-shelter'></i> 屋内環境：SwitchBot （<span id="spanSwitchBotPowerTime">取得中</span>） <span class="f_right">
+							<a href="#" onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;">
 								<i class="fa-solid fa-gear right"></i>
 							</a>
 						</span>
@@ -506,8 +441,7 @@
 							<div class='LinearLayoutChild'>
 								<section>
 									<strong>ConfigからECHONET Liteの通信機能を有効化すると表示されます。</strong><br>
-									<button
-										onclick="document.getElementById('configTab').checked=true; location.hash='ELConfig'; document.getElementById('ELConfigDetails').open=true;">設定はこちら</button>
+									<button onclick="document.getElementById('configTab').checked=true; location.hash='ELConfig'; document.getElementById('ELConfigDetails').open=true;">設定はこちら</button>
 								</section>
 							</div>
 						</div>
@@ -519,8 +453,7 @@
 							<div class='LinearLayoutChild'>
 								<section>
 									<strong>ConfigからPhilip hueの情報を入力すると表示されます。</strong><br>
-									<button
-										onclick="document.getElementById('configTab').checked=true; location.hash='HueConfig'; document.getElementById('HueConfigDetails').open=true;">設定はこちら</button>
+									<button onclick="document.getElementById('configTab').checked=true; location.hash='HueConfig'; document.getElementById('HueConfigDetails').open=true;">設定はこちら</button>
 								</section>
 							</div>
 						</div>
@@ -532,8 +465,7 @@
 							<div class='LinearLayoutChild'>
 								<section>
 									<strong>ConfigからSwitchBotの情報を入力すると表示されます。</strong><br>
-									<button
-										onclick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;">設定はこちら</button>
+									<button onclick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;">設定はこちら</button>
 								</section>
 							</div>
 						</div>
@@ -545,8 +477,7 @@
 							<div class='LinearLayoutChild'>
 								<section>
 									<strong>ConfigからIKEA Tradfriの情報を入力すると表示されます。</strong><br>
-									<button
-										onclick="document.getElementById('configTab').checked=true; location.hash='IkeaConfig'; document.getElementById('IkeaConfigDetails').open=true;">設定はこちら</button>
+									<button onclick="document.getElementById('configTab').checked=true; location.hash='IkeaConfig'; document.getElementById('IkeaConfigDetails').open=true;">設定はこちら</button>
 								</section>
 							</div>
 						</div>
@@ -558,43 +489,35 @@
 				<div class="haltab_content" id="divHal_tab">
 					<div class="haltab_area">
 						<input id="general" type="radio" name="haltab_item" checked>
-						<label class="haltab_item" for="general"><i class="fa-solid fa-chart-pie"></i><span
-								class="omitable"> 総合</span></label>
+						<label class="haltab_item" for="general"><i class="fa-solid fa-chart-pie"></i><span class="omitable"> 総合</span></label>
 
 						<input id="clothing" type="radio" name="haltab_item">
-						<label class="haltab_item" for="clothing"> <i class="fa-solid fa-shirt"></i><span
-								class="omitable">
+						<label class="haltab_item" for="clothing"> <i class="fa-solid fa-shirt"></i><span class="omitable">
 								衣服</span></label>
 
 						<input id="food" type="radio" name="haltab_item">
-						<label class="haltab_item" for="food"><i class="fa-solid fa-utensils"></i> <span
-								class="omitable">
+						<label class="haltab_item" for="food"><i class="fa-solid fa-utensils"></i> <span class="omitable">
 								食事</span></label>
 
 						<input id="housing" type="radio" name="haltab_item">
-						<label class="haltab_item" for="housing"><i class="fa-solid fa-house"></i> <span
-								class="omitable">
+						<label class="haltab_item" for="housing"><i class="fa-solid fa-house"></i> <span class="omitable">
 								住居</span></label>
 
 						<input id="physical" type="radio" name="haltab_item">
-						<label class="haltab_item" for="physical"><i class="fa-solid fa-person"></i> <span
-								class="omitable">
+						<label class="haltab_item" for="physical"><i class="fa-solid fa-person"></i> <span class="omitable">
 								身体</span></label>
 
 						<input id="mental" type="radio" name="haltab_item">
-						<label class="haltab_item" for="mental"><i class="fa-solid fa-heart"></i> <span
-								class="omitable">
+						<label class="haltab_item" for="mental"><i class="fa-solid fa-heart"></i> <span class="omitable">
 								心・絆</span></label>
 
 						<input id="ecology" type="radio" name="haltab_item">
-						<label class="haltab_item" for="ecology"><i class="fa-solid fa-earth-americas"></i> <span
-								class="omitable"> エコ</span></label>
+						<label class="haltab_item" for="ecology"><i class="fa-solid fa-earth-americas"></i> <span class="omitable"> エコ</span></label>
 
 						<div class="haltab_content" id="general_content"><!-- 総合タブ開始 -->
 							<table width="80%">
 								<tr>
-									<td class="hal"><span class="omitable">ユーザー</span>ID<span
-											class="omitable">(UID)</span>
+									<td class="hal"><span class="omitable">ユーザー</span>ID<span class="omitable">(UID)</span>
 									</td>
 									<td class="hal">
 										<div id="divId"></div>
@@ -626,9 +549,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td background="./img/balloon.png"
-										style="background-size: 100% 100%;background-repeat : no-repeat; padding:1em"
-										width="60%" colspan="2" class="hal">
+									<td background="./img/balloon.png" style="background-size: 100% 100%;background-repeat : no-repeat; padding:1em" width="60%" colspan="2" class="hal">
 										<div id="divComment"></div>
 									</td>
 								</tr>
@@ -643,8 +564,7 @@
 									</tr>
 								</thead>
 								<tr>
-									<td class="hal"><i class="fa-solid fa-shirt"></i><span
-											class="omitable">衣服・身だしなみ</span>
+									<td class="hal"><i class="fa-solid fa-shirt"></i><span class="omitable">衣服・身だしなみ</span>
 									</td>
 									<td class="hal">
 										<div id="divClothing" class="inline, right"></div>
@@ -655,8 +575,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td class="hal"><i class="fa-solid fa-utensils"></i> <span
-											class="omitable">食事</span>
+									<td class="hal"><i class="fa-solid fa-utensils"></i> <span class="omitable">食事</span>
 									</td>
 									<td class="hal">
 										<div id="divFood" class="inline, right"></div>
@@ -678,8 +597,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td class="hal"><i class="fa-solid fa-person"></i> <span
-											class="omitable">体の健康</span>
+									<td class="hal"><i class="fa-solid fa-person"></i> <span class="omitable">体の健康</span>
 									</td>
 									<td class="hal">
 										<div id="divPhysicalHealth" class="inline, right"></div>
@@ -701,8 +619,7 @@
 									</td>
 								</tr>
 								<tr>
-									<td class="hal"><i class="fa-solid fa-earth-americas"></i> <span
-											class="omitable">エコ度</span></td>
+									<td class="hal"><i class="fa-solid fa-earth-americas"></i> <span class="omitable">エコ度</span></td>
 									<td class="hal">
 										<div id="divEcology" class="inline, right"></div>
 									</td>
@@ -1334,17 +1251,11 @@
 						<summary class="config" id="userProfileDetail">ユーザプロファイル</summary>
 						<div class="p">
 							ニックネーム: <input id="inUserNickname" type="text" value="" /> <br>
-							年齢: <form class="secretBorder inline"><input id="inUserAge" type="password" value=""
-									class="secretText" inputmode="numeric" /><span id="inUserAgeButtonEye"
-									class="fa fa-eye" onclick="window.pushHideButton('inUserAge');"></span></form> 歳
+							年齢: <form class="secretBorder inline"><input id="inUserAge" type="password" value="" class="secretText" inputmode="numeric" /><span id="inUserAgeButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inUserAge');"></span></form> 歳
 							<br>
-							身長: <form class="secretBorder inline"><input id="inUserHeight" type="password" value=""
-									class="secretText" inputmode="numeric" /><span id="inUserHeightButtonEye"
-									class="fa fa-eye" onclick="window.pushHideButton('inUserHeight');"></span></form> cm
+							身長: <form class="secretBorder inline"><input id="inUserHeight" type="password" value="" class="secretText" inputmode="numeric" /><span id="inUserHeightButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inUserHeight');"></span></form> cm
 							<br>
-							体重: <form class="secretBorder inline"><input id="inUserWeight" type="password" value=""
-									class="secretText" inputmode="numeric" /><span id="inUserWeightButtonEye"
-									class="fa fa-eye" onclick="window.pushHideButton('inUserWeight');"></span></form> kg
+							体重: <form class="secretBorder inline"><input id="inUserWeight" type="password" value="" class="secretText" inputmode="numeric" /><span id="inUserWeightButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inUserWeight');"></span></form> kg
 							<br>
 							契約アンペア: <form class="inline"><input id="inUserAmpere" value="" inputmode="numeric" /></form>
 							A
@@ -1373,9 +1284,7 @@
 
 						<div class="p">
 							クラウドサービスHALと連携し、生活状況を得点化して見える化します。<br>
-							API Key: <form class="secretBorder inline"><input id="inHALApiKey" type="password" value=""
-									size="100" /><span id="inHALApiKeyButtonEye" class="fa fa-eye"
-									onclick="window.pushHideButton('inHALApiKey');"></span></form>
+							API Key: <form class="secretBorder inline"><input id="inHALApiKey" type="password" value="" size="100" /><span id="inHALApiKeyButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inHALApiKey');"></span></form>
 						</div>
 
 						<!-- デフォルトは設定されていないものとする -->
@@ -1392,15 +1301,13 @@
 								<strong>連携設定がされていません。</strong><br>
 								HALと連携するには下記の事前準備の通りにAPIトークンを取得し、Key入力をして登録ください。<br>
 							<p id="pSetHalApiTokenErr" style="color:red;"></p>
-							<p><button type="button" id="btnSetHalApiToken"
-									onclick="window.btnSetHalApiTokenBtn_Click();">登録</button></p>
+							<p><button type="button" id="btnSetHalApiToken" onclick="window.btnSetHalApiTokenBtn_Click();">登録</button></p>
 							</p>
 						</span>
 
 						<h3>事前準備</h3>
 						<p>
-							1. (HALでの作業)；<a href="#"
-								onClick='window.URLopen("https://hal.sugi-lab.net/");'>HAL</a>にログインする。（外部ブラウザが開きます。）<br>
+							1. (HALでの作業)；<a href="#" onClick='window.URLopen("https://hal.sugi-lab.net/");'>HAL</a>にログインする。（外部ブラウザが開きます。）<br>
 							2. (HALでの作業)；ユーティリティのProfileのページに行く。<br>
 							3. (HALでの作業)；APIトークンをコピーする。<br>
 							4. (PLISでの作業)；HAL連携設定に先ほどのAPIトークンを張り付ける。<br>
@@ -1419,13 +1326,9 @@
 							<option value="TESSERA">TESSERA</option> </select> <br>
 							Connection Type: <select id="inConnectionType" size="1" />
 							<option value="stable">stable</option>
-							<option value="fast">fast</option> </select> <br>							
-							Bルート認証ID設定: <form class="secretBorder inline"><input id="inESMId" type="password" value=""
-									size="50" /><span id="inESMIdButtonEye" class="fa fa-eye"
-									onclick="window.pushHideButton('inESMId');"></span></form> <br>
-							Bルート認証パスワード設定: <form class="secretBorder inline"><input id="inESMPassword" type="password"
-									value="" size="50" /><span id="inESMPasswordButtonEye" class="fa fa-eye"
-									onclick="window.pushHideButton('inESMPassword');"></span></form><br>
+							<option value="fast">fast</option> </select> <br>
+							Bルート認証ID設定: <form class="secretBorder inline"><input id="inESMId" type="password" value="" size="50" /><span id="inESMIdButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inESMId');"></span></form> <br>
+							Bルート認証パスワード設定: <form class="secretBorder inline"><input id="inESMPassword" type="password" value="" size="50" /><span id="inESMPasswordButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inESMPassword');"></span></form><br>
 							契約アンペア: <form class="inline"><input id="inESMUserAmpere" value="" inputmode="numeric" />
 							</form>
 							A (グラフ表示に利用)<br>
@@ -1437,11 +1340,9 @@
 							<p>
 								動作させるためには電力会社のBルートサービスの利用申し込みが必要です。電力会社に申請をすると，Bルート認証ID設定とBルート認証パスワード設定を取得できます。<br>
 								通信モジュールとしてWi-SUNモジュール（TESSERA RL7023，またはROHM BP35C2のどちらか）が必須です。<br>
-								TESSERA RL7023: <a href="#ElectricSmartMeter"
-									onClick='window.URLopen("https://tessera.co.jp/product/rfmodul/rl7023stick-d_ips.html");'>Web
+								TESSERA RL7023: <a href="#ElectricSmartMeter" onClick='window.URLopen("https://tessera.co.jp/product/rfmodul/rl7023stick-d_ips.html");'>Web
 									site</a><br>
-								ROHM BP35C2: <a href="#ElectricSmartMeter"
-									onClick='window.URLopen("https://www.rohm.co.jp/products/wireless-communication/specified-low-power-radio-modules/bp35c2-product#productDetail");'>Web
+								ROHM BP35C2: <a href="#ElectricSmartMeter" onClick='window.URLopen("https://www.rohm.co.jp/products/wireless-communication/specified-low-power-radio-modules/bp35c2-product#productDetail");'>Web
 									site</a>
 							</p>
 						</div>
@@ -1457,9 +1358,7 @@
 							まだKeyをお持ちでないかたは、Use Hueをチェックするとダイアログが出ますので，HueのGatewayのアクセススイッチを押してください。<br>
 							<br>
 							<label><input type="checkbox" id="inHueUse">Use Hue</label><br>
-							Key: <form class="secretBorder inline"><input id="inHueKey" type="password" value=""
-									size="50" class="secretText" /><span id="inHueKeyButtonEye" class="fa fa-eye"
-									onclick="window.pushHideButton('inHueKey');"></span></form><br>
+							Key: <form class="secretBorder inline"><input id="inHueKey" type="password" value="" size="50" class="secretText" /><span id="inHueKeyButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inHueKey');"></span></form><br>
 							<button id="btnHueConfigSet" onClick="window.btnHueConfigSet_Click();">設定</button>
 						</div>
 					</details>
@@ -1476,18 +1375,11 @@
 							Tradfriをチェックしてください。<br>
 							<br>
 							<label><input type="checkbox" id="inIkeaUse">Use IKEA Tradfri</label><br>
-							Security code: <form class="secretBorder inline"><input id="inIkeaSecurityCode"
-									type="password" value="" size="50" class="secretText" /><span
-									id="inIkeaSecurityCodeButtonEye" class="fa fa-eye"
-									onclick="window.pushHideButton('inIkeaSecurityCode');"></span></form>
+							Security code: <form class="secretBorder inline"><input id="inIkeaSecurityCode" type="password" value="" size="50" class="secretText" /><span id="inIkeaSecurityCodeButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inIkeaSecurityCode');"></span></form>
 							<br>
-							Identity: <form class="secretBorder inline"><input id="inIkeaIdentity" type="password"
-									value="" size="50" class="secretText" /><span id="inIkeaIdentityButtonEye"
-									class="fa fa-eye" onclick="window.pushHideButton('inIkeaIdentity');"></span></form>
+							Identity: <form class="secretBorder inline"><input id="inIkeaIdentity" type="password" value="" size="50" class="secretText" /><span id="inIkeaIdentityButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inIkeaIdentity');"></span></form>
 							<br>
-							PSK: <form class="secretBorder inline"><input id="inIkeaPsk" type="password" value=""
-									size="50" class="secretText" /><span id="inIkeaPskButtonEye" class="fa fa-eye"
-									onclick="window.pushHideButton('inIkeaPsk');"></span></form><br>
+							PSK: <form class="secretBorder inline"><input id="inIkeaPsk" type="password" value="" size="50" class="secretText" /><span id="inIkeaPskButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inIkeaPsk');"></span></form><br>
 
 							<button id="btnIkeaConfigSet" onClick="window.btnIkeaConfigSet_Click();">設定</button>
 						</div>
@@ -1499,18 +1391,13 @@
 					<details class="config" id="OWMConfigDetails">
 						<summary class="config" id="h2owmConfig">OpenWeatherMap (外部サービス)</summary>
 						<div class="p">
-							<a href="#OpenWeatherMapConfig"
-								onClick='window.URLopen("https://openweathermap.org/");'>OpenWeatherMap</a>
+							<a href="#OpenWeatherMapConfig" onClick='window.URLopen("https://openweathermap.org/");'>OpenWeatherMap</a>
 							（こちらから無料アカウントを作成し，API keyを取得してください。）<br>
 							<br>
 							<label><input type="checkbox" id="inOwmUse">Use OpenWeatherMap</label><br>
-							API Key: <form class="secretBorder inline"><input id="inOwmAPIKey" type="password" value=""
-									size="50" class="secretText" /><span id="inOwmAPIKeyButtonEye" class="fa fa-eye"
-									onclick="window.pushHideButton('inOwmAPIKey');"></span></form> (e.g.
+							API Key: <form class="secretBorder inline"><input id="inOwmAPIKey" type="password" value="" size="50" class="secretText" /><span id="inOwmAPIKeyButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inOwmAPIKey');"></span></form> (e.g.
 							12345678910abcdefghijklmnopqrstu)<br>
-							Zip-code (郵便番号): <form class="secretBorder inline"><input id="inOwmZipCode" type="password"
-									value="" class="secretText" size="10" /><span id="inOwmZipCodeButtonEye"
-									class="fa fa-eye" onclick="window.pushHideButton('inOwmZipCode');"></span></form>
+							Zip-code (郵便番号): <form class="secretBorder inline"><input id="inOwmZipCode" type="password" value="" class="secretText" size="10" /><span id="inOwmZipCodeButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inOwmZipCode');"></span></form>
 							(e.g.
 							000-0000)<br>
 							<div id="divWeatherConfigInfo"></div>
@@ -1525,38 +1412,25 @@
 						<summary class="config" id="netatmoConfig">Netatmo (外部サービス)</summary>
 						<div class="p">
 							<label><input type="checkbox" id="inNetatmoUse" value="on">Use Netatmo</label><br>
-							Client ID: <form class="secretBorder inline"><input id="inNetatmoID" type="password"
-									value="" class="secretText" size="50" /><span id="inNetatmoIDButtonEye"
-									class="fa fa-eye" onclick="window.pushHideButton('inNetatmoID');"></span></form>
+							Client ID: <form class="secretBorder inline"><input id="inNetatmoID" type="password" value="" class="secretText" size="50" /><span id="inNetatmoIDButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoID');"></span></form>
 							(e.g.
 							1234567890abcdefghijklmn)<br>
-							Client Secret: <form class="secretBorder inline"><input id="inNetatmoSecret" type="password"
-									value="" class="secretText" size="50" /><span id="inNetatmoSecretButtonEye"
-									class="fa fa-eye" onclick="window.pushHideButton('inNetatmoSecret');"></span></form>
+							Client Secret: <form class="secretBorder inline"><input id="inNetatmoSecret" type="password" value="" class="secretText" size="50" /><span id="inNetatmoSecretButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoSecret');"></span></form>
 							(e.g. 012345678910abcdefghijklmnopqrstuvwxyz123)<br>
-							Username (E-mail): <form class="secretBorder inline"><input id="inNetatmoUsername"
-									type="password" value="" class="secretText" size="50" /><span
-									id="inNetatmoUsernameButtonEye" class="fa fa-eye"
-									onclick="window.pushHideButton('inNetatmoUsername');"></span></form> (e.g.
+							Username (E-mail): <form class="secretBorder inline"><input id="inNetatmoUsername" type="password" value="" class="secretText" size="50" /><span id="inNetatmoUsernameButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoUsername');"></span></form> (e.g.
 							sugi-lab@example.com)<br>
-							Password: <form class="secretBorder inline"><input id="inNetatmoPassword" type="password"
-									value="" class="secretText" size="20" /><span id="inNetatmoPasswordButtonEye"
-									class="fa fa-eye" onclick="window.pushHideButton('inNetatmoPassword');"></span>
+							Password: <form class="secretBorder inline"><input id="inNetatmoPassword" type="password" value="" class="secretText" size="20" /><span id="inNetatmoPasswordButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoPassword');"></span>
 							</form>
 							(e.g. password)<br>
 
 							<button id="btnNetatmoConfigSet" onclick="window.btnNetatmoConfigSet_Click();">設定</button>
 
-
 							<h3>Netatmo設定方法</h3>
 							<p>
-								1. Netatmoアカウントを作成する。 <a href="#NetatmoConfig"
-									onClick='window.URLopen("https://dev.netatmo.com/");'>Netatmo Developers</a>
+								1. Netatmoアカウントを作成する。 <a href="#NetatmoConfig" onClick='window.URLopen("https://dev.netatmo.com/");'>Netatmo Developers</a>
 								（こちらから無料アカウントを作成し，下記の情報を取得してください。）<br>
 								2. 右上のアカウントから、My Appsのページに行く。<br>
-								3. Create new appのフォームに、**app name、description、data protection officer name、data
-								protection
-								officer email**を入力して保存する。<br>
+								3. Create new appのフォームに、**app name、description、data protection officer name、data protection officer email**を入力して保存する。<br>
 								4. 同ページの**client ID、client secret**を取得できる
 							</p>
 						</div>
@@ -1571,13 +1445,9 @@
 							まだTokenをお持ちでないかたは、下記の案内に従ってTokenを取得してください。<br>
 							<br>
 							<label><input type="checkbox" id="inSwitchBotUse">Use SwitchBot</label><br>
-							Token: <form class="secretBorder inline"><input id="inSwitchBotToken" type="password"
-									value="" size="50" class="secretText" /><span id="inSwitchBotTokenButtonEye"
-									class="fa fa-eye" onclick="window.pushHideButton('inSwitchBotToken');"></span>
-							</form><br>
-							<button id="btnSwitchBotConfigSet"
-								onclick="window.btnSwitchBotConfigSet_Click();">設定</button>
-
+							Token: <form class="secretBorder inline"><input id="inSwitchBotToken" type="password" value="" size="50" class="secretText" /><span id="inSwitchBotTokenButtonEye" class="fa a-eye" onclick="window.pushHideButton('inSwitchBotToken');"></span></form><br>
+							Secret: <form class="secretBorder inline"><input id="inSwitchBotSecret" type="password" value="" size="50" class="secretText" /><span id="inSwitchBotSecretButtonEye" class="fa a-eye" onclick="window.pushHideButton('inSwitchBotSecret');"></span></form><br>
+							<button id="btnSwitchBotConfigSet" onclick="window.btnSwitchBotConfigSet_Click();">設定</button>
 						</div>
 						<h3>Token取得方法</h3>
 						<p>
@@ -1587,7 +1457,7 @@
 							<li>設定を開く</li>
 							<li>アプリバージョンを10回タップする（タップに反応しません、公式の隠しコマンドです）</li>
 							<li>開発者向けオプションが出現するので、それを開く</li>
-							<li>トークン右側のボタンでコピーして、メールなどを利用してパソコンに送信する。</li>
+							<li>トークンやクライアントシークレットが表示されている右側のボタンでコピーして、メールなどを利用してパソコンに送信する。</li>
 						</ol>
 						</p>
 					</details>
@@ -1621,8 +1491,7 @@
 							<h3>対応センサ</h3>
 							バージョンアップで随時対応センサを増やしていく予定です。
 							<p>
-								- <a href="#OmronConfig"
-									onClick='window.URLopen("https://www.fa.omron.co.jp/products/family/3724/");'>2JCIE-BU
+								- <a href="#OmronConfig" onClick='window.URLopen("https://www.fa.omron.co.jp/products/family/3724/");'>2JCIE-BU
 									環境センサ (USB型)</a><br>
 							</p>
 							<p>
@@ -1653,8 +1522,7 @@
 							<h3>対応センサ</h3>
 							バージョンアップで随時対応センサを増やしていく予定です。
 							<p>
-								- <a href="#Co2sConfig"
-									onClick='window.URLopen("https://www.iodata.jp/product/tsushin/iot/ud-co2s/index.htm");'>UD-CO2S
+								- <a href="#Co2sConfig" onClick='window.URLopen("https://www.iodata.jp/product/tsushin/iot/ud-co2s/index.htm");'>UD-CO2S
 									高感度 CO2センサ</a><br>
 							</p>
 						</div>
@@ -1676,17 +1544,12 @@
 								<option value="false">無効</option>
 							</select> <small>（設定反映のためには再起動が必要です。）</small><br>
 							<br>
-							祝日データの再取得： <button id="btnCalendarRenewSyukujitsu"
-								onclick="window.btnCalendarRenewSyukujitsu_Click()"><i
-									class="fa-solid fa-arrows-rotate"></i></button>
-							<small>（祝日データは<a href="#"
-									onClick='window.URLopen("https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html");'>内閣府Webサイト</a>のものを利用しています）</small><br>
+							祝日データの再取得： <button id="btnCalendarRenewSyukujitsu" onclick="window.btnCalendarRenewSyukujitsu_Click()"><i class="fa-solid fa-arrows-rotate"></i></button>
+							<small>（祝日データは<a href="#" onClick='window.URLopen("https://www8.cao.go.jp/chosei/shukujitsu/gaiyou.html");'>内閣府Webサイト</a>のものを利用しています）</small><br>
 							<br>
-							家電操作ログ： 本日を含めて <input id="inEllogExpireDays" type="number" value="" min="0" max="9999"
-								step="1">
+							家電操作ログ： 本日を含めて <input id="inEllogExpireDays" type="number" value="" min="0" max="9999" step="1">
 							日間 (0 .. 9999)<br>
-							成績データ： 本日を含めて <input id="inResultExpireDays" type="number" value="" min="0" max="9999"
-								step="1">
+							成績データ： 本日を含めて <input id="inResultExpireDays" type="number" value="" min="0" max="9999" step="1">
 							日間 (0 .. 9999)<br>
 							<button id="btnSystemConfigSet" onclick="window.btnSystemConfigSet_Click();">設定</button>
 						</div>
@@ -1776,26 +1639,20 @@
 							<dl>
 								<li><a href="#" onClick='window.URLopen("https://www.apache.org/licenses/")'>Apache
 										License</a></li>
-								<li><a href="#"
-										onClick='window.URLopen("https://opensource.org/licenses/mit-license.php")'>MIT
+								<li><a href="#" onClick='window.URLopen("https://opensource.org/licenses/mit-license.php")'>MIT
 										License</a></li>
 								<li><a href="#" onClick='window.URLopen("https://www.isc.org/licenses/")'>ISC
 										License</a>
 								</li>
-								<li><a href="#"
-										onClick='window.URLopen("https://opensource.org/licenses/BSD-2-Clause")'>BSD-2-Clause
+								<li><a href="#" onClick='window.URLopen("https://opensource.org/licenses/BSD-2-Clause")'>BSD-2-Clause
 										License</a></li>
-								<li><a href="#"
-										onClick='window.URLopen("https://opensource.org/licenses/BSD-3-Clause")'>BSD-3-Clause
+								<li><a href="#" onClick='window.URLopen("https://opensource.org/licenses/BSD-3-Clause")'>BSD-3-Clause
 										License</a></li>
-								<li><a href="#"
-										onClick='window.URLopen("https://opensource.org/licenses/0BSD")'>Zero-Clause
+								<li><a href="#" onClick='window.URLopen("https://opensource.org/licenses/0BSD")'>Zero-Clause
 										BSD (0BSD)</a></li>
-								<li><a href="#"
-										onClick='window.URLopen("https://spdx.org/licenses/AFL-2.1.html")'>AFL-2.1</a>
+								<li><a href="#" onClick='window.URLopen("https://spdx.org/licenses/AFL-2.1.html")'>AFL-2.1</a>
 								</li>
-								<li><a href="#"
-										onClick='window.URLopen("https://creativecommons.org/publicdomain/zero/1.0/")'>CC0-1.0</a>
+								<li><a href="#" onClick='window.URLopen("https://creativecommons.org/publicdomain/zero/1.0/")'>CC0-1.0</a>
 								</li>
 							</dl>
 						</div>
@@ -1889,18 +1746,13 @@
 
 			<!-- 検索ボックス -->
 			<div id="searchBox">
-				<form class="secretBorder inline" onSubmit="window.btnSearchStart_Click(); return false;"><input
-						id="searchInput" class="inline" type="search" label="Search..." autocomplete="off" autofocus
-						onChange="window.btnSearchStart_Click()" /><span class="fa-solid fa-magnifying-glass"
+				<form class="secretBorder inline" onSubmit="window.btnSearchStart_Click(); return false;"><input id="searchInput" class="inline" type="search" label="Search..." autocomplete="off" autofocus onChange="window.btnSearchStart_Click()" /><span class="fa-solid fa-magnifying-glass"
 						onclick="window.btnSearchStart_Click()"></span>
 				</form><br>
 				<div id="searchResult" class="searchAttches inline">0/0</div>
-				<button class="searchPrev inline" onClick="window.btnSearchPrev_Click()"><i
-						class="fa-solid fa-arrow-left"></i></button>
-				<button class="searchNext inline" onClick="window.btnSearchNext_Click()"><i
-						class="fa-solid fa-arrow-right"></i></button>
-				<button class="searchStop inline" onClick="window.btnSearchStop_Click()"><i
-						class="fa-solid fa-xmark"></i></button>
+				<button class="searchPrev inline" onClick="window.btnSearchPrev_Click()"><i class="fa-solid fa-arrow-left"></i></button>
+				<button class="searchNext inline" onClick="window.btnSearchNext_Click()"><i class="fa-solid fa-arrow-right"></i></button>
+				<button class="searchStop inline" onClick="window.btnSearchStop_Click()"><i class="fa-solid fa-xmark"></i></button>
 			</div>
 		</webview>
 

@@ -27,6 +27,7 @@ const store = new Store();
 let config =  {
 	enabled: false,
 	token: '',
+	secret: '',
 	debug: false
 };
 
@@ -85,6 +86,7 @@ let mainSwitchBot = {
 		config.enabled    = store.get('config.SwitchBot.enabled', false);
 		config.debug      = store.get('config.SwitchBot.debug',   false);
 		config.token      = store.get('config.SwitchBot.token',   '');
+		config.secret      = store.get('config.SwitchBot.secret',   '');
 		persist = store.get('persist.SwitchBot', {});
 
 		sendIPCMessage( "renewSwitchBotConfigView", config );
@@ -100,6 +102,12 @@ let mainSwitchBot = {
 
 		if( config.token == '' ) {
 			config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.start() token is empty.'):0;
+			mainSwitchBot.isRun = false;
+			return;
+		}
+
+		if( config.secret == '' ) {
+			config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.start() secret is empty.'):0;
 			mainSwitchBot.isRun = false;
 			return;
 		}
@@ -245,7 +253,7 @@ let mainSwitchBot = {
 	 * @return {void}
 	*/
 	startCore: async function( _callback ) {
-		if( !config.token || config.token == '' ) {
+		if( config.token  == '' || config.secret == '' ) {
 			throw new Error('mainSwitchBot.startCore() config.token is empty.');
 		}
 
@@ -253,7 +261,7 @@ let mainSwitchBot = {
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.startCore() config:\x1b[32m', config, '\x1b[0m' ):0;
 
 		try{
-			mainSwitchBot.client = new SBC.RestClient( config.token );
+			mainSwitchBot.client = new SBC.RestClient( config.token, config.secret );
 
 			mainSwitchBot.facilities = await mainSwitchBot.renewFacilities( mainSwitchBot.client );  // 一回実行
 			mainSwitchBot.callback( mainSwitchBot.facilities );  // mainに通知
@@ -278,7 +286,6 @@ let mainSwitchBot = {
 	 * @async
 	 * @function stopObservation
 	 * @param {void} [void]
-	 * @return {void}
 	*/
 	stopObservation: function() {
 		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.stopObserve().' ):0;
@@ -300,7 +307,6 @@ let mainSwitchBot = {
 	 * @async
 	 * @function storeData
 	 * @param {facilities} [facilities]
-	 * @return {void}
 	*/
 	storeData: async function( facilities ) {
 		for( let d of facilities.deviceList ) {
