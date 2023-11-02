@@ -14,7 +14,6 @@ const path = require('path');
 const os = require('os');
 const fs = require('fs');
 const { exec } = require('child_process');
-const cron = require('node-cron');
 require('date-utils'); // for log
 const { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
 
@@ -142,7 +141,7 @@ ipcMain.handle('PageInSearch', (event, arg) => {
 			matchCase: false
 		});
 	} catch (error) {
-		sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'main.PageInSearch', stackLog: error.message } );
+		sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'main.PageInSearch', stackLog: error.message });
 	}
 });
 
@@ -728,12 +727,12 @@ const menuItems = [
 			{
 				label: 'Zoom (+)',
 				accelerator: isMac ? 'Command+plus' : 'Control+plus',
-				click: function () { mainWindow.webContents.setZoomFactor(  mainWindow.webContents.getZoomFactor() + 0.1 ); }
+				click: function () { mainWindow.webContents.setZoomFactor(mainWindow.webContents.getZoomFactor() + 0.1); }
 			},
 			{
 				label: 'Zoom (-)',
 				accelerator: isMac ? 'Command+-' : 'Control+-',
-				click: function () { mainWindow.webContents.setZoomFactor(  mainWindow.webContents.getZoomFactor() - 0.1); }
+				click: function () { mainWindow.webContents.setZoomFactor(mainWindow.webContents.getZoomFactor() - 0.1); }
 			},
 			{
 				label: 'Zoom (Reset)',

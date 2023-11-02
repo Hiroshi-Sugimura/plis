@@ -8,6 +8,7 @@
   "license": "MIT",
   "dependencies": {
     "@network-utils/arp-lookup": "^2.0.2",
+    "about-window": "^1.15.2",
     "date-utils": "^1.2.21",
     "e-smartmeter-echonet-lite": "^2.8.0",
     "echonet-lite": "^2.16.1",
@@ -21,10 +22,9 @@
     "request-promise-native": "^0.0.0",
     "sequelize": "^6.33.0",
     "sqlite3": "^5.1.6",
-    "switchbot-client": "^0.2.0",
+    "switchbot-handler": "^0.0.2",
     "tradfri-handler": "^0.5.3",
     "usb-2jcie-bu": "^1.2.0",
-    "about-window": "^1.15.2",
     "usb-ud-co2s": "^1.0.1"
   }
 }
