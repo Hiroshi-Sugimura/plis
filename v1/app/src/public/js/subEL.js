@@ -156,14 +156,14 @@ window.addEventListener('DOMContentLoaded', function () {
 			window.ipc.ELStop();  // ELをstopする
 			facilitiesEL = {};
 			divControlEL.innerHTML = '';
-		}else{
+		} else {
 			window.ipc.ELUse();
 		}
 
 		// old search or not
 		if (inELUseOldSearch.checked == false) {
 			window.ipc.ELStopOldSearch();  // ELをstopする
-		}else{
+		} else {
 			window.ipc.ELUseOldSearch();
 		}
 

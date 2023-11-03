@@ -55,6 +55,20 @@ window.addEventListener('DOMContentLoaded', function () {
 				}
 				break;
 
+			case "0022": // 電力量センサ
+				let volt = facilitiesEL[ip][eoj]["実行電圧計測値(E5)"];
+				let watt = facilitiesEL[ip][eoj]["小容量センサ瞬時電力量計測値(E2)"];
+				ret = "<div class='tooltip'><img src=\"./img/0011.png\" class='el-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + obj[0] + "<br>";
+				ret += "場所:" + instLocation + "<br>";
+
+				if (volt != undefined) {
+					ret += volt + "[V]<br>";
+				}
+				if (watt != undefined) {
+					ret += watt + "[W]<br>";
+				}
+				break;
+
 			case "0130": // エアコン
 				operatingStatus = facilitiesEL[ip][eoj]["動作状態(80)"];
 

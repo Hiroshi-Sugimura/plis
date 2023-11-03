@@ -10,8 +10,6 @@ PLIS (Platform for Life Improvement and Support)
 
 - [for PLIS developper's README](https://hiroshi-sugimura.github.io/plis//v1/docs/jsdoc/)
 
-# Releases
-
 
 # Licenses
 

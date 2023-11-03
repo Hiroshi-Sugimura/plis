@@ -79,6 +79,7 @@ let mainEL = {
 
 		if (mainEL.isRun) {  // 重複起動対応
 			if (config.enabled && persist.parsed && !isObjEmpty(persist.parsed)) {
+				sendIPCMessage("renewELConfigView", config);
 				sendIPCMessage("fclEL", persist.parsed);
 			}
 			return;
@@ -209,10 +210,10 @@ let mainEL = {
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.received() rinfo:', rinfo);
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.received() els:', els);
 			sendIPCMessage('Error', {
-				datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), 
-				moduleName: 'mainEL.received()', 
+				datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"),
+				moduleName: 'mainEL.received()',
 				stackLog: `EL packets that cannot be analyzed. From: ${rinfo.address}, Detail: ${error}`
-			} );
+			});
 			// throw error;
 			return;
 		}
@@ -306,7 +307,7 @@ let mainEL = {
 	search: function () {
 		EL.search();
 
-		if( config.oldSearch ) {  // Ver. 1.0系Search有効時
+		if (config.oldSearch) {  // Ver. 1.0系Search有効時
 			EL.sendOPC1(EL.EL_Multi, '0ef001', '0ef001', '63', 'd5', '00');
 		}
 	},
