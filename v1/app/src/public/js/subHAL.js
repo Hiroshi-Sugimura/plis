@@ -631,7 +631,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	window.HALgetUserProfileResponse = function (res) {
-		console.log('window.HALgetUserProfileResponse() res:', res);
+		// console.log('window.HALgetUserProfileResponse() res:', res);
 		// 取得したトークンが有効かどうかを確認するために HAL ユーザープロファイルを取得
 		if (inHALApiKey.value) {
 			try {

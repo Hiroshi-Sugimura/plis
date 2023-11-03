@@ -949,7 +949,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		//---------------------------------------------
 		// weather
 		// weatherDetail += '<H3>天気予報 (' + new Date(weather[0].reportDatetime).toLocaleString() + '以降)</H3>';
-		console.log('window.renewJmaDetail weather');
+		// console.log('window.renewJmaDetail weather');
 		weatherDetail += '<div class="p">';
 		weatherDetail += '<table><tbody>';
 		// テーブルヘッダ
@@ -989,7 +989,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			}
 
 			// 風
-			console.log('window.renewJmaDetail weather.winds');
+			// console.log('window.renewJmaDetail weather.winds');
 			let wns = JSON.parse(weather[a].winds);
 			weatherDetail += `<tr>`;
 			weatherDetail += `<th class="forecast">風 <i class='fa-solid fa-wind'></i></th>`;
@@ -1000,7 +1000,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 		//---------------------------------------------
 		// pops、降水量
-		console.log('window.renewJmaDetail pops');
+		// console.log('window.renewJmaDetail pops');
 		timeArray = JSON.parse(pops[0].timeDefines);
 		timeArray = timeArray.map((t) => { return new Date(t).toLocaleString(); });
 		timeArrayLength = timeArray.length;
@@ -1025,7 +1025,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 		//---------------------------------------------
 		// temps、気温
-		console.log('window.renewJmaDetail temps');
+		// console.log('window.renewJmaDetail temps');
 		timeArray = JSON.parse(temps[0].timeDefines);
 		timeArray = timeArray.map((t) => { return new Date(t).toLocaleString(); });
 		timeArrayLength = timeArray.length;
