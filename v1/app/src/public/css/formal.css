@@ -5,30 +5,39 @@
  *********************************************************************/
 /* 変数定義 */
 :root {
-	--main-bg: #F0F0F0;														/* うすい灰色 */
-	--main-text: #000000;														/* 黒 */
-	--sub-bg: #ffdddd;															/* 薄ピンク */
-	--sub-text: #bb4444;														/* エンジ */
-	--accent: #2A7762;															/* 緑 */
-	--strong: #DC143C;															/* 赤 */
-	--link-text: #880000;														/* 赤 */
-	--shadow: #333333;															/* 灰色 */
-	--inner-bg: #FFFFFF;														/* 白 */
+	--main-bg: #F0F0F0;
+	/* うすい灰色 */
+	--main-text: #000000;
+	/* 黒 */
+	--sub-bg: #ffdddd;
+	/* 薄ピンク */
+	--sub-text: #bb4444;
+	/* エンジ */
+	--accent: #2A7762;
+	/* 緑 */
+	--strong: #DC143C;
+	/* 赤 */
+	--link-text: #880000;
+	/* 赤 */
+	--shadow: #333333;
+	/* 灰色 */
+	--inner-bg: #FFFFFF;
+	/* 白 */
 	--p_red: #ffb2b2;
 	--p_purple: #ffb2ff;
 	--p_blue: #b2b2ff;
 	--p_water: #b2ffff;
 	--p_green: #b2ffb2;
 	--p_yellow: #ffffb2;
-	--temprature: rgba( 255, 178, 178, .5);
-	--humidity: rgba( 255, 178, 255, .5);
-	--pressure: rgba( 178, 178, 255, .5);
-	--anbientLight: rgba( 255, 196, 137, .2);
-	--noise: rgba( 70, 70, 220, .2);
-	--co2: rgba( 50, 100, 0, .2);
-	--tvoc: rgba( 178, 255, 255, .2);
-	--discomfort: rgba( 196, 137, 255, .2);
-	--heatStroke: rgba( 137, 196, 255, .2);
+	--temprature: rgba(255, 178, 178, .5);
+	--humidity: rgba(255, 178, 255, .5);
+	--pressure: rgba(178, 178, 255, .5);
+	--anbientLight: rgba(255, 196, 137, .2);
+	--noise: rgba(70, 70, 220, .2);
+	--co2: rgba(50, 100, 0, .2);
+	--tvoc: rgba(178, 255, 255, .2);
+	--discomfort: rgba(196, 137, 255, .2);
+	--heatStroke: rgba(137, 196, 255, .2);
 	--watt: rgba(110, 110, 110, 0.3);
 	--ampereR: rgba(255, 70, 70, 0.3);
 	--ampereT: rgba(178, 70, 70, 0.3);
@@ -125,10 +134,9 @@
 }
 
 /* sticky, スクロールしたら追従する */
-.sticky-container {
-}
+.sticky-container {}
 
-.sticky{
+.sticky {
 	position: -webkit-sticky;
 	position: sticky;
 	top: 0;
@@ -136,8 +144,9 @@
 
 
 /* read only */
-input:read-only, textarea:read-only {
-  background-color: #ccc;
+input:read-only,
+textarea:read-only {
+	background-color: #ccc;
 }
 
 
@@ -371,7 +380,7 @@ summary.config {
 
 
 
-.scrollbox{
+.scrollbox {
 	background-color: var(--inner-bg);
 	margin: 1.5em 1.5em 1.5em 6em;
 	padding: 1em;
@@ -388,7 +397,7 @@ summary.config {
 	border-radius: 5px;
 	/* はみ出たらスクロール */
 	font-size: 80%;
-	white-space:nowrap;
+	white-space: nowrap;
 	overflow: scroll;
 	height: 500px;
 }
@@ -561,13 +570,13 @@ p {
 }
 
 /* pの直後のdetailsはインデント，pの子要素にできないので */
-p + details {
+p+details {
 	margin-left: 3em;
 	padding-left: 3em;
 }
 
 /* pの直後のsectionはインデント，pの子要素にできないので */
-p + section {
+p+section {
 	margin-left: 3em;
 	padding-left: 3em;
 }
@@ -651,7 +660,7 @@ table.data {
 table td.hal {
 	background-color: var(--inner-bg);
 	border-top-color: var(--strong);
-	border-left-color:  none;
+	border-left-color: none;
 	border-right-color: dotted var(--sub-bg);
 	border-bottom-color: dotted var(--sub-bg);
 }
@@ -680,13 +689,12 @@ td.forecast {
 
 /* DetailタブのELリスト */
 table.el-details {
-	border-collapse: collapse;
-	/* 隣接セルの間をあけずに配置 */
-	background-color: var(--sub-bg);
-	border-top-color: var(--sub-bg);
-	border-left-color: var(--sub-bg);
-	border-right-color: var(--strong);
-	border-bottom-color: var(--strong);
+	border-collapse: separate;
+	/* 隣接セルの間をあけて配置するが、行を10px開けて列は開けない */
+	background-color: var(--nnner-bg);
+	border-spacing: 0px 10px;
+	border-top-color: var(--inner-bg);
+	border-bottom-color: var(--inner-bg);
 	margin: 10px 10px 10px;
 }
 
@@ -694,8 +702,9 @@ table td.opc {
 	background-color: var(--inner-bg);
 	border-top-color: var(--strong);
 	border-left-color: none;
-	border-right-color: none;
-	border-bottom-color:  dotted var(--sub-bg);
+	border-right: 1px solid black;
+	border-bottom-color: dotted var(--sub-bg);
+	vertical-align: top;
 	text-align: left;
 	word-break: break-word;
 	width: 150px;
@@ -706,7 +715,7 @@ table td.edt {
 	border-top-color: var(--strong);
 	border-left-color: none;
 	border-right-color: none;
-	border-bottom-color:  dotted var(--sub-bg);
+	border-bottom-color: dotted var(--sub-bg);
 	text-align: left;
 	word-break: break-word;
 	min-width: 540px;
@@ -739,7 +748,7 @@ table.roomEnv {
 td.roomEnvLeftNetatmo {
 	background-color: var(--inner-bg);
 	border-top-color: var(--strong);
-	border-left-color:  none;
+	border-left-color: none;
 	border-right-color: dotted var(--sub-bg);
 	border-bottom-color: dotted var(--sub-bg);
 	width: 250px;
@@ -749,7 +758,7 @@ td.roomEnvLeftNetatmo {
 td.roomEnvRightNetatmo {
 	background-color: var(--inner-bg);
 	border-top-color: var(--strong);
-	border-left-color:  none;
+	border-left-color: none;
 	border-right-color: dotted var(--sub-bg);
 	border-bottom-color: dotted var(--sub-bg);
 }
@@ -758,7 +767,7 @@ td.roomEnvRightNetatmo {
 td.roomEnvLeftOmron {
 	background-color: var(--inner-bg);
 	border-top-color: var(--strong);
-	border-left-color:  none;
+	border-left-color: none;
 	border-right-color: dotted var(--sub-bg);
 	border-bottom-color: dotted var(--sub-bg);
 	width: 250px;
@@ -768,7 +777,7 @@ td.roomEnvLeftOmron {
 td.roomEnvRightOmron {
 	background-color: var(--inner-bg);
 	border-top-color: var(--strong);
-	border-left-color:  none;
+	border-left-color: none;
 	border-right-color: dotted var(--sub-bg);
 	border-bottom-color: dotted var(--sub-bg);
 }
@@ -776,7 +785,7 @@ td.roomEnvRightOmron {
 td.roomEnv {
 	background-color: var(--inner-bg);
 	border-top-color: var(--strong);
-	border-left-color:  none;
+	border-left-color: none;
 	border-right-color: dotted var(--sub-bg);
 	border-bottom-color: dotted var(--sub-bg);
 }
@@ -865,7 +874,8 @@ textarea {
 }
 
 .secretText {
-	border: none; /* デフォルトの枠線を消す */
+	border: none;
+	/* デフォルトの枠線を消す */
 }
 
 .secretBorder {
@@ -921,7 +931,7 @@ textarea {
 }
 
 .tab_item {
-	width: calc( (100% - 100px) /5 );
+	width: calc((100% - 100px) /5);
 	height: 50px;
 	border-bottom: 3px solid var(--sub-text);
 	background-color: #d9d9d9;
@@ -957,20 +967,19 @@ input[name="tab_item_config"] {
 
 /*選択されているタブのコンテンツのみを表示, ここをコンテンツに合わせる*/
 /* button:check ~ tab*/
-#top:checked           ~ #divTop_tab,
-#control:checked       ~ #divControl_tab,
-#hal:checked           ~ #divHal_tab,
-#questionnaire:checked ~ #divQestionnaire_tab,
-#details:checked       ~ #divDetails_tab,
-#configTab:checked     ~ #divConfig_tab
-{
+#top:checked~#divTop_tab,
+#control:checked~#divControl_tab,
+#hal:checked~#divHal_tab,
+#questionnaire:checked~#divQestionnaire_tab,
+#details:checked~#divDetails_tab,
+#configTab:checked~#divConfig_tab {
 	display: block;
 }
 
 
 /*選択されているタブのスタイルを変える*/
-.tab_area input:checked + .tab_item,
-.tab_area input:checked + .tab_item_config {
+.tab_area input:checked+.tab_item,
+.tab_area input:checked+.tab_item_config {
 	background-color: var(--sub-text);
 	color: #fff;
 }
@@ -980,7 +989,7 @@ input[name="tab_item_config"] {
 	background-repeat: no-repeat;
 }
 
-.tab-icon{
+.tab-icon {
 	height: 40px;
 	float: center;
 	vertical-align: middle;
@@ -1035,19 +1044,18 @@ input[name="haltab_item"] {
 
 /*選択されているタブのコンテンツのみを表示, ここをコンテンツに合わせる*/
 /* button:check ~ tab*/
-#general:checked  ~ #general_content,
-#clothing:checked ~ #clothing_content,
-#food:checked     ~ #food_content,
-#housing:checked  ~ #housing_content,
-#physical:checked ~ #physical_content,
-#mental:checked   ~ #mental_content,
-#ecology:checked  ~ #ecology_content
-{
+#general:checked~#general_content,
+#clothing:checked~#clothing_content,
+#food:checked~#food_content,
+#housing:checked~#housing_content,
+#physical:checked~#physical_content,
+#mental:checked~#mental_content,
+#ecology:checked~#ecology_content {
 	display: block;
 }
 
 /*選択されているタブのスタイルを変える*/
-.haltab_area input:checked + .haltab_item {
+.haltab_area input:checked+.haltab_item {
 	background-color: var(--sub-text);
 	color: #fff;
 }
@@ -1058,7 +1066,7 @@ input[name="haltab_item"] {
 	background-repeat: no-repeat;
 }
 
-.tab-icon{
+.tab-icon {
 	height: 40px;
 	float: center;
 	vertical-align: middle;
@@ -1124,10 +1132,10 @@ input[name="haltab_item"] {
 /* tooltip */
 
 /* 呼び出し対象を指定 */
-.tooltip{
+.tooltip {
 	position: relative;
 	cursor: pointer;
-	display:  inline-block;
+	display: inline-block;
 }
 
 /* 吹き出しの中身を指定 */
@@ -1154,7 +1162,7 @@ input[name="haltab_item"] {
 }
 
 /* 全体の位置 */
-.tooltip:hover .description{
+.tooltip:hover .description {
 	display: inline-block;
 	top: -75px;
 	left: 0px;
@@ -1162,30 +1170,30 @@ input[name="haltab_item"] {
 
 /* 追従するTOPへ戻るボタン */
 #page-top {
-    position: fixed;
-    right: 5px;
-    bottom: 20px;
-    height: 50px;
-    text-decoration: none;
-    font-weight: bold;
-    transform: rotate(90deg);
-    font-size: 90%;
-    line-height: 1.5rem;
-    color: #737373;
-    padding: 0 0 0 35px;
-    border-top: solid 1px;
+	position: fixed;
+	right: 5px;
+	bottom: 20px;
+	height: 50px;
+	text-decoration: none;
+	font-weight: bold;
+	transform: rotate(90deg);
+	font-size: 90%;
+	line-height: 1.5rem;
+	color: #737373;
+	padding: 0 0 0 35px;
+	border-top: solid 1px;
 }
 
 #page-top::before {
-    content: "";
-    display: block;
-    position: absolute;
-    top: -1px;
-    left: 0px;
-    width: 15px;
-    border-top: solid 1px;
-    transform: rotate(35deg);
-    transform-origin: left top;
+	content: "";
+	display: block;
+	position: absolute;
+	top: -1px;
+	left: 0px;
+	width: 15px;
+	border-top: solid 1px;
+	transform: rotate(35deg);
+	transform-origin: left top;
 }
 
 /*********************************************************************/
@@ -1227,7 +1235,8 @@ input[name="haltab_item"] {
 
 /* calendar */
 table.calendar {
-	border-collapse: collapse;	/* 隣接セルの間をあけずに配置 */
+	border-collapse: collapse;
+	/* 隣接セルの間をあけずに配置 */
 	background-color: #FFFFFF;
 	min-width: 600px;
 	width: 100%;
@@ -1243,7 +1252,7 @@ tr.dayOfWeek {
 table.calendar td:first-child,
 td.holiday {
 	background-color: var(--sub-bg);
-    color: red;
+	color: red;
 }
 
 td.today {
@@ -1297,8 +1306,8 @@ td.today {
 	border: solid 1px var(--accent);
 	padding: 5px 5px;
 	position: fixed;
-    right: 5px;
-    top: 20px;
+	right: 5px;
+	top: 20px;
 	text-align: center;
 }
 
