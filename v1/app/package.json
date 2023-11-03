@@ -6,7 +6,7 @@
   "main": "src/main.js",
   "scripts": {
     "start": "electron-forge start",
-    "preinstall": "npm i license-checker npm-check-updates & pushd . & cd src & npm i & popd",
+    "preinstall": "npm i license-checker npm-check-updates && pushd . && cd src && npm i && popd",
     "win": "chcp 65001 && npm run license-check && electron-forge start",
     "mac": "npx license-checker --json > ./src/modules.json && electron-forge start",
     "package": "electron-forge package",
@@ -33,11 +33,11 @@
     "@electron-forge/maker-zip": "^6.4.2",
     "@electron-forge/plugin-auto-unpack-natives": "^6.4.2",
     "@electron-forge/publisher-github": "^6.4.2",
-    "electron": "26.2.4",
+    "electron": "27.0.3",
     "electron-builder": "^24.6.4",
     "license-checker": "^25.0.1"
   },
   "dependencies": {
-    "npm-check-updates": "^16.14.5"
+    "npm-check-updates": "^16.14.6"
   }
 }
