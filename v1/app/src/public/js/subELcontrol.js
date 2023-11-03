@@ -56,9 +56,9 @@ window.addEventListener('DOMContentLoaded', function () {
 				break;
 
 			case "0022": // 電力量センサ
-				let volt = facilitiesEL[ip][eoj]["実行電圧計測値(E5)"];
-				let watt = facilitiesEL[ip][eoj]["小容量センサ瞬時電力量計測値(E2)"];
-				ret = "<div class='tooltip'><img src=\"./img/0011.png\" class='el-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + obj[0] + "<br>";
+				let volt = facilitiesEL[ip][eoj]["実効電圧値計測値(E5)"].split('V')[0];
+				let watt = facilitiesEL[ip][eoj]["小容量センサ瞬時電力値計測値(E2)"];
+				ret = "<div class='tooltip'><img src=\"./img/0022.png\" class='el-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + obj[0] + "<br>";
 				ret += "場所:" + instLocation + "<br>";
 
 				if (volt != undefined) {
@@ -374,10 +374,10 @@ window.addEventListener('DOMContentLoaded', function () {
 				break;
 
 			default:
-				console.log('default case for', obj[1].substring(0, 4));
-				ret = "<img src=\"./img/" + obj[1].substring(0, 2) + ".png\" class='el-dev' /><br>" + obj[0] + "<br>" + makerCode + "<br>" + ip + "<br>";
-				console.log('createControlELButton(), no case device, using default:', ip, eoj);
-				console.dir(facilitiesEL[ip][eoj]);
+				console.log('subELcontrols.createControlELButton(), no case device, using default:', ip, eoj);
+				// console.dir(facilitiesEL[ip][eoj]);
+				ret = `<div class='tooltip'><img src='./img/${obj[1].substring(0, 2)}.png' class='el-dev' /><div class='description'>${makerCode}&#013;&#010;${ip}</div></div><br class='omitable'>${obj[0]}<br>`;
+				ret += "場所:" + instLocation + "<br>";
 				break;
 		}
 

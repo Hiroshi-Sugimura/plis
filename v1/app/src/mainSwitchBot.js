@@ -315,212 +315,218 @@ let mainSwitchBot = {
 			let det = facilities[d.deviceId];
 			// console.log( 'SwitchBot:dev:', d, ' detail:', det );
 
-			switch (d.deviceType) {
-				case 'Plug':
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'power',
-						value: det.power
-					});
-					break;
+			try {
+				switch (d.deviceType) {
+					case 'Plug':
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'power',
+							value: det.power
+						});
+						break;
 
-				case 'Plug Mini (JP)':
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'power',
-						value: det.power
-					});
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'voltage',
-						value: det.voltage
-					});
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'weight',
-						value: det.weight
-					});
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'electricityOfDay',
-						value: det.electricityOfDay
-					});
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'electricCurrent',
-						value: det.electricCurrent
-					});
-					break;
+					case 'Plug Mini (JP)':
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'power',
+							value: det.power
+						});
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'voltage',
+							value: det.voltage
+						});
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'weight',
+							value: det.weight
+						});
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'electricityOfDay',
+							value: det.electricityOfDay
+						});
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'electricCurrent',
+							value: det.electricCurrent
+						});
+						break;
 
-				case 'Meter':
-				case 'MeterPlus':
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'temperature',
-						value: det.temperature
-					});
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'humidity',
-						value: det.humidity
-					});
-					break;
+					case 'Meter':
+					case 'MeterPlus':
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'temperature',
+							value: det.temperature
+						});
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'humidity',
+							value: det.humidity
+						});
+						break;
 
-				case 'Curtain':  // カーテン
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'slidePosition',
-						value: det.slidePosition
-					});
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'openDirection',
-						value: d.openDirection
-					});
-					break;
+					case 'Curtain':  // カーテン
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'slidePosition',
+							value: det.slidePosition
+						});
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'openDirection',
+							value: d.openDirection
+						});
+						break;
 
-				case 'Humidifier':  // 加湿器
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'power',
-						value: det.power
-					});
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'humidity',
-						value: det.humidity
-					});
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'temperature',
-						value: det.temperature
-					});
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'lackWater',
-						value: det.lackWater
-					});
-					break;
+					case 'Humidifier':  // 加湿器
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'power',
+							value: det.power
+						});
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'humidity',
+							value: det.humidity
+						});
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'temperature',
+							value: det.temperature
+						});
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'lackWater',
+							value: det.lackWater
+						});
+						break;
 
-				case 'Motion Sensor':  // 人感センサ＝動きセンサ
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'moveDetected',
-						value: det.moveDetected
-					});
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'brightness',
-						value: det.brightness
-					});
-					break;
+					case 'Motion Sensor':  // 人感センサ＝動きセンサ
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'moveDetected',
+							value: det.moveDetected
+						});
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'brightness',
+							value: det.brightness
+						});
+						break;
 
-				case 'Contact Sensor':  // 開閉センサ＝接触センサ
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'moveDetected',
-						value: det.moveDetected
-					});
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'brightness',
-						value: det.brightness
-					});
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'openState',
-						value: det.openState
-					});
-					break;
+					case 'Contact Sensor':  // 開閉センサ＝接触センサ
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'moveDetected',
+							value: det.moveDetected
+						});
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'brightness',
+							value: det.brightness
+						});
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'openState',
+							value: det.openState
+						});
+						break;
 
-				case 'Color Bulb':  // ライト
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'power',
-						value: det.power
-					});
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'brightness',
-						value: det.brightness
-					});
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'color',
-						value: det.color
-					});
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'colorTemperature',
-						value: det.colorTemperature
-					});
-					break;
+					case 'Color Bulb':  // ライト
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'power',
+							value: det.power
+						});
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'brightness',
+							value: det.brightness
+						});
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'color',
+							value: det.color
+						});
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'colorTemperature',
+							value: det.colorTemperature
+						});
+						break;
 
-				case 'Bot':  // ボット
-					switchBotDataModel.create({
-						deviceId: d.deviceId,
-						deviceType: d.deviceType,
-						deviceName: d.deviceName,
-						property: 'power',
-						value: det.power
-					});
-					break;
+					case 'Bot':  // ボット
+						switchBotDataModel.create({
+							deviceId: d.deviceId,
+							deviceType: d.deviceType,
+							deviceName: d.deviceName,
+							property: 'power',
+							value: det.power
+						});
+						break;
 
-				// 以下はDB格納無し
-				case 'Hub Mini': break;
-				case 'Indoor Cam': break;
-				case 'Remote': break;
+					// 以下はDB格納無し
+					case 'Hub Mini': break;
+					case 'Indoor Cam': break;
+					case 'Remote': break;
 
-				default:
-					// console.log( 'unknown device in SwitchBot:dev:', d, ' detail:', det );
-					// 屋外カメラはなぜかdeviceType持ってない
-					break;
+					default:
+						// console.log( 'unknown device in SwitchBot:dev:', d, ' detail:', det );
+						// 屋外カメラはなぜかdeviceType持ってない
+						break;
+				}
+			} catch (error) {
+				sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainSwitchBot', stackLog: `${error.message}, d:${d}, det:${det}` });
+				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.storeData() error:\x1b[32m', error, '\x1b[0m');
+				throw error;
 			}
 		}
 	},
