@@ -8,8 +8,8 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-const { eldataModel, IOT_MajorResultsModel, IOT_MinorResultsModel } = require('./models/localDBModels');   // DBデータと連携
-const { Op } = require("sequelize");
+const { Op, eldataModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel, IOT_GarminActivityFilesModel } = require('./models/localDBModels');   // DBデータと連携
+
 const https = require('https');
 
 const Store = require('electron-store');
@@ -290,13 +290,83 @@ let mainHALsync = {
 
 		const hal_garmin_download_url = HAL_API_BASE_URL + '/garminDownload';
 
-		// HAL からGarminデータをダウンロード
-		let dndata = await mainHALsync.httpGetRequest(hal_garmin_download_url);
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Downloading from HAL, garmin data:', JSON.stringify(dndata, null, '  ')) : 0;
+		try {
+			// HAL からGarminデータをダウンロード
+			let dndata = await mainHALsync.httpGetRequest(hal_garmin_download_url);
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Downloading from HAL, garmin data:', JSON.stringify(dndata, null, '  ')) : 0;
 
-		// HAL からダウンロードしたGarminデータをローカルに保存
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Saving.') : 0;
+			// HAL からダウンロードしたGarminデータをローカルに保存
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Saving.') : 0;
 
+			// IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, , IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel, IOT_GarminActivityFilesModel
+			// Activities
+			// ActivityDetails
+			// BodyComps
+			// Epochs
+			// MoveIQActivities
+			// Pulseox
+			// Sleeps
+			// StressDetails
+			if (dndata.StressDetails) {
+				// ダウンロードしたデータをテーブルに追加
+				await IOT_GarminStressDetailsModel.findOrCreate({
+					where: {
+						idIOT_GarminStressDetails: dndata.StressDetails.idIOT_GarminStressDetails
+					},
+					defaults: {
+						idIOT_GarminStressDetails: dndata.StressDetails.idIOT_GarminStressDetails,
+						garminId: dndata.StressDetails.garminId,
+						garminAccessToken: dndata.StressDetails.garminAccessToken,
+						startTimeInSeconds: dndata.StressDetails.startTimeInSeconds,
+						startTimeOffsetInSeconds: dndata.StressDetails.startTimeOffsetInSeconds,
+						durationInSeconds: dndata.StressDetails.durationInSeconds,
+						calendarDate: dndata.StressDetails.calendarDate,
+						timeOffsetStressLevelValues: dndata.StressDetails.timeOffsetStressLevelValues,
+						timeOffsetBodyBatteryValues: dndata.StressDetails.timeOffsetBodyBatteryValues,
+						createdAt: dndata.StressDetails.createdAt,
+						updatedAt: dndata.StressDetails.updatedAt
+					}
+				});
+				console.log('Inserted a record in the IOT_GarminStressDetailsModel teble.');
+			}
+
+			// UserMetrics
+			if (dndata.UserMetrics) {
+				// ダウンロードしたデータをテーブルに追加
+				await IOT_GarminUserMetricsModel.findOrCreate({
+					where: {
+						idIOT_GarminUserMetricsDetails: dndata.UserMetrics.idIOT_GarminUserMetrics
+					},
+					defaults: {
+						idIOT_GarminUserMetricsDetails: dndata.UserMetrics.idIOT_GarminUserMetrics,
+						garminId: dndata.StressDetails.garminId,
+						garminAccessToken: dndata.StressDetails.garminAccessToken,
+						summaryId: dndata.UserMetrics.summaryId,
+						calendarDate: dndata.UserMetrics.calendarDate,
+						vo2Max: dndata.UserMetrics.vo2Max,
+						fitnessAge: dndata.UserMetrics.fitnessAge,
+						createdAt: dndata.UserMetrics.createdAt,
+						updatedAt: dndata.UserMetrics.updatedAt
+					}
+				});
+				console.log('Inserted a record in the IOT_GarminUserMetrics teble.');
+			}
+
+
+		} catch (error) {
+			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.garminDownload() ', error);
+			let arg = {
+				error: error.message
+			};
+
+			sendIPCMessage('Error', {
+				datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"),
+				moduleName: 'mainHALsync.garminDownload()',
+				stackLog: `Detail: ${error}`
+			});
+
+			// mainWindow.webContents.send('to-renderer', JSON.stringify({ cmd: "Synced", arg: arg }));
+		}
 	},
 
 

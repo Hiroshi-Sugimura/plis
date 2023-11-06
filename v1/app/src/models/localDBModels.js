@@ -15,10 +15,10 @@ const configDir = path.join(userHome, appname);
 // Setup sequelize db connection
 const sqlite3 = new Sequelize(
 	'database', '', '', {
-		"dialect": "sqlite",
-		"storage": path.join(configDir, "lifelog.db"),
-		"logging": false
-	} );
+	"dialect": "sqlite",
+	"storage": path.join(configDir, "lifelog.db"),
+	"logging": false
+});
 
 // freezeTableNameはモデルに渡した名前を実テーブルにマッピングする際に複数形に変換してしまうのを抑制する
 // timestamps: falseを入れておかないと，createdAt, updatedAtが勝手に追加されるみたい
@@ -284,10 +284,10 @@ const owmModel = sqlite3.define('owmTable', {
 		primaryKey: true,
 		allowNull: false
 	},
-	detail:{
+	detail: {
 		type: Sequelize.STRING
 	}
-},{
+}, {
 	freezeTableName: true,
 	timestamps: true
 });
@@ -302,10 +302,10 @@ const netatmoModel = sqlite3.define('netatmoTable', {
 		primaryKey: true,
 		allowNull: false
 	},
-	detail:{
+	detail: {
 		type: Sequelize.STRING
 	}
-},{
+}, {
 	freezeTableName: true,
 	timestamps: true
 });
@@ -996,61 +996,61 @@ const IOT_MinorkeyMeansModel = sqlite3.define('IOT_MinorkeyMeans', {
 
 // MinorKeyMeansModelの格納データ, HAL ver.1
 const MinorkeyMeansValues = [
-	{"idIOT_MinorkeyMeans":1,"version":1,"majorKey":1,"minorKey":1,"means":"洗濯頻度"},
-	{"idIOT_MinorkeyMeans":2,"version":1,"majorKey":1,"minorKey":2,"means":"アイロン頻度"},
-	{"idIOT_MinorkeyMeans":3,"version":1,"majorKey":1,"minorKey":3,"means":"服装選択"},
-	{"idIOT_MinorkeyMeans":4,"version":1,"majorKey":1,"minorKey":4,"means":"服装種類"},
-	{"idIOT_MinorkeyMeans":5,"version":1,"majorKey":1,"minorKey":5,"means":"着替えの頻度"},
-	{"idIOT_MinorkeyMeans":6,"version":1,"majorKey":1,"minorKey":6,"means":"爪切り頻度"},
-	{"idIOT_MinorkeyMeans":7,"version":1,"majorKey":1,"minorKey":7,"means":"歯磨き頻度"},
-	{"idIOT_MinorkeyMeans":8,"version":1,"majorKey":1,"minorKey":8,"means":"散髪頻度"},
-	{"idIOT_MinorkeyMeans":9,"version":1,"majorKey":1,"minorKey":9,"means":"ムダ毛、髭処理頻度"},
-	{"idIOT_MinorkeyMeans":10,"version":1,"majorKey":2,"minorKey":1,"means":"コレステロール値"},
-	{"idIOT_MinorkeyMeans":11,"version":1,"majorKey":2,"minorKey":2,"means":"血圧値"},
-	{"idIOT_MinorkeyMeans":12,"version":1,"majorKey":2,"minorKey":3,"means":"血糖値"},
-	{"idIOT_MinorkeyMeans":13,"version":1,"majorKey":2,"minorKey":4,"means":"水分量"},
-	{"idIOT_MinorkeyMeans":14,"version":1,"majorKey":2,"minorKey":5,"means":"野菜摂取量"},
-	{"idIOT_MinorkeyMeans":15,"version":1,"majorKey":2,"minorKey":6,"means":"肉摂取量"},
-	{"idIOT_MinorkeyMeans":16,"version":1,"majorKey":2,"minorKey":7,"means":"カロリー"},
-	{"idIOT_MinorkeyMeans":17,"version":1,"majorKey":2,"minorKey":8,"means":"夜食時間"},
-	{"idIOT_MinorkeyMeans":18,"version":1,"majorKey":2,"minorKey":9,"means":"賞味期限"},
-	{"idIOT_MinorkeyMeans":19,"version":1,"majorKey":3,"minorKey":1,"means":"掃除頻度"},
-	{"idIOT_MinorkeyMeans":20,"version":1,"majorKey":3,"minorKey":2,"means":"整理整頓"},
-	{"idIOT_MinorkeyMeans":21,"version":1,"majorKey":3,"minorKey":3,"means":"換気頻度"},
-	{"idIOT_MinorkeyMeans":22,"version":1,"majorKey":3,"minorKey":4,"means":"ほこり量"},
-	{"idIOT_MinorkeyMeans":23,"version":1,"majorKey":3,"minorKey":5,"means":"室温"},
-	{"idIOT_MinorkeyMeans":24,"version":1,"majorKey":3,"minorKey":6,"means":"布団清潔度"},
-	{"idIOT_MinorkeyMeans":25,"version":1,"majorKey":3,"minorKey":7,"means":"鍵施錠管理"},
-	{"idIOT_MinorkeyMeans":26,"version":1,"majorKey":4,"minorKey":1,"means":"睡眠時間"},
-	{"idIOT_MinorkeyMeans":27,"version":1,"majorKey":4,"minorKey":2,"means":"運動量（スポーツ）"},
-	{"idIOT_MinorkeyMeans":28,"version":1,"majorKey":4,"minorKey":3,"means":"運動量（歩数）"},
-	{"idIOT_MinorkeyMeans":29,"version":1,"majorKey":4,"minorKey":4,"means":"食事時間（朝）"},
-	{"idIOT_MinorkeyMeans":30,"version":1,"majorKey":4,"minorKey":5,"means":"食事時間（昼）"},
-	{"idIOT_MinorkeyMeans":31,"version":1,"majorKey":4,"minorKey":6,"means":"食事時間（夜）"},
-	{"idIOT_MinorkeyMeans":32,"version":1,"majorKey":4,"minorKey":7,"means":"体脂肪率（BMI）"},
-	{"idIOT_MinorkeyMeans":33,"version":1,"majorKey":4,"minorKey":8,"means":"お風呂頻度"},
-	{"idIOT_MinorkeyMeans":34,"version":1,"majorKey":4,"minorKey":9,"means":"薬摂取"},
-	{"idIOT_MinorkeyMeans":35,"version":1,"majorKey":4,"minorKey":10,"means":"飲酒頻度"},
-	{"idIOT_MinorkeyMeans":36,"version":1,"majorKey":4,"minorKey":11,"means":"喫煙頻度"},
-	{"idIOT_MinorkeyMeans":37,"version":1,"majorKey":4,"minorKey":12,"means":"座位時間"},
-	{"idIOT_MinorkeyMeans":38,"version":1,"majorKey":5,"minorKey":1,"means":"ストレス"},
-	{"idIOT_MinorkeyMeans":39,"version":1,"majorKey":5,"minorKey":2,"means":"コミュニケーション"},
-	{"idIOT_MinorkeyMeans":40,"version":1,"majorKey":5,"minorKey":3,"means":"笑顔頻度"},
-	{"idIOT_MinorkeyMeans":41,"version":1,"majorKey":5,"minorKey":4,"means":"外出頻度"},
-	{"idIOT_MinorkeyMeans":42,"version":1,"majorKey":5,"minorKey":5,"means":"親密具合"},
-	{"idIOT_MinorkeyMeans":43,"version":1,"majorKey":5,"minorKey":6,"means":"対面頻度"},
-	{"idIOT_MinorkeyMeans":44,"version":1,"majorKey":5,"minorKey":7,"means":"高揚感"},
-	{"idIOT_MinorkeyMeans":45,"version":1,"majorKey":5,"minorKey":8,"means":"イライラ"},
-	{"idIOT_MinorkeyMeans":46,"version":1,"majorKey":5,"minorKey":9,"means":"趣味満足度"},
-	{"idIOT_MinorkeyMeans":47,"version":1,"majorKey":5,"minorKey":10,"means":"SNS依存"},
-	{"idIOT_MinorkeyMeans":48,"version":1,"majorKey":6,"minorKey":1,"means":"ゴミ削減量"},
-	{"idIOT_MinorkeyMeans":49,"version":1,"majorKey":6,"minorKey":2,"means":"リサイクル頻度"},
-	{"idIOT_MinorkeyMeans":50,"version":1,"majorKey":6,"minorKey":3,"means":"プラスチック削減量"},
-	{"idIOT_MinorkeyMeans":51,"version":1,"majorKey":6,"minorKey":4,"means":"使用電気削減量"},
-	{"idIOT_MinorkeyMeans":52,"version":1,"majorKey":6,"minorKey":5,"means":"使用ガス削減量"},
-	{"idIOT_MinorkeyMeans":53,"version":1,"majorKey":6,"minorKey":6,"means":"使用水道水削減量"},
-	{"idIOT_MinorkeyMeans":54,"version":1,"majorKey":6,"minorKey":7,"means":"自動車排気削減量"}
-	];
+	{ "idIOT_MinorkeyMeans": 1, "version": 1, "majorKey": 1, "minorKey": 1, "means": "洗濯頻度" },
+	{ "idIOT_MinorkeyMeans": 2, "version": 1, "majorKey": 1, "minorKey": 2, "means": "アイロン頻度" },
+	{ "idIOT_MinorkeyMeans": 3, "version": 1, "majorKey": 1, "minorKey": 3, "means": "服装選択" },
+	{ "idIOT_MinorkeyMeans": 4, "version": 1, "majorKey": 1, "minorKey": 4, "means": "服装種類" },
+	{ "idIOT_MinorkeyMeans": 5, "version": 1, "majorKey": 1, "minorKey": 5, "means": "着替えの頻度" },
+	{ "idIOT_MinorkeyMeans": 6, "version": 1, "majorKey": 1, "minorKey": 6, "means": "爪切り頻度" },
+	{ "idIOT_MinorkeyMeans": 7, "version": 1, "majorKey": 1, "minorKey": 7, "means": "歯磨き頻度" },
+	{ "idIOT_MinorkeyMeans": 8, "version": 1, "majorKey": 1, "minorKey": 8, "means": "散髪頻度" },
+	{ "idIOT_MinorkeyMeans": 9, "version": 1, "majorKey": 1, "minorKey": 9, "means": "ムダ毛、髭処理頻度" },
+	{ "idIOT_MinorkeyMeans": 10, "version": 1, "majorKey": 2, "minorKey": 1, "means": "コレステロール値" },
+	{ "idIOT_MinorkeyMeans": 11, "version": 1, "majorKey": 2, "minorKey": 2, "means": "血圧値" },
+	{ "idIOT_MinorkeyMeans": 12, "version": 1, "majorKey": 2, "minorKey": 3, "means": "血糖値" },
+	{ "idIOT_MinorkeyMeans": 13, "version": 1, "majorKey": 2, "minorKey": 4, "means": "水分量" },
+	{ "idIOT_MinorkeyMeans": 14, "version": 1, "majorKey": 2, "minorKey": 5, "means": "野菜摂取量" },
+	{ "idIOT_MinorkeyMeans": 15, "version": 1, "majorKey": 2, "minorKey": 6, "means": "肉摂取量" },
+	{ "idIOT_MinorkeyMeans": 16, "version": 1, "majorKey": 2, "minorKey": 7, "means": "カロリー" },
+	{ "idIOT_MinorkeyMeans": 17, "version": 1, "majorKey": 2, "minorKey": 8, "means": "夜食時間" },
+	{ "idIOT_MinorkeyMeans": 18, "version": 1, "majorKey": 2, "minorKey": 9, "means": "賞味期限" },
+	{ "idIOT_MinorkeyMeans": 19, "version": 1, "majorKey": 3, "minorKey": 1, "means": "掃除頻度" },
+	{ "idIOT_MinorkeyMeans": 20, "version": 1, "majorKey": 3, "minorKey": 2, "means": "整理整頓" },
+	{ "idIOT_MinorkeyMeans": 21, "version": 1, "majorKey": 3, "minorKey": 3, "means": "換気頻度" },
+	{ "idIOT_MinorkeyMeans": 22, "version": 1, "majorKey": 3, "minorKey": 4, "means": "ほこり量" },
+	{ "idIOT_MinorkeyMeans": 23, "version": 1, "majorKey": 3, "minorKey": 5, "means": "室温" },
+	{ "idIOT_MinorkeyMeans": 24, "version": 1, "majorKey": 3, "minorKey": 6, "means": "布団清潔度" },
+	{ "idIOT_MinorkeyMeans": 25, "version": 1, "majorKey": 3, "minorKey": 7, "means": "鍵施錠管理" },
+	{ "idIOT_MinorkeyMeans": 26, "version": 1, "majorKey": 4, "minorKey": 1, "means": "睡眠時間" },
+	{ "idIOT_MinorkeyMeans": 27, "version": 1, "majorKey": 4, "minorKey": 2, "means": "運動量（スポーツ）" },
+	{ "idIOT_MinorkeyMeans": 28, "version": 1, "majorKey": 4, "minorKey": 3, "means": "運動量（歩数）" },
+	{ "idIOT_MinorkeyMeans": 29, "version": 1, "majorKey": 4, "minorKey": 4, "means": "食事時間（朝）" },
+	{ "idIOT_MinorkeyMeans": 30, "version": 1, "majorKey": 4, "minorKey": 5, "means": "食事時間（昼）" },
+	{ "idIOT_MinorkeyMeans": 31, "version": 1, "majorKey": 4, "minorKey": 6, "means": "食事時間（夜）" },
+	{ "idIOT_MinorkeyMeans": 32, "version": 1, "majorKey": 4, "minorKey": 7, "means": "体脂肪率（BMI）" },
+	{ "idIOT_MinorkeyMeans": 33, "version": 1, "majorKey": 4, "minorKey": 8, "means": "お風呂頻度" },
+	{ "idIOT_MinorkeyMeans": 34, "version": 1, "majorKey": 4, "minorKey": 9, "means": "薬摂取" },
+	{ "idIOT_MinorkeyMeans": 35, "version": 1, "majorKey": 4, "minorKey": 10, "means": "飲酒頻度" },
+	{ "idIOT_MinorkeyMeans": 36, "version": 1, "majorKey": 4, "minorKey": 11, "means": "喫煙頻度" },
+	{ "idIOT_MinorkeyMeans": 37, "version": 1, "majorKey": 4, "minorKey": 12, "means": "座位時間" },
+	{ "idIOT_MinorkeyMeans": 38, "version": 1, "majorKey": 5, "minorKey": 1, "means": "ストレス" },
+	{ "idIOT_MinorkeyMeans": 39, "version": 1, "majorKey": 5, "minorKey": 2, "means": "コミュニケーション" },
+	{ "idIOT_MinorkeyMeans": 40, "version": 1, "majorKey": 5, "minorKey": 3, "means": "笑顔頻度" },
+	{ "idIOT_MinorkeyMeans": 41, "version": 1, "majorKey": 5, "minorKey": 4, "means": "外出頻度" },
+	{ "idIOT_MinorkeyMeans": 42, "version": 1, "majorKey": 5, "minorKey": 5, "means": "親密具合" },
+	{ "idIOT_MinorkeyMeans": 43, "version": 1, "majorKey": 5, "minorKey": 6, "means": "対面頻度" },
+	{ "idIOT_MinorkeyMeans": 44, "version": 1, "majorKey": 5, "minorKey": 7, "means": "高揚感" },
+	{ "idIOT_MinorkeyMeans": 45, "version": 1, "majorKey": 5, "minorKey": 8, "means": "イライラ" },
+	{ "idIOT_MinorkeyMeans": 46, "version": 1, "majorKey": 5, "minorKey": 9, "means": "趣味満足度" },
+	{ "idIOT_MinorkeyMeans": 47, "version": 1, "majorKey": 5, "minorKey": 10, "means": "SNS依存" },
+	{ "idIOT_MinorkeyMeans": 48, "version": 1, "majorKey": 6, "minorKey": 1, "means": "ゴミ削減量" },
+	{ "idIOT_MinorkeyMeans": 49, "version": 1, "majorKey": 6, "minorKey": 2, "means": "リサイクル頻度" },
+	{ "idIOT_MinorkeyMeans": 50, "version": 1, "majorKey": 6, "minorKey": 3, "means": "プラスチック削減量" },
+	{ "idIOT_MinorkeyMeans": 51, "version": 1, "majorKey": 6, "minorKey": 4, "means": "使用電気削減量" },
+	{ "idIOT_MinorkeyMeans": 52, "version": 1, "majorKey": 6, "minorKey": 5, "means": "使用ガス削減量" },
+	{ "idIOT_MinorkeyMeans": 53, "version": 1, "majorKey": 6, "minorKey": 6, "means": "使用水道水削減量" },
+	{ "idIOT_MinorkeyMeans": 54, "version": 1, "majorKey": 6, "minorKey": 7, "means": "自動車排気削減量" }
+];
 
 //////////////////////////////////////////////////////////////////////
 // Room Environment data
@@ -1355,9 +1355,327 @@ const tempForecastModel = sqlite3.define('jmaTempForecast', {
 });
 
 
+//////////////////////////////////////////////////////////////////////
+// Garmin
+
+// garmin healsh api
+const IOT_GarminDailiesModel = sqlite3.define('IOT_GarminDailies', {
+	idIOT_GarminDailies: {
+		type: Sequelize.INTEGER,
+		autoIncrement: true,
+		primaryKey: true,
+		allowNull: false
+	},
+	garminId: Sequelize.STRING(255),
+	garminAccessToken: Sequelize.STRING(255),
+	summaryId: Sequelize.STRING(255),
+	calendarDate: Sequelize.STRING(255),
+	startTimeInSeconds: Sequelize.BIGINT,
+	startTimeOffsetInSeconds: Sequelize.BIGINT,
+	activityType: Sequelize.STRING(255),
+	durationInSeconds: Sequelize.BIGINT,
+	steps: Sequelize.INTEGER,
+	distanceInMeters: Sequelize.REAL,
+	activeTimeInSeconds: Sequelize.BIGINT,
+	activeKilocalories: Sequelize.INTEGER,
+	bmrKilocalories: Sequelize.INTEGER,
+	cunsumedCalories: Sequelize.INTEGER,
+	moderateIntensityDurationInSeconds: Sequelize.BIGINT,
+	vigorousIntensityDurationInSeconds: Sequelize.BIGINT,
+	floorsClimbed: Sequelize.BIGINT,
+	minHeartRateInBeatsPerMinute: Sequelize.BIGINT,
+	averageHeartRateInBeatsPerMinute: Sequelize.BIGINT,
+	maxHeartRateInBeatsPerMinute: Sequelize.BIGINT,
+	restingHeartRateInBeatsPerMinute: Sequelize.BIGINT,
+	timeOffsetHeartRateSamples: Sequelize.TEXT('medium'),
+	averageStressLevel: Sequelize.BIGINT,
+	maxStressLevel: Sequelize.BIGINT,
+	stressDurationInSeconds: Sequelize.BIGINT,
+	restStressDurationInSeconds: Sequelize.BIGINT,
+	activityStressDurationInSeconds: Sequelize.BIGINT,
+	lowStressDurationInSeconds: Sequelize.BIGINT,
+	mediumStressDurationInSeconds: Sequelize.BIGINT,
+	highStressDurationInSeconds: Sequelize.BIGINT,
+	stressQualifier: Sequelize.STRING,
+	stepsGoal: Sequelize.BIGINT,
+	netKilocaloriesGoal: Sequelize.BIGINT,
+	intensityDurationGoalInSeconds: Sequelize.BIGINT,
+	floorsClimbedGoal: Sequelize.BIGINT
+}, {
+	freezeTableName: true,
+	timestamps: true
+});
+
+const IOT_GarminStressDetailsModel = sqlite3.define('IOT_GarminStressDetails', {
+	idIOT_GarminStressDetails: {
+		type: Sequelize.INTEGER,
+		autoIncrement: true,
+		primaryKey: true,
+		allowNull: false
+	},
+	garminId: Sequelize.STRING(255),
+	garminAccessToken: Sequelize.STRING(255),
+	summaryId: Sequelize.STRING(255),
+	startTimeInSeconds: Sequelize.BIGINT,
+	startTimeOffsetInSeconds: Sequelize.BIGINT,
+	durationInSeconds: Sequelize.BIGINT,
+	calendarDate: Sequelize.STRING,
+	timeOffsetStressLevelValues: Sequelize.TEXT('medium'),
+	timeOffsetBodyBatteryValues: Sequelize.TEXT('medium')
+}, {
+	freezeTableName: true,
+	timestamps: true
+});
+
+
+const IOT_GarminEpochsModel = sqlite3.define('IOT_GarminEpochs', {
+	idIOT_GarminEpochs: {
+		type: Sequelize.INTEGER,
+		autoIncrement: true,
+		primaryKey: true,
+		allowNull: false
+	},
+	garminId: Sequelize.STRING(255),
+	garminAccessToken: Sequelize.STRING(255),
+	summaryId: Sequelize.STRING(255),
+	startTimeInSeconds: Sequelize.BIGINT,
+	startTimeOffsetInSeconds: Sequelize.BIGINT,
+	activityType: Sequelize.STRING(255),
+	durationInSeconds: Sequelize.BIGINT,
+	activeTimeInSeconds: Sequelize.BIGINT,
+	steps: Sequelize.BIGINT,
+	distanceInMeters: Sequelize.REAL,
+	activeKilocalories: Sequelize.BIGINT,
+	met: Sequelize.REAL,
+	intensity: Sequelize.STRING(255),
+	meanMotionIntensity: Sequelize.REAL,
+	maxMotionIntensity: Sequelize.REAL
+}, {
+	freezeTableName: true,
+	timestamps: true
+});
+
+
+const IOT_GarminSleepsModel = sqlite3.define('IOT_GarminSleeps', {
+	idIOT_GarminSleeps: {
+		type: Sequelize.INTEGER,
+		autoIncrement: true,
+		primaryKey: true,
+		allowNull: false
+	},
+	garminId: Sequelize.STRING(255),
+	garminAccessToken: Sequelize.STRING(255),
+	summaryId: Sequelize.STRING(255),
+	calendarDate: Sequelize.STRING,
+	startTimeInSeconds: Sequelize.BIGINT,
+	startTimeOffsetInSeconds: Sequelize.BIGINT,
+	durationInSeconds: Sequelize.BIGINT,
+	unmeasurableSleepInSeconds: Sequelize.BIGINT,
+	deepSleepDurationInSeconds: Sequelize.BIGINT,
+	lightSleepDurationInSeconds: Sequelize.BIGINT,
+	remSleepInSeconds: Sequelize.BIGINT,
+	awakeDurationInSeconds: Sequelize.BIGINT,
+	sleepLevelsMap: Sequelize.TEXT('medium'),
+	validation: Sequelize.STRING,
+	timeOffsetSleepRespiration: Sequelize.TEXT('medium'),
+	timeOffsetSleepSpo2: Sequelize.TEXT('medium'),
+	overallSleepScore: Sequelize.STRING,
+	sleepScores: Sequelize.TEXT('medium')
+}, {
+	freezeTableName: true,
+	timestamps: true
+});
+
+
+const IOT_GarminUserMetricsModel = sqlite3.define('IOT_GarminUserMetrics', {
+	idIOT_GarminUserMetrics: {
+		type: Sequelize.INTEGER,
+		autoIncrement: true,
+		primaryKey: true,
+		allowNull: false
+	},
+	garminId: Sequelize.STRING(255),
+	garminAccessToken: Sequelize.STRING(255),
+	summaryId: Sequelize.STRING(255),
+	calendarDate: Sequelize.STRING,
+	vo2Max: Sequelize.REAL,
+	fitnessAge: Sequelize.INTEGER
+}, {
+	freezeTableName: true,
+	timestamps: true
+});
+
+
+// garmin activity api
+const IOT_GarminActivitiesModel = sqlite3.define('IOT_GarminActivities', {
+	idIOT_GarminActivities: {
+		type: Sequelize.INTEGER,
+		autoIncrement: true,
+		primaryKey: true,
+		allowNull: false
+	},
+	garminId: Sequelize.STRING(255),
+	garminAccessToken: Sequelize.STRING(255),
+	summaryId: Sequelize.STRING(255),
+	activityId: Sequelize.STRING,
+	durationInSeconds: Sequelize.BIGINT,
+	startTimeInSeconds: Sequelize.BIGINT,
+	startTimeOffsetInSeconds: Sequelize.BIGINT,
+	activityType: Sequelize.STRING,
+	averageHeartRateInBeatsPerMinute: Sequelize.INTEGER,
+	averageRunCadenceInStepsPerMinute: Sequelize.INTEGER,
+	averageSpeedInMetersPerSecond: Sequelize.REAL,
+	averagePaceInMinutesPerKilometer: Sequelize.REAL,
+	activeKilocalories: Sequelize.REAL,
+	deviceName: Sequelize.STRING,
+	distanceInMeters: Sequelize.REAL,
+	maxHeartRateInBeatsPerMinute: Sequelize.INTEGER,
+	maxPaceInMinutesPerKilometer: Sequelize.REAL,
+	maxRunCadenceInStepsPerMinute: Sequelize.INTEGER,
+	maxSpeedInMetersPerSecond: Sequelize.REAL,
+	steps: Sequelize.INTEGER
+}, {
+	freezeTableName: true,
+	timestamps: true
+});
+
+
+const IOT_GarminActivityDetailsModel = sqlite3.define('IOT_GarminActivityDetails', {
+	idIOT_GarminActivityDetails: {
+		type: Sequelize.INTEGER,
+		autoIncrement: true,
+		primaryKey: true,
+		allowNull: false
+	},
+	garminId: Sequelize.STRING(255),
+	garminAccessToken: Sequelize.STRING(255),
+	summaryId: Sequelize.STRING(255),
+	activityId: Sequelize.STRING,
+	summary: Sequelize.TEXT('medium'),
+	samples: Sequelize.TEXT('medium'),
+	laps: Sequelize.STRING
+}, {
+	freezeTableName: true,
+	timestamps: true
+});
+
+
+
+const IOT_GarminMoveIQActivitiesModel = sqlite3.define('IOT_GarminMoveIQActivities', {
+	idIOT_GarminMoveIQActivities: {
+		type: Sequelize.INTEGER,
+		autoIncrement: true,
+		primaryKey: true,
+		allowNull: false
+	},
+	garminId: Sequelize.STRING(255),
+	garminAccessToken: Sequelize.STRING(255),
+	summaryId: Sequelize.STRING(255),
+	calendarDate: Sequelize.STRING,
+	startTimeInSeconds: Sequelize.BIGINT,
+	offsetInSeconds: Sequelize.BIGINT,
+	durationInSeconds: Sequelize.BIGINT,
+	activityType: Sequelize.STRING,
+	activitySubType: Sequelize.STRING
+}, {
+	freezeTableName: true,
+	timestamps: true
+});
+
+
+// 謎API
+const IOT_GarminAllDayRespirationModel = sqlite3.define('IOT_GarminAllDayRespiration', {
+	idIOT_GarminAllDayRespiration: {
+		type: Sequelize.INTEGER,
+		autoIncrement: true,
+		primaryKey: true,
+		allowNull: false
+	},
+	garminId: Sequelize.STRING(255),
+	garminAccessToken: Sequelize.STRING(255),
+	summaryId: Sequelize.STRING(255),
+	startTimeInSeconds: Sequelize.BIGINT,
+	durationInSeconds: Sequelize.BIGINT,
+	startTimeOffsetInSeconds: Sequelize.BIGINT,
+	timeOffsetEpochToBreaths: Sequelize.TEXT('medium')
+}, {
+	freezeTableName: true,
+	timestamps: true
+});
+
+
+const IOT_GarminPulseoxModel = sqlite3.define('IOT_GarminPulseox', {
+	idIOT_GarminPulseox: {
+		type: Sequelize.INTEGER,
+		autoIncrement: true,
+		primaryKey: true,
+		allowNull: false
+	},
+	garminId: Sequelize.STRING(255),
+	garminAccessToken: Sequelize.STRING(255),
+	summaryId: Sequelize.STRING(255),
+	calendarDate: Sequelize.STRING,
+	startTimeInSeconds: Sequelize.BIGINT,
+	durationInSeconds: Sequelize.BIGINT,
+	startTimeOffsetInSeconds: Sequelize.BIGINT,
+	timeOffsetSpo2Values: Sequelize.TEXT('medium'),
+	onDemand: Sequelize.STRING
+}, {
+	freezeTableName: true,
+	timestamps: true
+});
+
+
+// 体重計
+const IOT_GarminBodyCompsModel = sqlite3.define('IOT_GarminBodyComps', {
+	idIOT_GarminBodyComps: {
+		type: Sequelize.INTEGER,
+		autoIncrement: true,
+		primaryKey: true,
+		allowNull: false
+	},
+	garminId: Sequelize.STRING(255),
+	garminAccessToken: Sequelize.STRING(255),
+	summaryId: Sequelize.STRING(255),
+	muscleMassInGrams: Sequelize.INTEGER,
+	boneMassInGrams: Sequelize.INTEGER,
+	bodyWaterInPercent: Sequelize.REAL,
+	bodyFatInPercent: Sequelize.REAL,
+	bodyMassIndex: Sequelize.INTEGER,
+	weightInGrams: Sequelize.INTEGER,
+	measurementTimeInSeconds: Sequelize.INTEGER,
+	measurementTimeOffsetInSeconds: Sequelize.INTEGER
+}, {
+	freezeTableName: true,
+	timestamps: true
+});
+
+
+// アクティビティファイル
+const IOT_GarminActivityFilesModel = sqlite3.define('IOT_GarminActivityFiles', {
+	idIOT_GarminActivityFiles: {
+		type: Sequelize.INTEGER,
+		autoIncrement: true,
+		primaryKey: true,
+		allowNull: false
+	},
+	userId: Sequelize.STRING(255),
+	userAccessToken: Sequelize.STRING(255),
+	summaryId: Sequelize.STRING(255),
+	fileType: Sequelize.STRING(255),
+	callbackURL: Sequelize.STRING(255),
+	startTimeInSeconds: Sequelize.INTEGER,
+	activityId: Sequelize.INTEGER,
+	activityName: Sequelize.STRING(255),
+	manual: Sequelize.BOOLEAN
+}, {
+	freezeTableName: true,
+	timestamps: true
+});
+
 
 // export
-module.exports = { Sequelize, Op, sqlite3, elrawModel, eldataModel, esmdataModel, esmrawModel, electricEnergyModel, huerawModel, arpModel, owmModel, netatmoModel, IOT_QuestionnaireAnswersModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_MinorkeyMeansModel, MinorkeyMeansValues, roomEnvModel, jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel, switchBotRawModel, switchBotDataModel };
+module.exports = { Sequelize, Op, sqlite3, elrawModel, eldataModel, esmdataModel, esmrawModel, electricEnergyModel, huerawModel, arpModel, owmModel, netatmoModel, IOT_QuestionnaireAnswersModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_MinorkeyMeansModel, roomEnvModel, jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel, switchBotRawModel, switchBotDataModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel, IOT_GarminActivityFilesModel };
 
 //////////////////////////////////////////////////////////////////////
 // EOF
