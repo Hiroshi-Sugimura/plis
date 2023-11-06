@@ -313,7 +313,7 @@ let mainSwitchBot = {
 	storeData: async function (facilities) {
 		for (let d of facilities.deviceList) {
 			let det = facilities[d.deviceId];
-			// console.log( 'SwitchBot:dev:', d, ' detail:', det );
+			// console.log('SwitchBot:dev:', d, ' detail:', det);
 
 			try {
 				switch (d.deviceType) {
@@ -525,7 +525,7 @@ let mainSwitchBot = {
 				}
 			} catch (error) {
 				sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainSwitchBot', stackLog: `${error.message}, d:${d}, det:${det}` });
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.storeData() error:\x1b[32m', error, '\x1b[0m');
+				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.storeData() error:\x1b[32m', error, 'SwitchBot:dev:', d, ' detail:', det, '\x1b[0m');
 				throw error;
 			}
 		}
