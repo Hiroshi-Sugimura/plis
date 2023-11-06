@@ -57,7 +57,7 @@ let mainHALsync = {
 	start: async function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
 		config = await store.get('config.HAL', config);
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.initialize') : 0;
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.start()') : 0;
 
 		// mainHALsync.startUploadEldata(); 	// 家電操作ログのアップロードを開始、HALのDBがきついのでとりあえずやらない
 		sendIPCMessage("renewHALConfigView", config);  // configを送る、そうするとViewがkeyチェックのためにprofile取りに来る
@@ -99,7 +99,7 @@ let mainHALsync = {
 			if (major_data) {
 				updata.MajorResults = major_data.dataValues;
 				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- major_data:',
-										   JSON.stringify(major_data.dataValues, null, '  ')) : 0;
+					JSON.stringify(major_data.dataValues, null, '  ')) : 0;
 			} else {
 				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- major_data: null') : 0;
 			}
@@ -114,7 +114,7 @@ let mainHALsync = {
 			if (minor_data) {
 				updata.MinorResults = minor_data.dataValues;
 				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- minor_data:',
-										   JSON.stringify(minor_data.dataValues, null, '  ')) : 0;
+					JSON.stringify(minor_data.dataValues, null, '  ')) : 0;
 			} else {
 				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- minor_data: null') : 0;
 			}
@@ -166,7 +166,7 @@ let mainHALsync = {
 						where: { idIOT_MajorResults: id }
 					});
 					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Updated the latest record in the IOT_MajorResults table:') : 0;
-					config.debug ? console.log(JSON.stringify( updated_res.dataValues, null, '  ')) : 0;
+					config.debug ? console.log(JSON.stringify(updated_res.dataValues, null, '  ')) : 0;
 				} else {
 					// 今日のレコードがなければ、それを INSERT
 					rec = dndata.MajorResults;
@@ -176,7 +176,7 @@ let mainHALsync = {
 					// rec.updatedAt = now;
 					let ins_res = await IOT_MajorResultsModel.create(rec);
 					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a new record in the IOT_MajorResults table:') : 0;
-					config.debug ? console.log(JSON.stringify( ins_res.dataValues, null, '  ')) : 0;
+					config.debug ? console.log(JSON.stringify(ins_res.dataValues, null, '  ')) : 0;
 				}
 			}
 			// MinorResults テーブルのレコードを保存
@@ -207,7 +207,7 @@ let mainHALsync = {
 						where: { idIOT_MinorResults: id }
 					});
 					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Updated the latest record in the IOT_MinorResults table:') : 0;
-					config.debug ? console.log(JSON.stringify( updated_res.dataValues, null, '  ')) : 0;
+					config.debug ? console.log(JSON.stringify(updated_res.dataValues, null, '  ')) : 0;
 				} else {
 					// 今日のレコードがなければ、それを INSERT
 					rec = dndata.MinorResults;
@@ -217,7 +217,7 @@ let mainHALsync = {
 					// rec.updatedAt = now;
 					let ins_res = await IOT_MinorResultsModel.create(rec);
 					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a new record in the IOT_MinorResults table:') : 0;
-					config.debug ? console.log(JSON.stringify( ins_res.dataValues, null, '  ')) : 0;
+					config.debug ? console.log(JSON.stringify(ins_res.dataValues, null, '  ')) : 0;
 				}
 			}
 			// MinorkeyMeans テーブルのレコードを保存
@@ -247,10 +247,13 @@ let mainHALsync = {
 				console.log('Inserted ' + Object.keys(mdata.data).length + ' records in the MinorkeyMeans teble.');
 			}
 			*/
+			mainHALsync.garminDownload();
+
 			// メインプロセスに同期完了のイベントを送信
 			sendIPCMessage("HALSyncResponse", {});
 
 			// mainWindow.webContents.send('to-renderer', JSON.stringify({ cmd: "Synced", arg: {} }));
+
 
 		} catch (error) {
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.startSync() ', error);
@@ -259,14 +262,43 @@ let mainHALsync = {
 			};
 
 			sendIPCMessage('Error', {
-				datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), 
-				moduleName: 'mainHALsync.startSync()', 
+				datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"),
+				moduleName: 'mainHALsync.startSync()',
 				stackLog: `Detail: ${error}`
-			} );
+			});
 
 			// mainWindow.webContents.send('to-renderer', JSON.stringify({ cmd: "Synced", arg: arg }));
 		}
 	},
+
+	//----------------------------------------------------------------------------------------------
+	/**
+	 * @func garminDownload
+	 * @desc garminDownload
+	 * @async
+	 * @param {void} 
+	 * @return void
+	 * @throw error
+	 */
+	garminDownload: async function () {
+		mainHALsync.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.garminDownload().') : 0;
+
+		// HAL API トークンが登録されていなければ終了
+		if (!config.halApiToken) {
+			return;
+		}
+
+		const hal_garmin_download_url = HAL_API_BASE_URL + '/garminDownload';
+
+		// HAL からGarminデータをダウンロード
+		let dndata = await mainHALsync.httpGetRequest(hal_garmin_download_url);
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Downloading from HAL, garmin data:', JSON.stringify(dndata, null, '  ')) : 0;
+
+		// HAL からダウンロードしたGarminデータをローカルに保存
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Saving.') : 0;
+
+	},
+
 
 	//----------------------------------------------------------------------------------------------
 	/**
@@ -541,10 +573,10 @@ let mainHALsync = {
 		} catch (error) {
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| ', error);
 			sendIPCMessage('Error', {
-				datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), 
-				moduleName: 'mainHALsync.startUploadEldata()', 
+				datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"),
+				moduleName: 'mainHALsync.startUploadEldata()',
 				stackLog: `Detail: ${error}`
-			} );
+			});
 			setTimeout(mainHALsync.startUploadEldata, config.UPLOAD_START_INTERVAL, config);
 			return;
 		}
