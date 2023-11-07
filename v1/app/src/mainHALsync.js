@@ -8,7 +8,7 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-const { Op, eldataModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel, IOT_GarminActivityFilesModel } = require('./models/localDBModels');   // DBデータと連携
+const { Op, eldataModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel } = require('./models/localDBModels');   // DBデータと連携
 
 const https = require('https');
 
@@ -98,8 +98,8 @@ let mainHALsync = {
 			});
 			if (major_data) {
 				updata.MajorResults = major_data.dataValues;
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- major_data:',
-					JSON.stringify(major_data.dataValues, null, '  ')) : 0;
+				// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- major_data:', JSON.stringify(major_data.dataValues, null, '  ')) : 0;
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- major_data: found in DB') : 0;
 			} else {
 				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- major_data: null') : 0;
 			}
@@ -113,8 +113,8 @@ let mainHALsync = {
 			});
 			if (minor_data) {
 				updata.MinorResults = minor_data.dataValues;
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- minor_data:',
-					JSON.stringify(minor_data.dataValues, null, '  ')) : 0;
+				// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- minor_data:', JSON.stringify(minor_data.dataValues, null, '  ')) : 0;
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- minor_data: found in DB') : 0;
 			} else {
 				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- minor_data: null') : 0;
 			}
@@ -123,13 +123,15 @@ let mainHALsync = {
 			const hal_results_url = HAL_API_BASE_URL + '/results';
 
 			if (updata.MajorResults || updata.MinorResults) {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Uploading to HAL, updata:', JSON.stringify(updata, null, '  ')) : 0;
+				// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Uploading to HAL, updata:', JSON.stringify(updata, null, '  ')) : 0;
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Uploading to HAL') : 0;
 				await mainHALsync.httpPostRequest(hal_results_url, updata);
 			}
 
 			// HAL から成績データをダウンロード
 			let dndata = await mainHALsync.httpGetRequest(hal_results_url);
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Downloading from HAL, dndata:', JSON.stringify(dndata, null, '  ')) : 0;
+			// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Downloading from HAL, dndata:', JSON.stringify(dndata, null, '  ')) : 0;
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Downloading from HAL') : 0;
 
 			// HAL からダウンロードした成績データをローカルに保存
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Saving.') : 0;
@@ -166,7 +168,7 @@ let mainHALsync = {
 						where: { idIOT_MajorResults: id }
 					});
 					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Updated the latest record in the IOT_MajorResults table:') : 0;
-					config.debug ? console.log(JSON.stringify(updated_res.dataValues, null, '  ')) : 0;
+					// config.debug ? console.log(JSON.stringify(updated_res.dataValues, null, '  ')) : 0;
 				} else {
 					// 今日のレコードがなければ、それを INSERT
 					rec = dndata.MajorResults;
@@ -176,7 +178,7 @@ let mainHALsync = {
 					// rec.updatedAt = now;
 					let ins_res = await IOT_MajorResultsModel.create(rec);
 					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a new record in the IOT_MajorResults table:') : 0;
-					config.debug ? console.log(JSON.stringify(ins_res.dataValues, null, '  ')) : 0;
+					// config.debug ? console.log(JSON.stringify(ins_res.dataValues, null, '  ')) : 0;
 				}
 			}
 			// MinorResults テーブルのレコードを保存
@@ -207,7 +209,7 @@ let mainHALsync = {
 						where: { idIOT_MinorResults: id }
 					});
 					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Updated the latest record in the IOT_MinorResults table:') : 0;
-					config.debug ? console.log(JSON.stringify(updated_res.dataValues, null, '  ')) : 0;
+					// config.debug ? console.log(JSON.stringify(updated_res.dataValues, null, '  ')) : 0;
 				} else {
 					// 今日のレコードがなければ、それを INSERT
 					rec = dndata.MinorResults;
@@ -217,7 +219,7 @@ let mainHALsync = {
 					// rec.updatedAt = now;
 					let ins_res = await IOT_MinorResultsModel.create(rec);
 					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a new record in the IOT_MinorResults table:') : 0;
-					config.debug ? console.log(JSON.stringify(ins_res.dataValues, null, '  ')) : 0;
+					// config.debug ? console.log(JSON.stringify(ins_res.dataValues, null, '  ')) : 0;
 				}
 			}
 			// MinorkeyMeans テーブルのレコードを保存
@@ -251,9 +253,6 @@ let mainHALsync = {
 
 			// メインプロセスに同期完了のイベントを送信
 			sendIPCMessage("HALSyncResponse", {});
-
-			// mainWindow.webContents.send('to-renderer', JSON.stringify({ cmd: "Synced", arg: {} }));
-
 
 		} catch (error) {
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.startSync() ', error);
@@ -293,19 +292,279 @@ let mainHALsync = {
 		try {
 			// HAL からGarminデータをダウンロード
 			let dndata = await mainHALsync.httpGetRequest(hal_garmin_download_url);
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Downloading from HAL, garmin data:', JSON.stringify(dndata, null, '  ')) : 0;
+			// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Downloading garmin data from HAL', JSON.stringify(dndata, null, '  ')) : 0;
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Downloading garmin data from HAL') : 0;
 
 			// HAL からダウンロードしたGarminデータをローカルに保存
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Saving.') : 0;
 
-			// IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, , IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel, IOT_GarminActivityFilesModel
 			// Activities
+			if (dndata.Activities) {
+				// ダウンロードしたデータをテーブルに追加
+				await IOT_GarminActivitiesModel.findOrCreate({
+					where: {
+						idIOT_GarminActivities: dndata.Activities.idIOT_GarminActivities
+					},
+					defaults: {
+						idIOT_GarminActivities: dndata.Activities.idIOT_GarminActivities,
+						garminId: dndata.Activities.garminId,
+						garminAccessToken: dndata.Activities.garminAccessToken,
+						summaryId: dndata.Activities.summaryId,
+						activityId: dndata.Activities.activityId,
+						durationInSeconds: dndata.Activities.durationInSeconds,
+						startTimeInSeconds: dndata.Activities.startTimeInSeconds,
+						startTimeOffsetInSeconds: dndata.Activities.startTimeOffsetInSeconds,
+						activityType: dndata.Activities.activityType,
+						averageHeartRateInBeatsPerMinute: dndata.Activities.averageHeartRateInBeatsPerMinute,
+						averageRunCadenceInStepsPerMinute: dndata.Activities.averageRunCadenceInStepsPerMinute,
+						averageSpeedInMetersPerSecond: dndata.Activities.averageSpeedInMetersPerSecond,
+						averagePaceInMinutesPerKilometer: dndata.Activities.averagePaceInMinutesPerKilometer,
+						activeKilocalories: dndata.Activities.activeKilocalories,
+						deviceName: dndata.Activities.deviceName,
+						distanceInMeters: dndata.Activities.distanceInMeters,
+						maxHeartRateInBeatsPerMinute: dndata.Activities.maxHeartRateInBeatsPerMinute,
+						maxPaceInMinutesPerKilometer: dndata.Activities.maxPaceInMinutesPerKilometer,
+						maxRunCadenceInStepsPerMinute: dndata.Activities.maxRunCadenceInStepsPerMinute,
+						maxSpeedInMetersPerSecond: dndata.Activities.maxSpeedInMetersPerSecond,
+						steps: dndata.Activities.steps,
+						createdAt: dndata.Activities.createdAt,
+						updatedAt: dndata.Activities.updatedAt
+					}
+				});
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminActivitiesModel teble.') : 0;
+			} else {
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminActivitiesModel teble.') : 0;
+			}
+
 			// ActivityDetails
+			if (dndata.ActivityDetails) {
+				// ダウンロードしたデータをテーブルに追加
+				await IOT_GarminActivityDetailsModel.findOrCreate({
+					where: {
+						idIOT_GarminActivityDetails: dndata.ActivityDetails.idIOT_GarminActivityDetails
+					},
+					defaults: {
+						idIOT_GarminActivityDetails: dndata.ActivityDetails.idIOT_GarminActivityDetails,
+						garminId: dndata.ActivityDetails.garminId,
+						garminAccessToken: dndata.ActivityDetails.garminAccessToken,
+						summaryId: dndata.ActivityDetails.summaryId,
+						activityId: dndata.ActivityDetails.activityId,
+						summary: dndata.ActivityDetails.summary,
+						samples: dndata.ActivityDetails.samples,
+						laps: dndata.ActivityDetails.laps,
+						createdAt: dndata.ActivityDetails.createdAt,
+						updatedAt: dndata.ActivityDetails.updatedAt
+					}
+				});
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminActivityDetailsModel teble.') : 0;
+			} else {
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminActivityDetailsModel teble.') : 0;
+			}
+
 			// BodyComps
+			if (dndata.BodyComps) {
+				// ダウンロードしたデータをテーブルに追加
+				await IOT_GarminBodyCompsModel.findOrCreate({
+					where: {
+						idIOT_GarminBodyComps: dndata.BodyComps.idIOT_GarminBodyComps
+					},
+					defaults: {
+						idIOT_GarminBodyComps: dndata.BodyComps.idIOT_GarminBodyComps,
+						garminId: dndata.BodyComps.garminId,
+						garminAccessToken: dndata.BodyComps.garminAccessToken,
+						summaryId: dndata.BodyComps.summaryId,
+						muscleMassInGrams: dndata.BodyComps.muscleMassInGrams,
+						boneMassInGrams: dndata.BodyComps.boneMassInGrams,
+						bodyWaterInPercent: dndata.BodyComps.bodyWaterInPercent,
+						bodyFatInPercent: dndata.BodyComps.bodyFatInPercent,
+						bodyMassIndex: dndata.BodyComps.bodyMassIndex,
+						weightInGrams: dndata.BodyComps.weightInGrams,
+						measurementTimeInSeconds: dndata.BodyComps.measurementTimeInSeconds,
+						measurementTimeOffsetInSeconds: dndata.BodyComps.measurementTimeOffsetInSeconds,
+						createdAt: dndata.BodyComps.createdAt,
+						updatedAt: dndata.BodyComps.updatedAt
+					}
+				});
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminPulseoxModel teble.') : 0;
+			} else {
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminPulseoxModel teble.') : 0;
+			}
+
+			// Dailies
+			if (dndata.Dailies) {
+				// ダウンロードしたデータをテーブルに追加
+				await IOT_GarminDailiesModel.findOrCreate({
+					where: {
+						idIOT_GarminDailies: dndata.Dailies.idIOT_GarminDailies
+					},
+					defaults: {
+						idIOT_GarminDailies: dndata.Dailies.idIOT_GarminDailies,
+						garminId: dndata.Dailies.garminId,
+						garminAccessToken: dndata.Dailies.garminAccessToken,
+						summaryId: dndata.Dailies.startTimeInSeconds,
+						calendarDate: dndata.Dailies.timeOffsetBodyBatteryValues,
+						startTimeInSeconds: dndata.Dailies.calendarDate,
+						startTimeOffsetInSeconds: dndata.Dailies.timeOffsetStressLevelValues,
+						activityType: dndata.Dailies.timeOffsetBodyBatteryValues,
+						durationSeconds: dndata.Dailies.durationInSeconds,
+						step: dndata.Dailies.timeOffsetBodyBatteryValues,
+						distanceInMeters: dndata.Dailies.timeOffsetBodyBatteryValues,
+						activeTimeInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
+						activeKilocalories: dndata.Dailies.timeOffsetBodyBatteryValues,
+						bmrKilocalories: dndata.Dailies.timeOffsetBodyBatteryValues,
+						cunsumedCalories: dndata.Dailies.timeOffsetBodyBatteryValues,
+						moderateIntensityDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
+						vigorousIntensityDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
+						floorsClimbed: dndata.Dailies.timeOffsetBodyBatteryValues,
+						minHeartRateInBeatsPerMinute: dndata.Dailies.startTimeOffsetInSeconds,
+						averageHeartRateInBeatsPerMinute: dndata.Dailies.timeOffsetBodyBatteryValues,
+						maxHeartRateInBeatsPerMinute: dndata.Dailies.timeOffsetBodyBatteryValues,
+						restStressDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
+						timeOffsetHeartRateSamples: dndata.Dailies.timeOffsetBodyBatteryValues,
+						averageStressLevel: dndata.Dailies.timeOffsetBodyBatteryValues,
+						maxStressLevel: dndata.Dailies.timeOffsetBodyBatteryValues,
+						stressDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
+						activityStressDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
+						lowStressDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
+						mediumStressDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
+						highStressDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
+						stressQualifier: dndata.Dailies.timeOffsetBodyBatteryValues,
+						stepsGoal: dndata.Dailies.timeOffsetBodyBatteryValues,
+						netKilocaloriesGoal: dndata.Dailies.netKilocaloriesGoal,
+						intensityDurationGoalInSeconds: dndata.Dailies.intensityDurationGoalInSeconds,
+						floorsClimbedGoal: dndata.Dailies.floorsClimbedGoal,
+						createdAt: dndata.Dailies.createdAt,
+						updatedAt: dndata.Dailies.updatedAt
+					}
+				});
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminDailiesModel teble.') : 0;
+			} else {
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminDailiesModel teble.') : 0;
+			}
+
 			// Epochs
+			if (dndata.Epochs) {
+				// ダウンロードしたデータをテーブルに追加
+				await IOT_GarminEpochsModel.findOrCreate({
+					where: {
+						idIOT_GarminEpochs: dndata.Epochs.idIOT_GarminEpochs
+					},
+					defaults: {
+						idIOT_GarminEpochs: dndata.Epochs.idIOT_GarminEpochs,
+						garminId: dndata.Epochs.garminId,
+						garminAccessToken: dndata.Epochs.garminAccessToken,
+						summaryId: dndata.Epochs.summaryId,
+						startTimeInSeconds: dndata.Epochs.startTimeInSeconds,
+						startTimeOffsetInSeconds: dndata.Epochs.startTimeOffsetInSeconds,
+						activityType: dndata.Epochs.activityType,
+						durationInSeconds: dndata.Epochs.durationInSeconds,
+						activeTimeInSeconds: dndata.Epochs.activeTimeInSeconds,
+						steps: dndata.Epochs.steps,
+						distanceInMeters: dndata.Epochs.distanceInMeters,
+						activeKilocalories: dndata.Epochs.activeKilocalories,
+						met: dndata.Epochs.met,
+						intensity: dndata.Epochs.intensity,
+						meanMotionIntensity: dndata.Epochs.meanMotionIntensity,
+						maxMotionIntensity: dndata.Epochs.maxMotionIntensity,
+						createdAt: dndata.Epochs.createdAt,
+						updatedAt: dndata.Epochs.updatedAt
+					}
+				});
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminEpochsModel teble.') : 0;
+			} else {
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminEpochsModel teble.') : 0;
+			}
+
 			// MoveIQActivities
+			if (dndata.MoveIQActivities) {
+				// ダウンロードしたデータをテーブルに追加
+				await IOT_GarminMoveIQActivitiesModel.findOrCreate({
+					where: {
+						idIOT_GarminMoveIQActivities: dndata.MoveIQActivities.idIOT_GarminMoveIQActivities
+					},
+					defaults: {
+						idIOT_GarminMoveIQActivities: dndata.MoveIQActivities.idIOT_GarminMoveIQActivities,
+						garminId: dndata.MoveIQActivities.garminId,
+						garminAccessToken: dndata.MoveIQActivities.garminAccessToken,
+						summaryId: dndata.MoveIQActivities.summaryId,
+						calendarDate: dndata.MoveIQActivities.calendarDate,
+						startTimeInSeconds: dndata.MoveIQActivities.startTimeInSeconds,
+						offsetInSeconds: dndata.MoveIQActivities.offsetInSeconds,
+						durationInSeconds: dndata.MoveIQActivities.durationInSeconds,
+						activityType: dndata.MoveIQActivities.activityType,
+						activitySubType: dndata.MoveIQActivities.activitySubType,
+						createdAt: dndata.MoveIQActivities.createdAt,
+						updatedAt: dndata.MoveIQActivities.updatedAt
+					}
+				});
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminMoveIQActivitiesModel teble.') : 0;
+			} else {
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminMoveIQActivitiesModel teble.') : 0;
+			}
+
 			// Pulseox
+			if (dndata.Pulseox) {
+				// ダウンロードしたデータをテーブルに追加
+				await IOT_GarminPulseoxModel.findOrCreate({
+					where: {
+						idIOT_GarminPulseox: dndata.Pulseox.idIOT_GarminPulseox
+					},
+					defaults: {
+						idIOT_GarminPulseox: dndata.Pulseox.idIOT_GarminPulseox,
+						garminId: dndata.Pulseox.garminId,
+						garminAccessToken: dndata.Pulseox.garminAccessToken,
+						summaryId: dndata.Pulseox.summaryId,
+						calendarDate: dndata.Pulseox.calendarDate,
+						startTimeInSeconds: dndata.Pulseox.startTimeInSeconds,
+						durationInSeconds: dndata.Pulseox.durationInSeconds,
+						startTimeOffsetInSeconds: dndata.Pulseox.startTimeOffsetInSeconds,
+						timeOffsetSpo2Values: dndata.Pulseox.timeOffsetSpo2Values,
+						onDemand: dndata.Pulseox.onDemand,
+						createdAt: dndata.Pulseox.createdAt,
+						updatedAt: dndata.Pulseox.updatedAt
+					}
+				});
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminPulseoxModel teble.') : 0;
+			} else {
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminPulseoxModel teble.') : 0;
+			}
+
 			// Sleeps
+			if (dndata.Sleeps) {
+				// ダウンロードしたデータをテーブルに追加
+				await IOT_GarminSleepsModel.findOrCreate({
+					where: {
+						idIOT_GarminSleeps: dndata.Sleeps.idIOT_GarminSleeps
+					},
+					defaults: {
+						idIOT_GarminSleeps: dndata.Sleeps.idIOT_GarminSleeps,
+						garminId: dndata.Sleeps.garminId,
+						garminAccessToken: dndata.Sleeps.garminAccessToken,
+						summaryId: dndata.Sleeps.summaryId,
+						calendarDate: dndata.Sleeps.calendarDate,
+						startTimeInSeconds: dndata.Sleeps.startTimeInSeconds,
+						startTimeOffsetInSeconds: dndata.Sleeps.startTimeOffsetInSeconds,
+						durationInSeconds: dndata.Sleeps.durationInSeconds,
+						unmeasurableSleepInSeconds: dndata.Sleeps.unmeasurableSleepInSeconds,
+						deepSleepDurationInSeconds: dndata.Sleeps.deepSleepDurationInSeconds,
+						lightSleepDurationInSeconds: dndata.Sleeps.lightSleepDurationInSeconds,
+						remSleepInSeconds: dndata.Sleeps.remSleepInSeconds,
+						awakeDurationInSeconds: dndata.Sleeps.awakeDurationInSeconds,
+						sleepLevelsMap: dndata.Sleeps.sleepLevelsMap,
+						validation: dndata.Sleeps.validation,
+						timeOffsetSleepRespiration: dndata.Sleeps.timeOffsetSleepRespiration,
+						timeOffsetSleepSpo2: dndata.Sleeps.timeOffsetSleepSpo2,
+						timeOffsetSleepSpo2: dndata.Sleeps.timeOffsetSleepSpo2,
+						overallSleepScore: dndata.Sleeps.overallSleepScore,
+						createdAt: dndata.Sleeps.createdAt,
+						updatedAt: dndata.Sleeps.updatedAt
+					}
+				});
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminSleepsModel teble.') : 0;
+			} else {
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminSleepsModel teble.') : 0;
+			}
+
 			// StressDetails
 			if (dndata.StressDetails) {
 				// ダウンロードしたデータをテーブルに追加
@@ -317,6 +576,7 @@ let mainHALsync = {
 						idIOT_GarminStressDetails: dndata.StressDetails.idIOT_GarminStressDetails,
 						garminId: dndata.StressDetails.garminId,
 						garminAccessToken: dndata.StressDetails.garminAccessToken,
+						summaryId: dndata.StressDetails.summaryId,
 						startTimeInSeconds: dndata.StressDetails.startTimeInSeconds,
 						startTimeOffsetInSeconds: dndata.StressDetails.startTimeOffsetInSeconds,
 						durationInSeconds: dndata.StressDetails.durationInSeconds,
@@ -327,7 +587,9 @@ let mainHALsync = {
 						updatedAt: dndata.StressDetails.updatedAt
 					}
 				});
-				console.log('Inserted a record in the IOT_GarminStressDetailsModel teble.');
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminStressDetailsModel teble.') : 0;
+			} else {
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminStressDetailsModel teble.') : 0;
 			}
 
 			// UserMetrics
@@ -339,8 +601,8 @@ let mainHALsync = {
 					},
 					defaults: {
 						idIOT_GarminUserMetricsDetails: dndata.UserMetrics.idIOT_GarminUserMetrics,
-						garminId: dndata.StressDetails.garminId,
-						garminAccessToken: dndata.StressDetails.garminAccessToken,
+						garminId: dndata.UserMetrics.garminId,
+						garminAccessToken: dndata.UserMetrics.garminAccessToken,
 						summaryId: dndata.UserMetrics.summaryId,
 						calendarDate: dndata.UserMetrics.calendarDate,
 						vo2Max: dndata.UserMetrics.vo2Max,
@@ -349,7 +611,9 @@ let mainHALsync = {
 						updatedAt: dndata.UserMetrics.updatedAt
 					}
 				});
-				console.log('Inserted a record in the IOT_GarminUserMetrics teble.');
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminUserMetrics teble.') : 0;
+			} else {
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminUserMetrics teble.') : 0;
 			}
 
 
