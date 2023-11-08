@@ -59,7 +59,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @param {void}
 	 * @return {void}
 	 */
-	window.renewFacilitiesEL = function (arg) { //facilitiesHue = json = arg; // 機器情報確保
+	window.renewFacilitiesEL = function (arg) { // facilitiesEL = json = arg; // 機器情報確保
 		txtELLog.value = JSON.stringify(arg, null, '  ');
 
 		facilitiesEL = arg; // 機器情報確保
@@ -88,13 +88,20 @@ window.addEventListener('DOMContentLoaded', function () {
 			let EOJs = facilitiesEL[ip].EOJs;
 			EOJs.forEach((eoj) => {
 				// console.log('-- IP', ip, 'EOJ', eoj);
-				let obj = eoj.split(/\(|\)/);  // マルかっこで分割
-				if (obj[1] === '0ef001') { return; } // Node Profileはコントローラとしては無視, eachではcontinueではなくreturn
+				try {
+					let obj = eoj.split(/\(|\)/);  // マルかっこで分割
+					if (obj[1] === '0ef001') { return; } // Node Profileはコントローラとしては無視, eachではcontinueではなくreturn
 
-				doc += "<div class='LinearLayoutChild'> <section>"
-					+ `<span id='ELSettingsButton' class='fa-solid fa-gear el-settings-btn' onclick='window.ELSettings("${ip}", "${eoj}");'> </span>`
-					+ window.createControlELButton(facilitiesEL, ip, eoj)
-					+ "</section> </div>";  // ボタン設置
+					doc += "<div class='LinearLayoutChild'> <section>"
+						+ `<span id='ELSettingsButton' class='fa-solid fa-gear el-settings-btn' onclick='window.ELSettings("${ip}", "${eoj}");'> </span>`
+						+ window.createControlELButton(facilitiesEL, ip, eoj)
+						+ "</section> </div>";  // ボタン設置
+
+				} catch (error) {
+					console.error('Error: subEL.window.renewFacilitiesEL() control tab, error:', error);
+					console.error('ip:', ip, 'eoj:', eoj);
+					detailDoc += '</dl></td></tr>';
+				}
 			});
 		});
 
@@ -110,19 +117,25 @@ window.addEventListener('DOMContentLoaded', function () {
 
 			let EOJs = facilitiesEL[ip].EOJs;
 			EOJs.forEach((eoj) => {
-				let obj = eoj.split(/\(|\)/);  // (と)で分割
+				try {
+					let obj = eoj.split(/\(|\)/);  // (と)で分割
 
-				// icon
-				detailDoc += "<tr><td class='opc'><img src=\"./img/" + obj[1].substring(0, 2) + ".png\" width=50 /><br />" + obj[0] + "</td>";
-				detailDoc += '<td class="edt">\n<dl>';
+					// icon
+					detailDoc += "<tr><td class='opc'><img src=\"./img/" + obj[1].substring(0, 2) + ".png\" width=50 /><br />" + obj[0] + "</td>";
+					detailDoc += '<td class="edt">\n<dl>';
 
-				// EDT
-				let EPCs = facilitiesEL[ip][eoj].EPCs;
+					// EDT
+					let EPCs = facilitiesEL[ip][eoj].EPCs;
 
-				EPCs.forEach((epc) => {
-					detailDoc += "<dt>" + epc + "</dt><dd>" + facilitiesEL[ip][eoj][epc] + "</dd>\n";
-				});
-				detailDoc += '</dl></td></tr>';
+					EPCs.forEach((epc) => {
+						detailDoc += "<dt>" + epc + "</dt><dd>" + facilitiesEL[ip][eoj][epc] + "</dd>\n";
+					});
+					detailDoc += '</dl></td></tr>';
+				} catch (error) {
+					console.error('Error: subEL.window.renewFacilitiesEL() details tab error:', error);
+					console.error('ip:', ip, 'eoj:', eoj);
+					detailDoc += '</dl></td></tr>';
+				}
 			});
 			detailDoc += "</table>";
 		});

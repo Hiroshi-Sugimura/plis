@@ -78,7 +78,7 @@ let mainIkea = {
 			let co = await mainIkea.startCore((facilities) => {
 				persist = facilities;
 				if (!isObjEmpty(persist)) {
-					sendIPCMessage("fclIKEA", persist);
+					sendIPCMessage("fclIkea", persist);
 				}
 			});
 

@@ -64,7 +64,7 @@ PLISでは多種多様なIoT商品のAPI及びプロトコルを利用してい�
 
 # Logs
 
-- 1.1.4 EL旧型探索機能追加、HAL同期機能の追加、グラフ表示のバグ修正、カレンダーの日替わり自動更新、スマメ安定動作オプション追加、SwitchBot　API ver.1.1対応（かわりに制御機能がデグレした可能性あり）、ElectronのコアバージョンアップによってClipboard利用が厳しくなったのでしばらくはconfig.jsonに直接pasteしてください、再起動時にELの設定がdisableになるバグ修正、ELの電力量センサクラス対応（ただしELconvモジュールが計測値計算できていないので電力量が表示おかしい）、ELcontrolのデフォルト表記を修正、IKEA tradfriに表示対応、Detailsを見やすくした、HALとのGarminデータ連携機能追加、SwitchBotでのエラーログ処理、HALと電力スマメのSecretTextの見た目処理
+- 1.1.4 EL旧型探索機能追加、HAL同期機能の追加、グラフ表示のバグ修正、カレンダーの日替わり自動更新、スマメ安定動作オプション追加、SwitchBot　API ver.1.1対応（かわりに制御機能がデグレした可能性あり）、ElectronのコアバージョンアップによってClipboard利用が厳しくなったのでしばらくはconfig.jsonに直接pasteしてください、再起動時にELの設定がdisableになるバグ修正、ELの電力量センサクラス対応（ただしELconvモジュールが計測値計算できていないので電力量が表示おかしい）、ELcontrolのデフォルト表記を修正、IKEA tradfriに表示対応とエラー対応、Detailsを見やすくした、HALとのGarminデータ連携機能追加、SwitchBotでのエラーログ処理、HALと電力スマメのSecretTextの見た目処理、ELの電力量センサにてデータ未取得時のsplitの保護、
 - 1.1.3 解析不能ELパケットを受信したときにダイアログではなくエラーメッセージとする。
 - 1.1.2 SwtichBot Plug Mini対応、エラーの画面出力整理、エラーログのルート作成、Moduleライセンスの表デザイン変更・URLリンク、about PLIS対応、ページ内検索暫定対応、EL ver. 1.0系サーチ対応、無駄なログ削除、パッケージ更新、拡大縮小
 - 1.1.1 Store配布

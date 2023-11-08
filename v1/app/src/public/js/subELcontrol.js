@@ -26,7 +26,15 @@ window.addEventListener('DOMContentLoaded', function () {
 		facilitiesEL = _facilitiesEL; // ボタン更新とともに、facilitiesELも更新しておく
 
 		let ret = "";
-		let obj = eoj.split(/\(|\)/);  // マルかっこで分割
+		let obj = "";
+		try {
+			obj = eoj.split(/\(|\)/);  // マルかっこで分割
+		} catch (error) {
+			console.error('Error: subEL.window.renewFacilitiesEL() control tab, error:', error);
+			console.error('ip:', ip, 'eoj:', eoj);
+			return;
+		}
+
 		if (obj[1] === '0ef001') { return; } // Node Profileはコントローラとしては無視, eachではcontinueではなくreturn
 
 		let operatingStatus = facilitiesEL[ip][eoj]["動作状態(80)"];
@@ -56,7 +64,11 @@ window.addEventListener('DOMContentLoaded', function () {
 				break;
 
 			case "0022": // 電力量センサ
-				let volt = facilitiesEL[ip][eoj]["実効電圧値計測値(E5)"].split('V')[0];
+				let volt = undefined;
+				if (facilitiesEL[ip][eoj]["実効電圧値計測値(E5)"]) {
+					volt = facilitiesEL[ip][eoj]["実効電圧値計測値(E5)"].split('V')[0];
+				}
+
 				let watt = facilitiesEL[ip][eoj]["小容量センサ瞬時電力値計測値(E2)"];
 				ret = "<div class='tooltip'><img src=\"./img/0022.png\" class='el-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + obj[0] + "<br>";
 				ret += "場所:" + instLocation + "<br>";
