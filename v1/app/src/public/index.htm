@@ -501,24 +501,19 @@
 						<label class="haltab_item" for="general"><i class="fa-solid fa-chart-pie"></i><span class="omitable"> 総合</span></label>
 
 						<input id="clothing" type="radio" name="haltab_item">
-						<label class="haltab_item" for="clothing"> <i class="fa-solid fa-shirt"></i><span class="omitable">
-								衣服</span></label>
+						<label class="haltab_item" for="clothing"> <i class="fa-solid fa-shirt"></i><span class="omitable">衣服</span></label>
 
 						<input id="food" type="radio" name="haltab_item">
-						<label class="haltab_item" for="food"><i class="fa-solid fa-utensils"></i> <span class="omitable">
-								食事</span></label>
+						<label class="haltab_item" for="food"><i class="fa-solid fa-utensils"></i> <span class="omitable">食事</span></label>
 
 						<input id="housing" type="radio" name="haltab_item">
-						<label class="haltab_item" for="housing"><i class="fa-solid fa-house"></i> <span class="omitable">
-								住居</span></label>
+						<label class="haltab_item" for="housing"><i class="fa-solid fa-house"></i> <span class="omitable">住居</span></label>
 
 						<input id="physical" type="radio" name="haltab_item">
-						<label class="haltab_item" for="physical"><i class="fa-solid fa-person"></i> <span class="omitable">
-								身体</span></label>
+						<label class="haltab_item" for="physical"><i class="fa-solid fa-person"></i> <span class="omitable">身体</span></label>
 
 						<input id="mental" type="radio" name="haltab_item">
-						<label class="haltab_item" for="mental"><i class="fa-solid fa-heart"></i> <span class="omitable">
-								心・絆</span></label>
+						<label class="haltab_item" for="mental"><i class="fa-solid fa-heart"></i> <span class="omitable">心・絆</span></label>
 
 						<input id="ecology" type="radio" name="haltab_item">
 						<label class="haltab_item" for="ecology"><i class="fa-solid fa-earth-americas"></i> <span class="omitable"> エコ</span></label>
@@ -1257,7 +1252,7 @@
 					<!-- ユーザの個人情報 -->
 					<a name="userProfileConfig"></a>
 					<details class="config">
-						<summary class="config" id="userProfileDetail">ユーザプロファイル</summary>
+						<summary class="config" id="userProfileDetail"><i class="fa-solid fa-person"></i>ユーザプロファイル</summary>
 						<div class="p">
 							ニックネーム: <input id="inUserNickname" type="text" value="" /> <br>
 							年齢: <form class="secretBorder inline"><input id="inUserAge" type="password" value="" class="secretText" inputmode="numeric" /><span id="inUserAgeButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inUserAge');"></span></form> 歳
@@ -1276,7 +1271,7 @@
 					<!-- 気象庁、JMA -->
 					<a name="jmaConfig"></a>
 					<details class="config" id="jmaConfigDetail">
-						<summary class="config">気象庁</summary>
+						<summary class="config"><i class="fa-solid fa-sun"></i> 気象庁</summary>
 						<div class="p">
 							天気予報の地域設定ができます。<br>
 							地域: <select id="inJmaArea" size="1" onChange="window.inJmaArea_Change();" /></select> 地域コード:
@@ -1289,7 +1284,7 @@
 					<!-- HAL -->
 					<a name="HALConfig"></a>
 					<details class="config">
-						<summary class="config">HAL (Home-life Assessment List) 連携設定</summary>
+						<summary class="config"><i class="fa-solid fa-cloud"></i> HAL (Home-life Assessment List) 連携設定</summary>
 
 						<div class="p">
 							クラウドサービスHALと連携し、生活状況を得点化して見える化します。<br>
@@ -1327,7 +1322,7 @@
 					<!-- ESM: Electricity Smart Meter -->
 					<a name="ElectricSmartMeter"></a>
 					<details class="config" id="ESMConfigDetails">
-						<summary class="config">電力スマートメータ</summary>
+						<summary class="config"><i class="fa-solid fa-bolt"></i> 電力スマートメータ</summary>
 						<div class="p">
 							<label><input type="checkbox" id="inESMUse">Use Electric Smart Meter</label><br>
 							Donble Type: <select id="inDongleType" size="1" />
@@ -1361,7 +1356,7 @@
 					<!-- Philips hue -->
 					<a name="HueConfig"></a>
 					<details class="config" id="HueConfigDetails">
-						<summary class="config">Philips hue</summary>
+						<summary class="config"><i class="fa-solid fa-house"></i> Philips hue</summary>
 						<div class="p">
 							すでにKeyをお持ちのかたは、Keyに入力したあとチェックボックスを有効にしてください。<br>
 							まだKeyをお持ちでないかたは、Use Hueをチェックするとダイアログが出ますので，HueのGatewayのアクセススイッチを押してください。<br>
@@ -1376,7 +1371,7 @@
 					<!-- Ikea Tradfri -->
 					<a name="IkeaConfig"></a>
 					<details class="config" id="IkeaConfigDetails">
-						<summary class="config">IKEA Tradfri</summary>
+						<summary class="config"><i class="fa-solid fa-house"></i> IKEA Tradfri</summary>
 						<div class="p">
 							すでにIdentityとPSKをお持ちのかたは、（key, identity, psk）の3か所に入力したあとチェックボックスを有効にしてください。<br>
 							まだIdentityとPSKをお持ちでないかたは、ゲートウェイの背面にあるKeyのみをSerucity codeに入力してからUse IKEA
@@ -1397,7 +1392,7 @@
 					<!-- OpenWeatherMap -->
 					<a name="OpenWeatherMapConfig"></a>
 					<details class="config" id="OWMConfigDetails">
-						<summary class="config" id="h2owmConfig">OpenWeatherMap (外部サービス)</summary>
+						<summary class="config" id="h2owmConfig"><i class="fa-solid fa-sun"></i> OpenWeatherMap (外部サービス)</summary>
 						<div class="p">
 							<a href="#OpenWeatherMapConfig" onClick='window.URLopen("https://openweathermap.org/");'>OpenWeatherMap</a>
 							（こちらから無料アカウントを作成し，API keyを取得してください。）<br>
@@ -1417,7 +1412,7 @@
 					<!-- Netatmo -->
 					<a name="NetatmoConfig"></a>
 					<details class="config" id="NetatmoConfigDetails">
-						<summary class="config" id="netatmoConfig">Netatmo (外部サービス)</summary>
+						<summary class="config" id="netatmoConfig"><i class="fa-solid fa-sun"></i> Netatmo (外部サービス)</summary>
 						<div class="p">
 							<label><input type="checkbox" id="inNetatmoUse" value="on">Use Netatmo</label><br>
 							Client ID: <form class="secretBorder inline"><input id="inNetatmoID" type="password" value="" class="secretText" size="50" /><span id="inNetatmoIDButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoID');"></span></form>
@@ -1447,7 +1442,7 @@
 					<!-- SwitchBot -->
 					<a name="SwitchBotConfig"></a>
 					<details class="config" id="SwitchBotConfigDetails">
-						<summary class="config">SwitchBot</summary>
+						<summary class="config"><i class="fa-solid fa-house"></i> SwitchBot</summary>
 						<div class="p">
 							すでにTokenをお持ちのかたは、入力したあとチェックボックスを有効にしてください。<br>
 							まだTokenをお持ちでないかたは、下記の案内に従ってTokenを取得してください。<br>
@@ -1474,7 +1469,7 @@
 					<!-- ECHONET Lite -->
 					<a name="ELConfig"></a>
 					<details class="config" id="ELConfigDetails">
-						<summary class="config">ECHONET Lite</summary>
+						<summary class="config"><i class="fa-solid fa-house"></i> ECHONET Lite</summary>
 						<div class="p">
 							ECHONET Lite機器を利用したくないかたは、チェックボックスを無効にしてください。（default: checked）<br>
 							<br>
@@ -1488,7 +1483,7 @@
 					<!-- Omron -->
 					<a name="OmronConfig"></a>
 					<details class="config" id="OmronConfigDetails">
-						<summary class="config">OMRON USB Sensor</summary>
+						<summary class="config"><i class="fa-brands fa-usb"></i> OMRON USB Sensor</summary>
 						<div class="p">
 							OmronのUSBセンサをお持ちのかたは、デバイスドライバをインストールしてから、USBに挿してチェックボックスを有効にしてください。<br>
 							<br>
@@ -1519,7 +1514,7 @@
 					<!-- I/O DATA, UD-CO2S -->
 					<a name="Co2sConfig"></a>
 					<details class="config" id="Co2sConfigDetails">
-						<summary class="config">I/O DATA CO2センサー USB Sensor</summary>
+						<summary class="config"><i class="fa-brands fa-usb"></i> I/O DATA CO2センサー USB Sensor</summary>
 						<div class="p">
 							I/O DATAのUSBセンサ (UD-CO2S)をお持ちのかたは、USBに挿してチェックボックスを有効にしてください。<br>
 							<br>
@@ -1540,7 +1535,7 @@
 					<!-- System -->
 					<a name="SystemConfig"></a>
 					<details class="config" id="SystemConfigDetails">
-						<summary class="config">System</summary>
+						<summary class="config"><i class="fa-solid fa-wrench"></i> System</summary>
 						<div class="p">
 							スクリーンモード： <select id="inScreenMode" size="1">
 								<option value="window">Window</option>
@@ -1596,7 +1591,7 @@
 					<!-- Log -->
 					<a name="SystemLog"></a>
 					<details class="config" id="LogConfigDetails">
-						<summary class="config">Log</summary>
+						<summary class="config"><i class="fa-solid fa-list"></i> Log</summary>
 						<div class="p">
 
 							<details class="config" id="SystemLog_ELLog">
@@ -1623,7 +1618,7 @@
 
 					<a name="TermsConfig"></a>
 					<details class="config" id="TermsConfigDetails">
-						<summary class="config">Legal / 規約</summary>
+						<summary class="config"><i class="fa-solid fa-list"></i> Legal / 規約</summary>
 						<ul>
 							<li><a href="#" onClick='window.URLopen("https://plis.sugi-lab.net/terms.html")'>
 									Terms / 利用規約 (外部サイトが開きます)
@@ -1640,7 +1635,7 @@
 
 					<a name="LicenseConfig"></a>
 					<details class="config" id="LicenseConfigDetails">
-						<summary class="config">Modules' license</summary>
+						<summary class="config"><i class="fa-solid fa-list"></i> Modules' license</summary>
 						<div class="p sortable" id="divLicenses"> </div>
 
 						<div class="p">
