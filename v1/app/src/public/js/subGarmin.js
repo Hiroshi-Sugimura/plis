@@ -91,7 +91,20 @@ window.addEventListener('DOMContentLoaded', function () {
 	let getEpochsHtml = function (data) {
 		let doc = '<h3>Epochs</h3>';
 		if (data) {
-			doc += `<table><tr><td></td><td>${JSON.stringify(data, 1, '<br>')}</td></table>`
+			doc += `<div class="p"><table>
+			<tr><td>startTimeInSeconds</td><td>${data.startTimeInSeconds}</td>
+			<tr><td>startTimeOffsetInSeconds</td><td>${data.startTimeOffsetInSeconds}</td>
+			<tr><td>activityType</td><td>${data.activityType}</td>
+			<tr><td>durationInSeconds</td><td>${data.durationInSeconds}</td>
+			<tr><td>activeTimeInSeconds</td><td>${data.activeTimeInSeconds}</td>
+			<tr><td>steps</td><td>${data.steps}</td>
+			<tr><td>distanceInMeters</td><td>${data.distanceInMeters}</td>
+			<tr><td>activeKilocalories</td><td>${data.activeKilocalories}</td>
+			<tr><td>met</td><td>${data.met}</td>
+			<tr><td>intensity</td><td>${data.intensity}</td>
+			<tr><td>meanMotionIntensity</td><td>${data.meanMotionIntensity}</td>
+			<tr><td>maxMotionIntensity</td><td>${data.maxMotionIntensity}</td>
+			</table></div>`
 		} else {
 			doc += `<div class='p'>No data</div>`
 		}
@@ -101,7 +114,14 @@ window.addEventListener('DOMContentLoaded', function () {
 	let getMoveIQActivitiesHtml = function (data) {
 		let doc = '<h3>MoveIQActivities</h3>';
 		if (data) {
-			doc += `<table><tr><td></td><td>${JSON.stringify(data, 1, '<br>')}</td></table>`
+			doc += `<div class="p"><table>
+			<tr><td>calendarDate</td><td>${data.calendarDate}</td>
+			<tr><td>startTimeInSeconds</td><td>${data.startTimeInSeconds}</td>
+			<tr><td>offsetInSeconds</td><td>${data.offsetInSeconds}</td>
+			<tr><td>durationInSeconds</td><td>${data.durationInSeconds}</td>
+			<tr><td>activityType</td><td>${data.activityType}</td>
+			<tr><td>activitySubType</td><td>${data.activitySubType}</td>
+			</table></div>`
 		} else {
 			doc += `<div class='p'>No data</div>`
 		}
@@ -111,7 +131,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	let getPulseoxHtml = function (data) {
 		let doc = '<h3>Pulseox</h3>';
 		if (data) {
-			doc += `<table><tr><td></td><td>${JSON.stringify(data, 1, '<br>')}</td></table>`
+			doc += `<div class="p"><table><tr><td></td><td>${JSON.stringify(data, 1, '<br>')}</td></table></div>`
 		} else {
 			doc += `<div class='p'>No data</div>`
 		}
@@ -121,7 +141,23 @@ window.addEventListener('DOMContentLoaded', function () {
 	let getSleepsHtml = function (data) {
 		let doc = '<h3>Sleeps</h3>';
 		if (data) {
-			doc += `<table><tr><td></td><td>${JSON.stringify(data, 1, '<br>')}</td></table>`
+			doc += `<div class="p"><table>
+			<tr><td>calendarDate</td><td>${data.calendarDate}</td>
+			<tr><td>startTimeInSeconds</td><td>${data.startTimeInSeconds}</td>
+			<tr><td>startTimeOffsetInSeconds</td><td>${data.startTimeOffsetInSeconds}</td>
+			<tr><td>durationInSeconds</td><td>${data.durationInSeconds}</td>
+			<tr><td>unmeasurableSleepInSeconds</td><td>${data.unmeasurableSleepInSeconds}</td>
+			<tr><td>deepSleepDurationInSeconds</td><td>${data.deepSleepDurationInSeconds}</td>
+			<tr><td>lightSleepDurationInSeconds</td><td>${data.lightSleepDurationInSeconds}</td>
+			<tr><td>remSleepInSeconds</td><td>${data.remSleepInSeconds}</td>
+			<tr><td>awakeDurationInSeconds</td><td>${data.awakeDurationInSeconds}</td>
+			<tr><td>sleepLevelsMap</td><td>${data.sleepLevelsMap}</td>
+			<tr><td>validation</td><td>${data.validation}</td>
+			<tr><td>timeOffsetSleepRespiration</td><td>${data.timeOffsetSleepRespiration}</td>
+			<tr><td>timeOffsetSleepSpo2</td><td>${data.timeOffsetSleepSpo2}</td>
+			<tr><td>overallSleepScore</td><td>${data.overallSleepScore}</td>
+			<tr><td>sleepScores</td><td>${data.sleepScores}</td>
+			</table></div>`
 		} else {
 			doc += `<div class='p'>No data</div>`
 		}
@@ -131,7 +167,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	let getStressDetailsHtml = function (data) {
 		let doc = '<h3>StressDetails</h3>';
 		if (data) {
-			doc += `<table><tr><td></td><td>${JSON.stringify(data, 1, '<br>')}</td></table>`
+			doc += `<div class="p"><table><tr><td></td><td>${JSON.stringify(data, 1, '<br>')}</td></table></div>`
 		} else {
 			doc += `<div class='p'>No data</div>`
 		}
@@ -141,7 +177,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	let getUserMetricsHtml = function (data) {
 		let doc = '<h3>UserMetrics</h3>';
 		if (data) {
-			doc += `<table><tr><td></td><td>${JSON.stringify(data, 1, '<br>')}</td></table>`
+			doc += `<div class="p"><table><tr><td></td><td>${JSON.stringify(data, 1, '<br>')}</td></table></div>`
 		} else {
 			doc += `<div class='p'>No data</div>`
 		}
