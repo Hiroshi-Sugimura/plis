@@ -19,7 +19,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	let divGarmin = document.getElementById('divGarmin'); // contents
 
-	/** 
+	/**
 	 * @func window.showGarminData
 	 * @desc mainからの情報で，Garmin関係のhtmlを変更する
 	 * @param {void}
@@ -61,7 +61,11 @@ window.addEventListener('DOMContentLoaded', function () {
 	let getActivityDetailsHtml = function (data) {
 		let doc = '<h3>Activity Details</h3>';
 		if (data) {
-			doc += `<table><tr><td></td><td>${JSON.stringify(data, 1, '<br>')}</td></table>`
+			doc += `<div class="p"><table>
+			<tr><td>summary</td><td>${JSON.stringify( JSON.parse(data.summary), 1, '<br>')}</td>
+			<tr><td>samples</td><td>${data.samples}</td>
+			<tr><td>laps</td><td>${data.laps}</td>
+			</table></div>`
 		} else {
 			doc += `<div class='p'>No data</div>`
 		}
@@ -71,7 +75,16 @@ window.addEventListener('DOMContentLoaded', function () {
 	let getBodyCompsHtml = function (data) {
 		let doc = '<h3>Body Comps</h3>';
 		if (data) {
-			doc += `<table><tr><td></td><td>${JSON.stringify(data, 1, '<br>')}</td></table>`
+			doc += `<div class="p"><table>
+			<tr><td>muscleMassInGrams</td><td>${data.muscleMassInGrams}</td>
+			<tr><td>boneMassInGrams</td><td>${data.boneMassInGrams}</td>
+			<tr><td>bodyWaterInPercent</td><td>${data.bodyWaterInPercent}</td>
+			<tr><td>bodyFatInPercent</td><td>${data.bodyFatInPercent}</td>
+			<tr><td>bodyMassIndex</td><td>${data.bodyMassIndex}</td>
+			<tr><td>weightInGrams</td><td>${data.weightInGrams}</td>
+			<tr><td>measurementTimeInSeconds</td><td>${data.measurementTimeInSeconds}</td>
+			<tr><td>measurementTimeOffsetInSeconds</td><td>${data.measurementTimeOffsetInSeconds}</td>
+			</table></div>`
 		} else {
 			doc += `<div class='p'>No data</div>`
 		}
@@ -81,7 +94,40 @@ window.addEventListener('DOMContentLoaded', function () {
 	let getDailiesHtml = function (data) {
 		let doc = '<h3>Dailies</h3>';
 		if (data) {
-			doc += `<table><tr><td></td><td>${JSON.stringify(data, 1, '<br>')}</td></table>`
+			doc += `<div class="p"><table>
+			<tr><td>calendarDate</td><td>${data.calendarDate}</td>
+			<tr><td>startTimeInSeconds</td><td>${data.startTimeInSeconds}</td>
+			<tr><td>startTimeOffsetInSeconds</td><td>${data.startTimeOffsetInSeconds}</td>
+			<tr><td>activityType</td><td>${data.activityType}</td>
+			<tr><td>durationInSeconds</td><td>${data.durationInSeconds}</td>
+			<tr><td>steps</td><td>${data.steps}</td>
+			<tr><td>distanceInMeters</td><td>${data.distanceInMeters}</td>
+			<tr><td>activeTimeInSeconds</td><td>${data.activeTimeInSeconds}</td>
+			<tr><td>activeKilocalories</td><td>${data.activeKilocalories}</td>
+			<tr><td>bmrKilocalories</td><td>${data.bmrKilocalories}</td>
+			<tr><td>cunsumedCalories</td><td>${data.cunsumedCalories}</td>
+			<tr><td>moderateIntensityDurationInSeconds</td><td>${data.moderateIntensityDurationInSeconds}</td>
+			<tr><td>vigorousIntensityDurationInSeconds</td><td>${data.vigorousIntensityDurationInSeconds}</td>
+			<tr><td>floorsClimbed</td><td>${data.floorsClimbed}</td>
+			<tr><td>minHeartRateInBeatsPerMinute</td><td>${data.minHeartRateInBeatsPerMinute}</td>
+			<tr><td>averageHeartRateInBeatsPerMinute</td><td>${data.averageHeartRateInBeatsPerMinute}</td>
+			<tr><td>maxHeartRateInBeatsPerMinute</td><td>${data.maxHeartRateInBeatsPerMinute}</td>
+			<tr><td>restingHeartRateInBeatsPerMinute</td><td>${data.restingHeartRateInBeatsPerMinute}</td>
+			<tr><td>timeOffsetHeartRateSamples</td><td>${data.timeOffsetHeartRateSamples}</td>
+			<tr><td>averageStressLevel</td><td>${data.averageStressLevel}</td>
+			<tr><td>maxStressLevel</td><td>${data.maxStressLevel}</td>
+			<tr><td>stressDurationInSeconds</td><td>${data.stressDurationInSeconds}</td>
+			<tr><td>restStressDurationInSeconds</td><td>${data.restStressDurationInSeconds}</td>
+			<tr><td>activityStressDurationInSeconds</td><td>${data.activityStressDurationInSeconds}</td>
+			<tr><td>lowStressDurationInSeconds</td><td>${data.lowStressDurationInSeconds}</td>
+			<tr><td>mediumStressDurationInSeconds</td><td>${data.mediumStressDurationInSeconds}</td>
+			<tr><td>highStressDurationInSeconds</td><td>${data.highStressDurationInSeconds}</td>
+			<tr><td>stressQualifier</td><td>${data.stressQualifier}</td>
+			<tr><td>stepsGoal</td><td>${data.stepsGoal}</td>
+			<tr><td>stepsGoal</td><td>${data.stepsGoal}</td>
+			<tr><td>intensityDurationGoalInSeconds</td><td>${data.intensityDurationGoalInSeconds}</td>
+			<tr><td>floorsClimbedGoal</td><td>${data.floorsClimbedGoal}</td>
+			</table></div>`
 		} else {
 			doc += `<div class='p'>No data</div>`
 		}
@@ -131,7 +177,14 @@ window.addEventListener('DOMContentLoaded', function () {
 	let getPulseoxHtml = function (data) {
 		let doc = '<h3>Pulseox</h3>';
 		if (data) {
-			doc += `<div class="p"><table><tr><td></td><td>${JSON.stringify(data, 1, '<br>')}</td></table></div>`
+			doc += `<div class="p"><table>
+			<tr><td>calendarDate</td><td>${data.calendarDate}</td>
+			<tr><td>startTimeInSeconds</td><td>${data.startTimeInSeconds}</td>
+			<tr><td>durationInSeconds</td><td>${data.durationInSeconds}</td>
+			<tr><td>startTimeOffsetInSeconds</td><td>${data.startTimeOffsetInSeconds}</td>
+			<tr><td>timeOffsetSpo2Values</td><td>${data.timeOffsetSpo2Values}</td>
+			<tr><td>onDemand</td><td>${data.onDemand}</td>
+			</table></div>`
 		} else {
 			doc += `<div class='p'>No data</div>`
 		}
@@ -177,7 +230,11 @@ window.addEventListener('DOMContentLoaded', function () {
 	let getUserMetricsHtml = function (data) {
 		let doc = '<h3>UserMetrics</h3>';
 		if (data) {
-			doc += `<div class="p"><table><tr><td></td><td>${JSON.stringify(data, 1, '<br>')}</td></table></div>`
+			doc += `<div class="p"><table>
+			<tr><td>calendarDate</td><td>${data.calendarDate}</td>
+			<tr><td>vo2Max</td><td>${data.vo2Max}</td>
+			<tr><td>fitnessAge</td><td>${data.fitnessAge}</td>
+			</table></div>`
 		} else {
 			doc += `<div class='p'>No data</div>`
 		}

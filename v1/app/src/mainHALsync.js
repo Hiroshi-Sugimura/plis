@@ -51,7 +51,7 @@ let mainHALsync = {
 	 * @func start
 	 * @desc 初期化
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -71,7 +71,7 @@ let mainHALsync = {
 	 * @func startSync
 	 * @desc 同期処理, トリガー：APIKey設定時、同期ボタン押下、定時処理
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -278,7 +278,7 @@ let mainHALsync = {
 	 * @func garminDownload
 	 * @desc garminDownload
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -404,35 +404,35 @@ let mainHALsync = {
 						idIOT_GarminDailies: dndata.Dailies.idIOT_GarminDailies,
 						garminId: dndata.Dailies.garminId,
 						garminAccessToken: dndata.Dailies.garminAccessToken,
-						summaryId: dndata.Dailies.startTimeInSeconds,
-						calendarDate: dndata.Dailies.timeOffsetBodyBatteryValues,
-						startTimeInSeconds: dndata.Dailies.calendarDate,
-						startTimeOffsetInSeconds: dndata.Dailies.timeOffsetStressLevelValues,
-						activityType: dndata.Dailies.timeOffsetBodyBatteryValues,
-						durationSeconds: dndata.Dailies.durationInSeconds,
-						step: dndata.Dailies.timeOffsetBodyBatteryValues,
-						distanceInMeters: dndata.Dailies.timeOffsetBodyBatteryValues,
-						activeTimeInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
-						activeKilocalories: dndata.Dailies.timeOffsetBodyBatteryValues,
-						bmrKilocalories: dndata.Dailies.timeOffsetBodyBatteryValues,
-						cunsumedCalories: dndata.Dailies.timeOffsetBodyBatteryValues,
-						moderateIntensityDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
-						vigorousIntensityDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
-						floorsClimbed: dndata.Dailies.timeOffsetBodyBatteryValues,
-						minHeartRateInBeatsPerMinute: dndata.Dailies.startTimeOffsetInSeconds,
-						averageHeartRateInBeatsPerMinute: dndata.Dailies.timeOffsetBodyBatteryValues,
-						maxHeartRateInBeatsPerMinute: dndata.Dailies.timeOffsetBodyBatteryValues,
-						restStressDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
-						timeOffsetHeartRateSamples: dndata.Dailies.timeOffsetBodyBatteryValues,
-						averageStressLevel: dndata.Dailies.timeOffsetBodyBatteryValues,
-						maxStressLevel: dndata.Dailies.timeOffsetBodyBatteryValues,
-						stressDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
-						activityStressDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
-						lowStressDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
-						mediumStressDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
-						highStressDurationInSeconds: dndata.Dailies.timeOffsetBodyBatteryValues,
-						stressQualifier: dndata.Dailies.timeOffsetBodyBatteryValues,
-						stepsGoal: dndata.Dailies.timeOffsetBodyBatteryValues,
+						summaryId: dndata.Dailies.summaryId,
+						calendarDate: dndata.Dailies.calendarDate,
+						startTimeInSeconds: dndata.Dailies.startTimeInSeconds,
+						startTimeOffsetInSeconds: dndata.Dailies.startTimeOffsetInSeconds,
+						activityType: dndata.Dailies.activityType,
+						durationInSeconds: dndata.Dailies.durationInSeconds,
+						steps: dndata.Dailies.steps,
+						distanceInMeters: dndata.Dailies.distanceInMeters,
+						activeTimeInSeconds: dndata.Dailies.activeTimeInSeconds,
+						activeKilocalories: dndata.Dailies.activeKilocalories,
+						bmrKilocalories: dndata.Dailies.bmrKilocalories,
+						cunsumedCalories: dndata.Dailies.cunsumedCalories,
+						moderateIntensityDurationInSeconds: dndata.Dailies.moderateIntensityDurationInSeconds,
+						vigorousIntensityDurationInSeconds: dndata.Dailies.vigorousIntensityDurationInSeconds,
+						floorsClimbed: dndata.Dailies.floorsClimbed,
+						minHeartRateInBeatsPerMinute: dndata.Dailies.minHeartRateInBeatsPerMinute,
+						averageHeartRateInBeatsPerMinute: dndata.Dailies.averageHeartRateInBeatsPerMinute,
+						maxHeartRateInBeatsPerMinute: dndata.Dailies.maxHeartRateInBeatsPerMinute,
+						restStressDurationInSeconds: dndata.Dailies.restStressDurationInSeconds,
+						timeOffsetHeartRateSamples: dndata.Dailies.timeOffsetHeartRateSamples,
+						averageStressLevel: dndata.Dailies.averageStressLevel,
+						maxStressLevel: dndata.Dailies.maxStressLevel,
+						stressDurationInSeconds: dndata.Dailies.stressDurationInSeconds,
+						activityStressDurationInSeconds: dndata.Dailies.activityStressDurationInSeconds,
+						lowStressDurationInSeconds: dndata.Dailies.lowStressDurationInSeconds,
+						mediumStressDurationInSeconds: dndata.Dailies.mediumStressDurationInSeconds,
+						highStressDurationInSeconds: dndata.Dailies.highStressDurationInSeconds,
+						stressQualifier: dndata.Dailies.stressQualifier,
+						stepsGoal: dndata.Dailies.stepsGoal,
 						netKilocaloriesGoal: dndata.Dailies.netKilocaloriesGoal,
 						intensityDurationGoalInSeconds: dndata.Dailies.intensityDurationGoalInSeconds,
 						floorsClimbedGoal: dndata.Dailies.floorsClimbedGoal,
@@ -600,10 +600,10 @@ let mainHALsync = {
 				// ダウンロードしたデータをテーブルに追加
 				await IOT_GarminUserMetricsModel.findOrCreate({
 					where: {
-						idIOT_GarminUserMetricsDetails: dndata.UserMetrics.idIOT_GarminUserMetrics
+						idIOT_GarminUserMetrics: dndata.UserMetrics.idIOT_GarminUserMetrics
 					},
 					defaults: {
-						idIOT_GarminUserMetricsDetails: dndata.UserMetrics.idIOT_GarminUserMetrics,
+						idIOT_GarminUserMetrics: dndata.UserMetrics.idIOT_GarminUserMetrics,
 						garminId: dndata.UserMetrics.garminId,
 						garminAccessToken: dndata.UserMetrics.garminAccessToken,
 						summaryId: dndata.UserMetrics.summaryId,
@@ -648,7 +648,7 @@ let mainHALsync = {
 	 * @func httpGetRequest
 	 * @desc httpGetRequest
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -712,7 +712,7 @@ let mainHALsync = {
 	 * @func httpPostRequest
 	 * @desc httpPostRequest
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -781,7 +781,7 @@ let mainHALsync = {
 	 * @desc HAL API トークン設定
 	 * APIトークンをセットして、実際にプロファイルを受信できたら設定値として保存
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -803,7 +803,7 @@ let mainHALsync = {
 	 * @func deleteHalApiToken
 	 * @desc HAL API トークン設定削除
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -824,7 +824,7 @@ let mainHALsync = {
 	 * @func getHalUserProfileRequest
 	 * @desc HAL ユーザープロファイル取得
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -846,7 +846,7 @@ let mainHALsync = {
 	 * @func startUploadEldata
 	 * @desc 家電操作ログのアップロードを開始、定期的実行
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -949,7 +949,7 @@ let mainHALsync = {
 	 * @func ConfigSave
 	 * @desc ConfigSave
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -961,7 +961,7 @@ let mainHALsync = {
 	 * @func setConfig
 	 * @desc setConfig
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -978,7 +978,7 @@ let mainHALsync = {
 	 * @func getConfig
 	 * @desc getConfig
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -990,7 +990,7 @@ let mainHALsync = {
 	 * @func getPersist
 	 * @desc 現在のデータを取得する
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return persist persist
 	 */
 	getPersist: function () {
@@ -1001,7 +1001,7 @@ let mainHALsync = {
 	 * @func stop
 	 * @desc 開放して連携終了、設定や現在の数値を永続化する
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 */
 	stop: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.stop()') : 0;

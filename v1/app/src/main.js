@@ -267,7 +267,8 @@ ipcMain.handle('HALgetUserProfileRequest', (event, arg) => {
 // HAL local更新
 ipcMain.handle('HALrenew', async (event, arg) => {
 	persist.HAL = await mainHALlocal.getLastData();
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALrenew, halData:', persist.HAL) : 0;
+	// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALrenew, halData:', persist.HAL) : 0;
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALrenew, halData: <skip>') : 0;
 	sendIPCMessage("HALRenewResponse", persist.HAL);
 });
 
