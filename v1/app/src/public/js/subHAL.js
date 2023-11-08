@@ -77,7 +77,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	let btnSetHalApiToken = document.getElementById('btnSetHalApiToken');  // API Key登録ボタン
 	let btnHALSync = document.getElementById('btnHALSync');  // HAL同期ボタン
 
-	/** 
+	/**
 	 * @func renewMajorResults
 	 * @desc 内部関数
 	 * @memberof subHAL
@@ -149,7 +149,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		divComment.innerHTML = majorResults.comments ? majorResults.comments : "この調子で頑張ろう！";
 	};
 
-	/** 
+	/**
 	 * @func renewMinorResults
 	 * @memberof subHAL
 	 * @desc 内部関数
@@ -399,7 +399,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		});
 	};
 
-	/** 
+	/**
 	 * @func ranking
 	 * @memberof subHAL
 	 * @desc 内部関数，ランク付け
@@ -419,7 +419,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
+	/**
 	 * @func window.renewHALProfile
 	 * @desc Profileもらって画面更新
 	 * @param {void}
@@ -441,7 +441,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	////////////////////////////////////////////////////////////////////////////////
 	// GUIのボタン
 
-	/** 
+	/**
 	 * @func window.btnDeleteHalApiToken_Click
 	 * @desc HAL API トークン設定削除ボタンが押されたときの処理
 	 * @param {void}
@@ -454,7 +454,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	// HAL API Key登録ボタンクリック
 	let timer;  // HALからの応答待ち、タイムアウトタイマー
 
-	/** 
+	/**
 	 * @func window.btnSetHalApiTokenBtn_Click
 	 * @desc window.btnSetHalApiTokenBtn_Click
 	 * @param {void}
@@ -488,7 +488,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.ipc.HALsetApiTokenRequest(HALtoken);
 	};
 
-	/** 
+	/**
 	 * @func window.btnHALsync_Click
 	 * @desc HAL同期ボタンが押されたときの処理
 	 * @param {void}
@@ -505,7 +505,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	// mainプロセスから呼ばれるやつ
 
 	//----------------------------------------------------------------
-	/** 
+	/**
 	 * @func window.renewHALConfigView
 	 * @desc configデータをもらって画面更新
 	 * @param {void}
@@ -521,7 +521,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
-	/** 
+	/**
 	 * @func window.renewHALToken
 	 * @desc HAL Tokenに変更があったら呼ばれる
 	 * @param {void}
@@ -542,7 +542,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	//----------------------------------------------------------------
-	/** 
+	/**
 	 * @func window.HALRedraw
 	 * @desc データをもらって画面更新
 	 * @param {void}
@@ -561,7 +561,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------
-	/** 
+	/**
 	 * @func window.HALSyncResponse
 	 * @desc HAL cloud: 同期の応答、同期処理終了
 	 * @param arg {arg.error} errorがあるときだけ入ってる予定、成功は空オブジェクト
@@ -578,7 +578,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	}
 
 	//----------------------------------------------------------------
-	/** 
+	/**
 	 * @func window.HALsetApiTokenResponse
 	 * @desc HAL API登録完了したら呼ばれる
 	 * @param {void}
@@ -603,13 +603,13 @@ window.addEventListener('DOMContentLoaded', function () {
 			// 同期もする
 			btnHALSync.disabled = true;
 			btnHALSync.textContent = 'HAL Cloud 同期中…';
-			window.ipc.HALsync();
+			window.ipc.HALSyncRequeset();
 		}
 	};
 
 
 	//----------------------------------------------------------------
-	/** 
+	/**
 	 * @func window.HALdeleteApiTokenResponse
 	 * @desc HAL API トークン設定削除の応答、HALとの同期をやめた場合、mainから応答があって実行
 	 * @param {void}
@@ -624,7 +624,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------
-	/** 
+	/**
 	 * @func window.HALgetUserProfileResponse
 	 * @desc HAL ユーザープロファイル取得の応答
 	 * @param {void}
@@ -657,7 +657,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//================================================================
-	/** 
+	/**
 	 * @func btnQuestionnaireSubmit_click
 	 * @memberof subHAL
 	 * @desc local HAL, アンケート回答の投稿ボタンを押したときの処理
