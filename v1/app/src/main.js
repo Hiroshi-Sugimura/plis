@@ -878,6 +878,7 @@ async function savePersist() {
 	persist.Co2s = mainCo2s.getPersist();
 	persist.Ikea = mainIkea.getPersist();
 	persist.SwitchBot = mainSwitchBot.getPersist();
+	persist.HAL = mainHALsync.getPersist();
 	// calendarはpersistなし
 	// userはpersistなし
 	// systemはpersistなし

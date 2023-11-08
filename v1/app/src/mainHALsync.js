@@ -36,14 +36,15 @@ let persist = {  // = persist.HAL
 	name: 'No Profile',  // HALからのprofile
 	UID: 'No Data',
 	sex: 'No Data',
-	age: 'No Data'
+	age: 'No Data',
+	garmin: {}
 };
 
 let sendIPCMessage = null;
 
+
 //////////////////////////////////////////////////////////////////////
 // HAL, Home-life Assessment Listの処理
-
 let mainHALsync = {
 	//----------------------------------
 	/**
@@ -62,6 +63,7 @@ let mainHALsync = {
 		// mainHALsync.startUploadEldata(); 	// 家電操作ログのアップロードを開始、HALのDBがきついのでとりあえずやらない
 		sendIPCMessage("renewHALConfigView", config);  // configを送る、そうするとViewがkeyチェックのためにprofile取りに来る
 	},
+
 
 	//----------------------------------------------------------------------------------------------
 	/**
@@ -616,6 +618,12 @@ let mainHALsync = {
 				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminUserMetrics teble.') : 0;
 			}
 
+			// 画面表示
+			if (dndata) {
+				persist.garmin = dndata;
+				sendIPCMessage("showGarmin", persist.garmin);
+			}
+
 
 		} catch (error) {
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.garminDownload() ', error);
@@ -957,7 +965,9 @@ let mainHALsync = {
 	 * @throw error
 	 */
 	setConfig: async function (_config) {
-		config = mergeDeeply(config, _config);
+		if (_config) {
+			config = mergeDeeply(config, _config);
+		}
 		await store.set('config.HAL', config);
 		sendIPCMessage("renewHALConfigView", config);
 		sendIPCMessage("configSaved", 'HAL');  // 保存したので画面に通知
@@ -975,13 +985,38 @@ let mainHALsync = {
 		return config;
 	},
 
+	/**
+	 * @func getPersist
+	 * @desc 現在のデータを取得する
+	 * @async
+	 * @param {void} 
+	 * @return persist persist
+	 */
+	getPersist: function () {
+		return persist;
+	},
+
+	/**
+	 * @func stop
+	 * @desc 開放して連携終了、設定や現在の数値を永続化する
+	 * @async
+	 * @param {void} 
+	 */
+	stop: async function () {
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.stop()') : 0;
+
+		// startUploadEldataで仕掛けたintervalを潰さないとダメなんだけど、いまやってない
+		// node-cron化するべき
+		await mainHAL.setConfig();
+		await store.set('persist.HAL', persist);
+	},
+
+
 	//----------------------------------------------------------------------------------------------
 	/**
 	 * @func renewConfigView
 	 * @desc renewConfigView
 	 * @async
-	 * @param {void} 
-	 * @return void
 	 * @throw error
 	 */
 	renewConfigView: async function () {
