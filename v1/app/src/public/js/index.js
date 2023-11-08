@@ -418,7 +418,7 @@ function onLoad() {
 	let renewLicenses = function () {
 		// console.log( licenses );
 		let doc = `<table class="sort_table" id="tblLicenses">`
-			+ `<thead><tr><th>Name</th>` + `<th>Licenses</th>` + ` <th>Publisher</th>` + `<th>Repository</th><tr></thead><tbody>`;
+			+ `<thead> <tr><th>Name</th> <th>Licenses</th> <th>Publisher</th> <th>Repository</th> <tr></thead><tbody>`;
 
 		let keys = Object.keys(licenses);
 		for (let k of keys) {

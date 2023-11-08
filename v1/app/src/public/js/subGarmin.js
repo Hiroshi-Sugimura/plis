@@ -31,7 +31,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 		let doc = '';
 
-		doc += getActivitiesHtml(arg.getActivitiesHtml);
+		doc += getActivitiesHtml(arg.Activities);
 		doc += getActivityDetailsHtml(arg.ActivityDetails);
 		doc += getBodyCompsHtml(arg.BodyComps);
 		doc += getDailiesHtml(arg.Dailies);
@@ -50,7 +50,23 @@ window.addEventListener('DOMContentLoaded', function () {
 	let getActivitiesHtml = function (data) {
 		let doc = '<h3>Activities</h3>';
 		if (data) {
-			doc += `<table><tr><td></td><td>${JSON.stringify(data, 1, '<br>')}</td ></table > `
+			doc += `<div class="p"><table><thead><tr><th>Key</th><th>Value</th></tr></thead><tbody>
+			<tr><td>startTimeInSeconds</td><td>${data.startTimeInSeconds}</td>
+			<tr><td>startTimeOffsetInSeconds</td><td>${data.startTimeOffsetInSeconds}</td>
+			<tr><td>activityType</td><td>${data.activityType}</td>
+			<tr><td>averageHeartRateInBeatsPerMinute</td><td>${data.averageHeartRateInBeatsPerMinute}</td>
+			<tr><td>averageRunCadenceInStepsPerMinute</td><td>${data.averageRunCadenceInStepsPerMinute}</td>
+			<tr><td>averageSpeedInMetersPerSecond</td><td>${data.averageSpeedInMetersPerSecond}</td>
+			<tr><td>averagePaceInMinutesPerKilometer</td><td>${data.averagePaceInMinutesPerKilometer}</td>
+			<tr><td>activeKilocalories</td><td>${data.activeKilocalories}</td>
+			<tr><td>deviceName</td><td>${data.deviceName}</td>
+			<tr><td>distanceInMeters</td><td>${data.distanceInMeters}</td>
+			<tr><td>maxHeartRateInBeatsPerMinute</td><td>${data.maxHeartRateInBeatsPerMinute}</td>
+			<tr><td>maxPaceInMinutesPerKilometer</td><td>${data.maxPaceInMinutesPerKilometer}</td>
+			<tr><td>maxRunCadenceInStepsPerMinute</td><td>${data.maxRunCadenceInStepsPerMinute}</td>
+			<tr><td>maxSpeedInMetersPerSecond</td><td>${data.maxSpeedInMetersPerSecond}</td>
+			<tr><td>steps</td><td>${data.steps}</td>
+			</tbody></table></div>`
 		} else {
 			doc += `<div class='p'>No data</div>`
 		}
