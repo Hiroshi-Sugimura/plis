@@ -873,14 +873,19 @@ textarea {
 
 }
 
+/*********************************************************************
+/* パスワードなどの隠したり表示したりできるテキストボックス */
+
 .secretText {
 	border: none;
 	/* デフォルトの枠線を消す */
 }
 
+/* 枠線 */
 .secretBorder {
-	border-width: thin;
+	border-width: 1px;
 	border-style: solid;
+	padding: 2px;
 	width: 200px;
 }
 

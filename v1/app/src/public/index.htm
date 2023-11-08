@@ -133,8 +133,7 @@
 					</div>
 
 					<!-- OMRON -->
-					<h3 id="H3Omron" class="none"><i class='fa-solid fa-person-shelter'></i> 屋内環境：Omron, <span id="spanOmronPlace"></span> （<span id="spanOmronTime"></span>） <span class="f_right"><a href="#"
-								onClick="document.getElementById('configTab').checked=true; location.hash='OmronConfig'; document.getElementById('OmronConfigDetails').open=true;"><i class="fa-solid fa-gear right"></i>
+					<h3 id="H3Omron" class="none"><i class='fa-solid fa-person-shelter'></i> 屋内環境：Omron, <span id="spanOmronPlace"></span> （<span id="spanOmronTime"></span>） <span class="f_right"><a href="#" onClick="document.getElementById('configTab').checked=true; location.hash='OmronConfig'; document.getElementById('OmronConfigDetails').open=true;"><i class="fa-solid fa-gear right"></i>
 							</a>
 						</span>
 					</h3>
@@ -193,8 +192,7 @@
 
 
 					<!-- I/O DATA UD-CO2S -->
-					<h3 id="H3Co2s" class="none"><i class='fa-solid fa-person-shelter'></i> 屋内環境：UD-CO2S, <span id="spanCo2sPlace"></span> （<span id="spanCo2sTime"></span>） <span class="f_right"><a href="#"
-								onClick="document.getElementById('configTab').checked=true; location.hash='Co2sConfig'; document.getElementById('Co2sConfigDetails').open=true;"><i class="fa-solid fa-gear right"></i>
+					<h3 id="H3Co2s" class="none"><i class='fa-solid fa-person-shelter'></i> 屋内環境：UD-CO2S, <span id="spanCo2sPlace"></span> （<span id="spanCo2sTime"></span>） <span class="f_right"><a href="#" onClick="document.getElementById('configTab').checked=true; location.hash='Co2sConfig'; document.getElementById('Co2sConfigDetails').open=true;"><i class="fa-solid fa-gear right"></i>
 							</a>
 						</span>
 					</h3>
@@ -1284,7 +1282,7 @@
 
 						<div class="p">
 							クラウドサービスHALと連携し、生活状況を得点化して見える化します。<br>
-							API Key: <form class="secretBorder inline"><input id="inHALApiKey" type="password" value="" size="100" /><span id="inHALApiKeyButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inHALApiKey');"></span></form>
+							API Key: <form class="secretBorder inline"><input id="inHALApiKey" class="secretText" type="password" value="" size="100" /><span id="inHALApiKeyButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inHALApiKey');"></span></form>
 						</div>
 
 						<!-- デフォルトは設定されていないものとする -->
@@ -1327,8 +1325,8 @@
 							Connection Type: <select id="inConnectionType" size="1" />
 							<option value="stable">stable</option>
 							<option value="fast">fast</option> </select> <br>
-							Bルート認証ID設定: <form class="secretBorder inline"><input id="inESMId" type="password" value="" size="50" /><span id="inESMIdButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inESMId');"></span></form> <br>
-							Bルート認証パスワード設定: <form class="secretBorder inline"><input id="inESMPassword" type="password" value="" size="50" /><span id="inESMPasswordButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inESMPassword');"></span></form><br>
+							Bルート認証ID設定: <form class="secretBorder inline"><input id="inESMId" class="secretText" type="password" value="" size="50" /><span id="inESMIdButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inESMId');"></span></form> <br>
+							Bルート認証パスワード設定: <form class="secretBorder inline"><input id="inESMPassword" class="secretText" type="password" value="" size="50" /><span id="inESMPasswordButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inESMPassword');"></span></form><br>
 							契約アンペア: <form class="inline"><input id="inESMUserAmpere" value="" inputmode="numeric" />
 							</form>
 							A (グラフ表示に利用)<br>
@@ -1369,7 +1367,6 @@
 					<details class="config" id="IkeaConfigDetails">
 						<summary class="config">IKEA Tradfri</summary>
 						<div class="p">
-							<strong>開発中</strong><br>
 							すでにIdentityとPSKをお持ちのかたは、（key, identity, psk）の3か所に入力したあとチェックボックスを有効にしてください。<br>
 							まだIdentityとPSKをお持ちでないかたは、ゲートウェイの背面にあるKeyのみをSerucity codeに入力してからUse IKEA
 							Tradfriをチェックしてください。<br>
@@ -1746,8 +1743,7 @@
 
 			<!-- 検索ボックス -->
 			<div id="searchBox">
-				<form class="secretBorder inline" onSubmit="window.btnSearchStart_Click(); return false;"><input id="searchInput" class="inline" type="search" label="Search..." autocomplete="off" autofocus onChange="window.btnSearchStart_Click()" /><span class="fa-solid fa-magnifying-glass"
-						onclick="window.btnSearchStart_Click()"></span>
+				<form class="secretBorder inline" onSubmit="window.btnSearchStart_Click(); return false;"><input id="searchInput" class="inline" type="search" label="Search..." autocomplete="off" autofocus onChange="window.btnSearchStart_Click()" /><span class="fa-solid fa-magnifying-glass" onclick="window.btnSearchStart_Click()"></span>
 				</form><br>
 				<div id="searchResult" class="searchAttches inline">0/0</div>
 				<button class="searchPrev inline" onClick="window.btnSearchPrev_Click()"><i class="fa-solid fa-arrow-left"></i></button>

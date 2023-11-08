@@ -220,6 +220,10 @@ let mainSwitchBot = {
 		let ret = {};
 		try {
 			_client.getDevices(async (devlist) => {
+				if (!devlist || !devlist.deviceList) {
+					console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.renewFacilities() devlist is undefined or null.');
+					return;
+				}
 				ret.deviceList = devlist.deviceList;
 				ret.infraredRemoteList = devlist.infraredRemoteList;
 				for (let d of ret.deviceList) {
@@ -237,6 +241,8 @@ let mainSwitchBot = {
 			}
 
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.renewFacilities() error:\x1b[32m', error, '\x1b[0m');
+			console.log(ret.deviceList);
+
 			throw error;
 		}
 	},
