@@ -140,6 +140,12 @@ function onLoad() {
 				window.HALSyncResponse(c.arg);
 				break;
 
+			// Garmin
+			case "showGarmin":  // Garminデータ表示
+				console.log('main -> showGarmin:', c.arg);
+				window.showGarminData(c.arg);
+				break;
+
 
 			//----------------------------------------------
 			// EL関連

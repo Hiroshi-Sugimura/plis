@@ -62,6 +62,7 @@ let mainHALsync = {
 
 		// mainHALsync.startUploadEldata(); 	// 家電操作ログのアップロードを開始、HALのDBがきついのでとりあえずやらない
 		sendIPCMessage("renewHALConfigView", config);  // configを送る、そうするとViewがkeyチェックのためにprofile取りに来る
+		sendIPCMessage("showGarmin", persist.garmin);  // 保持しているGarminデータを表示する
 	},
 
 

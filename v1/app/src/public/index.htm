@@ -35,6 +35,9 @@
 				<input id="control" type="radio" name="tab_item">
 				<label class="tab_item" for="control"><img src="./img/set.png" class=tab-icon alt="set" align="top"><span class="omitable">Control</span></label>
 
+				<input id="wearable" type="radio" name="tab_item">
+				<label class="tab_item" for="wearable"><img src="./img/set.png" class=tab-icon alt="set" align="top"><span class="omitable">Wearable</span></label>
+
 				<input id="hal" type="radio" name="tab_item">
 				<label class="tab_item" for="hal"><img src="./img/chart.png" class=tab-icon alt="chart" align="top"><span class="omitable">HAL</span></label>
 
@@ -481,6 +484,14 @@
 						</div>
 					</div>
 				</div> <!-- Control タブ終了 -->
+
+
+				<div class="tab_content" id="divWearable_tab"> <!-- Wearableタブ開始 -->
+					<h2 id="H2Garmin">
+						Garmin
+					</h2>
+					<div id="divGarmin"></div>
+				</div> <!-- Wearableタブ終了 -->
 
 
 				<!-- HAL タブ開始 -->
@@ -1809,6 +1820,7 @@
 <script src="./js/subESM.js"></script>
 <script src="./js/subSwitchBot.js"></script>
 <script src="./js/subQuestionnaire.js"></script>
+<script src="./js/subGarmin.js"></script>
 <script src="./js/subHAL.js"></script>
 <script src="./js/index.js"></script> <!-- 一応index.jsが最後にloadされるようにする。実際はonLoadで順序制御できてるはず -->
 

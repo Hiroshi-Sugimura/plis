@@ -936,7 +936,7 @@ textarea {
 }
 
 .tab_item {
-	width: calc((100% - 100px) /5);
+	width: calc((100% - 100px) /6);
 	height: 50px;
 	border-bottom: 3px solid var(--sub-text);
 	background-color: #d9d9d9;
@@ -974,6 +974,7 @@ input[name="tab_item_config"] {
 /* button:check ~ tab*/
 #top:checked~#divTop_tab,
 #control:checked~#divControl_tab,
+#wearable:checked~#divWearable_tab,
 #hal:checked~#divHal_tab,
 #questionnaire:checked~#divQestionnaire_tab,
 #details:checked~#divDetails_tab,
