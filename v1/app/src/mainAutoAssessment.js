@@ -16,6 +16,10 @@ const { getToday, getYesterday, roundFloat, checkValue } = require('./mainSubmod
 //////////////////////////////////////////////////////////////////////
 // config
 
+let config = {
+	debug: false
+}
+
 const minorSchema = {
 	date: "",
 	assessmentSource: "HAL",
@@ -412,7 +416,7 @@ let mainAutoAssessment = {
 	//////////////////////////////////////////////////////////////////////
 	// 自動評価システムの開始処理（定時実行、EntryPoint）
 	start: function (_sendIPCMessage) {
-		console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.start()');
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.start()') : 0;
 
 		if (mainAutoAssessment.isRun) {
 			return; // 多重起動防止
@@ -422,7 +426,7 @@ let mainAutoAssessment = {
 
 		mainAutoAssessment.observationJob = cron.schedule('0 0 9 * * *', () => {  // 本番用の AM9:00
 			// mainAutoAssessment.observationJob = cron.schedule('*/10 * * * * *', () => {  // debug用の0秒毎
-			console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.start().observationJob');
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.start().observationJob') : 0;
 
 			let today = getToday();
 			let yesterday = getYesterday();

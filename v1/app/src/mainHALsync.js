@@ -46,6 +46,9 @@ let sendIPCMessage = null;
 //////////////////////////////////////////////////////////////////////
 // HAL, Home-life Assessment Listの処理
 let mainHALsync = {
+	isRun: false,
+	observationJob: null,
+
 	//----------------------------------
 	/**
 	 * @func start
@@ -57,8 +60,18 @@ let mainHALsync = {
 	 */
 	start: async function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
+
+		if (mainHALsync.isRun) {  // 重複起動対策
+			sendIPCMessage("renewHALConfigView", config);  // configを送る、そうするとViewがkeyチェックのためにprofile取りに来る
+			sendIPCMessage("showGarmin", persist.garmin);  // 保持しているGarminデータを表示する
+			return;
+		}
+		mainHALsync.isRun = true;
+
 		config = await store.get('config.HAL', config);
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.start()') : 0;
+
+		persist = store.get('persist.HAL', persist);
 
 		// mainHALsync.startUploadEldata(); 	// 家電操作ログのアップロードを開始、HALのDBがきついのでとりあえずやらない
 		sendIPCMessage("renewHALConfigView", config);  // configを送る、そうするとViewがkeyチェックのためにprofile取りに来る
