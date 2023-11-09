@@ -2,6 +2,9 @@
 //	Copyright (C) Hiroshi SUGIMURA 2023.10.09
 //////////////////////////////////////////////////////////////////////
 'use strict'
+/**
+ * @module mainAutoAssessment
+ */
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
@@ -146,7 +149,11 @@ let mainAutoAssessment = {
 	isRun: false,  // 機能が利用可能になったか？
 	observationJob: null,
 
-	// 以前のMinorResultsからMinorResults（1日経過処理）
+	/**
+	 * @func lastMR2mr
+	 * @desc 以前のMinorResultsからMinorResults（1日経過処理）
+	 * @async
+	 */
 	lastMR2mr: async function (mrRow, mr) {
 
 		await Object.keys(mr).forEach(async function (key) {
@@ -160,7 +167,11 @@ let mainAutoAssessment = {
 	},
 
 
-	// MinorResultsから MajorResultsを計算する
+	/**
+	 * @func calcMajorResults
+	 * @desc MinorResultsから MajorResultsを計算する
+	 * @async
+	 */
 	calcMajorResults: function (mr) {
 		let clothing_sum = 0;
 		let clothing_num = 0;
@@ -266,7 +277,11 @@ let mainAutoAssessment = {
 	},
 
 
-	// 評価シーケンス全体、なんかawaitが効いてないかんじ
+	/**
+	 * @func assessment
+	 * @desc 評価シーケンス全体
+	 * @async
+	 */
 	assessment: async function (today, yesterday) {
 		console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment - today:', today, ' yesterday:', yesterday);
 
@@ -414,7 +429,11 @@ let mainAutoAssessment = {
 
 
 	//////////////////////////////////////////////////////////////////////
-	// 自動評価システムの開始処理（定時実行、EntryPoint）
+	/**
+	 * @func start
+	 * @desc 自動評価システムの開始処理（定時実行、EntryPoint）
+	 * @async
+	 */
 	start: function (_sendIPCMessage) {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.start()') : 0;
 
@@ -437,6 +456,11 @@ let mainAutoAssessment = {
 		mainAutoAssessment.observationJob.start();
 	},
 
+	/**
+ * @func stop
+ * @desc 停止
+ * @async
+ */
 	stop: async function () {
 		await mainAutoAssessment.observationJob.stop();
 		mainAutoAssessment.observationJob = null;

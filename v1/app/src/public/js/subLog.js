@@ -24,10 +24,10 @@ window.addEventListener('DOMContentLoaded', function () {
 	let txtErrLog = document.getElementById('txtErrLog');
 
 	//----------------------------------------------------------------------------------------------
-	/** 
-	 * @func 
+	/**
+	 * @func addError
 	 * @desc エラーログを表示
-	 * @param errorMsg {datetime, moduleName, stackLog}
+	 * @param {Object} errorMsg ={datetime, moduleName, stackLog}
 	 * @return {void}
 	 */
 	window.addError = function (errorMsg) {
@@ -43,11 +43,15 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.renewLogText();
 	};
 
-	//
+	/** 
+	 * @func renewLogText
+	 * @desc エラーログを表示
+	 * @return {text}
+	 */
 	window.renewLogText = function () {
 		let t = ""
 
-		errorArray.forEach( (elem) => {
+		errorArray.forEach((elem) => {
 			t = elem.datetime + ' | ' + elem.moduleName + ': ' + elem.stackLog + '\n' + t;
 		});
 

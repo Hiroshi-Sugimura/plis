@@ -4,7 +4,7 @@
             "../app/src"
         ],
         "exclude": [
-            "node_modules"
+            "../app/src/node_modules"
         ],
         "includePattern": ".+\\.js(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
