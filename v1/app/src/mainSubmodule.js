@@ -11,7 +11,8 @@
 
 
 //////////////////////////////////////////////////////////////////////
-/** @func objectSort
+/**
+ *  @func objectSort
  *  @desc キーでソートしてからJSONにする
  *  @param {Object} [obj]
  *  @return {map}
@@ -28,8 +29,9 @@ let objectSort = function (obj) {
 	return map;
 };
 
-/** @func getNow
- *  @desc 現在時刻
+/**
+ *  @func getNow
+ *  @desc 現在時刻 ("YYYY-MM-DD hh:mm:ss")
  *  @param {void}
  *  @return {String} time
  */
@@ -53,23 +55,29 @@ let getNow = function () {
 	return date + ' ' + time;
 }
 
-/** @func getToday
+/**
+ *  @func getToday
  *  @desc 今日の日付 ("YYYY-MM-DD")
  *  @param {void}
  *  @return {String} time
  */
 let getToday = function () {
-	let now = new Date();
-	let today = [
-		now.getFullYear().toString(),
-		('0' + (now.getMonth() + 1)).slice(-2),
-		('0' + now.getDate()).slice(-2)
-	].join('-');
-	return today;
+	return Date.today().toFormat("YYYY-MM-DD");
+};
+
+/**
+ *  @func getYesterday
+ *  @desc 昨日の日付 ("YYYY-MM-DD")
+ *  @param {void}
+ *  @return {String} time
+ */
+let getYesterday = function () {
+	return Date.yesterday().toFormat("YYYY-MM-DD");
 };
 
 
-/** @func isObjEmpty
+/**
+ *  @func isObjEmpty
  *  @desc Object型が空{}かどうかチェックする。Object型は == {} ではチェックできない。
  *  @param {Object} obj
  *  @return {Object} obj
@@ -79,7 +87,8 @@ let isObjEmpty = function (obj) {
 }
 
 
-/** @func mergeDeeply
+/**
+ *  @func mergeDeeply
  *  @param {target} target
  *  @param {source} source
  *  @param {opts} opts
@@ -112,7 +121,41 @@ let mergeDeeply = function (target, source, opts) {
 	return result;
 }
 
-module.exports = { objectSort, getNow, getToday, isObjEmpty, mergeDeeply };
+
+/**
+ *  @func roundFloat
+ *  @param {integer} n 丸める対象
+ *  @param {integer} _digit 桁数、指定なければ２
+ *  @return {float} 丸めた数値
+ *  @desc 数値を丸める。
+ */
+let roundFloat = function (n, _digit) {
+	if (!_digit) {
+		_digit = 2
+	}
+	return parseFloat(n.toFixed(_digit));
+}
+
+
+/**
+ *  @func checkValue
+ *  @param {number} val チェック対象
+ *  @param {number} min 最小値
+ *  @param {number} max 最大値
+ *  @return {number} チェックした後の数値
+ *  @desc 数値を値域に合わせる
+ */
+let checkValue = function (val, min, max) {
+	if (val < min) { val = min; }
+	if (val > max) { val = max; }
+	return val;
+};
+
+
+
+
+module.exports = { objectSort, getNow, getToday, getYesterday, isObjEmpty, mergeDeeply, roundFloat, checkValue };
+
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////

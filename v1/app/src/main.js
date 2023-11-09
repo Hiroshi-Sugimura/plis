@@ -38,6 +38,7 @@ const openAboutWindow = require('about-window').default;  // このアプリに�
 
 const { sqlite3 } = require('./models/localDBModels');   // DBデータと連携
 const mainSystem = require('./mainSystem');  // System configの管理
+const mainAutoAssessment = require('./mainAutoAssessment');  // 成績付け
 const mainUser = require('./mainUser');     // User configの管理
 const mainArp = require('./mainArp');     // arpの管理
 const mainEL = require('./mainEL');      // ELの管理
@@ -110,6 +111,7 @@ ipcMain.handle('already', async (event, arg) => {
 	mainSwitchBot.start(sendIPCMessage);
 	mainCalendar.start(sendIPCMessage);
 	mainHALsync.start(sendIPCMessage);
+	mainAutoAssessment.start(sendIPCMessage);
 
 	persist.HAL = await mainHALlocal.getLastData();
 	sendIPCMessage("HALRenewResponse", persist.HAL);
