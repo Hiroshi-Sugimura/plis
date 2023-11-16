@@ -15,7 +15,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	const week = ["日", "月", "火", "水", "木", "金", "土"];
 
-	let holiday;
+	let holiday;  // 祝日データ
+	let showDate; // 現在表示位置
 
 	//----------------------------------------------------------------------------------------------
 	/** 
@@ -27,6 +28,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	window.createCalendar = function (_cal) {
 		holiday = _cal;
 		let today = new Date();
+		showDate = new Date(today.getFullYear(), today.getMonth(), 1);  // 現在表示位置
 		showProcess(today);
 	};
 
@@ -38,6 +40,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.renewCalendar = function () {
 		let today = new Date();
+		showDate = new Date(today.getFullYear(), today.getMonth(), 1);  // 現在表示位置
 		showProcess(today);
 	};
 
@@ -49,8 +52,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.calendarPrev = function () {
 		// 月末だとずれる可能性があるため、1日固定で取得
-		let today = new Date();
-		let showDate = new Date(today.getFullYear(), today.getMonth(), 1);
 		showDate.setMonth(showDate.getMonth() - 1);
 		showProcess(showDate);
 	};
@@ -63,8 +64,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.calendarNext = function () {
 		// 月末だとずれる可能性があるため、1日固定で取得
-		let today = new Date();
-		let showDate = new Date(today.getFullYear(), today.getMonth(), 1);
 		showDate.setMonth(showDate.getMonth() + 1);
 		showProcess(showDate);
 	};
