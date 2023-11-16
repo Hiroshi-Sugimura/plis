@@ -193,8 +193,8 @@ let mainSwitchBot = {
 
 	/**
 	 * @function control
-	 * @param {id} id デバイスID
-	 * @param {string} command デバイスへのコマンド
+	 * @param id id デバイスID
+	 * @param string command デバイスへのコマンド
 	 * @desc デバイスタイプごとに制御
 	*/
 	control: function (id, command) {
@@ -251,7 +251,7 @@ let mainSwitchBot = {
 	// 定時処理のインタフェース
 	/**
 	 * @function startCore
-	 * @callback {_callback} [_callback]
+	 * @callback function [_callback]
 	 * @desc 内部関数：監視開始
 	*/
 	startCore: function (_callback) {
@@ -309,7 +309,7 @@ let mainSwitchBot = {
 	/**
 	 * @async
 	 * @function storeData
-	 * @param {facilities} facilities
+	 * @param Object facilities
 	 * @desc 内部関数：デバイスタイプごとにステータスの読見方を変えてDBにためる
 	*/
 	storeData: async function (facilities) {
