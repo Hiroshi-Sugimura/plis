@@ -27,6 +27,11 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.showGarminData = function (arg) { // stateGarmin = json = arg;
 		stateGarmin = arg;
+		if (!arg) {
+			console.log('window.showGarminData() is no show. arg:', arg);
+			divGarmin.innerHTML = '<div class="p">No data.</div>';
+			return;
+		}
 		console.log('window.showGarminData() arg:', arg);
 
 		let doc = '';
@@ -78,7 +83,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		let doc = '<h3>Activity Details</h3>';
 		if (data) {
 			doc += `<div class="p"><table>
-			<tr><td>summary</td><td>${JSON.stringify( JSON.parse(data.summary), 1, '<br>')}</td>
+			<tr><td>summary</td><td>${JSON.stringify(JSON.parse(data.summary), 1, '<br>')}</td>
 			<tr><td>samples</td><td>${data.samples}</td>
 			<tr><td>laps</td><td>${data.laps}</td>
 			</table></div>`
