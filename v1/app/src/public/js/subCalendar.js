@@ -14,9 +14,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subCalendar.js');
 
 	const week = ["日", "月", "火", "水", "木", "金", "土"];
-	const today = new Date();
-	// 月末だとずれる可能性があるため、1日固定で取得
-	let showDate = new Date(today.getFullYear(), today.getMonth(), 1);
 
 	let holiday;
 
@@ -27,8 +24,9 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @Param {Void}
 	 * @Return {Void}
 	 */
-	window.createCalendar = function ( _cal ) {
+	window.createCalendar = function (_cal) {
 		holiday = _cal;
+		let today = new Date();
 		showProcess(today);
 	};
 
@@ -39,6 +37,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @Return {Void}
 	 */
 	window.renewCalendar = function () {
+		let today = new Date();
 		showProcess(today);
 	};
 
@@ -49,7 +48,10 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	window.calendarPrev = function () {
-		showDate.setMonth( showDate.getMonth() - 1 );
+		// 月末だとずれる可能性があるため、1日固定で取得
+		let today = new Date();
+		let showDate = new Date(today.getFullYear(), today.getMonth(), 1);
+		showDate.setMonth(showDate.getMonth() - 1);
 		showProcess(showDate);
 	};
 
@@ -60,6 +62,9 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	window.calendarNext = function () {
+		// 月末だとずれる可能性があるため、1日固定で取得
+		let today = new Date();
+		let showDate = new Date(today.getFullYear(), today.getMonth(), 1);
 		showDate.setMonth(showDate.getMonth() + 1);
 		showProcess(showDate);
 	};
@@ -70,7 +75,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @param {void}
 	 * @return {void}
 	 */
-	window.btnCalendarRenewSyukujitsu_Click = function() {
+	window.btnCalendarRenewSyukujitsu_Click = function () {
 		console.log('# btnCalendarRenewSyukujitsu_Click');
 		window.ipc.CalendarRenewHolidays();  // 祝日データ再取得
 	};
@@ -129,9 +134,9 @@ window.addEventListener('DOMContentLoaded', function () {
 					// 当月の日付を曜日に照らし合わせて設定
 					count++;
 					let dateInfo = checkDate(year, month, count);
-					if(dateInfo.isToday){
+					if (dateInfo.isToday) {
 						calendar += "<td class='today'>" + count + "</td>";
-					} else if(dateInfo.isHoliday) {
+					} else if (dateInfo.isHoliday) {
 						calendar += "<td class='holiday' title='" + dateInfo.holidayName + "'>" + count + "</td>";
 					} else {
 						calendar += "<td>" + count + "</td>";
@@ -154,7 +159,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	function checkDate(year, month, day) {
-		if(isToday(year, month, day)){
+		if (isToday(year, month, day)) {
 			return {
 				isToday: true,
 				isHoliday: false,
@@ -178,9 +183,11 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	function isToday(year, month, day) {
+		let today = new Date();
+
 		return (year == today.getFullYear()
-				&& month == (today.getMonth())
-				&& day == today.getDate());
+			&& month == (today.getMonth())
+			&& day == today.getDate());
 	}
 
 	/** 
@@ -202,4 +209,4 @@ window.addEventListener('DOMContentLoaded', function () {
 		return [false, ""];
 	}
 
-} );
+});
