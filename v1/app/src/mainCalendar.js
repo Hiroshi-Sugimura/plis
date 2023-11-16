@@ -1,9 +1,7 @@
 //////////////////////////////////////////////////////////////////////
 //	Copyright (C) Hiroshi SUGIMURA 2020.10.30
 //////////////////////////////////////////////////////////////////////
-/**
- * @module mainCalendar
- */
+
 'use strict'
 
 //////////////////////////////////////////////////////////////////////
@@ -13,7 +11,7 @@ const fs = require('fs');
 const axios = require('axios');
 const Store = require('electron-store');
 const store = new Store();
-const cron = require('node-cron');  
+const cron = require('node-cron');
 require('date-utils'); // for log
 
 
@@ -33,11 +31,14 @@ let config = {
 // メッセージ管理
 let sendIPCMessage = null;
 
-
+/**
+ * @module mainCalendar
+ * @desc カレンダーオブジェクト
+ */
 let mainCalendar = {
 	isRun: false,  // 多重起動防止
-	holidayData: null,
-	holidaysURL: 'https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv', // 内閣府
+	holidayData: null,  // 祝日データ
+	holidaysURL: 'https://www8.cao.go.jp/chosei/shukujitsu/syukujitsu.csv', // 内閣府からダウンロードする祝日ファイルのURI
 	observationTask: null,  // cronオブジェクト
 
 	//////////////////////////////////////////////////////////////////////
@@ -45,15 +46,13 @@ let mainCalendar = {
 	/**
 	 * @func start
 	 * @desc 初期化と機能開始
-	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @param {IPCMessage} _sendIPCMessage
 	 * @throw error
 	 */
 	start: function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
 
-		config.debug      = store.get('config.Calendar.debug', false);
+		config.debug = store.get('config.Calendar.debug', false);
 
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendarStart()') : 0;
 
@@ -63,8 +62,7 @@ let mainCalendar = {
 		}
 		mainCalendar.isRun = true;
 
-		//////////////////////////////////////////////////////////////////////
-		// 基本設定，electronのファイル読み込み対策，developmentで変更できるようにした（けどつかってない）
+		// 祝日データの確認
 		fs.readFile(path.join(databaseDir, "syukujitsu.csv"), "utf-8", (err, data) => {
 			if (err) {
 				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar() syukujitsu.csv is NOT found. error:', err);
@@ -88,7 +86,7 @@ let mainCalendar = {
 
 	/**
 	 * @func stopWithoutSave
-	 * @desc stop observationJob
+	 * @desc 保存しないで終了。監視をやめる
 	 */
 	stopWithoutSave: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.stop()') : 0;
@@ -104,43 +102,38 @@ let mainCalendar = {
 		mainCalendar.isRun = false;
 	},
 
-	
+
 	/**
-	 * @func setConfig
-	 * @desc setConfig
 	 * @async
-	 * @param {void} 
-	 * @return void
-	 * @throw error
+	 * @func setConfig
+	 * @desc 設定を変更して保存。_config=nullなら設定保存のみ
+	 * @param {Object} _config
 	 */
-	setConfig: async function(_config) {
-		config = mergeDeeply( config, _config );
+	setConfig: async function (_config) {
+		if (_config) {
+			config = mergeDeeply(config, _config);
+		}
 		await store.set('config.Calendar', config);
-		sendIPCMessage( "renewCalendarConfigView", config );
-		sendIPCMessage( "configSaved", 'Calendar' );  // 保存したので画面に通知
+		sendIPCMessage("renewCalendarConfigView", config);
+		sendIPCMessage("configSaved", 'Calendar');  // 保存したので画面に通知
 	},
 
 	/**
 	 * @func getConfig
-	 * @desc getConfig
-	 * @async
-	 * @param {void} 
-	 * @return void
-	 * @throw error
+	 * @return {Object} config
+	 * @desc 現在の設定値を返す
 	 */
 	getConfig: function () {
 		return config;
 	},
 
 	/**
-	 * @func getPersist
-	 * @desc getPersist
 	 * @async
-	 * @param {void} 
-	 * @return void
-	 * @throw error
+	 * @func getPersist
+	 * @return {Object} persist
+	 * @desc 現在の状況を返す
 	 */
-	getPersist: function() {
+	getPersist: function () {
 		return persist;
 	},
 
@@ -148,12 +141,9 @@ let mainCalendar = {
 	//////////////////////////////////////////////////////////////////////
 	// 内部関数
 	/**
+	 * @async
 	 * @func getHolidays
 	 * @desc 祝日データを内閣府からHTTPで取得して、ストレージにファイルとして保存する
-	 * @async
-	 * @param {void} 
-	 * @return void
-	 * @throw error
 	 */
 	getHolidays: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.getHolidays()') : 0;
