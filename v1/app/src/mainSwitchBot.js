@@ -68,8 +68,8 @@ let mainSwitchBot = {
 	/**
 	 * @async
 	 * @function start
-	 * @param {sendIPCMessage} [_sendIPCMessage]
-	 * @return {void}
+	 * @param {sendIPCMessage} _sendIPCMessage
+	 * @desc エントリーポイント
 	*/
 	start: function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
@@ -128,8 +128,7 @@ let mainSwitchBot = {
 	/**
 	 * @async
 	 * @function stop
-	 * @param {void} [void]
-	 * @return {void}
+	 * @desc configやpersistを保存して、終了する
 	*/
 	stop: async function () {
 		mainSwitchBot.isRun = false;
@@ -143,8 +142,7 @@ let mainSwitchBot = {
 	/**
 	 * @async
 	 * @function stopWithoutSave
-	 * @param {void} [void]
-	 * @return {void}
+	 * @desc configやpersistを保存せずに、終了する
 	*/
 	stopWithoutSave: async function () {
 		mainSwitchBot.isRun = false;
@@ -158,7 +156,7 @@ let mainSwitchBot = {
 	 * @async
 	 * @function setConfig
 	 * @param {_config} [_config]
-	 * @return {void}
+	 * @desc 設定変更し、設定を保存する。_configを指定しなければ保存だけする
 	*/
 	setConfig: async function (_config) {
 		if (_config) {
@@ -174,8 +172,8 @@ let mainSwitchBot = {
 	/**
 	 * @async
 	 * @function getConfig
-	 * @param {void}
-	 * @return {config}
+	 * @return {config} 現在保持している設定
+	 * @desc 現在の設定を返す
 	*/
 	getConfig: function () {
 		return config;
@@ -185,19 +183,19 @@ let mainSwitchBot = {
 	/**
 	 * @async
 	 * @function getPersist
-	 * @param {void}
-	 * @return {persist}
+	 * @return {persist} 現在保持している通信データ
+	 * @desc 現在の通信データを返す
 	*/
 	getPersist: function () {
 		return persist;
 	},
 
-	// デバイスタイプごとに制御
+
 	/**
 	 * @function control
-	 * @param {id} [id]
-	 * @param {command} [command]
-	 * @return {void}
+	 * @param {id} id デバイスID
+	 * @param {string} command デバイスへのコマンド
+	 * @desc デバイスタイプごとに制御
 	*/
 	control: function (id, command) {
 		// mainSwitchBot.client
@@ -215,6 +213,7 @@ let mainSwitchBot = {
 	 * @function renewFacilities
 	 * @param {Object} [_client]
 	 * @param {function} [callback(devStatusList)]
+	 * @desc SwitchBotと通信してデータ取得したら呼ばれる。その後処理してからcallback関数を呼ぶ
 	*/
 	renewFacilities: function (_client, callback) {
 		let ret = {};
@@ -250,11 +249,10 @@ let mainSwitchBot = {
 
 	//////////////////////////////////////////////////////////////////////
 	// 定時処理のインタフェース
-	// 監視開始
 	/**
 	 * @function startCore
 	 * @callback {_callback} [_callback]
-	 * @return {void}
+	 * @desc 内部関数：監視開始
 	*/
 	startCore: function (_callback) {
 		if (config.token == '' || config.secret == '') {
@@ -289,11 +287,9 @@ let mainSwitchBot = {
 		}
 	},
 
-	// 監視をやめる
 	/**
-	 * @async
 	 * @function stopObservation
-	 * @param {void} [void]
+	 * @desc 内部関数：監視をやめる
 	*/
 	stopObservation: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.stopObserve().') : 0;
@@ -310,16 +306,17 @@ let mainSwitchBot = {
 	},
 
 
-	// デバイスタイプごとにステータスの読見方を変えてDBにためる
 	/**
 	 * @async
 	 * @function storeData
-	 * @param {facilities} [facilities]
+	 * @param {facilities} facilities
+	 * @desc 内部関数：デバイスタイプごとにステータスの読見方を変えてDBにためる
 	*/
 	storeData: async function (facilities) {
 		for (let d of facilities.deviceList) {
 			let det = facilities[d.deviceId];
 			// console.log('SwitchBot:dev:', d, ' detail:', det);
+			if (!det) { continue; }  // 詳細の無いデバイスは保存しない。continueで次のデバイスへ。
 
 			try {
 				switch (d.deviceType) {
@@ -555,8 +552,9 @@ let mainSwitchBot = {
 	/**
 	 * @async
 	 * @function getCases
-	 * @param {date} [date]
-	 * @return {ret}
+	 * @param {string} date "yyyy-mm-dd"
+	 * @return {string} when-clause
+	 * @desc 1日分のデータを一気取得するためのwhen式を生成する
 	*/
 	getCases: function (date) {
 		let T1 = new Date(date);
@@ -584,13 +582,13 @@ let mainSwitchBot = {
 		return ret + 'ELSE "24:00"';
 	},
 
-	// meterListを取得
 	/**
 	 * @async
 	 * @function getMeterList
-	 * @param {theDayBegin} [theDayBegin]
-	 * @param {theDayEnd} [theDayEnd]
+	 * @param {Date} theDayBegin
+	 * @param {Date} theDayEnd
 	 * @return {rows}
+	 * @desc 温湿度計リストを取得する。MeterとMeterPlusを区別せずに取得する。動的に変わるので、当日の通信状況でデバイスリストを作成する。
 	*/
 	getMeterList: async function (theDayBegin, theDayEnd) {
 		let meterList = [];
@@ -614,13 +612,13 @@ let mainSwitchBot = {
 		}
 	},
 
-	// plugMiniListを取得
 	/**
 	 * @async
 	 * @function plugMiniList
-	 * @param {theDayBegin} [theDayBegin]
-	 * @param {theDayEnd} [theDayEnd]
+	 * @param {Date} theDayBegin
+	 * @param {Date} theDayEnd
 	 * @return {rows}
+	 * @desc プラグミニリストを取得する。JPとUSを区別せずに取得するが、Plugは電力をとれないので取得しない。動的に変わるので、当日の通信状況でデバイスリストを作成する。
 	*/
 	getPlugMiniList: async function (theDayBegin, theDayEnd) {
 		let list = [];
@@ -645,15 +643,15 @@ let mainSwitchBot = {
 	},
 
 
-	// 3分毎のtemperature
 	/**
 	 * @async
 	 * @function getTempratureRows
-	 * @param {theDayBegin} [theDayBegin]
-	 * @param {theDayEnd} [theDayEnd]
-	 * @param {meter} [meter]
-	 * @param {subQuery} [subQuery]
+	 * @param {Date} theDayBegin
+	 * @param {Date} theDayEnd
+	 * @param {meter} meter
+	 * @param {subQuery} subQuery
 	 * @return {rows}
+	 * @desc 3分毎のtemperature
 	*/
 	getTempratureRows: async function (theDayBegin, theDayEnd, meter, subQuery) {
 		try {
@@ -679,12 +677,16 @@ let mainSwitchBot = {
 		}
 	},
 
-	// 3分毎のhumidity
+
 	/**
 	 * @async
 	 * @function getHumidityRows
-	 * @param {sendIPCMessage} [_sendIPCMessage]
+	 * @param {Date} theDayBegin
+	 * @param {Date} theDayEnd
+	 * @param {meter} meter
+	 * @param {subQuery} subQuery
 	 * @return {rows}
+	 * @desc 3分毎のhumidity
 	*/
 	getHumidityRows: async function (theDayBegin, theDayEnd, meter, subQuery) {
 		let ret = [];
@@ -712,17 +714,15 @@ let mainSwitchBot = {
 	},
 
 
-
-
-	// 3分毎のvoltage
 	/**
 	 * @async
 	 * @function getVoltageRows
-	 * @param {theDayBegin} [theDayBegin]
-	 * @param {theDayEnd} [theDayEnd]
-	 * @param {plug} [plug]
-	 * @param {subQuery} [subQuery]
+	 * @param {Date} theDayBegin
+	 * @param {Date} theDayEnd
+	 * @param {plug} plug
+	 * @param {subQuery} subQuery
 	 * @return {rows}
+	 * @desc 3分毎のvoltage
 	*/
 	getVoltageRows: async function (theDayBegin, theDayEnd, plug, subQuery) {
 		try {
@@ -748,15 +748,15 @@ let mainSwitchBot = {
 		}
 	},
 
-	// 3分毎のwatt
 	/**
 	 * @async
 	 * @function getWeightRows
-	 * @param {theDayBegin} [theDayBegin]
-	 * @param {theDayEnd} [theDayEnd]
-	 * @param {plug} [plug]
-	 * @param {subQuery} [subQuery]
+	 * @param {Date} theDayBegin
+	 * @param {Date} theDayEnd
+	 * @param {plug} plug
+	 * @param {subQuery} subQuery
 	 * @return {rows}
+	 * @desc 3分毎のwatt
 	*/
 	getWeightRows: async function (theDayBegin, theDayEnd, plug, subQuery) {
 		let ret = [];
@@ -783,15 +783,16 @@ let mainSwitchBot = {
 		}
 	},
 
-	// 3分毎のAmpere
+
 	/**
 	 * @async
 	 * @function getCurrentRows
-	 * @param {theDayBegin} [theDayBegin]
-	 * @param {theDayEnd} [theDayEnd]
-	 * @param {plug} [plug]
-	 * @param {subQuery} [subQuery]
+	 * @param {Date} theDayBegin
+	 * @param {Date} theDayEnd
+	 * @param {plug} plug
+	 * @param {subQuery} subQuery
 	 * @return {rows}
+	 * @desc 3分毎のampere
 	*/
 	getCurrentRows: async function (theDayBegin, theDayEnd, plug, subQuery) {
 		let ret = [];
@@ -819,13 +820,11 @@ let mainSwitchBot = {
 	},
 
 
-
-	// DBからテーブル取得
 	/**
 	 * @async
 	 * @function getTodayRoomEnvSwitchBot
-	 * @param {void}
-	 * @return {object}
+	 * @return {object} 3分毎データ配列を格納したJSON
+	 * @desc DBからすべてセンサの３分毎データを取得してオブジェクトとする
 	*/
 	getTodayRoomEnvSwitchBot: async function () {
 		// 画面に今日のデータを送信するためのデータ作る
@@ -961,8 +960,7 @@ let mainSwitchBot = {
 	/**
 	 * @async
 	 * @function sendTodayRoomEnv
-	 * @param {void}
-	 * @return {void}
+	 * @desc 本日の（３分毎）データをRendererに送る
 	*/
 	sendTodayRoomEnv: async function () {
 		let arg = {};
