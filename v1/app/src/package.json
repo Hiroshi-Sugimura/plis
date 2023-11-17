@@ -22,7 +22,7 @@
     "request-promise-native": "^0.0.0",
     "sequelize": "^6.35.0",
     "sqlite3": "^5.1.6",
-    "switchbot-handler": "^0.0.2",
+    "switchbot-handler": "^1.0.0",
     "tradfri-handler": "^0.5.3",
     "usb-2jcie-bu": "^1.2.0",
     "usb-ud-co2s": "^1.0.1"

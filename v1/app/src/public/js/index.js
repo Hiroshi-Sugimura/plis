@@ -297,7 +297,7 @@ function onLoad() {
 			//----------------------------------------------
 			// SwitchBot関連
 			case "fclSwitchBot":
-				// console.log('main -> fclSwitchBot:', c.arg);
+				console.log('main -> fclSwitchBot:', c.arg);
 				window.renewFacilitiesSwitchBot(c.arg);
 				break;
 

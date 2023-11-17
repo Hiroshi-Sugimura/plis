@@ -66,10 +66,16 @@ window.addEventListener('DOMContentLoaded', function () {
 			switch (d.deviceType) {
 				case 'Bot':
 					switch (devState.power) {
-						case 'on': icon = 'fa-regular fa-square'; break;
-						case 'off': icon = 'fa-solid fa-square-xmark'; break;
+						case 'on':
+							icon = 'fa-regular fa-square';
+							control = `<button onClick="window.SwitchBotBot('${d.deviceId}', 'turnOff', 'default');">OFF</button>`;
+							break;
+						case 'off':
+							icon = 'fa-solid fa-square-xmark';
+							control = `<button onClick="window.SwitchBotBot('${d.deviceId}', 'turnOn', 'default');">ON</button>`;
+							break;
 					}
-					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>`;
+					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${devState.power}<br>${control}`;
 					break;
 
 				case 'Curtain':
@@ -131,10 +137,10 @@ window.addEventListener('DOMContentLoaded', function () {
 				case 'Plug Mini (US)':
 				case 'Plug Mini (JP)':
 					if (devState.power == 'on') {
-						control = `<button onClick="window.SwitchBotPlug(this);" value="${d.deviceId},turnOff">OFF</button>`;
+						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOff', 'default');">OFF</button>`;
 						icon = 'fa-plug-circle-bolt';
 					} else {
-						control = `<button onClick="window.SwitchBotPlug(this);" value="${d.deviceId},turnOn">ON</button>`;
+						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOff', 'default');">OFF</button>`;
 						icon = 'fa-plug';
 					}
 					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>`;
@@ -146,10 +152,10 @@ window.addEventListener('DOMContentLoaded', function () {
 
 				case 'Plug':
 					if (devState.power == 'on') {
-						control = `<button onClick="window.SwitchBotPlug(this);" value="${d.deviceId},turnOff">OFF</button>`;
+						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOff', 'default');">OFF</button>`;
 						icon = 'fa-plug-circle-bolt';
 					} else {
-						control = `<button onClick="window.SwitchBotPlug(this);" value="${d.deviceId},turnOn">ON</button>`;
+						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOn', 'default');">OFF</button>`;
 						icon = 'fa-plug';
 					}
 					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${control}`;
@@ -269,16 +275,24 @@ window.addEventListener('DOMContentLoaded', function () {
 	//----------------------------------------------------------------------------------------------
 	/**
 	 * @func
-	 * @desc SwitchBot control
-	 * @param {void}
-	 * @return {void}
+	 * @desc SwitchBot control for Plug
+	 * @param {Button} btn
 	 */
-	window.SwitchBotPlug = function (btn) {
-		let v = btn.value.split(',');
-		let c = { command: v[1] };
-		console.log('btn:', v[0], JSON.stringify(c));
-		window.ipc.SwitchBotControl(v[0], JSON.stringify(c));
+	window.SwitchBotPlug = function (id, command, param) {
+		console.log('window.SwitchBotPlug() id:', id, 'command:', command, 'param:', param);
+		window.ipc.SwitchBotControl(id, command, param);
 	};
+
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bot
+	 * @param {Button} btn
+	 */
+	window.SwitchBotBot = function (id, command, param) {
+		console.log('window.SwitchBotBot() id:', id, 'command:', command, 'param:', param);
+		window.ipc.SwitchBotControl(id, command, param);
+	};
+
 
 	//----------------------------------------------------------------------------------------------
 	// SwitchBot chart

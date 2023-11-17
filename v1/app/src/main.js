@@ -56,23 +56,33 @@ const mainCalendar = require('./mainCalendar'); // カレンダー準備
 const mainCo2s = require('./mainCo2s');  // usb-ud-co2センサー
 const licenses = require('./modules.json');  // モジュールのライセンス
 
-let mainWindow = null; // electronのmain window
+/** electronのmain window */
+let mainWindow = null;
 
-let localaddresses = [];  // NICリスト
+/** NICリスト */
+let localaddresses = [];
 
-// 管理しているデバイスやサービスのリストにユーザが名前を付けたい
+/** 管理しているデバイスやサービスのリストにユーザが名前を付けたい */
 // [{ type: '', id: '', ip: '', mac: '', alias, '' }]
 let managedThings = [];
 
 const store = new Store();
 
-let config = {}; // = config.system
+/** config */
+let config = {}; // = 
+
+/** persist */
 let persist = {};
 
 //////////////////////////////////////////////////////////////////////
 // local function
 //////////////////////////////////////////////////////////////////////
-// IPC通信の定式
+/**
+ * @func
+ * @desc IPC通信の定式
+ * @param {string} cmdStr
+ * @param {string} argStr
+ */
 let sendIPCMessage = function (cmdStr, argStr) {
 	try {
 		if (mainWindow != null && mainWindow.webContents != null) {
@@ -486,15 +496,9 @@ ipcMain.handle('SwitchBotStop', async (event, arg) => {
 	await mainSwitchBot.stop();
 });
 
-/**
- * Add two numbers together. (JSDoc test)
- * @param {number} a - The first number. (JSDoc test)
- * @param {number} b - The second number. (JSDoc test)
- * @returns {number} The sum of the two numbers. (JSDoc test)
- */
 ipcMain.handle('SwitchBotControl', async (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- SwitchBotControl, arg:\x1b[32m', arg, '\x1b[0m') : 0;
-	mainSwitchBot.control(arg.id, arg.command);
+	mainSwitchBot.control(arg.id, arg.command, arg.param);
 });
 
 

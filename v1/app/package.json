@@ -9,7 +9,7 @@
     "preinstall": "npm i license-checker npm-check-updates && pushd . && cd src && npm i && popd",
     "win": "chcp 65001 && npm run license-check && electron-forge start",
     "mac": "npx license-checker --json > ./src/modules.json && electron-forge start",
-    "ncu": "npx ncu -u && cd src && npx ncu -u && popd",
+    "ncu": "npx ncu -u && npm i && cd src && npx ncu -u && npm i && popd",
     "package": "electron-forge package",
     "make": "npx license-checker --json > ./src/modules.json && electron-forge make",
     "publish": "electron-forge publish",

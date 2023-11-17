@@ -198,15 +198,18 @@ let mainSwitchBot = {
 	 * @function control
 	 * @param {string} id デバイスID
 	 * @param {string} command デバイスへのコマンド
+	 * @param {string} param デバイスへのコマンド詳細
 	 * @desc デバイスタイプごとに制御
 	*/
-	control: function (id, command) {
+	control: async function (id, command, param) {
 		// mainSwitchBot.client
-		console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.control() id:', id, 'command:', command);
+		console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.control() id:', id, 'command:', command, 'param:', param);
 
-		mainSwitchBot.client.setDeviceStatus(id, command, '', (ret) => {
-			console.log('mainSwitchBot.client.sendControlCommand ret:', r);
-		});
+		// mainSwitchBot.client.setDeviceStatus(id, command, param, (ret) => {
+		// console.log('mainSwitchBot.client.sendControlCommand ret:', ret);
+		// });
+		const ret = await mainSwitchBot.client.setDeviceStatusSync(id, command, param);
+		console.log(ret);
 	},
 
 
