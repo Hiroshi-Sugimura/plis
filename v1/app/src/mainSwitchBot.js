@@ -59,16 +59,21 @@ let mainSwitchBot = {
 	callback: null,
 	/** @member isRun
 	 *  @desc 初期化して起動済みのフラグ
-	 *  @default null
+	 *  @default false
 	 */
 	isRun: false,
 
 	//////////////////////////////////////////////////////////////////////
 	// interfaces
 	/**
-	 * @async
+	 * @callback sendIPCMessage
+	 * @param {string} cmdStr - command string. e.g. "Info"
+	 * @param {string} argStr - details. g.g. "detail text."
+	 */
+
+	/**
 	 * @function start
-	 * @param {sendIPCMessage} _sendIPCMessage
+	 * @param {sendIPCMessage} _sendIPCMessage - IPC通信関数
 	 * @desc エントリーポイント
 	*/
 	start: function (_sendIPCMessage) {
@@ -155,7 +160,7 @@ let mainSwitchBot = {
 	/**
 	 * @async
 	 * @function setConfig
-	 * @param {_config} [_config]
+	 * @param {Object} [_config=undefined] - 設定
 	 * @desc 設定変更し、設定を保存する。_configを指定しなければ保存だけする
 	*/
 	setConfig: async function (_config) {
@@ -170,9 +175,8 @@ let mainSwitchBot = {
 	},
 
 	/**
-	 * @async
 	 * @function getConfig
-	 * @return {config} 現在保持している設定
+	 * @return {Object} 現在保持している設定
 	 * @desc 現在の設定を返す
 	*/
 	getConfig: function () {
@@ -181,9 +185,8 @@ let mainSwitchBot = {
 
 
 	/**
-	 * @async
 	 * @function getPersist
-	 * @return {persist} 現在保持している通信データ
+	 * @return {Object} persist 現在保持している通信データ
 	 * @desc 現在の通信データを返す
 	*/
 	getPersist: function () {
@@ -193,8 +196,8 @@ let mainSwitchBot = {
 
 	/**
 	 * @function control
-	 * @param id id デバイスID
-	 * @param string command デバイスへのコマンド
+	 * @param {string} id デバイスID
+	 * @param {string} command デバイスへのコマンド
 	 * @desc デバイスタイプごとに制御
 	*/
 	control: function (id, command) {
@@ -226,7 +229,26 @@ let mainSwitchBot = {
 				ret.deviceList = devlist.deviceList;
 				ret.infraredRemoteList = devlist.infraredRemoteList;
 				for (let d of ret.deviceList) {
-					ret[d.deviceId] = await _client.getDeviceStatusSync(d.deviceId);
+					switch (d.deviceType) {
+						case 'Plug':
+						case 'Plug Mini (US)':
+						case 'Plug Mini (JP)':
+						case 'Meter':
+						case 'MeterPlus':
+						case 'Curtain':
+						case 'Humidifier':
+						case 'Motion Sensor':
+						case 'Contact Sensor':
+						case 'Color Bulb':
+						case 'Bot':
+							ret[d.deviceId] = await _client.getDeviceStatusSync(d.deviceId);
+							break;
+						case 'Hub Mini': // APIの回数を抑えるために、詳細を取りに行かないデバイスを設定
+						case 'Indoor Cam':
+						case 'Remote':
+						default:
+							continue;
+					}
 				}
 				callback(objectSort(ret));
 			});
@@ -270,9 +292,9 @@ let mainSwitchBot = {
 				mainSwitchBot.callback(mainSwitchBot.facilities);  // mainに通知
 			});  // 一回実行
 
-			// 監視はcronで実施、処理が相当重いので3分毎、DBへのクエリ方法をもっと高速になるように考えたほうが良い
-			// 1分に1回実施
-			mainSwitchBot.observationJob = cron.schedule('*/1 * * * *', async () => {
+			// 監視はcronで実施、DBへのクエリ方法をもっと高速になるように考えたほうが良い
+			// 1分に1回実施だと一日10000回のAPI制限に引っかかるので通信時間考えて毎2分30秒で実施、3分に1回という感じ
+			mainSwitchBot.observationJob = cron.schedule('30 */2 * * * *', async () => {
 				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.cron.schedule()') : 0;
 
 				mainSwitchBot.renewFacilities(mainSwitchBot.client, (devStatusList) => {  // 現在のデータ取得
@@ -330,6 +352,7 @@ let mainSwitchBot = {
 						});
 						break;
 
+					case 'Plug Mini (US)':
 					case 'Plug Mini (JP)':
 						switchBotDataModel.create({
 							deviceId: d.deviceId,
