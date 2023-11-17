@@ -140,7 +140,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOff', 'default');">OFF</button>`;
 						icon = 'fa-plug-circle-bolt';
 					} else {
-						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOff', 'default');">OFF</button>`;
+						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOff', 'default');">ON</button>`;
 						icon = 'fa-plug';
 					}
 					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>`;
@@ -167,10 +167,17 @@ window.addEventListener('DOMContentLoaded', function () {
 
 				case 'Color Bulb':
 					switch (devState.power) {
-						case 'on': icon = 'fa-regular fa-lightbulb'; break;
-						case 'off': icon = 'fa-solid fa-lightbulb'; break;
+						case 'on':
+							control = `<button onClick="window.SwitchBotBulb('${d.deviceId}', 'turnOff', 'default');">OFF</button>`;
+							icon = 'fa-regular fa-lightbulb';
+							break;
+						case 'off':
+							control = `<button onClick="window.SwitchBotBulb('${d.deviceId}', 'turnOn', 'default');">ON</button>`;
+							icon = 'fa-solid fa-lightbulb';
+							break;
 					}
-					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>brightness:${devState.brightness}<br>color:${devState.color}<br>colorTemperature:${devState.colorTemperature}`;
+
+					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>brightness:${devState.brightness}<br>color:${devState.color}<br>colorTemperature:${devState.colorTemperature}<br>${control}`;
 					break;
 
 				case 'Robot Vacuum Cleaner S1':
@@ -276,7 +283,9 @@ window.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * @func
 	 * @desc SwitchBot control for Plug
-	 * @param {Button} btn
+	 * @param {string} id
+	 * @param {string} command
+	 * @param {string} param
 	 */
 	window.SwitchBotPlug = function (id, command, param) {
 		console.log('window.SwitchBotPlug() id:', id, 'command:', command, 'param:', param);
@@ -286,13 +295,26 @@ window.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * @func
 	 * @desc SwitchBot control for Bot
-	 * @param {Button} btn
+	 * @param {string} id
+	 * @param {string} command
+	 * @param {string} param
 	 */
 	window.SwitchBotBot = function (id, command, param) {
 		console.log('window.SwitchBotBot() id:', id, 'command:', command, 'param:', param);
 		window.ipc.SwitchBotControl(id, command, param);
 	};
 
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bulb
+	 * @param {string} id
+	 * @param {string} command
+	 * @param {string} param
+	 */
+	window.SwitchBotBulb = function (id, command, param) {
+		console.log('window.SwitchBotBulb() id:', id, 'command:', command, 'param:', param);
+		window.ipc.SwitchBotControl(id, command, param);
+	};
 
 	//----------------------------------------------------------------------------------------------
 	// SwitchBot chart

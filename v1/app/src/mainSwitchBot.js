@@ -201,15 +201,21 @@ let mainSwitchBot = {
 	 * @param {string} param デバイスへのコマンド詳細
 	 * @desc デバイスタイプごとに制御
 	*/
-	control: async function (id, command, param) {
+	control: function (id, command, param) {
 		// mainSwitchBot.client
-		console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.control() id:', id, 'command:', command, 'param:', param);
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.control() id:', id, 'command:', command, 'param:', param) : 0;
 
-		// mainSwitchBot.client.setDeviceStatus(id, command, param, (ret) => {
-		// console.log('mainSwitchBot.client.sendControlCommand ret:', ret);
-		// });
-		const ret = await mainSwitchBot.client.setDeviceStatusSync(id, command, param);
-		console.log(ret);
+		mainSwitchBot.client.setDeviceStatus(id, command, param, (ret) => {
+			for (let i of ret.items) {
+				// console.log(JSON.stringify(i));
+				if (i.message == 'success') {
+					persist[i.deviceID] = i.status;
+					sendIPCMessage("fclSwitchBot", persist);
+				} else {
+					// console.error(JSON.stringify(ret));
+				}
+			}
+		});
 	},
 
 
