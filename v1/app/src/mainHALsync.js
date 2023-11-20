@@ -54,8 +54,7 @@ let mainHALsync = {
 	 * @func start
 	 * @desc 初期化
 	 * @async
-	 * @param {void}
-	 * @return void
+	 * @param {function} _sendIPCMessage
 	 * @throw error
 	 */
 	start: async function (_sendIPCMessage) {
@@ -76,6 +75,11 @@ let mainHALsync = {
 		// mainHALsync.startUploadEldata(); 	// 家電操作ログのアップロードを開始、HALのDBがきついのでとりあえずやらない
 		sendIPCMessage("renewHALConfigView", config);  // configを送る、そうするとViewがkeyチェックのためにprofile取りに来る
 		sendIPCMessage("showGarmin", persist.garmin);  // 保持しているGarminデータを表示する
+
+		if( !persist?.garmin ) {  // garminデータがない時には一回ダウンロードする
+			mainHALsync.garminDownload();
+		}
+
 	},
 
 
@@ -84,8 +88,6 @@ let mainHALsync = {
 	 * @func startSync
 	 * @desc 同期処理, トリガー：APIKey設定時、同期ボタン押下、定時処理
 	 * @async
-	 * @param {void}
-	 * @return void
 	 * @throw error
 	 */
 	startSync: async function () {
