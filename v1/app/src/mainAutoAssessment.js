@@ -11,7 +11,7 @@
 const cron = require('node-cron');
 require("date-utils");
 
-const { sqlite3, Op, IOT_MajorResultsModel, IOT_MinorResultsModel, roomEnvModel, IOT_QuestionnaireAnswersModel } = require('./models/localDBModels');   // DB models
+const { sqlite3, Op, IOT_MajorResultsModel, IOT_MinorResultsModel, switchBotDataModel, IOT_QuestionnaireAnswersModel } = require('./models/localDBModels');   // DB models
 
 const { getToday, getYesterday, roundFloat, checkValue } = require('./mainSubmodule');
 const mainHALlocal = require('./mainHALlocal.js');
@@ -319,8 +319,12 @@ let mainAutoAssessment = {
 			//--------------------------------------------------------
 			// IoTデータで点数をつける
 			// await console.log('IoT');
-			let iotHumidityRows = await roomEnvModel.findAll({
-				where: { createdAt: { [Op.like]: yesterday + "%" } },
+			let iotHumidityRows = await switchBotDataModel.findAll({
+				where: {
+					createdAt: { [Op.like]: yesterday + "%" },
+					[Op.or]: [{ deviceType: 'Meter' }, { deviceType: 'MeterPlus' }],
+					property: 'humidity'
+				},
 				order: [["createdAt", "desc"]]
 			});
 			// if (iotHumidityRows.length != 0) { // データがあれば

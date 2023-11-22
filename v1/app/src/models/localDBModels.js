@@ -322,6 +322,16 @@ const switchBotRawModel = sqlite3.define('switchBotRawTable', {
 	},
 	detail: {
 		type: Sequelize.TEXT('medium')
+	},
+	createdAt: {
+		type: 'TIMESTAMP',
+		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+		allowNull: false
+	},
+	updatedAt: {
+		type: 'TIMESTAMP',
+		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+		allowNull: false
 	}
 }, {
 	freezeTableName: true,
@@ -351,6 +361,16 @@ const switchBotDataModel = sqlite3.define('switchBotDataTable', {
 	},
 	value: {
 		type: Sequelize.TEXT('tiny')
+	},
+	createdAt: {
+		type: 'TIMESTAMP',
+		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+		allowNull: false
+	},
+	updatedAt: {
+		type: 'TIMESTAMP',
+		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+		allowNull: false
 	}
 }, {
 	freezeTableName: true,
