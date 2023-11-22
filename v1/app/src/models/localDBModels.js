@@ -1049,7 +1049,8 @@ const MinorkeyMeansValues = [
 	{ "idIOT_MinorkeyMeans": 51, "version": 1, "majorKey": 6, "minorKey": 4, "means": "使用電気削減量" },
 	{ "idIOT_MinorkeyMeans": 52, "version": 1, "majorKey": 6, "minorKey": 5, "means": "使用ガス削減量" },
 	{ "idIOT_MinorkeyMeans": 53, "version": 1, "majorKey": 6, "minorKey": 6, "means": "使用水道水削減量" },
-	{ "idIOT_MinorkeyMeans": 54, "version": 1, "majorKey": 6, "minorKey": 7, "means": "自動車排気削減量" }
+	{ "idIOT_MinorkeyMeans": 54, "version": 1, "majorKey": 6, "minorKey": 7, "means": "自動車排気削減量" },
+	{ "idIOT_MinorkeyMeans": 55, "version": 1, "majorKey": 3, "minorKey": 8, "means": "湿度" }
 ];
 
 //////////////////////////////////////////////////////////////////////
