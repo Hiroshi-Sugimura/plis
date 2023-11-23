@@ -280,8 +280,10 @@ let mainAutoAssessment = {
 
 	/**
 	 * @func assessment
-	 * @desc 評価シーケンス全体
 	 * @async
+	 * @desc 評価シーケンス全体
+	 * @param {string} today - "YYYY-MM-DD"
+	 * @param {string} yesterday - "YYYY-MM-DD"
 	 */
 	assessment: async function (today, yesterday) {
 		console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment - today:', today, ' yesterday:', yesterday);
@@ -330,8 +332,8 @@ let mainAutoAssessment = {
 			// if (iotHumidityRows.length != 0) { // データがあれば
 			if (iotHumidityRows) { // データが無くても実行する（debug用）
 				// 3=住居, 8=湿度
-				minorResults.r_3_8 = await mainAutoAssessment.humidityPoint(iotHumidityRows, minorResults);
-				console.log(minorResults.r_3_8);  // 点数の確認
+				minorResults = await mainAutoAssessment.humidityPoint(iotHumidityRows, minorResults);
+				// console.log(minorResults.r_3_8);  // 点数の確認
 			}
 
 
@@ -456,8 +458,8 @@ let mainAutoAssessment = {
 		mainAutoAssessment.isRun = true;
 		sendIPCMessage = _sendIPCMessage;
 
-		// mainAutoAssessment.observationJob = cron.schedule('0 0 9 * * *', () => {  // 本番用の AM9:00
-		mainAutoAssessment.observationJob = cron.schedule('*/10 * * * * *', async () => {  // debug用の10秒毎
+		mainAutoAssessment.observationJob = cron.schedule('0 0 9 * * *', async () => {  // 本番用の AM9:00
+			// mainAutoAssessment.observationJob = cron.schedule('*/10 * * * * *', async () => {  // debug用の10秒毎
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.start().observationJob') : 0;
 
 			let today = getToday();
@@ -485,15 +487,16 @@ let mainAutoAssessment = {
 
 
 	/**
-	 * @func 
-	 * @desc 湿度の点数を入れる
-	 * @async
+	 * 湿度の点数を入れる
+	 * @param {Object} iotRows
+	 * @param {Object} minorResults
+	 * @return {Object}
 	 */
 	humidityPoint: function (iotRows, minorResults) {
-		let ret = 40;
-		console.log('mainAutoAssessment.humidityPoint() iotRows:', iotRows);
+		minorResults.r_3_8 = 100;
+		// console.log('mainAutoAssessment.humidityPoint() iotRows:', iotRows);
 
-		return ret;
+		return minorResults.r_3_8;
 	}
 
 };

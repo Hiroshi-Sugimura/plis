@@ -63,10 +63,15 @@ let mainSwitchBot = {
 	 */
 	isRun: false,
 	/** @member count
-	 *  @desc switch bot との通信カウンター
+	 *  @desc switch bot との通信カウンター、countUp()メソドでカウントアップせよ。
 	 *  @default 0
 	 */
 	count: 0,
+	/** @member countResetJob
+	 *  @desc switch bot との通信カウンターを日替わりでリセットする
+	 *  @default null
+	 */
+	countResetJob: null,
 
 	//////////////////////////////////////////////////////////////////////
 	// interfaces
@@ -221,6 +226,7 @@ let mainSwitchBot = {
 				}
 			}
 		});
+		mainSwitchBot.countUp();
 	},
 
 
@@ -236,6 +242,7 @@ let mainSwitchBot = {
 		let ret = {};
 		try {
 			_client.getDevices(async (devlist) => {
+				mainSwitchBot.countUp();
 				if (!devlist || !devlist.deviceList) {
 					console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.renewFacilities() devlist is undefined or null.');
 					return;
@@ -256,6 +263,7 @@ let mainSwitchBot = {
 						case 'Color Bulb':
 						case 'Bot':
 							ret[d.deviceId] = await _client.getDeviceStatusSync(d.deviceId);
+							mainSwitchBot.countUp();
 							break;
 						case 'Hub Mini': // APIの回数を抑えるために、詳細を取りに行かないデバイスを設定
 						case 'Indoor Cam':
@@ -279,6 +287,14 @@ let mainSwitchBot = {
 			console.log(ret.deviceList);
 
 			throw error;
+		}
+	},
+
+
+	countUp: function () {
+		mainSwitchBot.count += 1;
+		if (mainSwitchBot.count == 10000) {
+			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.count reaches the API limits (10000 calls)');
 		}
 	},
 
@@ -309,15 +325,22 @@ let mainSwitchBot = {
 			// 監視はcronで実施、DBへのクエリ方法をもっと高速になるように考えたほうが良い
 			// 1分に1回実施だと一日10000回のAPI制限に引っかかるので通信時間考えて毎2分30秒で実施、3分に1回という感じ
 			mainSwitchBot.observationJob = cron.schedule('30 */2 * * * *', async () => {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.cron.schedule()') : 0;
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.cron.observationJob()') : 0;
 
 				mainSwitchBot.renewFacilities(mainSwitchBot.client, (devStatusList) => {  // 現在のデータ取得
 					mainSwitchBot.facilities = devStatusList;
 					mainSwitchBot.callback(mainSwitchBot.facilities);  // mainに通知
 				});  // 一回実行
 			});
-
 			mainSwitchBot.observationJob.start();
+
+			// カウントリセットジョブ
+			mainSwitchBot.countResetJob = cron.schedule('0 0 * * *', async () => {
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.cron.countResetJob() count:', mainSwitchBot.count) : 0;
+				mainSwitchBot.count = 0;
+			});
+			mainSwitchBot.countResetJob.start();
+
 		} catch (error) {
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.startCore() error:\x1b[32m', error, '\x1b[0m');
 		}
@@ -328,17 +351,24 @@ let mainSwitchBot = {
 	 * @desc 内部関数：監視をやめる
 	*/
 	stopObservation: function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.stopObserve().') : 0;
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.stopObservation().') : 0;
 
 		if (mainSwitchBot.observationJob) {
 			mainSwitchBot.observationJob.stop();
 			mainSwitchBot.observationJob = null;
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.stopObserve() is stopped.') : 0;
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.observationJob is stopped.') : 0;
 		} else {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.stopObserve() has already stopped.') : 0;
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.observationJob has already stopped.') : 0;
 		}
 
-		// mainSwitchBot.client.close();  // axiosのソケットcloseの方法不明
+		if (mainSwitchBot.countResetJob) {
+			mainSwitchBot.countResetJob.stop();
+			mainSwitchBot.countResetJob = null;
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.countResetJob is stopped.') : 0;
+		} else {
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.countResetJob has already stopped.') : 0;
+		}
+
 	},
 
 
