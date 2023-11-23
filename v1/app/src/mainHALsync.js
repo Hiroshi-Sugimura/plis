@@ -963,13 +963,12 @@ let mainHALsync = {
 	/**
 	 * @func ConfigSave
 	 * @desc ConfigSave
-	 * @async
 	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
-	ConfigSave: async function () {
-		await store.set('config.HAL', config);
+	ConfigSave: function () {
+		store.set('config.HAL', config);
 	},
 
 	/**

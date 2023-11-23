@@ -69,7 +69,7 @@ let managedThings = [];
 const store = new Store();
 
 /** config */
-let config = {}; // = 
+let config = {}; // =
 
 /** persist */
 let persist = {};
@@ -188,7 +188,7 @@ ipcMain.handle('CalendarRenewHolidays', async (event, arg) => {
 
 
 // System設定関連
-ipcMain.handle('SystemSetConfig', async (event, arg) => {
+ipcMain.handle('SystemSetConfig', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- SystemSetConfig, arg:\x1b[32m', arg, '\x1b[0m') : 0;
 	config.screenMode = arg.screenMode;
 	config.debug = arg.debug;
@@ -212,11 +212,11 @@ ipcMain.handle('SystemSetConfig', async (event, arg) => {
 	config.windowWidth = mainWindow.getSize()[0];
 	config.windowHeight = mainWindow.getSize()[1];
 
-	await mainSystem.setConfig(arg);
+	mainSystem.setConfig(arg);
 });
 
 // screen modeだけの変更
-ipcMain.handle('ScreenMode', async (event, arg) => {
+ipcMain.handle('ScreenMode', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ScreenMode, arg:\x1b[32m', arg, '\x1b[0m') : 0;
 	config.screenMode = arg.screenMode;
 	switch (config.screenMode) {
@@ -233,15 +233,15 @@ ipcMain.handle('ScreenMode', async (event, arg) => {
 	config.windowWidth = mainWindow.getSize()[0];
 	config.windowHeight = mainWindow.getSize()[1];
 
-	await mainSystem.setConfig(config);
+	mainSystem.setConfig(config);
 });
 
 
 //----------------------------------
 // Profile関連
-ipcMain.handle('userProfileSave', async (event, arg) => {
+ipcMain.handle('userProfileSave', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- userProfileSave, arg:\x1b[32m', arg, '\x1b[0m') : 0;
-	await mainUser.setConfig(arg);
+	mainUser.setConfig(arg);
 });
 
 //----------------------------------
@@ -265,9 +265,9 @@ ipcMain.handle('HALdeleteApiToken', async (event, arg) => {
 });
 
 // HAL同期ボタンとその応答
-ipcMain.handle('HALSyncRequeset', async (event, arg) => {
+ipcMain.handle('HALSyncRequeset', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALSyncRequeset.') : 0;
-	await mainHALsync.startSync();
+	mainHALsync.startSync();
 });
 
 // HAL cloud ユーザープロファイル取得
@@ -306,14 +306,14 @@ ipcMain.handle('ELStop', async (event, arg) => {
 	mainEL.stop();
 });
 
-ipcMain.handle('ELUseOldSearch', async (event, arg) => {
+ipcMain.handle('ELUseOldSearch', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ELUseOldSearch, arg:', arg) : 0;
-	await mainEL.setConfig({ oldSearch: true });  // arg = undef
+	mainEL.setConfig({ oldSearch: true });  // arg = undef
 });
 
-ipcMain.handle('ELStopOldSearch', async (event, arg) => {
+ipcMain.handle('ELStopOldSearch', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ELStopOldSearch, arg', arg) : 0;
-	await mainEL.setConfig({ oldSearch: false });  // arg = undef
+	mainEL.setConfig({ oldSearch: false });  // arg = undef
 });
 
 ipcMain.handle('Elsend', async (event, arg) => {
