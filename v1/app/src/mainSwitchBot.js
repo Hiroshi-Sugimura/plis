@@ -62,6 +62,11 @@ let mainSwitchBot = {
 	 *  @default false
 	 */
 	isRun: false,
+	/** @member count
+	 *  @desc switch bot との通信カウンター
+	 *  @default 0
+	 */
+	count: 0,
 
 	//////////////////////////////////////////////////////////////////////
 	// interfaces
