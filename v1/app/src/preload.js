@@ -182,8 +182,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	HALgetUserProfileRequest: async () => {
-		return await ipcRenderer.invoke('HALgetUserProfileRequest', '');
+	HALgetUserProfileRequest: () => {
+		ipcRenderer.invoke('HALgetUserProfileRequest', '');
 	},
 
 	//----------------------------------------------------------------------------------------------
