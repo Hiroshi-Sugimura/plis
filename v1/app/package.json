@@ -1,6 +1,7 @@
 {
   "name": "PLIS",
   "productName": "PLIS",
+  "memo": "publish時にはappx/appxmanifest.xmlのバージョンも変更すること",
   "version": "1.1.4",
   "description": "Platform for Life Improvement and Support",
   "main": "src/main.js",
