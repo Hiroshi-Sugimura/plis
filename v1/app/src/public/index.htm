@@ -403,8 +403,7 @@
 					<!-- SwitchBot Abst / Control -->
 					<h2 id="H2ControlSwitchBot" style="display: none;">
 						SwitchBot (<span id="spanSwitchBotTime"></span>)
-						<span class="f_right"><a href="#" onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;"><i class="fa-solid fa-gear right"></i>
-							</a>
+						<span class="f_right"><a href="#" onClick="document.getElementById('configTab').checked=true; location.hash='SwitchBotConfig'; document.getElementById('SwitchBotConfigDetails').open=true;"><i class="fa-solid fa-gear right"></i></a>
 						</span>
 					</h2>
 					<div class="p">
@@ -1447,6 +1446,7 @@
 						<div class="p">
 							すでにTokenをお持ちのかたは、入力したあとチェックボックスを有効にしてください。<br>
 							まだTokenをお持ちでないかたは、下記の案内に従ってTokenを取得してください。<br>
+							なお、SwitchBot APIは1日10,000回の利用制限があります。<br>
 							<br>
 							<label><input type="checkbox" id="inSwitchBotUse">Use SwitchBot</label><br>
 							Token: <form class="secretBorder inline"><input id="inSwitchBotToken" type="password" value="" size="50" class="secretText" /><span id="inSwitchBotTokenButtonEye" class="fa a-eye" onclick="window.pushHideButton('inSwitchBotToken');"></span></form><br>

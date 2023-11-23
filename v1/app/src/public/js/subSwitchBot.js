@@ -36,7 +36,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * @func
 	 * @desc SwitchBot デバイス情報のrenew
-	 * @param {void}
+	 * @param {Object} arg
 	 * @return {void}
 	 */
 	window.renewFacilitiesSwitchBot = function (arg) {
@@ -53,6 +53,8 @@ window.addEventListener('DOMContentLoaded', function () {
 			divControlSwitchBot.innerHTML = doc;
 			return; // 機器情報なければやらない、存在も消す
 		}
+
+		spanSwitchBotTime.innerHTML = `${moment().format("YYYY/MM/DD HH:mm:ss")} 取得, ${arg.count} calls/day`;
 
 		let devs = facilitiesSwitchBot.deviceList; // array
 		for (const d of devs) {
@@ -220,8 +222,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * @func
 	 * @desc SwitchBot config
-	 * @param {void}
-	 * @return {void}
 	 */
 	window.btnSwitchBotConfigSet_Click = function () {
 		btnSwitchBotConfigSet.disabled = true;
@@ -239,8 +239,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * @func
 	 * @desc 設定完了通知で、設定ボタンの復活（連打防止）
-	 * @param {void}
-	 * @return {void}
 	 */
 	window.SwitchBotConfigSaved = function () {
 		btnSwitchBotConfigSet.disabled = false;
@@ -254,8 +252,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * @func
 	 * @desc mainプロセスから設定値をもらったので画面を更新
-	 * @param {void}
-	 * @return {void}
+	 * @param {Object} arg
 	 */
 	window.renewSwitchBotConfigView = function (arg) {
 		// console.log('window.renewSwitchBotConfigView arg:', arg);
@@ -267,7 +264,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
 		if (arg.enabled) {  // 利用する場合
 			H2ControlSwitchBot.style.display = 'block';
-			spanSwitchBotTime.innerHTML = moment().format("YYYY/MM/DD HH:mm:ss取得");
 			divControlSwitchBot.style.display = '-webkit-flex';
 			canRoomEnvChartSwitchBot.style.display = 'block';
 			divSwitchBotSuggest.style.display = 'none';
@@ -325,8 +321,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @func
 	 * @desc newLegendClickHandler
 	 * @memberof subSwitchBot
-	 * @param {void}
-	 * @return {void}
+	 * @param {object} e
+	 * @param {object} legendItem
 	 */
 	let newLegendClickHandler = function (e, legendItem) {
 		let index = legendItem.datasetIndex;
@@ -374,8 +370,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @func
 	 * @desc newPowerLegendClickHandler
 	 * @memberof subSwitchBot
-	 * @param {void}
-	 * @return {void}
+	 * @param {object} e
+	 * @param {object} legendItem
 	 */
 	let newPowerLegendClickHandler = function (e, legendItem) {
 		let index = legendItem.datasetIndex;
@@ -579,8 +575,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @func
 	 * @desc renewCanvasSwitchBot
 	 * @memberof subSwitchBot
-	 * @param {void}
-	 * @return {void}
 	 */
 	let renewCanvasSwitchBot = function () {
 		H3SwitchBot.style.display = 'block';
@@ -606,8 +600,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @func
 	 * @desc renewPowerCanvasSwitchBot
 	 * @memberof subSwitchBot
-	 * @param {void}
-	 * @return {void}
 	 */
 	let renewPowerCanvasSwitchBot = function () {
 		H3SwitchBotPower.style.display = 'block';
@@ -635,8 +627,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * @func
 	 * @desc データをもらって画面更新
-	 * @param {void}
-	 * @return {void}
+	 * @param {json} _envDataObj
 	 */
 	window.renewRoomEnvSwitchBot = function (_envDataObj) {
 		let envDataObj = JSON.parse(_envDataObj);

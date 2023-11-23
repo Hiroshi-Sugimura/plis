@@ -19,7 +19,7 @@ const { SwitchBot } = require('switchbot-handler');
 const cron = require('node-cron');
 require('date-utils'); // for log
 const { Sequelize, Op, switchBotRawModel, switchBotDataModel } = require('./models/localDBModels');   // DBデータと連携
-const { objectSort, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
+const { objectSort, isObjEmpty, mergeDeeply, getToday } = require('./mainSubmodule');
 
 const store = new Store();
 
@@ -127,9 +127,20 @@ let mainSwitchBot = {
 			return;
 		}
 
+		if (persist?.countDay == getToday()) {  // カウンタが今日でなければ、persistあっても0リセット
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.count is continued.') : 0;
+			mainSwitchBot.count = persist.count;
+		} else {
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.count is reset.') : 0;
+			persist.count = 0;
+			persist.countDay = getToday();
+		}
+
 		try {
 			mainSwitchBot.startCore((facilities) => {
 				persist = facilities;
+				persist.count = mainSwitchBot.count;
+				persist.countDay = getToday();
 				sendIPCMessage("fclSwitchBot", persist);
 				switchBotRawModel.create({ detail: JSON.stringify(persist) });  // store raw data
 				mainSwitchBot.storeData(facilities);  // store meaningfull data

@@ -69,7 +69,7 @@ let managedThings = [];
 const store = new Store();
 
 /** config */
-let config = {}; // =
+let config = {};
 
 /** persist */
 let persist = {};
