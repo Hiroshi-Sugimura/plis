@@ -30,7 +30,7 @@ const databaseDir = path.join(userHome, appname);  // SQLite3ファイルの置�
 
 //////////////////////////////////////////////////////////////////////
 // 追加ライブラリ
-const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, shell, clipboard } = require('electron');
 app.disableHardwareAcceleration(); // electron設定とmain window
 const Store = require('electron-store');
 
@@ -693,7 +693,7 @@ const menuItems = [
 		label: appname,
 		submenu: [
 			{
-				label: 'Your Database',
+				label: 'Show your database',
 				accelerator: isMac ? 'Command+s' : 'Control+s',
 				click: async function () { shell.showItemInFolder(databaseDir); }
 			},
@@ -708,11 +708,53 @@ const menuItems = [
 					store.openInEditor();
 				}
 			},
+			{ type: "separator" },
 			{
 				label: 'Quit',
 				accelerator: isMac ? 'Command+Q' : 'Alt+F4',
 				click: function () { app.quit(); }
 			}]
+	}, {
+		label: 'Edit',
+		submenu: [  // 基本機能だけど、用意しておかないとMac開発時にショートカットが効かない
+			{
+				label: 'Cut',
+				accelerator: isMac ? 'Command+X' : 'Control+X',
+				selector: 'cut:'
+			},
+			{
+				label: 'Copy',
+				accelerator: isMac ? 'Command+C' : 'Control+C',
+				selector: 'copy:'
+			},
+			{
+				label: 'Paste',
+				accelerator: isMac ? 'Command+V' : 'Control+V',
+				selector: 'paste:'
+			},
+			{ type: "separator" },
+			{
+				label: "Undo",
+				accelerator: isMac ? 'Command+Z' : 'Control+Z',
+				selector: "undo:"
+			},
+			{
+				label: "Redo",
+				accelerator: isMac ? 'Shift+Command+Z' : 'Shift+Control+Z',
+				selector: "redo:"
+			},
+			{
+				label: "Select All",
+				accelerator: isMac ? 'Command+A' : 'Control+A',
+				selector: "selectAll:"
+			},
+			{ type: "separator" },
+			{
+				label: 'Search in page',
+				accelerator: isMac ? 'Command+F' : 'Control+F',
+				click: function (item, focusedWindow) { sendIPCMessage("openSearch", '') }
+			}
+		]
 	}, {
 		label: 'View',
 		submenu: [
@@ -722,15 +764,11 @@ const menuItems = [
 				click: function (item, focusedWindow) { if (focusedWindow) focusedWindow.reload() }
 			},
 			{
-				label: 'Search in page',
-				accelerator: isMac ? 'Command+F' : 'Control+F',
-				click: function (item, focusedWindow) { sendIPCMessage("openSearch", '') }
-			},
-			{
 				label: 'Toggle Full Screen',
 				accelerator: isMac ? 'Ctrl+Command+F' : 'F11',
 				click: function () { mainWindow.setFullScreen(!mainWindow.isFullScreen()); }
 			},
+			{ type: "separator" },
 			{
 				label: 'Zoom (+)',
 				accelerator: isMac ? 'Command+plus' : 'Control+plus',
@@ -749,11 +787,6 @@ const menuItems = [
 			{
 				label: 'Create shortcut',
 				click: function () { createShortCut(); }
-			},
-			{
-				label: 'Toggle Developer Tools',
-				accelerator: isMac ? 'Ctrl+Command+I' : 'Control+Shift+I',
-				click: function () { mainWindow.toggleDevTools(); }
 			}]
 	}, {
 		label: 'Information',
@@ -791,7 +824,14 @@ const menuItems = [
 			{
 				label: 'EURA (External contents)',
 				click: function () { shell.openExternal('https://plis.sugi-lab.net/eula.html'); }
-			}]
+			},
+			{ type: "separator" },
+			{
+				label: 'Developer Tools',
+				accelerator: isMac ? 'Ctrl+Command+I' : 'Control+Shift+I',
+				click: function () { mainWindow.toggleDevTools(); }
+			}
+		]
 	}];
 
 /**
