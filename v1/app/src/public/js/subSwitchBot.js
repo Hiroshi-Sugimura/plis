@@ -18,8 +18,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	let H3SwitchBot = document.getElementById('H3SwitchBot');
 	let H3SwitchBotPower = document.getElementById('H3SwitchBotPower');
 
-	let divSwitchBot = document.getElementById('divSwitchBot');  // switchBotのセンサデータ
-
 	// config
 	let inSwitchBotUse = document.getElementById('inSwitchBotUse'); // switchBot; use or not
 	let inSwitchBotToken = document.getElementById('inSwitchBotToken'); // switchBot; token
@@ -31,6 +29,10 @@ window.addEventListener('DOMContentLoaded', function () {
 	let divControlSwitchBot = document.getElementById('divControlSwitchBot');  // SwitchBotのコントロール
 	const canRoomEnvChartSwitchBot = document.getElementById('canRoomEnvChartSwitchBot');  // 部屋環境グラフ
 	let divSwitchBotSuggest = document.getElementById('divSwitchBotSuggest'); // switchBot; サジェスト
+
+	// dialog
+	let dlgSwitchBotSettingsDialog = document.getElementById('dlgSwitchBotSettingsDialog');  // switchBotの汎用ダイアログ
+	let divSwitchBotSettingsContents = document.getElementById('divSwitchBotSettingsContents');  // switchBotの汎用ダイアログのコンテンツ
 
 	//----------------------------------------------------------------------------------------------
 	/**
@@ -62,6 +64,8 @@ window.addEventListener('DOMContentLoaded', function () {
 			let icon = '';
 			let subicon = '';
 			let control = '';
+			let temp = '';
+			let color = '#000000';
 			// console.log('window.renewFacilitiesSwitchBot() d:', d, 'devState:', devState);
 			doc += "<div class='LinearLayoutChild'> <section>";
 
@@ -170,16 +174,36 @@ window.addEventListener('DOMContentLoaded', function () {
 				case 'Color Bulb':
 					switch (devState.power) {
 						case 'on':
-							control = `<button onClick="window.SwitchBotBulb('${d.deviceId}', 'turnOff', 'default');">OFF</button>`;
+							control = `Power: <button onClick='window.SwitchBotBulb("${d.deviceId}", "turnOff", "default");'>OFF</button><br>`;
 							icon = 'fa-regular fa-lightbulb';
 							break;
 						case 'off':
-							control = `<button onClick="window.SwitchBotBulb('${d.deviceId}', 'turnOn', 'default');">ON</button>`;
+							control = `Power: <button onClick='window.SwitchBotBulb("${d.deviceId}", "turnOn", "default");'>ON</button><br>`;
 							icon = 'fa-solid fa-lightbulb';
 							break;
 					}
+					temp = devState.color.split(/:/);
+					color = `#${toHexString(temp[0])}${toHexString(temp[1])}${toHexString(temp[2])}`;
+					console.log(color);
 
-					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>brightness:${devState.brightness}<br>color:${devState.color}<br>colorTemperature:${devState.colorTemperature}<br>${control}`;
+					control += `<form class='inline'>Brightness: `  // brightness
+						+ `<input type='range' value='${devState.brightness}' min='0' max='100' step='5' onChange='()'>`
+						+ `<input type='number' value='${devState.brightness}' min='0' max='100' step='5' onChange=''>`
+						+ `</form>`
+						+ `<button type='button' onclick='window.SwitchBotBulbUpdateSettings();'>送信</button>`
+						+ `<br>`
+						+ `<form class='inline'>Color: `  // color
+						+ `<input type='color' value='${color}'>`
+						+ `</form>`
+						+ `<button type='button' onclick='window.SwitchBotBulbUpdateSettings();'>送信</button>`
+						+ `<br>`
+						+ `<form class='inline'>Color temperature: `  // colorTemperature
+						+ `<input type='range' value='${devState.colorTemperature}' min='0' max='100' step='5' onChange='()'>`
+						+ `<input type='number' value='${devState.colorTemperature}' min='0' max='100' step='5' onChange=''>`
+						+ `</form>`
+						+ `<button type='button' onclick='window.SwitchBotBulbUpdateSettings();'>送信</button>`;
+
+					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${control}`;
 					break;
 
 				case 'Robot Vacuum Cleaner S1':
@@ -215,6 +239,14 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 
 		divControlSwitchBot.innerHTML = doc;
+	};
+
+	function toHexString(v) {
+		let ret = parseInt(v);
+		ret = ret.toString(16);
+		ret = '0' + ret;
+		ret = ret.substr(0, 2);
+		return ret;
 	};
 
 
@@ -311,6 +343,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		console.log('window.SwitchBotBulb() id:', id, 'command:', command, 'param:', param);
 		window.ipc.SwitchBotControl(id, command, param);
 	};
+
 
 	//----------------------------------------------------------------------------------------------
 	// SwitchBot chart
