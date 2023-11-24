@@ -11,9 +11,10 @@
 const cron = require('node-cron');
 require("date-utils");
 
-const { sqlite3, Op, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_QuestionnaireAnswersModel } = require('./models/localDBModels');   // DB models
+const { sqlite3, Op, IOT_MajorResultsModel, IOT_MinorResultsModel, switchBotDataModel, IOT_QuestionnaireAnswersModel } = require('./models/localDBModels');   // DB models
 
 const { getToday, getYesterday, roundFloat, checkValue } = require('./mainSubmodule');
+const mainHALlocal = require('./mainHALlocal.js');
 
 
 //////////////////////////////////////////////////////////////////////
@@ -279,8 +280,10 @@ let mainAutoAssessment = {
 
 	/**
 	 * @func assessment
-	 * @desc 評価シーケンス全体
 	 * @async
+	 * @desc 評価シーケンス全体
+	 * @param {string} today - "YYYY-MM-DD"
+	 * @param {string} yesterday - "YYYY-MM-DD"
 	 */
 	assessment: async function (today, yesterday) {
 		console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment - today:', today, ' yesterday:', yesterday);
@@ -318,8 +321,20 @@ let mainAutoAssessment = {
 			//--------------------------------------------------------
 			// IoTデータで点数をつける
 			// await console.log('IoT');
-
-
+			let iotHumidityRows = await switchBotDataModel.findAll({
+				where: {
+					createdAt: { [Op.like]: yesterday + "%" },
+					[Op.or]: [{ deviceType: 'Meter' }, { deviceType: 'MeterPlus' }],
+					property: 'humidity'
+				},
+				order: [["createdAt", "desc"]]
+			});
+			// if (iotHumidityRows.length != 0) { // データがあれば
+			if (iotHumidityRows) { // データが無くても実行する（debug用）
+				// 3=住居, 8=湿度
+				minorResults = await mainAutoAssessment.humidityPoint(iotHumidityRows, minorResults);
+				// console.log(minorResults.r_3_8);  // 点数の確認
+			}
 
 
 			//--------------------------------------------------------
@@ -375,7 +390,7 @@ let mainAutoAssessment = {
 				// minorResultsをCreate
 				minorResults.createdAt = now;
 				minorResults.updatedAt = now;
-				minorResults.assessmentSource = 'HEMS-Logger';
+				minorResults.assessmentSource = 'PLIS';
 				minorResults.date = today;
 				// console.log('Create IOT_MinorResultsModel:', minorResults);
 				await IOT_MinorResultsModel.create(minorResults);
@@ -443,29 +458,47 @@ let mainAutoAssessment = {
 		mainAutoAssessment.isRun = true;
 		sendIPCMessage = _sendIPCMessage;
 
-		mainAutoAssessment.observationJob = cron.schedule('0 0 9 * * *', () => {  // 本番用の AM9:00
-			// mainAutoAssessment.observationJob = cron.schedule('*/10 * * * * *', () => {  // debug用の0秒毎
+		mainAutoAssessment.observationJob = cron.schedule('0 0 9 * * *', async () => {  // 本番用の AM9:00
+			// mainAutoAssessment.observationJob = cron.schedule('*/10 * * * * *', async () => {  // debug用の10秒毎
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.start().observationJob') : 0;
 
 			let today = getToday();
 			let yesterday = getYesterday();
 
-			mainAutoAssessment.assessment(today, yesterday);
+			await mainAutoAssessment.assessment(today, yesterday);
+			// 点数付けたので画面更新
+			sendIPCMessage("HALRenewResponse", await mainHALlocal.getLastData());
 		});
 
 		mainAutoAssessment.observationJob.start();
 	},
 
+
 	/**
- * @func stop
- * @desc 停止
- * @async
- */
+	 * @func stop
+	 * @desc 停止
+	 * @async
+	 */
 	stop: async function () {
 		await mainAutoAssessment.observationJob.stop();
 		mainAutoAssessment.observationJob = null;
 		mainAutoAssessment.isRun = false;
+	},
+
+
+	/**
+	 * 湿度の点数を入れる
+	 * @param {Object} iotRows
+	 * @param {Object} minorResults
+	 * @return {Object}
+	 */
+	humidityPoint: function (iotRows, minorResults) {
+		minorResults.r_3_8 = 100;
+		// console.log('mainAutoAssessment.humidityPoint() iotRows:', iotRows);
+
+		return minorResults.r_3_8;
 	}
+
 };
 
 

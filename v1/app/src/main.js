@@ -30,7 +30,7 @@ const databaseDir = path.join(userHome, appname);  // SQLite3ファイルの置�
 
 //////////////////////////////////////////////////////////////////////
 // 追加ライブラリ
-const { app, BrowserWindow, ipcMain, Menu, shell } = require('electron');
+const { app, BrowserWindow, ipcMain, Menu, shell, clipboard } = require('electron');
 app.disableHardwareAcceleration(); // electron設定とmain window
 const Store = require('electron-store');
 
@@ -69,7 +69,7 @@ let managedThings = [];
 const store = new Store();
 
 /** config */
-let config = {}; // = 
+let config = {};
 
 /** persist */
 let persist = {};
@@ -188,7 +188,7 @@ ipcMain.handle('CalendarRenewHolidays', async (event, arg) => {
 
 
 // System設定関連
-ipcMain.handle('SystemSetConfig', async (event, arg) => {
+ipcMain.handle('SystemSetConfig', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- SystemSetConfig, arg:\x1b[32m', arg, '\x1b[0m') : 0;
 	config.screenMode = arg.screenMode;
 	config.debug = arg.debug;
@@ -212,11 +212,11 @@ ipcMain.handle('SystemSetConfig', async (event, arg) => {
 	config.windowWidth = mainWindow.getSize()[0];
 	config.windowHeight = mainWindow.getSize()[1];
 
-	await mainSystem.setConfig(arg);
+	mainSystem.setConfig(arg);
 });
 
 // screen modeだけの変更
-ipcMain.handle('ScreenMode', async (event, arg) => {
+ipcMain.handle('ScreenMode', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ScreenMode, arg:\x1b[32m', arg, '\x1b[0m') : 0;
 	config.screenMode = arg.screenMode;
 	switch (config.screenMode) {
@@ -233,15 +233,15 @@ ipcMain.handle('ScreenMode', async (event, arg) => {
 	config.windowWidth = mainWindow.getSize()[0];
 	config.windowHeight = mainWindow.getSize()[1];
 
-	await mainSystem.setConfig(config);
+	mainSystem.setConfig(config);
 });
 
 
 //----------------------------------
 // Profile関連
-ipcMain.handle('userProfileSave', async (event, arg) => {
+ipcMain.handle('userProfileSave', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- userProfileSave, arg:\x1b[32m', arg, '\x1b[0m') : 0;
-	await mainUser.setConfig(arg);
+	mainUser.setConfig(arg);
 });
 
 //----------------------------------
@@ -265,9 +265,9 @@ ipcMain.handle('HALdeleteApiToken', async (event, arg) => {
 });
 
 // HAL同期ボタンとその応答
-ipcMain.handle('HALSyncRequeset', async (event, arg) => {
+ipcMain.handle('HALSyncRequeset', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALSyncRequeset.') : 0;
-	await mainHALsync.startSync();
+	mainHALsync.startSync();
 });
 
 // HAL cloud ユーザープロファイル取得
@@ -306,14 +306,14 @@ ipcMain.handle('ELStop', async (event, arg) => {
 	mainEL.stop();
 });
 
-ipcMain.handle('ELUseOldSearch', async (event, arg) => {
+ipcMain.handle('ELUseOldSearch', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ELUseOldSearch, arg:', arg) : 0;
-	await mainEL.setConfig({ oldSearch: true });  // arg = undef
+	mainEL.setConfig({ oldSearch: true });  // arg = undef
 });
 
-ipcMain.handle('ELStopOldSearch', async (event, arg) => {
+ipcMain.handle('ELStopOldSearch', (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ELStopOldSearch, arg', arg) : 0;
-	await mainEL.setConfig({ oldSearch: false });  // arg = undef
+	mainEL.setConfig({ oldSearch: false });  // arg = undef
 });
 
 ipcMain.handle('Elsend', async (event, arg) => {
@@ -693,7 +693,7 @@ const menuItems = [
 		label: appname,
 		submenu: [
 			{
-				label: 'Your Database',
+				label: 'Show your database',
 				accelerator: isMac ? 'Command+s' : 'Control+s',
 				click: async function () { shell.showItemInFolder(databaseDir); }
 			},
@@ -708,11 +708,53 @@ const menuItems = [
 					store.openInEditor();
 				}
 			},
+			{ type: "separator" },
 			{
 				label: 'Quit',
 				accelerator: isMac ? 'Command+Q' : 'Alt+F4',
 				click: function () { app.quit(); }
 			}]
+	}, {
+		label: 'Edit',
+		submenu: [  // 基本機能だけど、用意しておかないとMac開発時にショートカットが効かない
+			{
+				label: 'Cut',
+				accelerator: isMac ? 'Command+X' : 'Control+X',
+				selector: 'cut:'
+			},
+			{
+				label: 'Copy',
+				accelerator: isMac ? 'Command+C' : 'Control+C',
+				selector: 'copy:'
+			},
+			{
+				label: 'Paste',
+				accelerator: isMac ? 'Command+V' : 'Control+V',
+				selector: 'paste:'
+			},
+			{ type: "separator" },
+			{
+				label: "Undo",
+				accelerator: isMac ? 'Command+Z' : 'Control+Z',
+				selector: "undo:"
+			},
+			{
+				label: "Redo",
+				accelerator: isMac ? 'Shift+Command+Z' : 'Shift+Control+Z',
+				selector: "redo:"
+			},
+			{
+				label: "Select All",
+				accelerator: isMac ? 'Command+A' : 'Control+A',
+				selector: "selectAll:"
+			},
+			{ type: "separator" },
+			{
+				label: 'Search in page',
+				accelerator: isMac ? 'Command+F' : 'Control+F',
+				click: function (item, focusedWindow) { sendIPCMessage("openSearch", '') }
+			}
+		]
 	}, {
 		label: 'View',
 		submenu: [
@@ -722,15 +764,11 @@ const menuItems = [
 				click: function (item, focusedWindow) { if (focusedWindow) focusedWindow.reload() }
 			},
 			{
-				label: 'Search in page',
-				accelerator: isMac ? 'Command+F' : 'Control+F',
-				click: function (item, focusedWindow) { sendIPCMessage("openSearch", '') }
-			},
-			{
 				label: 'Toggle Full Screen',
 				accelerator: isMac ? 'Ctrl+Command+F' : 'F11',
 				click: function () { mainWindow.setFullScreen(!mainWindow.isFullScreen()); }
 			},
+			{ type: "separator" },
 			{
 				label: 'Zoom (+)',
 				accelerator: isMac ? 'Command+plus' : 'Control+plus',
@@ -749,11 +787,6 @@ const menuItems = [
 			{
 				label: 'Create shortcut',
 				click: function () { createShortCut(); }
-			},
-			{
-				label: 'Toggle Developer Tools',
-				accelerator: isMac ? 'Ctrl+Command+I' : 'Control+Shift+I',
-				click: function () { mainWindow.toggleDevTools(); }
 			}]
 	}, {
 		label: 'Information',
@@ -791,7 +824,14 @@ const menuItems = [
 			{
 				label: 'EURA (External contents)',
 				click: function () { shell.openExternal('https://plis.sugi-lab.net/eula.html'); }
-			}]
+			},
+			{ type: "separator" },
+			{
+				label: 'Developer Tools',
+				accelerator: isMac ? 'Ctrl+Command+I' : 'Control+Shift+I',
+				click: function () { mainWindow.toggleDevTools(); }
+			}
+		]
 	}];
 
 /**

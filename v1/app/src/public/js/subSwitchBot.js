@@ -18,8 +18,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	let H3SwitchBot = document.getElementById('H3SwitchBot');
 	let H3SwitchBotPower = document.getElementById('H3SwitchBotPower');
 
-	let divSwitchBot = document.getElementById('divSwitchBot');  // switchBotのセンサデータ
-
 	// config
 	let inSwitchBotUse = document.getElementById('inSwitchBotUse'); // switchBot; use or not
 	let inSwitchBotToken = document.getElementById('inSwitchBotToken'); // switchBot; token
@@ -32,11 +30,15 @@ window.addEventListener('DOMContentLoaded', function () {
 	const canRoomEnvChartSwitchBot = document.getElementById('canRoomEnvChartSwitchBot');  // 部屋環境グラフ
 	let divSwitchBotSuggest = document.getElementById('divSwitchBotSuggest'); // switchBot; サジェスト
 
+	// dialog
+	let dlgSwitchBotSettingsDialog = document.getElementById('dlgSwitchBotSettingsDialog');  // switchBotの汎用ダイアログ
+	let divSwitchBotSettingsContents = document.getElementById('divSwitchBotSettingsContents');  // switchBotの汎用ダイアログのコンテンツ
+
 	//----------------------------------------------------------------------------------------------
 	/**
 	 * @func
 	 * @desc SwitchBot デバイス情報のrenew
-	 * @param {void}
+	 * @param {Object} arg
 	 * @return {void}
 	 */
 	window.renewFacilitiesSwitchBot = function (arg) {
@@ -54,12 +56,16 @@ window.addEventListener('DOMContentLoaded', function () {
 			return; // 機器情報なければやらない、存在も消す
 		}
 
+		spanSwitchBotTime.innerHTML = `${moment().format("YYYY/MM/DD HH:mm:ss")} 取得, ${arg.count} calls/day`;
+
 		let devs = facilitiesSwitchBot.deviceList; // array
 		for (const d of devs) {
 			let devState = facilitiesSwitchBot[d.deviceId];
 			let icon = '';
 			let subicon = '';
 			let control = '';
+			let temp = '';
+			let color = '#000000';
 			// console.log('window.renewFacilitiesSwitchBot() d:', d, 'devState:', devState);
 			doc += "<div class='LinearLayoutChild'> <section>";
 
@@ -168,16 +174,36 @@ window.addEventListener('DOMContentLoaded', function () {
 				case 'Color Bulb':
 					switch (devState.power) {
 						case 'on':
-							control = `<button onClick="window.SwitchBotBulb('${d.deviceId}', 'turnOff', 'default');">OFF</button>`;
+							control = `Power: <button onClick='window.SwitchBotBulb("${d.deviceId}", "turnOff", "default");'>OFF</button><br>`;
 							icon = 'fa-regular fa-lightbulb';
 							break;
 						case 'off':
-							control = `<button onClick="window.SwitchBotBulb('${d.deviceId}', 'turnOn', 'default');">ON</button>`;
+							control = `Power: <button onClick='window.SwitchBotBulb("${d.deviceId}", "turnOn", "default");'>ON</button><br>`;
 							icon = 'fa-solid fa-lightbulb';
 							break;
 					}
+					temp = devState.color.split(/:/);
+					color = `#${toHexString(temp[0])}${toHexString(temp[1])}${toHexString(temp[2])}`;
+					console.log(color);
 
-					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>brightness:${devState.brightness}<br>color:${devState.color}<br>colorTemperature:${devState.colorTemperature}<br>${control}`;
+					control += `<form class='inline'>Brightness: `  // brightness
+						+ `<input type='range' value='${devState.brightness}' min='0' max='100' step='5' onChange='()'>`
+						+ `<input type='number' value='${devState.brightness}' min='0' max='100' step='5' onChange=''>`
+						+ `</form>`
+						+ `<button type='button' onclick='window.SwitchBotBulbUpdateSettings();'>送信</button>`
+						+ `<br>`
+						+ `<form class='inline'>Color: `  // color
+						+ `<input type='color' value='${color}'>`
+						+ `</form>`
+						+ `<button type='button' onclick='window.SwitchBotBulbUpdateSettings();'>送信</button>`
+						+ `<br>`
+						+ `<form class='inline'>Color temperature: `  // colorTemperature
+						+ `<input type='range' value='${devState.colorTemperature}' min='0' max='100' step='5' onChange='()'>`
+						+ `<input type='number' value='${devState.colorTemperature}' min='0' max='100' step='5' onChange=''>`
+						+ `</form>`
+						+ `<button type='button' onclick='window.SwitchBotBulbUpdateSettings();'>送信</button>`;
+
+					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${control}`;
 					break;
 
 				case 'Robot Vacuum Cleaner S1':
@@ -215,13 +241,19 @@ window.addEventListener('DOMContentLoaded', function () {
 		divControlSwitchBot.innerHTML = doc;
 	};
 
+	function toHexString(v) {
+		let ret = parseInt(v);
+		ret = ret.toString(16);
+		ret = '0' + ret;
+		ret = ret.substr(0, 2);
+		return ret;
+	};
+
 
 	//----------------------------------------------------------------------------------------------
 	/**
 	 * @func
 	 * @desc SwitchBot config
-	 * @param {void}
-	 * @return {void}
 	 */
 	window.btnSwitchBotConfigSet_Click = function () {
 		btnSwitchBotConfigSet.disabled = true;
@@ -239,8 +271,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * @func
 	 * @desc 設定完了通知で、設定ボタンの復活（連打防止）
-	 * @param {void}
-	 * @return {void}
 	 */
 	window.SwitchBotConfigSaved = function () {
 		btnSwitchBotConfigSet.disabled = false;
@@ -254,8 +284,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * @func
 	 * @desc mainプロセスから設定値をもらったので画面を更新
-	 * @param {void}
-	 * @return {void}
+	 * @param {Object} arg
 	 */
 	window.renewSwitchBotConfigView = function (arg) {
 		// console.log('window.renewSwitchBotConfigView arg:', arg);
@@ -267,7 +296,6 @@ window.addEventListener('DOMContentLoaded', function () {
 
 		if (arg.enabled) {  // 利用する場合
 			H2ControlSwitchBot.style.display = 'block';
-			spanSwitchBotTime.innerHTML = moment().format("YYYY/MM/DD HH:mm:ss取得");
 			divControlSwitchBot.style.display = '-webkit-flex';
 			canRoomEnvChartSwitchBot.style.display = 'block';
 			divSwitchBotSuggest.style.display = 'none';
@@ -316,6 +344,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.ipc.SwitchBotControl(id, command, param);
 	};
 
+
 	//----------------------------------------------------------------------------------------------
 	// SwitchBot chart
 	let spanSwitchBotEnvTime = document.getElementById('spanSwitchBotEnvTime');    // env
@@ -325,8 +354,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @func
 	 * @desc newLegendClickHandler
 	 * @memberof subSwitchBot
-	 * @param {void}
-	 * @return {void}
+	 * @param {object} e
+	 * @param {object} legendItem
 	 */
 	let newLegendClickHandler = function (e, legendItem) {
 		let index = legendItem.datasetIndex;
@@ -374,8 +403,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @func
 	 * @desc newPowerLegendClickHandler
 	 * @memberof subSwitchBot
-	 * @param {void}
-	 * @return {void}
+	 * @param {object} e
+	 * @param {object} legendItem
 	 */
 	let newPowerLegendClickHandler = function (e, legendItem) {
 		let index = legendItem.datasetIndex;
@@ -579,8 +608,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @func
 	 * @desc renewCanvasSwitchBot
 	 * @memberof subSwitchBot
-	 * @param {void}
-	 * @return {void}
 	 */
 	let renewCanvasSwitchBot = function () {
 		H3SwitchBot.style.display = 'block';
@@ -606,8 +633,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @func
 	 * @desc renewPowerCanvasSwitchBot
 	 * @memberof subSwitchBot
-	 * @param {void}
-	 * @return {void}
 	 */
 	let renewPowerCanvasSwitchBot = function () {
 		H3SwitchBotPower.style.display = 'block';
@@ -635,8 +660,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * @func
 	 * @desc データをもらって画面更新
-	 * @param {void}
-	 * @return {void}
+	 * @param {json} _envDataObj
 	 */
 	window.renewRoomEnvSwitchBot = function (_envDataObj) {
 		let envDataObj = JSON.parse(_envDataObj);

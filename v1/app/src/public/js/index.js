@@ -384,6 +384,7 @@ function onLoad() {
 				break;
 
 			case "renewLicenses": // ライセンス表示の更新
+				console.log('main -> renewLicenses:', c.arg);
 				licenses = c.arg;
 				renewLicenses();
 				break;
@@ -416,9 +417,8 @@ function onLoad() {
 	 * @Return {Void}
 	 */
 	let renewLicenses = function () {
-		// console.log( licenses );
 		let doc = `<table class="sort_table" id="tblLicenses">`
-			+ `<thead> <tr><th>Name</th> <th>Licenses</th> <th>Publisher</th> <th>Repository</th> <tr></thead><tbody>`;
+			+ `<thead> <tr><th data-id='k' sortable>Name</th> <th data-id='licenses' sortable>Licenses</th> <th data-id='publisher' sortable>Publisher</th> <th>Repository</th> <tr></thead><tbody>`;
 
 		let keys = Object.keys(licenses);
 		for (let k of keys) {

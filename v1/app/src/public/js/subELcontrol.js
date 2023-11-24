@@ -400,8 +400,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func window.ELSettings
 	 * @desc GUIイベント，関数で閉じてしまっているので，Global変数のWindowからアクセスできるようにしておく
-	 * @param {void}
-	 * @return {void}
+	 * @param {string} ip
+	 * @param {string} obj
 	 */
 	window.ELSettings = function (ip, obj) {
 		let eoj = obj.split(/\(|\)/)[1];  // マルかっこで分割
@@ -521,8 +521,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func window.ELAirconShowControlDialog
 	 * @desc エアコンの詳細コントロールダイアログを表示
-	 * @param {void}
-	 * @return {void}
+	 * @param {string} ip
+	 * @param {string} obj
 	 */
 	window.ELAirconShowControlDialog = function (ip, obj) {
 		let eoj = obj.split(/\(|\)/)[1];  // 丸括弧 = Parenthesisで分割
@@ -557,8 +557,9 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func
 	 * @desc エアコンのモード切り替え（詳細コントロールダイアログから呼ばれる）
-	 * @param {void}
-	 * @return {void}
+	 * @param {object} radio
+	 * @param {string} ip
+	 * @param {string} eoj
 	 */
 	window.ELAAirconChangeMode = function (radio, ip, eoj) {
 		// console.log(ip, eoj, radio.value);
@@ -581,8 +582,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func window.ELpowButton
 	 * @desc 電源ボタンが押された
-	 * @param {void}
-	 * @return {void}
+	 * @param {object} btn
 	 */
 	window.ELpowButton = function (btn) {
 		let cmd = btn.value.split(",");
