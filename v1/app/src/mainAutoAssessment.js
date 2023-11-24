@@ -390,7 +390,7 @@ let mainAutoAssessment = {
 				// minorResultsをCreate
 				minorResults.createdAt = now;
 				minorResults.updatedAt = now;
-				minorResults.assessmentSource = 'HEMS-Logger';
+				minorResults.assessmentSource = 'PLIS';
 				minorResults.date = today;
 				// console.log('Create IOT_MinorResultsModel:', minorResults);
 				await IOT_MinorResultsModel.create(minorResults);
