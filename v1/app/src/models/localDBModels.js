@@ -731,16 +731,6 @@ const IOT_MinorResultsModel = sqlite3.define('IOT_MinorResults', {
 		autoIncrement: true,
 		primaryKey: true
 	},
-	createdAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
-	},
-	updatedAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
-	},
 	date: {
 		type: Sequelize.DATEONLY,
 		unique: true,

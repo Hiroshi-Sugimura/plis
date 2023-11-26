@@ -388,8 +388,8 @@ let mainAutoAssessment = {
 				});
 			} else {
 				// minorResultsをCreate
-				minorResults.createdAt = now;
-				minorResults.updatedAt = now;
+				// minorResults.createdAt = now;
+				// minorResults.updatedAt = now;
 				minorResults.assessmentSource = 'PLIS';
 				minorResults.date = today;
 				// console.log('Create IOT_MinorResultsModel:', minorResults);
