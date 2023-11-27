@@ -13,7 +13,7 @@ const omron = require('usb-2jcie-bu');
 const cron = require('node-cron');
 require('date-utils'); // for log
 const { Sequelize, Op, roomEnvModel } = require('./models/localDBModels');   // DBデータと連携
-const { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
+const { mergeDeeply } = require('./mainSubmodule');
 
 let sendIPCMessage = null;
 const store = new Store();
@@ -96,16 +96,19 @@ let mainOmron = {
 				sendIPCMessage("renewOmron", persist);
 			});
 
-			// 3秒毎にセンサの値チェック
+			// 3秒毎にセンサの値チェック、画面表示は3秒毎にするが、DBへの記録は1分毎とする
 			mainOmron.observationJob = cron.schedule('*/3 * * * * *', () => {
 				omron.requestData();
 			});
-		} catch (e) {
+			mainOmron.observationJob.start();
+		} catch (error) {
+			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.start().start()', error);
 		}
 
-		mainOmron.storeJob = cron.schedule('*/1 * * * *', async () => {
+		// 3秒毎にセンサの値チェック、画面表示は3秒毎にするが、DBへの記録は1分毎とする
+		mainOmron.storeJob = cron.schedule('*/3 * * * *', async () => {
 			try {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.cron.schedule() every 1min') : 0;
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.cron.schedule() every 3min') : 0;
 
 				let dt = new Date();
 
@@ -136,7 +139,7 @@ let mainOmron = {
 
 				mainOmron.sendTodayRoomEnv(); 		// 本日のデータの定期的送信
 			} catch (error) {
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.cron.schedule() each 1min, error:', error);
+				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.cron.schedule() each 3min, error:', error);
 			}
 		});
 
@@ -149,17 +152,20 @@ let mainOmron = {
 	 * @func stop
 	 * @desc stop
 	 * @async
-	 * @param {void} 
-	 * @return void
 	 * @throw error
 	 */
 	stop: async function () {
 		mainOmron.isRun = false;
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.stop()') : 0;
 
-		if (mainOmron.observationJob) {
+		if (mainOmron.observationJob) {  // センサ監視ジョブ
 			await mainOmron.observationJob.stop();
 			mainOmron.observationJob = null;
+		}
+
+		if (mainOmron.storeJob) {  // DB保存ジョブ
+			await mainOmron.storeJob.stop();
+			mainOmron.storeJob = null;
 		}
 
 		await mainOmron.setConfig(config);
@@ -171,18 +177,22 @@ let mainOmron = {
 	 * @func stopWithoutSave
 	 * @desc stopWithoutSave
 	 * @async
-	 * @param {void} 
-	 * @return void
 	 * @throw error
 	 */
 	stopWithoutSave: async function () {
 		mainOmron.isRun = false;
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.stopWithoutSave()') : 0;
 
-		if (mainOmron.observationJob) {
+		if (mainOmron.observationJob) {  // センサ監視ジョブ
 			await mainOmron.observationJob.stop();
 			mainOmron.observationJob = null;
 		}
+
+		if (mainOmron.storeJob) {  // DB保存ジョブ
+			await mainOmron.storeJob.stop();
+			mainOmron.storeJob = null;
+		}
+
 		await omron.stop();
 	},
 
@@ -190,8 +200,7 @@ let mainOmron = {
 	 * @func setConfig
 	 * @desc setConfig
 	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @param {Object} _config - nullable
 	 * @throw error
 	 */
 	setConfig: async function (_config) {
@@ -208,8 +217,7 @@ let mainOmron = {
 	 * @func getConfig
 	 * @desc getConfig
 	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @return {Object} config
 	 * @throw error
 	 */
 	getConfig: function () {
@@ -220,8 +228,7 @@ let mainOmron = {
 	 * @func getPersist
 	 * @desc getPersist
 	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @return {Object} persist
 	 * @throw error
 	 */
 	getPersist: function () {
@@ -236,8 +243,8 @@ let mainOmron = {
 	 * @func getCases
 	 * @desc getCases
 	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @param {Date}  date
+	 * @return {string} when clause
 	 * @throw error
 	 */
 	/*
@@ -283,8 +290,7 @@ let mainOmron = {
 	 * @func getRows
 	 * @desc getRows
 	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @return {Array} rows
 	 * @throw error
 	 */
 	// DBからテーブル取得
@@ -331,8 +337,7 @@ let mainOmron = {
 	 * @func getTodayRoomEnv
 	 * @desc getTodayRoomEnv
 	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @return {Array} rows
 	 * @throw error
 	 */
 	getTodayRoomEnv: async function () {
@@ -389,10 +394,8 @@ let mainOmron = {
 
 	/**
 	 * @func sendTodayRoomEnv
-	 * @desc sendTodayRoomEnv
+	 * @desc 画面更新
 	 * @async
-	 * @param {void} 
-	 * @return void
 	 * @throw error
 	 */
 	sendTodayRoomEnv: async function () {

@@ -12,8 +12,8 @@ const Store = require('electron-store');
 const request = require('request');
 const cron = require('node-cron');
 require('date-utils'); // for log
-const { Sequelize, sqlite3, jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel } = require('./models/localDBModels');   // DBデータと連携
-const {isObjEmpty, mergeDeeply} = require('./mainSubmodule');
+const { jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel } = require('./models/localDBModels');   // DBデータと連携
+const { isObjEmpty, mergeDeeply } = require('./mainSubmodule');
 
 let sendIPCMessage = null;
 const store = new Store();
@@ -31,13 +31,17 @@ let persist = {};
 // config
 
 let mainJma = {
+	/** 多重起動防止 */
 	isRun: false,
-	abstURL:   "https://www.jma.go.jp/bosai/forecast/data/overview_forecast/",
+	/** 天気概要の取得URL、固定値 */
+	abstURL: "https://www.jma.go.jp/bosai/forecast/data/overview_forecast/",
+	/** 適期詳細の取得URL、固定値 */
 	detailURL: "https://www.jma.go.jp/bosai/forecast/data/forecast/",
+	/** 監視ジョブ */
 	observationJob: null,
+	/** 画面更新先 */
 	callback: null,
-	debug: false,
-
+	/** エリアコード、固定値 */
 	areaCodes: {
 		"群馬県": "100000",
 		"埼玉県": "110000",
@@ -92,152 +96,149 @@ let mainJma = {
 	},
 
 	//////////////////////////////////////////////////////////////////////
-	// 気象庁の処理
 	/**
 	 * @func start
-	 * @desc start
-	 * @async
-	 * @param {void} 
+	 * @desc 気象庁天気取得の処理、重複起動は防いでいる
+	 * @param {function} _sendIPCMessage 
 	 * @return void
 	 * @throw error
 	 */
-	// 重複起動してもよい
-	start: function ( _sendIPCMessage ) {
+	start: function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
-		if( mainJma.isRun ) {  // 重複起動は現在データを渡す
-			sendIPCMessage('renewJmaConfigView', config );
-			if( !isObjEmpty( persist.abst ) )   { sendIPCMessage( "renewJmaAbst",   persist.abst ); }
-			if( !isObjEmpty( persist.detail ) ) { sendIPCMessage( "renewJmaDetail", persist.detail ); }
+		if (mainJma.isRun) {  // 重複起動は現在データを渡す
+			sendIPCMessage('renewJmaConfigView', config);
+			if (!isObjEmpty(persist.abst)) { sendIPCMessage("renewJmaAbst", persist.abst); }
+			if (!isObjEmpty(persist.detail)) { sendIPCMessage("renewJmaDetail", persist.detail); }
 			return;
 		}
 
 		config.enabled = store.get('config.JMA.enabled', true);
-		config.area    = store.get('config.JMA.area', '東京都');
-		config.code    = store.get('config.JMA.code', '130000');
-		config.debug   = store.get('config.JMA.debug', false);
-		persist        = store.get('persist.JMA', {});
+		config.area = store.get('config.JMA.area', '東京都');
+		config.code = store.get('config.JMA.code', '130000');
+		config.debug = store.get('config.JMA.debug', false);
+		persist = store.get('persist.JMA', {});
 
-		if( !config.enabled ) {
-			config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| JmaStart(): Jma is disabled.'):0;
+		if (!config.enabled) {
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| JmaStart(): Jma is disabled.') : 0;
 			mainJma.isRun = false;
 			return;
 		}
 		mainJma.isRun = true;
 
-		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| JmaStart() config:', '\x1b[32m', config, '\x1b[0m'):0;
-		if( !persist || isObjEmpty(persist) ) { persist = {abst:{}, detail:{}}; }
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| JmaStart() config:', '\x1b[32m', config, '\x1b[0m') : 0;
+		if (!persist || isObjEmpty(persist)) { persist = { abst: {}, detail: {} }; }
 
 		mainJma.callback = async function (res) {
-			switch( res.cmd ) {
+			switch (res.cmd) {
 				case "abst":
-				try{
-					if( !isObjEmpty(res.json) ) {
-						// raw
-						let raw = mainJma.parseAbstRaw( res.json );
-						// config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| JmaStart() abst raw:', '\x1b[32m', raw, '\x1b[0m'):0;
-						await jmaRawModel.findOne( {where: { requestAreaCode: raw.requestAreaCode, reportDatetime: raw.reportDatetime } })
-							.then( async (row) => {
-								if( !row ) {  // 重複は蓄積しない
-									await jmaRawModel.create( raw );
-								}
-							}).catch( (error) => {
-								config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| Error JmaStart() abst raw:', '\x1b[32m', raw, '\x1b[0m'):0;
-								throw error;
-							});
+					try {
+						if (!isObjEmpty(res.json)) {
+							// raw
+							let raw = mainJma.parseAbstRaw(res.json);
+							// config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| JmaStart() abst raw:', '\x1b[32m', raw, '\x1b[0m'):0;
+							await jmaRawModel.findOne({ where: { requestAreaCode: raw.requestAreaCode, reportDatetime: raw.reportDatetime } })
+								.then(async (row) => {
+									if (!row) {  // 重複は蓄積しない
+										await jmaRawModel.create(raw);
+									}
+								}).catch((error) => {
+									config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| Error JmaStart() abst raw:', '\x1b[32m', raw, '\x1b[0m') : 0;
+									throw error;
+								});
 
-						// 構造化されたデータ
-						persist.abst = mainJma.parseAbst(res.json);
-						sendIPCMessage( "renewJmaAbst", persist.abst );
-						await jmaAbstModel.findOne( {where: { requestAreaCode: persist.abst.requestAreaCode, reportDatetime: persist.abst.reportDatetime } })
-							.then( async (row) => {
-								if( !row ) {  // 重複は蓄積しない
-									await jmaAbstModel.create( persist.abst );
-								}
-							}).catch( (error) => {
-								config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| Error JmaStart() abst:', '\x1b[32m', persist.abst, '\x1b[0m'):0;
-								throw error;
-							});
+							// 構造化されたデータ
+							persist.abst = mainJma.parseAbst(res.json);
+							sendIPCMessage("renewJmaAbst", persist.abst);
+							await jmaAbstModel.findOne({ where: { requestAreaCode: persist.abst.requestAreaCode, reportDatetime: persist.abst.reportDatetime } })
+								.then(async (row) => {
+									if (!row) {  // 重複は蓄積しない
+										await jmaAbstModel.create(persist.abst);
+									}
+								}).catch((error) => {
+									config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| Error JmaStart() abst:', '\x1b[32m', persist.abst, '\x1b[0m') : 0;
+									throw error;
+								});
+						}
+					} catch (error) {
+						// JSONじゃないbodyもくる？
+						console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| JmaStart() abst error:', error);
 					}
-				}catch( error ) {
-					// JSONじゃないbodyもくる？
-					console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| JmaStart() abst error:', error);
-				}
-				break;
+					break;
 
 
 				case "detail":
-				try{
-					if( !isObjEmpty(res.json) ) {
-						// raw
-						let raw = mainJma.parseDetailRaw( res.json );
-						// config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| JmaStart() abst raw:', '\x1b[32m', raw, '\x1b[0m'):0;
-						await jmaRawModel.findOne( {where: { requestAreaCode: raw.requestAreaCode, reportDatetime: raw.reportDatetime } })
-							.then( async (row) => {
-								if( !row ) {  // 重複は蓄積しない
-									await jmaRawModel.create( raw );
-								}
-							}).catch( (error) => {
-								config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| Error JmaStart() detail raw:', '\x1b[32m', raw, '\x1b[0m'):0;
-								throw error;
-							});
-
-						// 構造化されたデータ
-						persist.detail = mainJma.parseDetail(res.json);
-						sendIPCMessage( "renewJmaDetail", persist.detail );
-
-
-						// 詳細の天気
-						for( let i in persist.detail.weather ) {
-							await weatherForecastModel.findOne( {where: { code: persist.detail.weather[i].code, reportDatetime: persist.detail.weather[i].reportDatetime } })
-								.then( async (row) => {
-									if( !row ) {  // 重複は蓄積しない
-										await weatherForecastModel.create( persist.detail.weather[i] );
+					try {
+						if (!isObjEmpty(res.json)) {
+							// raw
+							let raw = mainJma.parseDetailRaw(res.json);
+							// config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| JmaStart() abst raw:', '\x1b[32m', raw, '\x1b[0m'):0;
+							await jmaRawModel.findOne({ where: { requestAreaCode: raw.requestAreaCode, reportDatetime: raw.reportDatetime } })
+								.then(async (row) => {
+									if (!row) {  // 重複は蓄積しない
+										await jmaRawModel.create(raw);
 									}
-								}).catch( (error) => {
-									config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| Error JmaStart() detail weather:', '\x1b[32m', persist.detail.weather[i], '\x1b[0m'):0;
+								}).catch((error) => {
+									config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| Error JmaStart() detail raw:', '\x1b[32m', raw, '\x1b[0m') : 0;
 									throw error;
 								});
-						}
 
-						// 詳細の降水確率
-						for( let i in persist.detail.pops ) {
-							await popsForecastModel.findOne( {where: { code: persist.detail.pops[i].code, reportDatetime: persist.detail.pops[i].reportDatetime } })
-								.then( async (row) => {
-									if( !row ) {  // 重複は蓄積しない
-										await popsForecastModel.create( persist.detail.pops[i] );
-									}
-								}).catch( (error) => {
-									config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| Error JmaStart() detail pops:', '\x1b[32m', persist.detail.pops[i], '\x1b[0m'):0;
-									throw error;
-								});
-						}
+							// 構造化されたデータ
+							persist.detail = mainJma.parseDetail(res.json);
+							sendIPCMessage("renewJmaDetail", persist.detail);
 
-						// 詳細の気温
-						for( let i in persist.detail.temperature ) {
-							await tempForecastModel.findOne( {where: { code: persist.detail.temperature[i].code, reportDatetime: persist.detail.temperature[i].reportDatetime } })
-								.then( async (row) => {
-									if( !row ) {  // 重複は蓄積しない
-										await tempForecastModel.create( persist.detail.temperature[i] );
-									}
-								}).catch( (error) => {
-									config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| Error JmaStart() detail temperature:', '\x1b[32m', persist.detail.temperature[i], '\x1b[0m'):0;
-									throw error;
-								});
+
+							// 詳細の天気
+							for (let i in persist.detail.weather) {
+								await weatherForecastModel.findOne({ where: { code: persist.detail.weather[i].code, reportDatetime: persist.detail.weather[i].reportDatetime } })
+									.then(async (row) => {
+										if (!row) {  // 重複は蓄積しない
+											await weatherForecastModel.create(persist.detail.weather[i]);
+										}
+									}).catch((error) => {
+										config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| Error JmaStart() detail weather:', '\x1b[32m', persist.detail.weather[i], '\x1b[0m') : 0;
+										throw error;
+									});
+							}
+
+							// 詳細の降水確率
+							for (let i in persist.detail.pops) {
+								await popsForecastModel.findOne({ where: { code: persist.detail.pops[i].code, reportDatetime: persist.detail.pops[i].reportDatetime } })
+									.then(async (row) => {
+										if (!row) {  // 重複は蓄積しない
+											await popsForecastModel.create(persist.detail.pops[i]);
+										}
+									}).catch((error) => {
+										config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| Error JmaStart() detail pops:', '\x1b[32m', persist.detail.pops[i], '\x1b[0m') : 0;
+										throw error;
+									});
+							}
+
+							// 詳細の気温
+							for (let i in persist.detail.temperature) {
+								await tempForecastModel.findOne({ where: { code: persist.detail.temperature[i].code, reportDatetime: persist.detail.temperature[i].reportDatetime } })
+									.then(async (row) => {
+										if (!row) {  // 重複は蓄積しない
+											await tempForecastModel.create(persist.detail.temperature[i]);
+										}
+									}).catch((error) => {
+										config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| Error JmaStart() detail temperature:', '\x1b[32m', persist.detail.temperature[i], '\x1b[0m') : 0;
+										throw error;
+									});
+							}
 						}
+					} catch (error) {
+						// JSONじゃないbodyもくる？
+						console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| Error JmaStart() detail:', error);
 					}
-				}catch( error ) {
-					// JSONじゃないbodyもくる？
-					console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| Error JmaStart() detail:', error);
-				}
-				break;
+					break;
 			}
 		};
 
 		mainJma.setObserve();  // 3 hour each
 
-		sendIPCMessage('renewJmaConfigView', config );
-		if( !isObjEmpty( persist.abst ) )   { sendIPCMessage( "renewJmaAbst",   persist.abst ); }
-		if( !isObjEmpty( persist.detail ) ) { sendIPCMessage( "renewJmaDetail", persist.detail ); }
+		sendIPCMessage('renewJmaConfigView', config);
+		if (!isObjEmpty(persist.abst)) { sendIPCMessage("renewJmaAbst", persist.abst); }
+		if (!isObjEmpty(persist.detail)) { sendIPCMessage("renewJmaDetail", persist.detail); }
 		mainJma.gets(); // 初回起動はデータ取得する
 	},
 
@@ -245,59 +246,53 @@ let mainJma = {
 	// ---------------------------------------------------------------
 	/**
 	 * @func gets
-	 * @desc gets
-	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @desc 内部関数、天気情報を取得してcallbackする
 	 * @throw error
 	 */
-	// inner functions
-	gets: function() {
-		request( { url: mainJma.abstURL + config.code + ".json", method: 'GET', json:true }, function (error, response, body ) {
-			if( error ) {
-				console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.observe().abst error:', error);
+	gets: function () {
+		request({ url: mainJma.abstURL + config.code + ".json", method: 'GET', json: true }, function (error, response, body) {
+			if (error) {
+				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.observe().abst error:', error);
 				return;
 			}
-			mainJma.callback( {cmd:"abst", json:body} );
+			mainJma.callback({ cmd: "abst", json: body });
 		});
 
-		request( { url: mainJma.detailURL + config.code + ".json", method: 'GET', json:true }, function (error, response, body ) {
-			if( error ) {
-				console.error( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.observe().detail error:', error);
+		request({ url: mainJma.detailURL + config.code + ".json", method: 'GET', json: true }, function (error, response, body) {
+			if (error) {
+				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.observe().detail error:', error);
 				return;
 			}
-			mainJma.callback( {cmd:"detail", json:body} );
+			mainJma.callback({ cmd: "detail", json: body });
 		});
 	},
 
 	/**
 	 * @func parseAbstRaw
-	 * @desc parseAbstRaw
-	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @desc 内部関数、取得した概要情報を使いやすくする
+	 * @param {Object} body
+	 * @return {Object} body
 	 * @throw error
 	 */
 	// getしたbodyを使い物になる形に変える
-	parseAbstRaw: function(body) {
+	parseAbstRaw: function (body) {
 		return {
 			type: 'abst',
 			publishingOffice: body.publishingOffice,
 			reportDatetime: body.reportDatetime,
 			requestAreaCode: config.code,
-			json: JSON.stringify( body )
+			json: JSON.stringify(body)
 		};
 	},
 
 	/**
 	 * @func parseAbst
-	 * @desc parseAbst
-	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @desc 内部関数、取得した概要を使いやすくする
+	 * @param {Object} body
+	 * @return {Object} body
 	 * @throw error
 	 */
-	parseAbst: function(body) {
+	parseAbst: function (body) {
 		return {
 			reportDatetime: body.reportDatetime,
 			publishingOffice: body.publishingOffice,
@@ -309,13 +304,12 @@ let mainJma = {
 
 	/**
 	 * @func parseDetailRaw
-	 * @desc parseDetailRaw
-	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @desc 取得した詳細を使いやすくする
+	 * @param {Object} body
+	 * @return {Object} body
 	 * @throw error
 	 */
-	parseDetailRaw: function(body) {
+	parseDetailRaw: function (body) {
 		let w = body[0];  // json[1]はちょっとよくわからんので
 		let publishingOffice = w.publishingOffice;
 		let reportDatetime = w.reportDatetime;
@@ -325,21 +319,20 @@ let mainJma = {
 			publishingOffice: publishingOffice,
 			reportDatetime: reportDatetime,
 			requestAreaCode: config.code,
-			json: JSON.stringify( body )
+			json: JSON.stringify(body)
 		};
 	},
 
 	/**
 	 * @func parseDetail
-	 * @desc parseDetail
-	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @desc 内部関数、取得した詳細を使いやすくする
+	 * @param {Object} body
+	 * @return {Object} body
 	 * @throw error
 	 */
-	parseDetail: function(body) {
+	parseDetail: function (body) {
 		// console.log( body );
-		let res = {weather:[], pops:[], temperature:[]};
+		let res = { weather: [], pops: [], temperature: [] };
 		let w = body[0];  // body[1]はちょっとよくわからんので
 		let publishingOffice = w.publishingOffice;
 		let reportDatetime = w.reportDatetime;
@@ -349,8 +342,8 @@ let mainJma = {
 
 		// timeseries 0 = weather
 		let timeDefines = JSON.stringify(we.timeDefines);
-		for( let a of we.areas ) {
-			res.weather.push( {
+		for (let a of we.areas) {
+			res.weather.push({
 				reportDatetime: reportDatetime,
 				publishingOffice: publishingOffice,
 				targetArea: a.area.name,
@@ -365,8 +358,8 @@ let mainJma = {
 
 		// timeseries 1 = pops
 		timeDefines = JSON.stringify(po.timeDefines);
-		for( let a of po.areas ) {
-			res.pops.push( {
+		for (let a of po.areas) {
+			res.pops.push({
 				reportDatetime: reportDatetime,
 				publishingOffice: publishingOffice,
 				targetArea: a.area.name,
@@ -378,8 +371,8 @@ let mainJma = {
 
 		// timeseries 2 = temperature
 		timeDefines = JSON.stringify(te.timeDefines);
-		for( let a of te.areas ) {
-			res.temperature.push( {
+		for (let a of te.areas) {
+			res.temperature.push({
 				reportDatetime: reportDatetime,
 				publishingOffice: publishingOffice,
 				targetArea: a.area.name,
@@ -395,40 +388,34 @@ let mainJma = {
 
 	/**
 	 * @func setObserve
-	 * @desc setObserve
-	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @desc 監視開始する
 	 * @throw error
 	 */
-	// 監視開始する
-	setObserve: function() {
-		mainJma.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.setObserve() start.' ):0;
+	setObserve: function () {
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.setObserve() start.') : 0;
 
-		if( mainJma.observationJob ) {
-			mainJma.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.setObserve() already started.' ):0;
+		if (config.observationJob) {
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.setObserve() already started.') : 0;
 		}
 
 		// 監視はcronで実施、3時間毎
 		mainJma.observationJob = cron.schedule('0 */3 * * *', () => {
-			mainJma.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.setObserve cron.schedule()'):0;
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.setObserve cron.schedule()') : 0;
 			mainJma.gets();
-		})
+		});
+
+		mainJma.observationJob.start();
 	},
 
 	/**
 	 * @func stopObservation
-	 * @desc stopObservation
-	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @desc 監視をやめる
 	 * @throw error
 	 */
-	// 監視をやめる
-	stopObservation: function() {
-		mainJma.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.stopObservation() observation.' ):0;
+	stopObservation: function () {
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.stopObservation() observation.') : 0;
 
-		if( mainJma.observationJob ) {
+		if (mainJma.observationJob) {
 			mainJma.observationJob.stop();
 			mainJma.observationJob = null;
 		}
@@ -436,57 +423,48 @@ let mainJma = {
 
 	/**
 	 * @func stop
-	 * @desc stop
+	 * @desc mainJmaの機能を（保存して）停止する
 	 * @async
-	 * @param {void} 
-	 * @return void
 	 * @throw error
 	 */
-	// interface
-	// 機能を停止する
 	stop: async function () {
-		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.stop()'):0;
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.stop()') : 0;
 
-		await mainJma.setConfig( config );
+		await mainJma.setConfig(config);
 		await store.set('persist.JMA', persist);
 		await mainJma.stopObservation();
 	},
 
 	/**
 	 * @func stopWithoutSave
-	 * @desc stopWithoutSave
+	 * @desc mainJmaの機能を（保存しないで）停止する
 	 * @async
-	 * @param {void} 
-	 * @return void
 	 * @throw error
 	 */
 	stopWithoutSave: async function () {
-		config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.stopWithoutSave()'):0;
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.stopWithoutSave()') : 0;
 		await mainJma.stopObservation();
 	},
 
 	/**
 	 * @func setConfig
-	 * @desc setConfig
+	 * @desc 設定更新、保存
 	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @param {Object} _config - nullable
 	 * @throw error
 	 */
-	setConfig: async function  ( _config ) {
-		if( _config ) {
-			config = mergeDeeply( config, _config );
+	setConfig: async function (_config) {
+		if (_config) {
+			config = mergeDeeply(config, _config);
 		}
 		await store.set('config.JMA', config);
-		sendIPCMessage( "configSaved", 'JMA' );  // 保存したので画面に通知
+		sendIPCMessage("configSaved", 'JMA');  // 保存したので画面に通知
 	},
 
 	/**
 	 * @func getConfig
-	 * @desc getConfig
-	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @desc 設定取得
+	 * @return {Object} config
 	 * @throw error
 	 */
 	getConfig: function () {
@@ -495,13 +473,11 @@ let mainJma = {
 
 	/**
 	 * @func getPersist
-	 * @desc getPersist
-	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @desc 情報取得
+	 * @return {Object} persist
 	 * @throw error
 	 */
-	getPersist: function() {
+	getPersist: function () {
 		return persist;
 	}
 
