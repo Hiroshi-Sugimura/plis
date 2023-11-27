@@ -187,21 +187,21 @@ window.addEventListener('DOMContentLoaded', function () {
 					console.log(color);
 
 					control += `<form class='inline'>Brightness: `  // brightness
-						+ `<input type='range' value='${devState.brightness}' min='0' max='100' step='5' onChange='()'>`
-						+ `<input type='number' value='${devState.brightness}' min='0' max='100' step='5' onChange=''>`
+						+ `<input type='range' id="inSwitchBotBulbRange_${d.deviceId}" value='${devState.brightness}' min='0' max='100' step='5' onChange='window.inSwitchBotBulbRange_Change("${d.deviceId}", this.value);'>`
+						+ `<input type='number' id="inSwitchBotBulbNumber_${d.deviceId}" value='${devState.brightness}' min='0' max='100' step='5' onChange='window.inSwitchBotBulbNumber_Change("${d.deviceId}", this.value);'>`
 						+ `</form>`
-						+ `<button type='button' onclick='window.SwitchBotBulbUpdateSettings();'>送信</button>`
+						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateBrightnessSettings("${d.deviceId}");'>送信</button>`
 						+ `<br>`
 						+ `<form class='inline'>Color: `  // color
 						+ `<input type='color' value='${color}'>`
 						+ `</form>`
-						+ `<button type='button' onclick='window.SwitchBotBulbUpdateSettings();'>送信</button>`
+						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateColorSettings();'>送信</button>`
 						+ `<br>`
 						+ `<form class='inline'>Color temperature: `  // colorTemperature
 						+ `<input type='range' value='${devState.colorTemperature}' min='0' max='100' step='5' onChange='()'>`
 						+ `<input type='number' value='${devState.colorTemperature}' min='0' max='100' step='5' onChange=''>`
 						+ `</form>`
-						+ `<button type='button' onclick='window.SwitchBotBulbUpdateSettings();'>送信</button>`;
+						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateColorTemperatureSettings();'>送信</button>`;
 
 					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${control}`;
 					break;
@@ -344,6 +344,40 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.ipc.SwitchBotControl(id, command, param);
 	};
 
+	// ----- スライダーと数値表示の同期
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bulb, Range change
+	 * @param {string} id
+	 * @param {string} param
+	 */
+	window.inSwitchBotBulbRange_Change = function (id, value) {
+		// console.log(id, value)
+		let obj = document.getElementById("inSwitchBotBulbNumber_" + id);
+		obj.value = value;
+	};
+
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bulb, Number change
+	 * @param {string} id
+	 * @param {string} param
+	 */
+	window.inSwitchBotBulbNumber_Change = function (id, value) {
+		// console.log(id, value)
+		let obj = document.getElementById("inSwitchBotBulbRange_" + id);
+		obj.value = value;
+	};
+
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bulb, Brigntness change
+	 * @param {string} id
+	 */
+	window.btnSwitchBotBulbUpdateBrightnessSettings = function (id) {
+		let obj = document.getElementById("inSwitchBotBulbNumber_" + id);
+		window.ipc.SwitchBotControl(id, "setBrightness", obj.value);
+	};
 
 	//----------------------------------------------------------------------------------------------
 	// SwitchBot chart

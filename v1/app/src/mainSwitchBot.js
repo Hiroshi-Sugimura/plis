@@ -227,13 +227,17 @@ let mainSwitchBot = {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.control() id:', id, 'command:', command, 'param:', param) : 0;
 
 		mainSwitchBot.client.setDeviceStatus(id, command, param, (ret) => {
-			for (let i of ret.items) {
-				// console.log(JSON.stringify(i));
-				if (i.message == 'success') {
-					persist[i.deviceID] = i.status;
-					sendIPCMessage("fclSwitchBot", persist);
-				} else {
-					// console.error(JSON.stringify(ret));
+			if (isObjEmpty(ret)) {
+				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.control() ret:', ret);
+			} else {
+				for (let i of ret.items) {
+					// console.log(JSON.stringify(i));
+					if (i.message == 'success') {
+						persist[i.deviceID] = i.status;
+						sendIPCMessage("fclSwitchBot", persist);
+					} else {
+						// console.error(JSON.stringify(ret));
+					}
 				}
 			}
 		});
