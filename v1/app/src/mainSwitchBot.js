@@ -346,7 +346,7 @@ let mainSwitchBot = {
 			mainSwitchBot.observationJob.start();
 
 			// カウントリセットジョブ
-			mainSwitchBot.countResetJob = cron.schedule('0 0 * * *', async () => {
+			mainSwitchBot.countResetJob = cron.schedule('0 0 * * *', () => {
 				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.cron.countResetJob() count:', mainSwitchBot.count) : 0;
 				mainSwitchBot.count = 0;
 			});

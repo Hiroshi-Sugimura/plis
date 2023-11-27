@@ -11,7 +11,7 @@
 const Store = require('electron-store');
 const TF = require('tradfri-handler');
 const cron = require('node-cron');
-const { Sequelize, sqlite3 } = require('./models/localDBModels');   // DBデータと連携
+const { ikeaRawModel, ikeaDataModel } = require('./models/localDBModels');   // DBデータと連携
 const { isObjEmpty, mergeDeeply } = require('./mainSubmodule');
 
 let sendIPCMessage = null;
@@ -32,8 +32,6 @@ let persist = {};
 //////////////////////////////////////////////////////////////////////
 // config
 let mainIkea = {
-	/** 画面更新用 */
-	callback: null,
 	/** 監視ジョブ */
 	observationJob: null,
 	/** 多重起動抑制 */
@@ -76,13 +74,8 @@ let mainIkea = {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.start(), config:\x1b[32m', config, '\x1b[0m') : 0;
 
 		try {
-			let co = await mainIkea.startCore((facilities) => {
-				persist = facilities;
-				if (!isObjEmpty(persist)) {
-					sendIPCMessage("fclIkea", persist);
-				}
-			});
-
+			let co = await TF.initialize(config.securityCode, mainIkea.received, { identity: config.identity, psk: config.psk, debugMode: config.debug });
+			mainIkea.startObserve();
 			config.identity = co.identity;
 			config.psk = co.psk;
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mianIkea.start() is connected. config:\x1b[32m', config, '\x1b[0m') : 0;
@@ -96,9 +89,11 @@ let mainIkea = {
 		}
 
 		if (!isObjEmpty(persist)) {
-			sendIPCMessage("fclIkea", persist);
+			sendIPCMessage("fclIkea", persist); // 起動後に一回画面表示
+			mainIkea.storeData();  // 起動時に一回persistをDB記録
 		}
 	},
+
 
 	/**
 	 * @func stop
@@ -169,41 +164,13 @@ let mainIkea = {
 
 
 	//////////////////////////////////////////////////////////////////////
-	/**
-	 * @func startCore
-	 * @desc inner functions
-	 * @async
-	 * @param {Function} callback
-	 * @param {Object} 接続設定
-	 * @throw error
-	 */
-	startCore: async function (callback) {
-		if (!config.securityCode || config.securityCode == "") {
-			console.error('mainIkea.startCore() config.key is not valid.');
-		}
-
-		mainIkea.callback = callback;
-
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.startCore() config::\x1b[32m', config, '\x1b[0m') : 0;
-
-		let ret;
-		try {
-			ret = await TF.initialize(config.securityCode, mainIkea.received, { identity: config.identity, psk: config.psk, debugMode: config.debug });
-			mainIkea.observe();
-			return ret;
-		} catch (error) {
-			console.error('mainIkea.startCore() error:\x1b[32m', error, '\x1b[0m');
-			throw error;
-		}
-	},
-
 
 	/**
 	 * @func received
-	 * @desc 受信データ処理
-	 * @param {} rIP
-	 * @param {} device
-	 * @param {} error
+	 * @desc 内部関数、受信データ処理、callbackで呼ばれる
+	 * @param {string} rIP
+	 * @param {Object} device
+	 * @param {Error} error
 	 * @throw error
 	 */
 	received: function (rIP, device, error) {
@@ -221,27 +188,117 @@ let mainIkea = {
 
 
 	/**
-	 * @func observe
-	 * @desc Ikeaを監視する
+	 * @func startObserve
+	 * @desc Ikeaを監視開始
 	 * @throw error
 	 */
-	observe: function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.observe() start.') : 0;
+	startObserve: function () {
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.startObserve() start.') : 0;
 
 		if (mainIkea.observationJob) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.observe() already started.') : 0;
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.startObserve() already started.') : 0;
 		}
 
 		// facilitiesの定期的監視
-		let oldVal = JSON.stringify(TF.objectSort(TF.facilities));
+		let oldValStr = JSON.stringify(TF.objectSort(TF.facilities));
 		mainIkea.observationJob = cron.schedule('0 * * * * *', () => {  // 1分毎にautoget、変化があればログ表示
-			const newVal = JSON.stringify(TF.objectSort(TF.facilities));
-			if (oldVal == newVal) return; // 変化した
-			oldVal = newVal;
-			mainIkea.callback(TF.facilities);
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.startObserve().cron() each 1min') : 0;
+			let newValStr = JSON.stringify(TF.objectSort(TF.facilities));
+			if (oldValStr == newValStr) return;  // 変化しないので無視
+			persist = TF.facilities;
+			if (!isObjEmpty(persist)) {
+				sendIPCMessage("fclIkea", persist);
+				ikeaRawModel.create({ detail: JSON.stringify(persist) });  // store raw data
+				mainIkea.storeData();
+			}
 			// console.log('TF changed, new TF.facilities:', newVal);
 		});
+
 		mainIkea.observationJob.start();
+	},
+
+	/**
+	 * @async
+	 * @function storeData
+	 * @desc 内部関数：デバイスタイプごとにステータスの読見方を変えてDBにためる
+	*/
+	storeData: async function () {
+		// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.storeData() persist:', persist) : 0;
+		for (let d in persist) {
+			let det = persist[d];
+			// console.log('Ikea:dev:', d, ' detail:', det);
+
+			if (!det) { continue; }  // 詳細の無いデバイスは保存しない。continueで次のデバイスへ。
+
+			let name = det.name;
+			let type = det.type;
+			let alive = det.alive;
+			let info = det.deviceInfo;
+			let power = info.power;
+			let battery = info.battery;
+
+			try {
+				switch (det.type) {
+					case 0:  // remote controller
+						ikeaDataModel.create({
+							deviceId: d,
+							deviceType: type,
+							deviceName: name,
+							alive: alive,
+							power: power,
+							battery: battery,
+							list: JSON.stringify(det.switchList)
+						});
+						break;
+					case 2: // bulb
+						// console.log('subIkea.js, bulb value:', value);
+						ikeaDataModel.create({
+							deviceId: d,
+							deviceType: type,
+							deviceName: name,
+							alive: alive,
+							power: power,
+							battery: battery,
+							list: JSON.stringify(det.lightList)
+						});
+						break;
+					case 6: // signal repeater
+						// console.log('subIkea.js, signal repeater value:', value);
+						ikeaDataModel.create({
+							deviceId: d,
+							deviceType: type,
+							deviceName: name,
+							alive: alive,
+							power: power,
+							battery: battery,
+							list: JSON.stringify(det.repeaterList)
+						});
+						break;
+					case 7: // blind
+						// console.log('subIkea.js, bulb value:', value);
+						ikeaDataModel.create({
+							deviceId: d,
+							deviceType: type,
+							deviceName: name,
+							alive: alive,
+							power: power,
+							battery: battery,
+							list: JSON.stringify(det.blindList)
+						});
+						break;
+
+					default:
+						console.log('unknown device in SwitchBot:dev:', d, ' detail:', det);
+						break;
+				}
+
+			} catch (error) {
+				sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainIkea', stackLog: `${error.message}, d:${d}, det:${det}` });
+				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.storeData() error:\x1b[32m', error, 'Ikea:dev:', d, ' detail:', det, '\x1b[0m');
+				throw error;
+			}
+
+		}
 	},
 
 
