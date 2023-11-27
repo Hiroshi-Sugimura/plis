@@ -12,7 +12,7 @@ const Store = require('electron-store');
 const TF = require('tradfri-handler');
 const cron = require('node-cron');
 const { Sequelize, sqlite3 } = require('./models/localDBModels');   // DBデータと連携
-const { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
+const { isObjEmpty, mergeDeeply } = require('./mainSubmodule');
 
 let sendIPCMessage = null;
 
@@ -32,8 +32,11 @@ let persist = {};
 //////////////////////////////////////////////////////////////////////
 // config
 let mainIkea = {
+	/** 画面更新用 */
 	callback: null,
+	/** 監視ジョブ */
 	observationJob: null,
+	/** 多重起動抑制 */
 	isRun: false,
 
 	//////////////////////////////////////////////////////////////////////
@@ -41,11 +44,9 @@ let mainIkea = {
 	 * @func start
 	 * @desc start
 	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @param {Function} _sendIPCMessage
 	 * @throw error
 	 */
-	// interfaces
 	start: async function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
 
@@ -101,10 +102,8 @@ let mainIkea = {
 
 	/**
 	 * @func stop
-	 * @desc stop
+	 * @desc 保存して機能終了
 	 * @async
-	 * @param {void} 
-	 * @return void
 	 * @throw error
 	 */
 	stop: async function () {
@@ -120,10 +119,8 @@ let mainIkea = {
 
 	/**
 	 * @func stopWithoutSave
-	 * @desc stopWithoutSave
+	 * @desc 保存しないで機能終了
 	 * @async
-	 * @param {void} 
-	 * @return void
 	 * @throw error
 	 */
 	stopWithoutSave: async function () {
@@ -135,13 +132,11 @@ let mainIkea = {
 	},
 
 
-
 	/**
 	 * @func setConfig
-	 * @desc setConfig
+	 * @desc configの変更と保存
 	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @param {object} _config - nullable
 	 * @throw error
 	 */
 	setConfig: async function (_config) {
@@ -156,11 +151,8 @@ let mainIkea = {
 
 	/**
 	 * @func getConfig
-	 * @desc getConfig
-	 * @async
-	 * @param {void} 
-	 * @return void
-	 * @throw error
+	 * @desc Config取得
+	 * @return {Object} config
 	 */
 	getConfig: function () {
 		return config;
@@ -168,11 +160,8 @@ let mainIkea = {
 
 	/**
 	 * @func getPersist
-	 * @desc getPersist
-	 * @async
-	 * @param {void} 
-	 * @return void
-	 * @throw error
+	 * @desc Persist取得
+	 * @return {Object} persist
 	 */
 	getPersist: function () {
 		return persist;
@@ -184,8 +173,8 @@ let mainIkea = {
 	 * @func startCore
 	 * @desc inner functions
 	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @param {Function} callback
+	 * @param {Object} 接続設定
 	 * @throw error
 	 */
 	startCore: async function (callback) {
@@ -212,9 +201,9 @@ let mainIkea = {
 	/**
 	 * @func received
 	 * @desc 受信データ処理
-	 * @async
-	 * @param {void} 
-	 * @return void
+	 * @param {} rIP
+	 * @param {} device
+	 * @param {} error
 	 * @throw error
 	 */
 	received: function (rIP, device, error) {
@@ -234,12 +223,9 @@ let mainIkea = {
 	/**
 	 * @func observe
 	 * @desc Ikeaを監視する
-	 * @async
-	 * @param {void} 
-	 * @return void
 	 * @throw error
 	 */
-	observe: async function (interval) {
+	observe: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.observe() start.') : 0;
 
 		if (mainIkea.observationJob) {
@@ -263,18 +249,16 @@ let mainIkea = {
 	 * @func stop
 	 * @desc 監視をやめる、リリースする
 	 * @async
-	 * @param {void} 
-	 * @return void
 	 * @throw error
 	 */
-	stop: function () {
+	stop: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.stop().') : 0;
 
 		if (mainIkea.observationJob) {
-			mainIkea.observationJob.stop();
+			await mainIkea.observationJob.stop();
 			mainIkea.observationJob = null;
 		}
-		TF.release();
+		await TF.release();
 	}
 };
 
