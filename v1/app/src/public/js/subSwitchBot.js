@@ -187,21 +187,21 @@ window.addEventListener('DOMContentLoaded', function () {
 					console.log(color);
 
 					control += `<form class='inline'>Brightness: `  // brightness
-						+ `<input type='range' id="inSwitchBotBulbRange_${d.deviceId}" value='${devState.brightness}' min='0' max='100' step='5' onChange='window.inSwitchBotBulbRange_Change("${d.deviceId}", this.value);'>`
-						+ `<input type='number' id="inSwitchBotBulbNumber_${d.deviceId}" value='${devState.brightness}' min='0' max='100' step='5' onChange='window.inSwitchBotBulbNumber_Change("${d.deviceId}", this.value);'>`
+						+ `<input type='number' id="inSwitchBotBulbBriNumber_${d.deviceId}" value='${devState.brightness}' min='0' max='100' step='5' onChange='window.inSwitchBotBulbBriNumber_Change("${d.deviceId}", this.value);'><br>`
+						+ `<input type='range'  id="inSwitchBotBulbBriRange_${d.deviceId}"  value='${devState.brightness}' min='0' max='100' step='5' onChange='window.inSwitchBotBulbBriRange_Change("${d.deviceId}", this.value);'>`
 						+ `</form>`
 						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateBrightnessSettings("${d.deviceId}");'>送信</button>`
 						+ `<br>`
 						+ `<form class='inline'>Color: `  // color
-						+ `<input type='color' value='${color}'>`
+						+ `<input type='color' id="inSwitchBotBulbColor_${d.deviceId}" value='${color}'>`
 						+ `</form>`
-						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateColorSettings();'>送信</button>`
+						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateColorSettings("${d.deviceId}");'>送信</button>`
 						+ `<br>`
 						+ `<form class='inline'>Color temperature: `  // colorTemperature
-						+ `<input type='range' value='${devState.colorTemperature}' min='0' max='100' step='5' onChange='()'>`
-						+ `<input type='number' value='${devState.colorTemperature}' min='0' max='100' step='5' onChange=''>`
+						+ `<input type='number' id="inSwitchBotBulbTempNumber_${d.deviceId}" value='${devState.colorTemperature}' min='2700' max='6500' step='100' onChange='window.inSwitchBotBulbTempNumber_Change("${d.deviceId}", this.value);'><br>`
+						+ `<input type='range'  id="inSwitchBotBulbTempNumber_${d.deviceId}" value='${devState.colorTemperature}' min='2700' max='6500' step='100' onChange='window.inSwitchBotBulbTempRange_Change("${d.deviceId}", this.value);'>`
 						+ `</form>`
-						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateColorTemperatureSettings();'>送信</button>`;
+						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateColorTemperatureSettings("${d.deviceId}");'>送信</button>`;
 
 					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${control}`;
 					break;
@@ -247,6 +247,10 @@ window.addEventListener('DOMContentLoaded', function () {
 		ret = '0' + ret;
 		ret = ret.substr(0, 2);
 		return ret;
+	};
+
+	function toDecString(v) {
+		return parseInt(v, 16);;
 	};
 
 
@@ -344,16 +348,16 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.ipc.SwitchBotControl(id, command, param);
 	};
 
-	// ----- スライダーと数値表示の同期
+	// ----- Brightness
 	/**
 	 * @func
 	 * @desc SwitchBot control for Bulb, Range change
 	 * @param {string} id
 	 * @param {string} param
 	 */
-	window.inSwitchBotBulbRange_Change = function (id, value) {
+	window.inSwitchBotBulbBriRange_Change = function (id, value) {
 		// console.log(id, value)
-		let obj = document.getElementById("inSwitchBotBulbNumber_" + id);
+		let obj = document.getElementById("inSwitchBotBulbBriNumber_" + id);
 		obj.value = value;
 	};
 
@@ -363,9 +367,9 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @param {string} id
 	 * @param {string} param
 	 */
-	window.inSwitchBotBulbNumber_Change = function (id, value) {
+	window.inSwitchBotBulbBriNumber_Change = function (id, value) {
 		// console.log(id, value)
-		let obj = document.getElementById("inSwitchBotBulbRange_" + id);
+		let obj = document.getElementById("inSwitchBotBulbBriRange_" + id);
 		obj.value = value;
 	};
 
@@ -375,9 +379,62 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @param {string} id
 	 */
 	window.btnSwitchBotBulbUpdateBrightnessSettings = function (id) {
-		let obj = document.getElementById("inSwitchBotBulbNumber_" + id);
+		let obj = document.getElementById("inSwitchBotBulbBriNumber_" + id);
 		window.ipc.SwitchBotControl(id, "setBrightness", obj.value);
 	};
+
+
+	// ----- Color
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bulb, Brigntness change
+	 * @param {string} id
+	 */
+	window.btnSwitchBotBulbUpdateColorSettings = function (id) {
+		let obj = document.getElementById("inSwitchBotBulbColor_" + id);
+		let r = toDecString(obj.value.substr(1, 2));
+		let g = toDecString(obj.value.substr(3, 2));
+		let b = toDecString(obj.value.substr(5, 2));
+		let col = `${r}:${g}:${b}`;
+		window.ipc.SwitchBotControl(id, "setColor", col);
+	};
+
+
+	// ----- Color temp
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bulb, Range change
+	 * @param {string} id
+	 * @param {string} param
+	 */
+	window.inSwitchBotBulbTempRange_Change = function (id, value) {
+		// console.log(id, value)
+		let obj = document.getElementById("inSwitchBotBulbTempNumber_" + id);
+		obj.value = value;
+	};
+
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bulb, Number change
+	 * @param {string} id
+	 * @param {string} param
+	 */
+	window.inSwitchBotBulbTempNumber_Change = function (id, value) {
+		// console.log(id, value)
+		let obj = document.getElementById("inSwitchBotBulbTempRange_" + id);
+		obj.value = value;
+	};
+
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bulb, Brigntness change
+	 * @param {string} id
+	 */
+	window.btnSwitchBotBulbUpdateColorTemperatureSettings = function (id) {
+		let obj = document.getElementById("inSwitchBotBulbTempNumber_" + id);
+		window.ipc.SwitchBotControl(id, "setColorTemperature", obj.value);
+	};
+
 
 	//----------------------------------------------------------------------------------------------
 	// SwitchBot chart

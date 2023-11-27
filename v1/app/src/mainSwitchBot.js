@@ -15,7 +15,7 @@
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
 const Store = require('electron-store');
-const { SwitchBot } = require('switchbot-handler');
+const { SwitchBotHandler } = require('switchbot-handler');
 const cron = require('node-cron');
 require('date-utils'); // for log
 const { Sequelize, Op, switchBotRawModel, switchBotDataModel } = require('./models/localDBModels');   // DBデータと連携
@@ -224,7 +224,7 @@ let mainSwitchBot = {
 	*/
 	control: function (id, command, param) {
 		// mainSwitchBot.client
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.control() id:', id, 'command:', command, 'param:', param) : 0;
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.control() id:', id, ', command:', command, ', param:', param) : 0;
 
 		mainSwitchBot.client.setDeviceStatus(id, command, param, (ret) => {
 			if (isObjEmpty(ret)) {
@@ -330,7 +330,7 @@ let mainSwitchBot = {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.startCore() config:\x1b[32m', config, '\x1b[0m') : 0;
 
 		try {
-			mainSwitchBot.client = new SwitchBot(config.token, config.secret);
+			mainSwitchBot.client = new SwitchBotHandler(config.token, config.secret);
 
 			mainSwitchBot.renewFacilities(mainSwitchBot.client, (devStatusList) => {
 				mainSwitchBot.facilities = devStatusList;
