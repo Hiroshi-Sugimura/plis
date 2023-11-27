@@ -690,8 +690,9 @@ let mainHALsync = {
 	 * @func httpGetRequest
 	 * @desc httpGetRequest
 	 * @async
-	 * @param {void}
-	 * @return void
+	 * @param {string} url
+	 * @param {string} token
+	 * @return body - string promise
 	 * @throw error
 	 */
 	httpGetRequest: function (url, token) {
@@ -754,8 +755,10 @@ let mainHALsync = {
 	 * @func httpPostRequest
 	 * @desc httpPostRequest
 	 * @async
-	 * @param {void}
-	 * @return void
+	 * @param {string} url
+	 * @param {string} data
+	 * @param {string} token
+	 * @return body - string promise
 	 * @throw error
 	 */
 	httpPostRequest: function (url, data, token) {
@@ -823,9 +826,7 @@ let mainHALsync = {
 	 * @desc HAL API トークン設定
 	 * APIトークンをセットして、実際にプロファイルを受信できたら設定値として保存
 	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * @param {string} _token
 	 */
 	setHalApiTokenRequest: async function (_token) {
 		let arg = {};
@@ -845,9 +846,6 @@ let mainHALsync = {
 	 * @func deleteHalApiToken
 	 * @desc HAL API トークン設定削除
 	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
 	 */
 	deleteHalApiToken: async function () {
 		try {
@@ -866,9 +864,6 @@ let mainHALsync = {
 	 * @func getHalUserProfileRequest
 	 * @desc HAL ユーザープロファイル取得
 	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
 	 */
 	getHalUserProfileRequest: async function () {
 		let arg = {};
@@ -888,8 +883,6 @@ let mainHALsync = {
 	 * @func startUploadEldata
 	 * @desc 家電操作ログのアップロードを開始、定期的実行
 	 * @async
-	 * @param {void}
-	 * @return void
 	 * @throw error
 	 */
 	startUploadEldata: async function () {
@@ -990,8 +983,6 @@ let mainHALsync = {
 	/**
 	 * @func ConfigSave
 	 * @desc ConfigSave
-	 * @param {void}
-	 * @return void
 	 * @throw error
 	 */
 	ConfigSave: function () {
@@ -1002,8 +993,7 @@ let mainHALsync = {
 	 * @func setConfig
 	 * @desc setConfig
 	 * @async
-	 * @param {void}
-	 * @return void
+	 * @param {Object} _config
 	 * @throw error
 	 */
 	setConfig: async function (_config) {
@@ -1017,11 +1007,9 @@ let mainHALsync = {
 
 	/**
 	 * @func getConfig
-	 * @desc getConfig
+	 * @desc 設定取得
 	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * @return config
 	 */
 	getConfig: function () {
 		return config;
@@ -1031,8 +1019,7 @@ let mainHALsync = {
 	 * @func getPersist
 	 * @desc 現在のデータを取得する
 	 * @async
-	 * @param {void}
-	 * @return persist persist
+	 * @return persist
 	 */
 	getPersist: function () {
 		return persist;
@@ -1042,7 +1029,6 @@ let mainHALsync = {
 	 * @func stop
 	 * @desc 開放して連携終了、設定や現在の数値を永続化する
 	 * @async
-	 * @param {void}
 	 */
 	stop: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.stop()') : 0;
@@ -1058,10 +1044,9 @@ let mainHALsync = {
 	/**
 	 * @func renewConfigView
 	 * @desc renewConfigView
-	 * @async
 	 * @throw error
 	 */
-	renewConfigView: async function () {
+	renewConfigView: function () {
 		sendIPCMessage("renewHALConfigView", config);  // 現在の設定値を表示
 	}
 
