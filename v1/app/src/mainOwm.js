@@ -12,8 +12,8 @@ const Store = require('electron-store');
 const http = require('http');
 const cron = require('node-cron');
 require('date-utils'); // for log
-const { Sequelize, Op, sqlite3, owmModel } = require('./models/localDBModels');   // DBデータと連携
-const { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
+const { owmModel } = require('./models/localDBModels');   // DBデータと連携
+const { isObjEmpty, mergeDeeply } = require('./mainSubmodule');
 
 const store = new Store();
 
@@ -202,6 +202,8 @@ let mainOwm = {
 				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.setObserve.cron.get errror:', error);
 			});
 		});
+
+		mainOwm.observationJob.start();
 	},
 
 	/** @func stopObservation
