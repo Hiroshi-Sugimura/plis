@@ -10,13 +10,13 @@
 // 基本ライブラリ
 const { Op, eldataModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel } = require('./models/localDBModels');   // DBデータと連携
 
-const https = require('https');
-
 const Store = require('electron-store');
-const store = new Store();
-
+const https = require('https');
+const cron = require('node-cron');
+require('date-utils'); // for log
 const { getToday, mergeDeeply } = require('./mainSubmodule');
 
+const store = new Store();
 const HAL_API_BASE_URL = 'https://hal.sugi-lab.net/api';
 
 let config = {  // = config.HAL
@@ -47,7 +47,7 @@ let sendIPCMessage = null;
 // HAL, Home-life Assessment Listの処理
 let mainHALsync = {
 	isRun: false,
-	observationJob: null,
+	uploadEldataTask: null,
 
 	//----------------------------------
 	/**
@@ -72,7 +72,14 @@ let mainHALsync = {
 
 		persist = store.get('persist.HAL', persist);
 
-		// mainHALsync.startUploadEldata(); 	// 家電操作ログのアップロードを開始、HALのDBがきついのでとりあえずやらない
+		// 家電操作ログのアップロード、HALのDBがきついので停止中
+		/*
+		mainHALsync.uploadEldataTask = cron.schedule('0 0 * * *', () => { // 毎日0時
+			mainHALsync.startUploadEldata();  // 家電操作ログのアップロード
+		})
+		mainHALsync.uploadEldataTask.start();
+		*/
+
 		sendIPCMessage("renewHALConfigView", config);  // configを送る、そうするとViewがkeyチェックのためにprofile取りに来る
 		sendIPCMessage("showGarmin", persist.garmin);  // 保持しているGarminデータを表示する
 
@@ -970,13 +977,6 @@ let mainHALsync = {
 		// 最後にアップロードした日時と Log ID をストレージに保存
 		await store.set('config.HAL.lastUploadedTime', Date.now());
 		await store.set('config.HAL.lastUploadedId', max_id);
-
-		// 次回起動のタイマーをセット
-		let interval = config.UPLOAD_START_INTERVAL;
-		if (dlist.length === config.UPLOAD_UNIT_NUM) {
-			interval = config.UPLOAD_UNIT_INTERVAL;
-		}
-		setTimeout(mainHALsync.startUploadEldata, interval, config);
 	},
 
 	//----------------------------------------------------------------------------------------------
@@ -1033,8 +1033,10 @@ let mainHALsync = {
 	stop: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.stop()') : 0;
 
-		// startUploadEldataで仕掛けたintervalを潰さないとダメなんだけど、いまやってない
-		// node-cron化するべき
+		if (mainHALsync.uploadEldataTask) {
+			await mainHALsync.uploadEldataTask.stop();
+			mainHALsync.uploadEldataTask = null;
+		}
 		await mainHAL.setConfig();
 		await store.set('persist.HAL', persist);
 	},

@@ -70,7 +70,8 @@ let mainEL = {
 	 * @func start
 	 * @desc 初期化
 	 * @async
-	 * @param {void}
+	 * @param {Function} _sendIPCMessage
+	 * @param {Array} _localaddresses
 	 * @return void
 	 * @throw error
 	 */
