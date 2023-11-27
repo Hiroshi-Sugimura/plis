@@ -76,7 +76,7 @@ let mainHALsync = {
 		sendIPCMessage("renewHALConfigView", config);  // configを送る、そうするとViewがkeyチェックのためにprofile取りに来る
 		sendIPCMessage("showGarmin", persist.garmin);  // 保持しているGarminデータを表示する
 
-		if( !persist?.garmin ) {  // garminデータがない時には一回ダウンロードする
+		if (!persist?.garmin) {  // garminデータがない時には一回ダウンロードする
 			mainHALsync.garminDownload();
 		}
 
@@ -378,6 +378,33 @@ let mainHALsync = {
 			} else {
 				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminActivityDetailsModel teble.') : 0;
 			}
+
+
+			// ActivityDetails
+			if (dndata.AllDayRespiration) {
+				// ダウンロードしたデータをテーブルに追加
+				await IOT_GarminAllDayRespirationModel.findOrCreate({
+					where: {
+						idIOT_GarminAllDayRespiration: dndata.ActivityDetails.idIOT_GarminAllDayRespiration
+					},
+					defaults: {
+						idIOT_GarminAllDayRespiration: dndata.ActivityDetails.idIOT_GarminAllDayRespiration,
+						garminId: dndata.AllDayRespiration.garminId,
+						garminAccessToken: dndata.AllDayRespiration.garminAccessToken,
+						summaryId: dndata.AllDayRespiration.summaryId,
+						activityId: dndata.AllDayRespiration.startTimeInSeconds,
+						summary: dndata.AllDayRespiration.durationInSeconds,
+						samples: dndata.AllDayRespiration.startTimeOffsetInSeconds,
+						laps: dndata.AllDayRespiration.timeOffsetEpochToBreaths,
+						createdAt: dndata.AllDayRespiration.createdAt,
+						updatedAt: dndata.AllDayRespiration.updatedAt
+					}
+				});
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminAllDayRespirationModel teble.') : 0;
+			} else {
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminAllDayRespirationModel teble.') : 0;
+			}
+
 
 			// BodyComps
 			if (dndata.BodyComps) {
