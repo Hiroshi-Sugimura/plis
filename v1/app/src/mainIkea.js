@@ -34,6 +34,8 @@ let persist = {};
 let mainIkea = {
 	/** 監視ジョブ */
 	observationJob: null,
+	/** 監視ジョブ */
+	storeJob: null,
 	/** 多重起動抑制 */
 	isRun: false,
 
@@ -199,7 +201,7 @@ let mainIkea = {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.startObserve() already started.') : 0;
 		}
 
-		// facilitiesの定期的監視
+		// facilitiesの定期的監視、変化があれば記録
 		let oldValStr = JSON.stringify(TF.objectSort(TF.facilities));
 		mainIkea.observationJob = cron.schedule('0 * * * * *', () => {  // 1分毎にautoget、変化があればログ表示
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.startObserve().cron() each 1min') : 0;
@@ -208,13 +210,19 @@ let mainIkea = {
 			persist = TF.facilities;
 			if (!isObjEmpty(persist)) {
 				sendIPCMessage("fclIkea", persist);
-				ikeaRawModel.create({ detail: JSON.stringify(persist) });  // store raw data
 				mainIkea.storeData();
 			}
 			// console.log('TF changed, new TF.facilities:', newVal);
 		});
-
 		mainIkea.observationJob.start();
+
+
+		// 3分毎にDB登録、変化がなくても記録
+		mainIkea.storeJob = cron.schedule('0 */3 * * * *', () => {
+			sendIPCMessage("fclIkea", persist);
+			ikeaRawModel.create({ detail: JSON.stringify(persist) });  // store raw data
+		});
+		mainIkea.storeJob.start();
 	},
 
 	/**
@@ -315,6 +323,12 @@ let mainIkea = {
 			await mainIkea.observationJob.stop();
 			mainIkea.observationJob = null;
 		}
+
+		if (mainIkea.storeJob) {
+			await mainIkea.storeJob.stop();
+			mainIkea.storeJob = null;
+		}
+
 		await TF.release();
 	}
 };
