@@ -1326,6 +1326,49 @@ td.today {
 	border: solid #83bffc 1px;
 }
 
+/*********************************************************************/
+/* font awesome カスタム */
+.icon_layers {
+	display: inline-block;
+	height: 2em;
+	line-height: 2em;
+	min-width: 2em;
+	position: relative;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.icon_layers_icon {
+	position: absolute;
+	left: 0;
+	display: inline-block;
+	width: 100%;
+	text-align: center;
+	font-size: 2em;
+}
+
+.icon_layers_text {
+	position: relative;
+	top: 0.4em;
+	min-width: 100%;
+	color: #fff;
+	font-size: 1.2em;
+}
+
+.icon_layers_counter {
+	position: absolute;
+	top: 0;
+	right: -5px;
+	display: inline-block;
+	padding: 3px 5px;
+	line-height: 1;
+	color: #fff;
+	background: #ff3333;
+	font-size: 0.6em;
+	border-radius: 1em;
+	-webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
+}
 
 
 /*********************************************************************

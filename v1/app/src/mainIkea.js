@@ -165,6 +165,19 @@ let mainIkea = {
 	},
 
 
+	/**
+	 * @func control
+	 * @desc デバイスの制御
+	 * @param {string} key
+	 * @param {string} type
+	 * @param {object} command
+	 */
+	control: function (key, type, command) {
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.control() key:', key, ', type:', type, ', command:', command) : 0;
+		TF.setState(key, type, command);
+	},
+
+
 	//////////////////////////////////////////////////////////////////////
 
 	/**

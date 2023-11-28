@@ -283,12 +283,13 @@ contextBridge.exposeInMainWorld('ipc', {
 	/**
 	 * @func 
 	 * @desc Ikea関連
-	 * @param {void} 
-	 * @return void
+	 * @param {string} key
+	 * @param {string} type
+	 * @param {object} command
 	 */
-	IkeaSend: (url, json) => {
-		console.log(url, json);
-		ipcRenderer.invoke('IkeaSend', { url: url, json: json });
+	IkeaSend: (key, type, command) => {
+		// console.log(key, type, command);
+		ipcRenderer.invoke('IkeaSend', { key: key, type: type, command: command });
 	},
 
 

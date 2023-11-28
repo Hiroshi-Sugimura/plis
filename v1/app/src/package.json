@@ -23,7 +23,7 @@
     "sequelize": "^6.35.1",
     "sqlite3": "^5.1.6",
     "switchbot-handler": "^1.0.2",
-    "tradfri-handler": "^0.5.3",
+    "tradfri-handler": "^0.5.4",
     "usb-2jcie-bu": "^1.2.0",
     "usb-ud-co2s": "^1.0.1"
   }

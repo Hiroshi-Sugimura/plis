@@ -62,32 +62,102 @@ window.addEventListener('DOMContentLoaded', function () {
 
 			// key is light number
 			// value is details
+			let icon = '';
 			let name = value.name;
-			let alive = value.alive;
 			let type = value.type;
 			let info = value.deviceInfo;
 			let makerCode = info.manufacturer;
-			let power = info.power;
-			let battery = info.battery;
+
+			let alive = '';  // 接続状態
+			if (value.alive) {
+				alive = `<i class='fa-solid fa-link'></i>`
+			} else {
+				alive = `<i class='fa-solid fa-link-slash'></i>`
+			}
+
+			let battery = '';  // バッテリー充電量
+			if (info?.battery >= 85) {
+				battery = `<span class='icon_layers'><i class='fa-solid fa-battery-full icon_layers_icon'></i><span class='icon_layers_counter'>${info.battery}</span></span>`
+			} else if (info?.battery >= 70) {
+				battery = `<span class='icon_layers'><i class='fa-solid fa-battery-three-quarters icon_layers_icon'></i><span class='icon_layers_counter'>${info.battery}</span></span>`
+			} else if (info?.battery >= 40) {
+				battery = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter'>${info.battery}</span></span>`
+			} else if (info?.battery >= 20) {
+				battery = `<span class='icon_layers'><i class='fa-solid fa-battery-quater icon_layers_icon'></i><span class='icon_layers_counter'>${info.battery}</span></span>`
+			} else {
+				battery = `<span class='icon_layers'><i class='fa-solid fa-battery-empty icon_layers_icon'></i><span class='icon_layers_counter'>${info.battery}</span></span>`
+			}
+
+			let power = '';  // 電源種類
+			switch (info?.power) {
+				case 0: power = 'Unknown'; break;
+				case 1: power = 'InternalBattery'; break;
+				case 2: power = 'ExternalBattery'; break;
+				case 3: power = 'Battery'; break;
+				case 4: power = 'PowerOverEthernet'; break;
+				case 5: power = 'USB'; break;
+				case 6: power = 'AC_Power'; break;
+				// default
+				case 7:
+				default:
+					powerr = 'Solar'; break;
+			}
+
+			let control = ''; // 制御できるものがあれば
 
 			doc += "<div class='LinearLayoutChild'> <section>";
 
 			switch (type) {
 				case 0:  // remote controller
 					// console.log('subIkea.js, remo-con value:', value);
-					doc += `<div class='tooltip'><i class="fa-solid fa-toggle-off ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div><br>${name}<br>alive:${alive}<br>battery:${battery}<br>power:${power}<br>`;
+					doc += `<div class='tooltip'><i class="fa-solid fa-toggle-off ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive} ${battery}<br>${name}<br>power:${power}<br>`;
 					break;
-				case 2: // bulb
-					// console.log('subIkea.js, bulb value:', value);
-					doc += `<div class='tooltip'><i class="fa-regular fa-lightbulb ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div><br>${name}<br>alive:${alive}<br>power:${power}<br>`;
+
+				case 1: // slaveRemote
+					console.log('subIkea.js, slaveRemote:', value);
 					break;
+
+				case 2: // bulb, light
+					// console.log('subIkea.js, bulb key:', key, ', value:', value);
+					// console.log('color:', value.lightList[0].color);
+					// console.log('colorTemperature:', value.lightList[0].colorTemperature);
+					// console.log('dimmer:', value.lightList[0].dimmer);
+
+					if (value.lightList[0].onOff) { // true = on
+						icon = 'fa-regular fa-lightbulb';
+						control = `<button onClick="window.btnIkeaBulbOnOff_Click('${key}', 'light', 'off');">OFF</button>`;
+					} else { // false = off
+						icon = 'fa-solid fa-lightbulb';
+						control = `<button onClick="window.btnIkeaBulbOnOff_Click('${key}', 'light', 'on');">ON</button>`;
+					}
+
+					doc += `<div class='tooltip'><i class='${icon} ikea-dev'></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive}<br>${name}<br>power:${power}<br>${control}`;
+					break;
+
+				case 3: // plug
+					console.log('subIkea.js, plug:', value);
+					break;
+
+				case 4: // motion sensor
+					console.log('subIkea.js, plug:', value);
+					break;
+
 				case 6: // signal repeater
 					// console.log('subIkea.js, signal repeater value:', value);
-					doc += `<div class='tooltip'><i class="fa-solid fa-wifi ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div><br>${name}<br>alive:${alive}<br>power:${power}<br>`;
+					doc += `<div class='tooltip'><i class="fa-solid fa-wifi ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive}<br>${name}<br>power:${power}<br>`;
 					break;
+
 				case 7: // blind
 					// console.log('subIkea.js, bulb value:', value);
-					doc += `<div class='tooltip'><i class="fa-solid fa-warehouse ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div><br>${name}<br>alive:${alive}<br>battery:${battery}<br>power:${power}<br>`;
+					doc += `<div class='tooltip'><i class="fa-solid fa-warehouse ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive} ${battery}<br>${name}<br>power:${power}<br>`;
+					break;
+
+				case 8: // sound remote
+					console.log('subIkea.js, sound remote:', value);
+					break;
+
+				case 10: // air purifier
+					console.log('subIkea.js, air purifier:', value);
 					break;
 
 				default:
@@ -113,26 +183,19 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//----------------------------------------------------------------------------------------------
 	/** 
-	 * @func window.IkeaPowButton
-	 * @desc IkeaPowButton
-	 * @param {void}
-	 * @return {void}
+	 * @func window.btnIkeaBulbOnOff_Click
+	 * @desc Ikea 照明のON/OFF
+	 * @param key - device id
+	 * @param command - on or off
 	 */
-	window.IkeaPowButton = function (btn) {
-		let cmd = btn.value.split(",");
-
-		let sendurl = "/lights/" + cmd[0] + "/state";
-
-		switch (cmd[1]) {
+	window.btnIkeaBulbOnOff_Click = function (key, type, command) {
+		switch (command) {
 			case 'on':
-				window.ipc.IkeaSend(sendurl, { "on": true });
+				window.ipc.IkeaSend(key, type, { "onOff": true });
 				break;
 			case 'off':
-				window.ipc.IkeaSend(sendurl, { "on": false });
+				window.ipc.IkeaSend(key, type, { "onOff": false });
 				break;
-			default:
-				console.error('unknown cmd');
-				console.error(cmd[1]);
 		}
 	};
 

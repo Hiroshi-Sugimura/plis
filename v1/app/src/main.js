@@ -403,7 +403,8 @@ ipcMain.handle('IkeaUseStop', async (event, arg) => {
 
 // Ikea関係のコントロール
 ipcMain.handle('IkeaSend', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- IkeaSend, ip:\x1b[32m', 'out of control', '\x1b[0marg:\x1b[32m', arg, '\x1b[0m') : 0;
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- IkeaSend, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	mainIkea.control(arg.key, arg.type, arg.command);
 })
 
 //----------------------------------
