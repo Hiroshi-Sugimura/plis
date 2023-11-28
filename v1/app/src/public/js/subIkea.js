@@ -148,8 +148,8 @@ window.addEventListener('DOMContentLoaded', function () {
 					break;
 
 				case 7: // blind
-					// console.log('subIkea.js, bulb value:', value);
-					doc += `<div class='tooltip'><i class="fa-solid fa-warehouse ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive} ${battery}<br>${name}<br>power:${power}<br>`;
+					console.log('subIkea.js, blind value:', value);
+					doc += `<div class='tooltip'><i class="fa-solid fa-warehouse ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive} ${battery}<br>${name}<br>power:${power}<br>position:${value.blindList[0].position}<br>`;
 					break;
 
 				case 8: // sound remote
