@@ -174,17 +174,21 @@ window.addEventListener('DOMContentLoaded', function () {
 				case 'Color Bulb':
 					switch (devState.power) {
 						case 'on':
-							control = `Power: <button onClick='window.SwitchBotBulb("${d.deviceId}", "turnOff", "default");'>OFF</button><br>`;
+							control = `<button onClick='window.SwitchBotBulb("${d.deviceId}", "turnOff", "default");'>OFF</button><br>`;
 							icon = 'fa-regular fa-lightbulb';
 							break;
 						case 'off':
-							control = `Power: <button onClick='window.SwitchBotBulb("${d.deviceId}", "turnOn", "default");'>ON</button><br>`;
+							control = `<button onClick='window.SwitchBotBulb("${d.deviceId}", "turnOn", "default");'>ON</button><br>`;
 							icon = 'fa-solid fa-lightbulb';
 							break;
 					}
+
+					// 色を16進表記にかえる r:g:b -> $rrggbb
 					temp = devState.color.split(/:/);
 					color = `#${toHexString(temp[0])}${toHexString(temp[1])}${toHexString(temp[2])}`;
-					console.log(color);
+
+					// color時に、colorTemperatureが0になるみたいだけど、値域としておかしいので補正
+					devState.colorTemperature = devState.colorTemperature == 0 ? 2700 : devState.colorTemperature;
 
 					control += `<form class='inline'>Brightness: `  // brightness
 						+ `<input type='number' id="inSwitchBotBulbBriNumber_${d.deviceId}" value='${devState.brightness}' min='0' max='100' step='5' onChange='window.inSwitchBotBulbBriNumber_Change("${d.deviceId}", this.value);'><br>`
@@ -193,7 +197,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateBrightnessSettings("${d.deviceId}");'>送信</button>`
 						+ `<br>`
 						+ `<form class='inline'>Color: `  // color
-						+ `<input type='color' id="inSwitchBotBulbColor_${d.deviceId}" value='${color}'>`
+						+ `<input type='color' id="inSwitchBotBulbColor_${d.deviceId}" value='${color}' />`
 						+ `</form>`
 						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateColorSettings("${d.deviceId}");'>送信</button>`
 						+ `<br>`
@@ -241,14 +245,22 @@ window.addEventListener('DOMContentLoaded', function () {
 		divControlSwitchBot.innerHTML = doc;
 	};
 
+	/**
+	 * @func
+	 * @desc 10進数表記文字を16進数に変換
+	 */
 	function toHexString(v) {
 		let ret = parseInt(v);
 		ret = ret.toString(16);
 		ret = '0' + ret;
-		ret = ret.substr(0, 2);
+		ret = ret.substr(-2);
 		return ret;
 	};
 
+	/**
+	 * @func
+	 * @desc 16進数表記文字を10進数に変換
+	 */
 	function toDecString(v) {
 		return parseInt(v, 16);;
 	};
