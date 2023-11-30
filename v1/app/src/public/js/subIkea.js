@@ -32,8 +32,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func window.renewFacilitiesIkea
 	 * @desc mainからの情報で，ikea関係のhtmlを変更する
-	 * @param {void}
-	 * @return {void}
+	 * @param {Object} arg
 	 */
 	window.renewFacilitiesIkea = function (arg) { //facilitiesIkea = json = arg; // 機器情報確保
 		facilitiesIkea = arg;
@@ -100,7 +99,7 @@ window.addEventListener('DOMContentLoaded', function () {
 				// default
 				case 7:
 				default:
-					powerr = 'Solar'; break;
+					power = 'Solar'; break;
 			}
 
 			let control = ''; // 制御できるものがあれば
@@ -110,7 +109,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			switch (type) {
 				case 0:  // remote controller
 					// console.log('subIkea.js, remo-con value:', value);
-					doc += `<div class='tooltip'><i class="fa-solid fa-toggle-off ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive} ${battery}<br>${name}<br>power:${power}<br>`;
+					doc += `<div class='tooltip'><i class="fa-solid fa-toggle-off ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive} ${battery}<br>${name}<br>`;
 					break;
 
 				case 1: // slaveRemote
@@ -131,7 +130,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						control = `<button onClick="window.btnIkeaBulbOnOff_Click('${key}', 'light', 'on');">ON</button>`;
 					}
 
-					doc += `<div class='tooltip'><i class='${icon} ikea-dev'></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive}<br>${name}<br>power:${power}<br>${control}`;
+					doc += `<div class='tooltip'><i class='${icon} ikea-dev'></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive}<br>${name}<br>${control}`;
 					break;
 
 				case 3: // plug
@@ -144,12 +143,16 @@ window.addEventListener('DOMContentLoaded', function () {
 
 				case 6: // signal repeater
 					// console.log('subIkea.js, signal repeater value:', value);
-					doc += `<div class='tooltip'><i class="fa-solid fa-wifi ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive}<br>${name}<br>power:${power}<br>`;
+					doc += `<div class='tooltip'><i class="fa-solid fa-wifi ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive}<br>${name}<br>`;
 					break;
 
 				case 7: // blind
 					console.log('subIkea.js, blind value:', value);
-					doc += `<div class='tooltip'><i class="fa-solid fa-warehouse ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive} ${battery}<br>${name}<br>power:${power}<br>position:${value.blindList[0].position}<br>`;
+
+					control = `<button onClick="window.btnIkeaBlindUpDown_Click('${key}', 'blind', 'up');">Up</button>`
+						+ `<button onClick="window.btnIkeaBlindUpDown_Click('${key}', 'blind', 'down');">Down</button>`;
+
+					doc += `<div class='tooltip'><i class="fa-solid fa-warehouse ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive} ${battery}<br>${name}<br>position:${value.blindList[0].position}<br>${control}<br>`;
 					break;
 
 				case 8: // sound remote
@@ -170,11 +173,10 @@ window.addEventListener('DOMContentLoaded', function () {
 		divControlIkea.innerHTML = doc;
 	}
 
-	/** 
+	/**
 	 * @func window.renewIkeaLog
 	 * @desc configタブのデバッグログ
-	 * @param {void}
-	 * @return {void}
+	 * @param {string} text
 	 */
 	window.renewIkeaLog = function (text) {
 		txtIkeaLog.value = text;
@@ -199,7 +201,27 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
+
 	/** 
+	 * @func window.btnIkeaBulbOnOff_Click
+	 * @desc Ikea ブラインドの開け閉め
+	 * @param key - device id
+	 * @param command - up or down
+	 */
+	window.btnIkeaBlindUpDown_Click = function (key, type, command) {
+		switch (command) {
+			case 'Up':
+				window.ipc.IkeaSend(key, type, { "position": 100 });
+				break;
+			case 'Down':
+				window.ipc.IkeaSend(key, type, { "position": 0 });
+				break;
+		}
+	}
+
+
+
+	/**
 	 * @func window.btnIkeaConfigSet_Click
 	 * @desc 設定ボタン
 	 * @param {void}
@@ -225,12 +247,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
+	/**
 	 * @func window.IkeaConfigSaved
 	 * @desc 設定完了通知
 	 * @param {void}
-	 * @return {void}
-	 */
+						* @return {void}
+						*/
 	window.IkeaConfigSaved = function () {
 		btnIkeaConfigSet.disabled = false;
 		btnIkeaConfigSet.textContent = '設定';
@@ -238,12 +260,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast('Info', 'IKEA 設定を保存しました。');
 	};
 
-	/** 
+	/**
 	 * @func window.renewIkeaConfigView
 	 * @desc renewIkeaConfigView
 	 * @param {void}
-	 * @return {void}
-	 */
+						* @return {void}
+						*/
 	window.renewIkeaConfigView = function (arg) {
 		inIkeaUse.checked = arg.enabled;
 		inIkeaSecurityCode.value = arg.securityCode;
