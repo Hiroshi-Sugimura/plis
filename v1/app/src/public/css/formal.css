@@ -1376,6 +1376,21 @@ td.today {
 	-moz-border-radius: 1em;
 }
 
+.icon_layers_counter_green {
+	position: absolute;
+	top: 0;
+	right: -5px;
+	display: inline-block;
+	padding: 3px 5px;
+	line-height: 1;
+	color: #000000;
+	background: #33ff33;
+	opacity: 0.80;
+	font-size: 0.6em;
+	border-radius: 1em;
+	-webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
+}
 
 /*********************************************************************
 	EOF

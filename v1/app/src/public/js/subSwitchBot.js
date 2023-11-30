@@ -105,11 +105,11 @@ window.addEventListener('DOMContentLoaded', function () {
 				case 'Meter':
 				case 'MeterPlus':
 					if (devState.battery >= 85) {
-						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-full icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-full icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
 					} else if (devState.battery >= 70) {
-						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-three-quarters icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-three-quarters icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
 					} else if (devState.battery >= 40) {
-						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
 					} else if (devState.battery >= 20) {
 						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-quater icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
 					} else {
@@ -151,11 +151,11 @@ window.addEventListener('DOMContentLoaded', function () {
 					}
 
 					if (devState.battery >= 85) {
-						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-full icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-full icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
 					} else if (devState.battery >= 70) {
-						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-three-quarters icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-three-quarters icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
 					} else if (devState.battery >= 40) {
-						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
 					} else if (devState.battery >= 20) {
 						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-quater icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
 					} else {
@@ -184,11 +184,11 @@ window.addEventListener('DOMContentLoaded', function () {
 					}
 
 					if (devState.battery >= 85) {
-						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-full icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-full icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
 					} else if (devState.battery >= 70) {
-						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-three-quarters icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-three-quarters icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
 					} else if (devState.battery >= 40) {
-						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
 					} else if (devState.battery >= 20) {
 						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-quater icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
 					} else {
