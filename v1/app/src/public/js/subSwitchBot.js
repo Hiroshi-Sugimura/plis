@@ -116,7 +116,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-empty icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
 					}
 
-					doc += `<div class="tooltip"><i class="fa-solid fa-temperature-half switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${batteryIcon}<br>${d.deviceName}<br>${devState.temperature} ℃ / ${devState.humidity} ％`;
+					doc += `<div class="tooltip"><i class="fa-solid fa-temperature-half switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${batteryIcon}<br>${d.deviceName}<br><i class="fa-solid fa-temperature-three-quarters"></i> ${devState.temperature} ℃<br><i class="fa-solid fa-droplet"></i> ${devState.humidity} ％`;
 					break;
 
 				case 'Lock':
@@ -221,9 +221,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br>`;
 					doc += `${control}<br>`;
-					doc += `${devState.voltage} [V] / ${devState.electricCurrent} [A]<br>`
-					doc += `${devState.weight} [W]<br>`;
-					doc += `Duration: ${devState.electricityOfDay} min<br>`;
+					doc += `${devState.voltage} [V]<br> ${devState.electricCurrent} [A]<br>${devState.weight} [W]<br>`;
+					doc += `<i class="fa-regular fa-clock"></i> ${devState.electricityOfDay} min<br>`;
 					break;
 
 				case 'Plug':
@@ -311,7 +310,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
 					}
 
-					doc += `<div class="tooltip"><i class="fa-solid fa-droplet switchBot-dev"></i><i class="fa-solid ${subicon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br>${devState.temperature} ℃ / ${devState.humidity}％<br>lackWater: ${devState.lackWater}`;
+					doc += `<div class="tooltip"><i class="fa-solid fa-droplet switchBot-dev"></i><i class="fa-solid ${subicon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br><i class="fa-solid fa-temperature-three-quarters"></i> ${devState.temperature} ℃<br><i class="fa-solid fa-droplet"></i> ${devState.humidity} ％<br>lackWater: ${devState.lackWater}`;
 					break;
 
 				case 'Indoor Cam':

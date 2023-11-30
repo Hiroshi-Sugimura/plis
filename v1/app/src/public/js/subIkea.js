@@ -210,10 +210,10 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.btnIkeaBlindUpDown_Click = function (key, type, command) {
 		switch (command) {
-			case 'Up':
+			case 'up':
 				window.ipc.IkeaSend(key, type, { "position": 100 });
 				break;
-			case 'Down':
+			case 'down':
 				window.ipc.IkeaSend(key, type, { "position": 0 });
 				break;
 		}
