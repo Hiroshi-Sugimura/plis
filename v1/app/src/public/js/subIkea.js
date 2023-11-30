@@ -148,10 +148,13 @@ window.addEventListener('DOMContentLoaded', function () {
 
 				case 7: // blind
 					// console.log('subIkea.js, blind value:', value);
-					control = `<button onClick="window.btnIkeaBlindUpDown_Click('${key}', 'blind', 'up');">Up</button>`
-						+ `<button onClick="window.btnIkeaBlindUpDown_Click('${key}', 'blind', 'down');">Down</button>`;
+					// control = `<button onClick="window.btnIkeaBlindUpDown_Click('${key}', 'blind', 'up');">Up</button>`
+					// + `<button onClick="window.btnIkeaBlindUpDown_Click('${key}', 'blind', 'down');">Down</button>`;
 
-					doc += `<div class='tooltip'><i class="fa-solid fa-warehouse ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive} ${battery}<br>${name}<br>position:${value.blindList[0].position}<br>${control}<br>`;
+					control = `<form class='inline'><input type='range' id="inIkeaBlindApertureRange_${key}" value='${value.blindList[0].position}' min='0' max='100' step='5' onChange='window.inIkeaBlindApertureRange_Change("${key}", this.value);'>`
+						+ `<input type='number' id="inIkeaBlindApertureNumber_${key}" value='${value.blindList[0].position}' min='0' max='100' step='5' onChange='window.inIkeaBlindApertureNumber_Change("${key}", this.value);'></form>`
+
+					doc += `<div class='tooltip'><i class="fa-solid fa-warehouse ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive} ${battery}<br>${name}<br>${control}<br>`;
 					break;
 
 				case 8: // sound remote
@@ -183,6 +186,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
+	// IKEA デバイス制御
+
 	/** 
 	 * @func window.btnIkeaBulbOnOff_Click
 	 * @desc Ikea 照明のON/OFF
@@ -202,22 +207,33 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	/** 
-	 * @func window.btnIkeaBulbOnOff_Click
-	 * @desc Ikea ブラインドの開け閉め
+	 * @func window.inIkeaBlindApertureRange_Change
+	 * @desc Ikea ブラインドの開け閉めステップ
 	 * @param key - device id
-	 * @param command - up or down
+	 * @param value - [0-100]
 	 */
-	window.btnIkeaBlindUpDown_Click = function (key, type, command) {
-		switch (command) {
-			case 'up':
-				window.ipc.IkeaSend(key, type, { "position": 100 });
-				break;
-			case 'down':
-				window.ipc.IkeaSend(key, type, { "position": 0 });
-				break;
-		}
+	window.inIkeaBlindApertureRange_Change = function (key, value) {
+		let number = document.getElementById("inIkeaBlindApertureNumber_" + key);
+		number.value = value;
+
+		window.ipc.IkeaSend(key, 'blind', { "position": value });
 	};
 
+	/** 
+	 * @func window.inIkeaBlindApertureNumber_Change
+	 * @desc Ikea ブラインドの開け閉めステップ
+	 * @param key - device id
+	 * @param value - [0-100]
+	 */
+	window.inIkeaBlindApertureNumber_Change = function (key, value) {
+		let range = document.getElementById("inIkeaBlindApertureRange_" + key);
+		range.value = value;
+
+		window.ipc.IkeaSend(key, 'blind', { "position": value });
+	};
+
+	//----------------------------------------------------------------------------------------------
+	// IKEA 設定
 
 	/**
 	 * @func window.btnIkeaConfigSet_Click

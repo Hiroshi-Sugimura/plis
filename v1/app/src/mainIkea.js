@@ -198,10 +198,15 @@ let mainIkea = {
 			console.error(error);
 			return;
 		}
+
 		// 要求したら一度だけ受信処理する
 		if (mainIkea.isRequested == true) {
-			persist = TF.facilities;
-			sendIPCMessage("fclIkea", persist);
+			if (device.type === TF.AccessoryTypes.blind) {
+				// ブラインドは取得すると現在値をとってしまうので無視する（より良い方法がある？）
+			} else {
+				persist = TF.facilities;
+				sendIPCMessage("fclIkea", persist);
+			}
 		}
 		mainIkea.isRequested = false;
 	},
