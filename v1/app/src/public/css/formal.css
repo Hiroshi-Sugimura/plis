@@ -1344,17 +1344,22 @@ td.today {
 	display: inline-block;
 	width: 100%;
 	text-align: center;
-	font-size: 2em;
+	font-size: 200%;
 }
 
 .icon_layers_text {
 	position: relative;
-	top: 0.4em;
-	min-width: 100%;
-	color: #fff;
-	font-size: 1.2em;
+	color: #ffffff;
+	font-size: 85%;
 }
 
+.icon_layers_text_black {
+	position: relative;
+	/* color: #000000; */
+	font-size: 85%;
+}
+
+/* iconの右上にカウンター乗せる */
 .icon_layers_counter {
 	position: absolute;
 	top: 0;
@@ -1364,6 +1369,7 @@ td.today {
 	line-height: 1;
 	color: #fff;
 	background: #ff3333;
+	opacity: 0.80;
 	font-size: 0.6em;
 	border-radius: 1em;
 	-webkit-border-radius: 1em;
