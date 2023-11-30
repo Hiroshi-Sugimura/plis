@@ -85,9 +85,10 @@ let mainIkea = {
 
 		} catch (error) {
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.start() error:\x1b[32m', error, '\x1b[0m');
+			sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainIkea.start', stackLog: 'Can not discover and connect gateway. Please check your network connection. And restart PLIS.' });
 			config.enabled = false;
 			mainIkea.isRun = false;
-			return;
+			throw error;
 		}
 
 		if (!isObjEmpty(persist)) {
