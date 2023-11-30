@@ -778,7 +778,13 @@ const menuItems = [
 			{
 				label: 'Zoom (-)',
 				accelerator: isMac ? 'Command+-' : 'Control+-',
-				click: function () { mainWindow.webContents.setZoomFactor(mainWindow.webContents.getZoomFactor() - 0.1); }
+				click: function () {
+					if (mainWindow.webContents.getZoomFactor() >= 0.2) {
+						mainWindow.webContents.setZoomFactor(mainWindow.webContents.getZoomFactor() - 0.1);
+					} else {
+						sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'main', stackLog: 'Minimum zoom' });
+					}
+				}
 			},
 			{
 				label: 'Zoom (Reset)',

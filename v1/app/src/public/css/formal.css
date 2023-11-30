@@ -1359,7 +1359,7 @@ td.today {
 	font-size: 85%;
 }
 
-/* iconの右上にカウンター乗せる */
+/* 背景赤、文字白のカウンター */
 .icon_layers_counter {
 	position: absolute;
 	top: 0;
@@ -1376,6 +1376,7 @@ td.today {
 	-moz-border-radius: 1em;
 }
 
+/* 背景緑、文字黒のカウンター */
 .icon_layers_counter_green {
 	position: absolute;
 	top: 0;

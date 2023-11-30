@@ -76,11 +76,11 @@ window.addEventListener('DOMContentLoaded', function () {
 
 			let battery = '';  // バッテリー充電量
 			if (info?.battery >= 85) {
-				battery = `<span class='icon_layers'><i class='fa-solid fa-battery-full icon_layers_icon'></i><span class='icon_layers_counter'>${info.battery}</span></span>`
+				battery = `<span class='icon_layers'><i class='fa-solid fa-battery-full icon_layers_icon'></i><span class='icon_layers_counter_green'>${info.battery}</span></span>`
 			} else if (info?.battery >= 70) {
-				battery = `<span class='icon_layers'><i class='fa-solid fa-battery-three-quarters icon_layers_icon'></i><span class='icon_layers_counter'>${info.battery}</span></span>`
+				battery = `<span class='icon_layers'><i class='fa-solid fa-battery-three-quarters icon_layers_icon'></i><span class='icon_layers_counter_green'>${info.battery}</span></span>`
 			} else if (info?.battery >= 40) {
-				battery = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter'>${info.battery}</span></span>`
+				battery = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter_green'>${info.battery}</span></span>`
 			} else if (info?.battery >= 20) {
 				battery = `<span class='icon_layers'><i class='fa-solid fa-battery-quater icon_layers_icon'></i><span class='icon_layers_counter'>${info.battery}</span></span>`
 			} else {
@@ -147,8 +147,7 @@ window.addEventListener('DOMContentLoaded', function () {
 					break;
 
 				case 7: // blind
-					console.log('subIkea.js, blind value:', value);
-
+					// console.log('subIkea.js, blind value:', value);
 					control = `<button onClick="window.btnIkeaBlindUpDown_Click('${key}', 'blind', 'up');">Up</button>`
 						+ `<button onClick="window.btnIkeaBlindUpDown_Click('${key}', 'blind', 'down');">Down</button>`;
 
@@ -171,7 +170,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 
 		divControlIkea.innerHTML = doc;
-	}
+	};
 
 	/**
 	 * @func window.renewIkeaLog
@@ -180,7 +179,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.renewIkeaLog = function (text) {
 		txtIkeaLog.value = text;
-	}
+	};
 
 
 	//----------------------------------------------------------------------------------------------
@@ -217,8 +216,7 @@ window.addEventListener('DOMContentLoaded', function () {
 				window.ipc.IkeaSend(key, type, { "position": 0 });
 				break;
 		}
-	}
-
+	};
 
 
 	/**
