@@ -38,6 +38,8 @@ let mainIkea = {
 	storeJob: null,
 	/** 多重起動抑制 */
 	isRun: false,
+	/** 受信処理抑制 */
+	isRequested: false,
 
 	//////////////////////////////////////////////////////////////////////
 	/**
@@ -175,6 +177,7 @@ let mainIkea = {
 	 */
 	control: function (key, type, command) {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.control() key:', key, ', type:', type, ', command:', command) : 0;
+		mainIkea.isRequested = true;
 		TF.setState(key, type, command);
 	},
 
@@ -195,11 +198,12 @@ let mainIkea = {
 			console.error(error);
 			return;
 		}
-
-		// if( device.type === AccessoryTypes.lightbulb ) {
-		// console.log( device );
-		// }
-		// console.log('-- received, IP:', rIP, ', device:', device);
+		// 要求したら一度だけ受信処理する
+		if (mainIkea.isRequested == true) {
+			persist = TF.facilities;
+			sendIPCMessage("fclIkea", persist);
+		}
+		mainIkea.isRequested = false;
 	},
 
 
