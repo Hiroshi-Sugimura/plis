@@ -757,6 +757,19 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
+
+	/**
+	 *  @func isObjEmpty
+	 *  @desc Object型が空{}かどうかチェックする。Object型は == {} ではチェックできない。
+	 *  @param {Object} obj
+	 *  @return {Object} obj
+	 */
+	let isObjEmpty = function (obj) {
+		return Object.keys(obj).length === 0;
+	};
+
+
+
 	const pointStyleList = ['circle', 'triangle', 'cross', 'rect', 'star', 'dash', 'rectRounded', 'crossRot', 'rectRot', 'line'];
 
 	//////////////////////////////////////////////////////////////////
@@ -841,7 +854,9 @@ window.addEventListener('DOMContentLoaded', function () {
 			}
 		}
 
-		renewPowerCanvasSwitchBot();
+		if (!isObjEmpty(datasetsSwitchBotPower)) {
+			renewPowerCanvasSwitchBot();
+		}
 	};
 
 });
