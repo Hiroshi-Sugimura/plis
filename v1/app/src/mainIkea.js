@@ -38,6 +38,8 @@ let mainIkea = {
 	storeJob: null,
 	/** 多重起動抑制 */
 	isRun: false,
+	/** 受信処理抑制 */
+	isRequested: false,
 
 	//////////////////////////////////////////////////////////////////////
 	/**
@@ -85,9 +87,10 @@ let mainIkea = {
 
 		} catch (error) {
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.start() error:\x1b[32m', error, '\x1b[0m');
+			sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainIkea.start', stackLog: 'Can not discover and connect gateway. Please check your network connection. And restart PLIS.' });
 			config.enabled = false;
 			mainIkea.isRun = false;
-			return;
+			throw error;
 		}
 
 		if (!isObjEmpty(persist)) {
@@ -174,6 +177,7 @@ let mainIkea = {
 	 */
 	control: function (key, type, command) {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.control() key:', key, ', type:', type, ', command:', command) : 0;
+		mainIkea.isRequested = true;
 		TF.setState(key, type, command);
 	},
 
@@ -195,10 +199,16 @@ let mainIkea = {
 			return;
 		}
 
-		// if( device.type === AccessoryTypes.lightbulb ) {
-		// console.log( device );
-		// }
-		// console.log('-- received, IP:', rIP, ', device:', device);
+		// 要求したら一度だけ受信処理する
+		if (mainIkea.isRequested == true) {
+			if (device.type === TF.AccessoryTypes.blind) {
+				// ブラインドは取得すると現在値をとってしまうので無視する（より良い方法がある？）
+			} else {
+				persist = TF.facilities;
+				sendIPCMessage("fclIkea", persist);
+			}
+		}
+		mainIkea.isRequested = false;
 	},
 
 

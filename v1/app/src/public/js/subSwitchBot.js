@@ -63,6 +63,8 @@ window.addEventListener('DOMContentLoaded', function () {
 			let devState = facilitiesSwitchBot[d.deviceId];
 			let icon = '';
 			let subicon = '';
+			let cloudIcon = '';
+			let batteryIcon = '';
 			let control = '';
 			let temp = '';
 			let color = '#000000';
@@ -73,15 +75,21 @@ window.addEventListener('DOMContentLoaded', function () {
 				case 'Bot':
 					switch (devState.power) {
 						case 'on':
-							icon = 'fa-regular fa-square';
+							icon = `<span class='icon_layers'><i class='fa-regular fa-square switchBot-dev icon_layers_icon'></i><span class='icon_layers_text_black'>ON</span></span>`
 							control = `<button onClick="window.SwitchBotBot('${d.deviceId}', 'turnOff', 'default');">OFF</button>`;
 							break;
 						case 'off':
-							icon = 'fa-solid fa-square-xmark';
+							icon = `<span class='icon_layers'><i class='fa-regular fa-square switchBot-dev icon_layers_icon'></i><span class='icon_layers_text_black'>OFF</span></span>`
 							control = `<button onClick="window.SwitchBotBot('${d.deviceId}', 'turnOn', 'default');">ON</button>`;
 							break;
 					}
-					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${devState.power}<br>${control}`;
+
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+					doc += `<div class="tooltip">${icon}<div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br>${control}`;
 					break;
 
 				case 'Curtain':
@@ -96,7 +104,19 @@ window.addEventListener('DOMContentLoaded', function () {
 
 				case 'Meter':
 				case 'MeterPlus':
-					doc += `<div class="tooltip"><i class="fa-solid fa-temperature-half switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${devState.temperature} ℃ / ${devState.humidity} ％`;
+					if (devState.battery >= 85) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-full icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 70) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-three-quarters icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 40) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 20) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-quater icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+					} else {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-empty icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+					}
+
+					doc += `<div class="tooltip"><i class="fa-solid fa-temperature-half switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${batteryIcon}<br>${d.deviceName}<br><i class="fa-solid fa-temperature-three-quarters"></i> ${devState.temperature} ℃<br><i class="fa-solid fa-droplet"></i> ${devState.humidity} ％`;
 					break;
 
 				case 'Lock':
@@ -109,7 +129,13 @@ window.addEventListener('DOMContentLoaded', function () {
 					break;
 
 				case 'Remote':  // リモートボタン
-					doc += `<div class="tooltip"><i class="fa-solid fa-toggle-off switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}`;
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+
+					doc += `<div class="tooltip"><i class="fa-solid fa-toggle-off switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}`;
 					break;
 
 				case 'Motion Sensor':
@@ -117,7 +143,26 @@ window.addEventListener('DOMContentLoaded', function () {
 						case "bright": subicon = "fa-regular fa-sun"; break;  // 明るい
 						case "dim": subicon = "fa-solid fa-moon"; break;  // 暗い
 					}
-					doc += `<div class="tooltip"><i class="fa-solid fa-person-rays switchBot-dev"></i><i class="${subicon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>MoveDetected: ${devState.moveDetected}`;
+
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+
+					if (devState.battery >= 85) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-full icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 70) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-three-quarters icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 40) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 20) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-quater icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+					} else {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-empty icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+					}
+
+					doc += `<div class="tooltip"><i class="fa-solid fa-person-rays switchBot-dev"></i><i class="${subicon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon} ${batteryIcon}<br>${d.deviceName}<br>MoveDetected: ${devState.moveDetected}`;
 					break;
 
 				case 'Contact Sensor':  // 開閉センサ
@@ -132,7 +177,25 @@ window.addEventListener('DOMContentLoaded', function () {
 						case "timeOutNotClose": icon = "fa-door-open"; break;  // 開きっぱなし
 						case "close": icon = "fa-door-closed"; break;  // 閉まった
 					}
-					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>MoveDetected: ${devState.moveDetected}`;
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+
+					if (devState.battery >= 85) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-full icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 70) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-three-quarters icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 40) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 20) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-quater icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+					} else {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-empty icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+					}
+
+					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon} ${batteryIcon}<br>${d.deviceName}<br>MoveDetected: ${devState.moveDetected}`;
 					break;
 
 				case 'Ceiling Light':
@@ -149,11 +212,17 @@ window.addEventListener('DOMContentLoaded', function () {
 						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOff', 'default');">ON</button>`;
 						icon = 'fa-plug';
 					}
-					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>`;
+
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+
+					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br>`;
 					doc += `${control}<br>`;
-					doc += `${devState.voltage} [V] / ${devState.electricCurrent} [A]<br>`
-					doc += `${devState.weight} [W]<br>`;
-					doc += `Duration: ${devState.electricityOfDay} min<br>`;
+					doc += `${devState.voltage} [V]<br> ${devState.electricCurrent} [A]<br>${devState.weight} [W]<br>`;
+					doc += `<i class="fa-regular fa-clock"></i> ${devState.electricityOfDay} min<br>`;
 					break;
 
 				case 'Plug':
@@ -164,7 +233,14 @@ window.addEventListener('DOMContentLoaded', function () {
 						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOn', 'default');">OFF</button>`;
 						icon = 'fa-plug';
 					}
-					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${control}`;
+
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+
+					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br>${control}`;
 					break;
 
 				case 'Strip Light':
@@ -182,6 +258,13 @@ window.addEventListener('DOMContentLoaded', function () {
 							icon = 'fa-solid fa-lightbulb';
 							break;
 					}
+
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+
 
 					// 色を16進表記にかえる r:g:b -> $rrggbb
 					temp = devState.color.split(/:/);
@@ -207,7 +290,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						+ `</form>`
 						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateColorTemperatureSettings("${d.deviceId}");'>送信</button>`;
 
-					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${control}`;
+					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br>${control}`;
 					break;
 
 				case 'Robot Vacuum Cleaner S1':
@@ -221,7 +304,13 @@ window.addEventListener('DOMContentLoaded', function () {
 						case 'off': subicon = 'fa-plug'; break;
 					}
 
-					doc += `<div class="tooltip"><i class="fa-solid fa-droplet switchBot-dev"></i><i class="fa-solid ${subicon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${devState.temperature} ℃ / ${devState.humidity}％<br>lackWater: ${devState.lackWater}`;
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+
+					doc += `<div class="tooltip"><i class="fa-solid fa-droplet switchBot-dev"></i><i class="fa-solid ${subicon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br><i class="fa-solid fa-temperature-three-quarters"></i> ${devState.temperature} ℃<br><i class="fa-solid fa-droplet"></i> ${devState.humidity} ％<br>lackWater: ${devState.lackWater}`;
 					break;
 
 				case 'Indoor Cam':

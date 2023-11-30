@@ -1344,17 +1344,22 @@ td.today {
 	display: inline-block;
 	width: 100%;
 	text-align: center;
-	font-size: 2em;
+	font-size: 200%;
 }
 
 .icon_layers_text {
 	position: relative;
-	top: 0.4em;
-	min-width: 100%;
-	color: #fff;
-	font-size: 1.2em;
+	color: #ffffff;
+	font-size: 85%;
 }
 
+.icon_layers_text_black {
+	position: relative;
+	/* color: #000000; */
+	font-size: 85%;
+}
+
+/* 背景赤、文字白のカウンター */
 .icon_layers_counter {
 	position: absolute;
 	top: 0;
@@ -1364,12 +1369,29 @@ td.today {
 	line-height: 1;
 	color: #fff;
 	background: #ff3333;
+	opacity: 0.80;
 	font-size: 0.6em;
 	border-radius: 1em;
 	-webkit-border-radius: 1em;
 	-moz-border-radius: 1em;
 }
 
+/* 背景緑、文字黒のカウンター */
+.icon_layers_counter_green {
+	position: absolute;
+	top: 0;
+	right: -5px;
+	display: inline-block;
+	padding: 3px 5px;
+	line-height: 1;
+	color: #000000;
+	background: #33ff33;
+	opacity: 0.80;
+	font-size: 0.6em;
+	border-radius: 1em;
+	-webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
+}
 
 /*********************************************************************
 	EOF

@@ -28,7 +28,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	window.showGarminData = function (arg) { // stateGarmin = json = arg;
 		stateGarmin = arg;
 		if (!arg) {
-			console.log('window.showGarminData() is no show. arg:', arg);
+			// console.log('window.showGarminData() is no show. arg:', arg);
 			divGarmin.innerHTML = `<div class="p">No data.<br>クラウドサービスHALと連携し、HALとGarminを連携するとデータを取得できます。最初のHAL-Garminデータ連携には1日ほどかかる場合があります。HAL-PLISデータ連携は毎日朝9時半に自動実行されますが、連携設定成功時に表示される右上のボタンで手動同期も可能です。<br><button onclick="document.getElementById('configTab').checked=true; location.hash='HALConfig'; document.getElementById('HALConfigDetail').open=true;">設定はこちら</button></div>`;
 			return;
 		}
