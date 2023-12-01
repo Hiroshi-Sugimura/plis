@@ -8,6 +8,8 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
+const fs = require('fs');
+const path = require('path');
 const cron = require('node-cron');
 const Store = require('electron-store');
 const eSM = require('e-smartmeter-echonet-lite');
@@ -16,6 +18,8 @@ const ELconv = require('echonet-lite-conv');
 const { Sequelize, Op, esmdataModel, esmrawModel, electricEnergyModel } = require('./models/localDBModels');   // DBデータと連携
 const { objectSort, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
 
+// 基礎設定
+const appDir = process.env.NODE_ENV === 'development' ? __dirname : __dirname;
 let sendIPCMessage = null;
 const store = new Store();
 
@@ -84,6 +88,15 @@ let mainESM = {
 			return;
 		}
 		mainESM.isRun = true;
+
+		// 辞書の読み込みをオーバーライド
+		ELconv.initialize = function () {
+			ELconv.m_dictNod = JSON.parse(fs.readFileSync(path.join(appDir, 'nodeProfile.json'), 'utf8'));
+			ELconv.m_dictSup = JSON.parse(fs.readFileSync(path.join(appDir, 'superClass_I.json'), 'utf8'));
+			ELconv.m_dictDev = JSON.parse(fs.readFileSync(path.join(appDir, 'deviceObject_I.json'), 'utf8'));
+			ELconv.m_dictMakers = JSON.parse(fs.readFileSync(path.join(appDir, 'makers.json'), 'utf8'));
+		};
+		ELconv.initialize();
 
 		try {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start()') : 0;
