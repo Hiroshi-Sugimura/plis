@@ -315,7 +315,7 @@
 							<div class='LinearLayoutChild'>
 								<section>
 									<strong>ConfigからOpenWeatherMapの情報を入力すると表示されます。</strong><br>
-									<button onclick="document.getElementById('configTab').checked=true; location.hash='OpenWeatherMapConfig'; document.getElementById('OpenWeatherMapConfig').open=true;">設定はこちら</button>
+									<button onclick="document.getElementById('configTab').checked=true; location.hash='OpenWeatherMapConfig'; document.getElementById('OWMConfigDetails').open=true;">設定はこちら</button>
 								</section>
 							</div>
 						</div>
@@ -1710,6 +1710,13 @@
 				</p>
 			</dialog>
 
+			<!-- SwitchBotの汎用ダイアログ -->
+			<dialog id="dlgSwitchBotSettingsDialog">
+				<h3>デバイス設定の変更</h3>
+				<div class="p">
+					<div id="divSwitchBotSettingsContents"></div>
+				</div>
+			</dialog>
 
 			<!-- OpenWeatherMapのダイアログ -->
 			<dialog id="dlgOwmHelp">

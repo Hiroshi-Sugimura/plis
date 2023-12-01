@@ -350,6 +350,82 @@ const switchBotDataModel = sqlite3.define('switchBotDataTable', {
 
 
 //////////////////////////////////////////////////////////////////////
+// IKEA
+const ikeaRawModel = sqlite3.define('ikeaRawTable', {
+	id: {
+		type: Sequelize.INTEGER,
+		autoIncrement: true,
+		primaryKey: true,
+		allowNull: false
+	},
+	detail: {
+		type: Sequelize.TEXT('medium')
+	},
+	createdAt: {
+		type: 'TIMESTAMP',
+		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+		allowNull: false
+	},
+	updatedAt: {
+		type: 'TIMESTAMP',
+		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+		allowNull: false
+	}
+}, {
+	freezeTableName: true,
+	timestamps: true
+});
+
+
+const ikeaDataModel = sqlite3.define('ikeaDataTable', {
+	id: {
+		type: Sequelize.INTEGER,
+		autoIncrement: true,
+		primaryKey: true,
+		allowNull: false
+	},
+	deviceId: {
+		type: Sequelize.TEXT('tiny'),
+		allowNull: false
+	},
+	deviceType: {
+		type: Sequelize.TEXT('tiny'),
+		allowNull: false
+	},
+	deviceName: {
+		type: Sequelize.TEXT('tiny')
+	},
+	alive: {
+		type: Sequelize.BOOLEAN
+	},
+	power: {
+		type: Sequelize.INTEGER
+	},
+	battery: {
+		type: Sequelize.INTEGER
+	},
+	list: {
+		type: Sequelize.TEXT('medium')
+	},
+	createdAt: {
+		type: 'TIMESTAMP',
+		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+		allowNull: false
+	},
+	updatedAt: {
+		type: 'TIMESTAMP',
+		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+		allowNull: false
+	}
+}, {
+	freezeTableName: true,
+	timestamps: true
+});
+
+
+
+
+//////////////////////////////////////////////////////////////////////
 // IOT_QuestionnaireAnswersModel
 const IOT_QuestionnaireAnswersModel = sqlite3.define('IOT_QuestionnaireAnswers', {
 	id: {
@@ -1616,7 +1692,7 @@ const IOT_GarminActivityFilesModel = sqlite3.define('IOT_GarminActivityFiles', {
 
 
 // export
-module.exports = { Sequelize, Op, sqlite3, elrawModel, eldataModel, esmdataModel, esmrawModel, electricEnergyModel, huerawModel, arpModel, owmModel, netatmoModel, IOT_QuestionnaireAnswersModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_MinorkeyMeansModel, roomEnvModel, jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel, switchBotRawModel, switchBotDataModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel, IOT_GarminActivityFilesModel };
+module.exports = { Sequelize, Op, sqlite3, elrawModel, eldataModel, esmdataModel, esmrawModel, electricEnergyModel, huerawModel, arpModel, owmModel, netatmoModel, ikeaRawModel, ikeaDataModel, IOT_QuestionnaireAnswersModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_MinorkeyMeansModel, roomEnvModel, jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel, switchBotRawModel, switchBotDataModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel, IOT_GarminActivityFilesModel };
 
 //////////////////////////////////////////////////////////////////////
 // EOF

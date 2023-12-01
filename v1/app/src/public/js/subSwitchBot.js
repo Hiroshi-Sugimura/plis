@@ -18,8 +18,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	let H3SwitchBot = document.getElementById('H3SwitchBot');
 	let H3SwitchBotPower = document.getElementById('H3SwitchBotPower');
 
-	let divSwitchBot = document.getElementById('divSwitchBot');  // switchBotのセンサデータ
-
 	// config
 	let inSwitchBotUse = document.getElementById('inSwitchBotUse'); // switchBot; use or not
 	let inSwitchBotToken = document.getElementById('inSwitchBotToken'); // switchBot; token
@@ -31,6 +29,10 @@ window.addEventListener('DOMContentLoaded', function () {
 	let divControlSwitchBot = document.getElementById('divControlSwitchBot');  // SwitchBotのコントロール
 	const canRoomEnvChartSwitchBot = document.getElementById('canRoomEnvChartSwitchBot');  // 部屋環境グラフ
 	let divSwitchBotSuggest = document.getElementById('divSwitchBotSuggest'); // switchBot; サジェスト
+
+	// dialog
+	let dlgSwitchBotSettingsDialog = document.getElementById('dlgSwitchBotSettingsDialog');  // switchBotの汎用ダイアログ
+	let divSwitchBotSettingsContents = document.getElementById('divSwitchBotSettingsContents');  // switchBotの汎用ダイアログのコンテンツ
 
 	//----------------------------------------------------------------------------------------------
 	/**
@@ -61,7 +63,11 @@ window.addEventListener('DOMContentLoaded', function () {
 			let devState = facilitiesSwitchBot[d.deviceId];
 			let icon = '';
 			let subicon = '';
+			let cloudIcon = '';
+			let batteryIcon = '';
 			let control = '';
+			let temp = '';
+			let color = '#000000';
 			// console.log('window.renewFacilitiesSwitchBot() d:', d, 'devState:', devState);
 			doc += "<div class='LinearLayoutChild'> <section>";
 
@@ -69,15 +75,21 @@ window.addEventListener('DOMContentLoaded', function () {
 				case 'Bot':
 					switch (devState.power) {
 						case 'on':
-							icon = 'fa-regular fa-square';
+							icon = `<span class='icon_layers'><i class='fa-regular fa-square switchBot-dev icon_layers_icon'></i><span class='icon_layers_text_black'>ON</span></span>`
 							control = `<button onClick="window.SwitchBotBot('${d.deviceId}', 'turnOff', 'default');">OFF</button>`;
 							break;
 						case 'off':
-							icon = 'fa-solid fa-square-xmark';
+							icon = `<span class='icon_layers'><i class='fa-regular fa-square switchBot-dev icon_layers_icon'></i><span class='icon_layers_text_black'>OFF</span></span>`
 							control = `<button onClick="window.SwitchBotBot('${d.deviceId}', 'turnOn', 'default');">ON</button>`;
 							break;
 					}
-					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${devState.power}<br>${control}`;
+
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+					doc += `<div class="tooltip">${icon}<div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br>${control}`;
 					break;
 
 				case 'Curtain':
@@ -92,7 +104,19 @@ window.addEventListener('DOMContentLoaded', function () {
 
 				case 'Meter':
 				case 'MeterPlus':
-					doc += `<div class="tooltip"><i class="fa-solid fa-temperature-half switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${devState.temperature} ℃ / ${devState.humidity} ％`;
+					if (devState.battery >= 85) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-full icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 70) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-three-quarters icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 40) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 20) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-quater icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+					} else {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-empty icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+					}
+
+					doc += `<div class="tooltip"><i class="fa-solid fa-temperature-half switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${batteryIcon}<br>${d.deviceName}<br><i class="fa-solid fa-temperature-three-quarters"></i> ${devState.temperature} ℃<br><i class="fa-solid fa-droplet"></i> ${devState.humidity} ％`;
 					break;
 
 				case 'Lock':
@@ -105,7 +129,13 @@ window.addEventListener('DOMContentLoaded', function () {
 					break;
 
 				case 'Remote':  // リモートボタン
-					doc += `<div class="tooltip"><i class="fa-solid fa-toggle-off switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}`;
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+
+					doc += `<div class="tooltip"><i class="fa-solid fa-toggle-off switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}`;
 					break;
 
 				case 'Motion Sensor':
@@ -113,7 +143,26 @@ window.addEventListener('DOMContentLoaded', function () {
 						case "bright": subicon = "fa-regular fa-sun"; break;  // 明るい
 						case "dim": subicon = "fa-solid fa-moon"; break;  // 暗い
 					}
-					doc += `<div class="tooltip"><i class="fa-solid fa-person-rays switchBot-dev"></i><i class="${subicon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>MoveDetected: ${devState.moveDetected}`;
+
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+
+					if (devState.battery >= 85) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-full icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 70) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-three-quarters icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 40) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 20) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-quater icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+					} else {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-empty icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+					}
+
+					doc += `<div class="tooltip"><i class="fa-solid fa-person-rays switchBot-dev"></i><i class="${subicon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon} ${batteryIcon}<br>${d.deviceName}<br>MoveDetected: ${devState.moveDetected}`;
 					break;
 
 				case 'Contact Sensor':  // 開閉センサ
@@ -128,7 +177,25 @@ window.addEventListener('DOMContentLoaded', function () {
 						case "timeOutNotClose": icon = "fa-door-open"; break;  // 開きっぱなし
 						case "close": icon = "fa-door-closed"; break;  // 閉まった
 					}
-					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>MoveDetected: ${devState.moveDetected}`;
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+
+					if (devState.battery >= 85) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-full icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 70) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-three-quarters icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 40) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
+					} else if (devState.battery >= 20) {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-quater icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+					} else {
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-empty icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+					}
+
+					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon} ${batteryIcon}<br>${d.deviceName}<br>MoveDetected: ${devState.moveDetected}`;
 					break;
 
 				case 'Ceiling Light':
@@ -145,11 +212,17 @@ window.addEventListener('DOMContentLoaded', function () {
 						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOff', 'default');">ON</button>`;
 						icon = 'fa-plug';
 					}
-					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>`;
+
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+
+					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br>`;
 					doc += `${control}<br>`;
-					doc += `${devState.voltage} [V] / ${devState.electricCurrent} [A]<br>`
-					doc += `${devState.weight} [W]<br>`;
-					doc += `Duration: ${devState.electricityOfDay} min<br>`;
+					doc += `${devState.voltage} [V]<br> ${devState.electricCurrent} [A]<br>${devState.weight} [W]<br>`;
+					doc += `<i class="fa-regular fa-clock"></i> ${devState.electricityOfDay} min<br>`;
 					break;
 
 				case 'Plug':
@@ -160,7 +233,14 @@ window.addEventListener('DOMContentLoaded', function () {
 						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOn', 'default');">OFF</button>`;
 						icon = 'fa-plug';
 					}
-					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${control}`;
+
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+
+					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br>${control}`;
 					break;
 
 				case 'Strip Light':
@@ -170,16 +250,47 @@ window.addEventListener('DOMContentLoaded', function () {
 				case 'Color Bulb':
 					switch (devState.power) {
 						case 'on':
-							control = `<button onClick="window.SwitchBotBulb('${d.deviceId}', 'turnOff', 'default');">OFF</button>`;
+							control = `<button onClick='window.SwitchBotBulb("${d.deviceId}", "turnOff", "default");'>OFF</button><br>`;
 							icon = 'fa-regular fa-lightbulb';
 							break;
 						case 'off':
-							control = `<button onClick="window.SwitchBotBulb('${d.deviceId}', 'turnOn', 'default');">ON</button>`;
+							control = `<button onClick='window.SwitchBotBulb("${d.deviceId}", "turnOn", "default");'>ON</button><br>`;
 							icon = 'fa-solid fa-lightbulb';
 							break;
 					}
 
-					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>brightness:${devState.brightness}<br>color:${devState.color}<br>colorTemperature:${devState.colorTemperature}<br>${control}`;
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+
+
+					// 色を16進表記にかえる r:g:b -> $rrggbb
+					temp = devState.color.split(/:/);
+					color = `#${toHexString(temp[0])}${toHexString(temp[1])}${toHexString(temp[2])}`;
+
+					// color時に、colorTemperatureが0になるみたいだけど、値域としておかしいので補正
+					devState.colorTemperature = devState.colorTemperature == 0 ? 2700 : devState.colorTemperature;
+
+					control += `<form class='inline'>Brightness: `  // brightness
+						+ `<input type='number' id="inSwitchBotBulbBriNumber_${d.deviceId}" value='${devState.brightness}' min='0' max='100' step='5' onChange='window.inSwitchBotBulbBriNumber_Change("${d.deviceId}", this.value);'><br>`
+						+ `<input type='range'  id="inSwitchBotBulbBriRange_${d.deviceId}"  value='${devState.brightness}' min='0' max='100' step='5' onChange='window.inSwitchBotBulbBriRange_Change("${d.deviceId}", this.value);'>`
+						+ `</form>`
+						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateBrightnessSettings("${d.deviceId}");'>送信</button>`
+						+ `<br>`
+						+ `<form class='inline'>Color: `  // color
+						+ `<input type='color' id="inSwitchBotBulbColor_${d.deviceId}" value='${color}' />`
+						+ `</form>`
+						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateColorSettings("${d.deviceId}");'>送信</button>`
+						+ `<br>`
+						+ `<form class='inline'>Color temperature: `  // colorTemperature
+						+ `<input type='number' id="inSwitchBotBulbTempNumber_${d.deviceId}" value='${devState.colorTemperature}' min='2700' max='6500' step='100' onChange='window.inSwitchBotBulbTempNumber_Change("${d.deviceId}", this.value);'><br>`
+						+ `<input type='range'  id="inSwitchBotBulbTempNumber_${d.deviceId}" value='${devState.colorTemperature}' min='2700' max='6500' step='100' onChange='window.inSwitchBotBulbTempRange_Change("${d.deviceId}", this.value);'>`
+						+ `</form>`
+						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateColorTemperatureSettings("${d.deviceId}");'>送信</button>`;
+
+					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br>${control}`;
 					break;
 
 				case 'Robot Vacuum Cleaner S1':
@@ -193,7 +304,13 @@ window.addEventListener('DOMContentLoaded', function () {
 						case 'off': subicon = 'fa-plug'; break;
 					}
 
-					doc += `<div class="tooltip"><i class="fa-solid fa-droplet switchBot-dev"></i><i class="fa-solid ${subicon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>${devState.temperature} ℃ / ${devState.humidity}％<br>lackWater: ${devState.lackWater}`;
+					if (d.enableCloudService) {  // クラウドモード
+						cloudIcon = `<i class='fa-solid fa-cloud'></i>`
+					} else {
+						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
+					}
+
+					doc += `<div class="tooltip"><i class="fa-solid fa-droplet switchBot-dev"></i><i class="fa-solid ${subicon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br><i class="fa-solid fa-temperature-three-quarters"></i> ${devState.temperature} ℃<br><i class="fa-solid fa-droplet"></i> ${devState.humidity} ％<br>lackWater: ${devState.lackWater}`;
 					break;
 
 				case 'Indoor Cam':
@@ -215,6 +332,26 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 
 		divControlSwitchBot.innerHTML = doc;
+	};
+
+	/**
+	 * @func
+	 * @desc 10進数表記文字を16進数に変換
+	 */
+	function toHexString(v) {
+		let ret = parseInt(v);
+		ret = ret.toString(16);
+		ret = '0' + ret;
+		ret = ret.substr(-2);
+		return ret;
+	};
+
+	/**
+	 * @func
+	 * @desc 16進数表記文字を10進数に変換
+	 */
+	function toDecString(v) {
+		return parseInt(v, 16);;
 	};
 
 
@@ -311,6 +448,94 @@ window.addEventListener('DOMContentLoaded', function () {
 		console.log('window.SwitchBotBulb() id:', id, 'command:', command, 'param:', param);
 		window.ipc.SwitchBotControl(id, command, param);
 	};
+
+	// ----- Brightness
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bulb, Range change
+	 * @param {string} id
+	 * @param {string} param
+	 */
+	window.inSwitchBotBulbBriRange_Change = function (id, value) {
+		// console.log(id, value)
+		let obj = document.getElementById("inSwitchBotBulbBriNumber_" + id);
+		obj.value = value;
+	};
+
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bulb, Number change
+	 * @param {string} id
+	 * @param {string} param
+	 */
+	window.inSwitchBotBulbBriNumber_Change = function (id, value) {
+		// console.log(id, value)
+		let obj = document.getElementById("inSwitchBotBulbBriRange_" + id);
+		obj.value = value;
+	};
+
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bulb, Brigntness change
+	 * @param {string} id
+	 */
+	window.btnSwitchBotBulbUpdateBrightnessSettings = function (id) {
+		let obj = document.getElementById("inSwitchBotBulbBriNumber_" + id);
+		window.ipc.SwitchBotControl(id, "setBrightness", obj.value);
+	};
+
+
+	// ----- Color
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bulb, Brigntness change
+	 * @param {string} id
+	 */
+	window.btnSwitchBotBulbUpdateColorSettings = function (id) {
+		let obj = document.getElementById("inSwitchBotBulbColor_" + id);
+		let r = toDecString(obj.value.substr(1, 2));
+		let g = toDecString(obj.value.substr(3, 2));
+		let b = toDecString(obj.value.substr(5, 2));
+		let col = `${r}:${g}:${b}`;
+		window.ipc.SwitchBotControl(id, "setColor", col);
+	};
+
+
+	// ----- Color temp
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bulb, Range change
+	 * @param {string} id
+	 * @param {string} param
+	 */
+	window.inSwitchBotBulbTempRange_Change = function (id, value) {
+		// console.log(id, value)
+		let obj = document.getElementById("inSwitchBotBulbTempNumber_" + id);
+		obj.value = value;
+	};
+
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bulb, Number change
+	 * @param {string} id
+	 * @param {string} param
+	 */
+	window.inSwitchBotBulbTempNumber_Change = function (id, value) {
+		// console.log(id, value)
+		let obj = document.getElementById("inSwitchBotBulbTempRange_" + id);
+		obj.value = value;
+	};
+
+	/**
+	 * @func
+	 * @desc SwitchBot control for Bulb, Brigntness change
+	 * @param {string} id
+	 */
+	window.btnSwitchBotBulbUpdateColorTemperatureSettings = function (id) {
+		let obj = document.getElementById("inSwitchBotBulbTempNumber_" + id);
+		window.ipc.SwitchBotControl(id, "setColorTemperature", obj.value);
+	};
+
 
 	//----------------------------------------------------------------------------------------------
 	// SwitchBot chart
@@ -621,6 +846,19 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
+
+	/**
+	 *  @func isObjEmpty
+	 *  @desc Object型が空{}かどうかチェックする。Object型は == {} ではチェックできない。
+	 *  @param {Object} obj
+	 *  @return {Object} obj
+	 */
+	let isObjEmpty = function (obj) {
+		return Object.keys(obj).length === 0;
+	};
+
+
+
 	const pointStyleList = ['circle', 'triangle', 'cross', 'rect', 'star', 'dash', 'rectRounded', 'crossRot', 'rectRot', 'line'];
 
 	//////////////////////////////////////////////////////////////////
@@ -705,7 +943,9 @@ window.addEventListener('DOMContentLoaded', function () {
 			}
 		}
 
-		renewPowerCanvasSwitchBot();
+		if (!isObjEmpty(datasetsSwitchBotPower)) {
+			renewPowerCanvasSwitchBot();
+		}
 	};
 
 });

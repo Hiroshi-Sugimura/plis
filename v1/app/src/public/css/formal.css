@@ -1326,7 +1326,72 @@ td.today {
 	border: solid #83bffc 1px;
 }
 
+/*********************************************************************/
+/* font awesome カスタム */
+.icon_layers {
+	display: inline-block;
+	height: 2em;
+	line-height: 2em;
+	min-width: 2em;
+	position: relative;
+	vertical-align: middle;
+	text-align: center;
+}
 
+.icon_layers_icon {
+	position: absolute;
+	left: 0;
+	display: inline-block;
+	width: 100%;
+	text-align: center;
+	font-size: 200%;
+}
+
+.icon_layers_text {
+	position: relative;
+	color: #ffffff;
+	font-size: 85%;
+}
+
+.icon_layers_text_black {
+	position: relative;
+	/* color: #000000; */
+	font-size: 85%;
+}
+
+/* 背景赤、文字白のカウンター */
+.icon_layers_counter {
+	position: absolute;
+	top: 0;
+	right: -5px;
+	display: inline-block;
+	padding: 3px 5px;
+	line-height: 1;
+	color: #fff;
+	background: #ff3333;
+	opacity: 0.80;
+	font-size: 0.6em;
+	border-radius: 1em;
+	-webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
+}
+
+/* 背景緑、文字黒のカウンター */
+.icon_layers_counter_green {
+	position: absolute;
+	top: 0;
+	right: -5px;
+	display: inline-block;
+	padding: 3px 5px;
+	line-height: 1;
+	color: #000000;
+	background: #33ff33;
+	opacity: 0.80;
+	font-size: 0.6em;
+	border-radius: 1em;
+	-webkit-border-radius: 1em;
+	-moz-border-radius: 1em;
+}
 
 /*********************************************************************
 	EOF

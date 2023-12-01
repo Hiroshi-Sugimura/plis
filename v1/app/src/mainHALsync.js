@@ -10,13 +10,13 @@
 // 基本ライブラリ
 const { Op, eldataModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel } = require('./models/localDBModels');   // DBデータと連携
 
-const https = require('https');
-
 const Store = require('electron-store');
-const store = new Store();
-
+const https = require('https');
+const cron = require('node-cron');
+require('date-utils'); // for log
 const { getToday, mergeDeeply } = require('./mainSubmodule');
 
+const store = new Store();
 const HAL_API_BASE_URL = 'https://hal.sugi-lab.net/api';
 
 let config = {  // = config.HAL
@@ -47,7 +47,7 @@ let sendIPCMessage = null;
 // HAL, Home-life Assessment Listの処理
 let mainHALsync = {
 	isRun: false,
-	observationJob: null,
+	uploadEldataTask: null,
 
 	//----------------------------------
 	/**
@@ -72,11 +72,18 @@ let mainHALsync = {
 
 		persist = store.get('persist.HAL', persist);
 
-		// mainHALsync.startUploadEldata(); 	// 家電操作ログのアップロードを開始、HALのDBがきついのでとりあえずやらない
+		// 家電操作ログのアップロード、HALのDBがきついので停止中
+		/*
+		mainHALsync.uploadEldataTask = cron.schedule('0 0 * * *', () => { // 毎日0時
+			mainHALsync.startUploadEldata();  // 家電操作ログのアップロード
+		})
+		mainHALsync.uploadEldataTask.start();
+		*/
+
 		sendIPCMessage("renewHALConfigView", config);  // configを送る、そうするとViewがkeyチェックのためにprofile取りに来る
 		sendIPCMessage("showGarmin", persist.garmin);  // 保持しているGarminデータを表示する
 
-		if( !persist?.garmin ) {  // garminデータがない時には一回ダウンロードする
+		if (!persist?.garmin) {  // garminデータがない時には一回ダウンロードする
 			mainHALsync.garminDownload();
 		}
 
@@ -379,6 +386,33 @@ let mainHALsync = {
 				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminActivityDetailsModel teble.') : 0;
 			}
 
+
+			// ActivityDetails
+			if (dndata.AllDayRespiration) {
+				// ダウンロードしたデータをテーブルに追加
+				await IOT_GarminAllDayRespirationModel.findOrCreate({
+					where: {
+						idIOT_GarminAllDayRespiration: dndata.ActivityDetails.idIOT_GarminAllDayRespiration
+					},
+					defaults: {
+						idIOT_GarminAllDayRespiration: dndata.ActivityDetails.idIOT_GarminAllDayRespiration,
+						garminId: dndata.AllDayRespiration.garminId,
+						garminAccessToken: dndata.AllDayRespiration.garminAccessToken,
+						summaryId: dndata.AllDayRespiration.summaryId,
+						activityId: dndata.AllDayRespiration.startTimeInSeconds,
+						summary: dndata.AllDayRespiration.durationInSeconds,
+						samples: dndata.AllDayRespiration.startTimeOffsetInSeconds,
+						laps: dndata.AllDayRespiration.timeOffsetEpochToBreaths,
+						createdAt: dndata.AllDayRespiration.createdAt,
+						updatedAt: dndata.AllDayRespiration.updatedAt
+					}
+				});
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminAllDayRespirationModel teble.') : 0;
+			} else {
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminAllDayRespirationModel teble.') : 0;
+			}
+
+
 			// BodyComps
 			if (dndata.BodyComps) {
 				// ダウンロードしたデータをテーブルに追加
@@ -663,8 +697,9 @@ let mainHALsync = {
 	 * @func httpGetRequest
 	 * @desc httpGetRequest
 	 * @async
-	 * @param {void}
-	 * @return void
+	 * @param {string} url
+	 * @param {string} token
+	 * @return body - string promise
 	 * @throw error
 	 */
 	httpGetRequest: function (url, token) {
@@ -727,8 +762,10 @@ let mainHALsync = {
 	 * @func httpPostRequest
 	 * @desc httpPostRequest
 	 * @async
-	 * @param {void}
-	 * @return void
+	 * @param {string} url
+	 * @param {string} data
+	 * @param {string} token
+	 * @return body - string promise
 	 * @throw error
 	 */
 	httpPostRequest: function (url, data, token) {
@@ -796,9 +833,7 @@ let mainHALsync = {
 	 * @desc HAL API トークン設定
 	 * APIトークンをセットして、実際にプロファイルを受信できたら設定値として保存
 	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * @param {string} _token
 	 */
 	setHalApiTokenRequest: async function (_token) {
 		let arg = {};
@@ -818,9 +853,6 @@ let mainHALsync = {
 	 * @func deleteHalApiToken
 	 * @desc HAL API トークン設定削除
 	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
 	 */
 	deleteHalApiToken: async function () {
 		try {
@@ -839,9 +871,6 @@ let mainHALsync = {
 	 * @func getHalUserProfileRequest
 	 * @desc HAL ユーザープロファイル取得
 	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
 	 */
 	getHalUserProfileRequest: async function () {
 		let arg = {};
@@ -861,8 +890,6 @@ let mainHALsync = {
 	 * @func startUploadEldata
 	 * @desc 家電操作ログのアップロードを開始、定期的実行
 	 * @async
-	 * @param {void}
-	 * @return void
 	 * @throw error
 	 */
 	startUploadEldata: async function () {
@@ -950,21 +977,12 @@ let mainHALsync = {
 		// 最後にアップロードした日時と Log ID をストレージに保存
 		await store.set('config.HAL.lastUploadedTime', Date.now());
 		await store.set('config.HAL.lastUploadedId', max_id);
-
-		// 次回起動のタイマーをセット
-		let interval = config.UPLOAD_START_INTERVAL;
-		if (dlist.length === config.UPLOAD_UNIT_NUM) {
-			interval = config.UPLOAD_UNIT_INTERVAL;
-		}
-		setTimeout(mainHALsync.startUploadEldata, interval, config);
 	},
 
 	//----------------------------------------------------------------------------------------------
 	/**
 	 * @func ConfigSave
 	 * @desc ConfigSave
-	 * @param {void}
-	 * @return void
 	 * @throw error
 	 */
 	ConfigSave: function () {
@@ -975,8 +993,7 @@ let mainHALsync = {
 	 * @func setConfig
 	 * @desc setConfig
 	 * @async
-	 * @param {void}
-	 * @return void
+	 * @param {Object} _config
 	 * @throw error
 	 */
 	setConfig: async function (_config) {
@@ -990,11 +1007,9 @@ let mainHALsync = {
 
 	/**
 	 * @func getConfig
-	 * @desc getConfig
+	 * @desc 設定取得
 	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * @return config
 	 */
 	getConfig: function () {
 		return config;
@@ -1004,8 +1019,7 @@ let mainHALsync = {
 	 * @func getPersist
 	 * @desc 現在のデータを取得する
 	 * @async
-	 * @param {void}
-	 * @return persist persist
+	 * @return persist
 	 */
 	getPersist: function () {
 		return persist;
@@ -1015,13 +1029,14 @@ let mainHALsync = {
 	 * @func stop
 	 * @desc 開放して連携終了、設定や現在の数値を永続化する
 	 * @async
-	 * @param {void}
 	 */
 	stop: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.stop()') : 0;
 
-		// startUploadEldataで仕掛けたintervalを潰さないとダメなんだけど、いまやってない
-		// node-cron化するべき
+		if (mainHALsync.uploadEldataTask) {
+			await mainHALsync.uploadEldataTask.stop();
+			mainHALsync.uploadEldataTask = null;
+		}
 		await mainHAL.setConfig();
 		await store.set('persist.HAL', persist);
 	},
@@ -1031,10 +1046,9 @@ let mainHALsync = {
 	/**
 	 * @func renewConfigView
 	 * @desc renewConfigView
-	 * @async
 	 * @throw error
 	 */
-	renewConfigView: async function () {
+	renewConfigView: function () {
 		sendIPCMessage("renewHALConfigView", config);  // 現在の設定値を表示
 	}
 

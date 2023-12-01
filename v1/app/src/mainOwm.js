@@ -12,8 +12,8 @@ const Store = require('electron-store');
 const http = require('http');
 const cron = require('node-cron');
 require('date-utils'); // for log
-const { Sequelize, Op, sqlite3, owmModel } = require('./models/localDBModels');   // DBデータと連携
-const { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
+const { owmModel } = require('./models/localDBModels');   // DBデータと連携
+const { isObjEmpty, mergeDeeply } = require('./mainSubmodule');
 
 const store = new Store();
 
@@ -91,32 +91,6 @@ let mainOwm = {
 		});
 
 		if (!isObjEmpty(persist)) { sendIPCMessage("renewOwm", persist); }  // もし前回データがあれば送る
-
-		// 1時間分毎にチェック
-		cron.schedule('0 */1 * * *', () => {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.cron.schedule() every an hour') : 0;
-
-			// 天気を記録
-			if (config.enabled && !isObjEmpty(persist)) {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.cron.schedule() Store OWM') : 0;
-
-				let w = persist;
-				if (w) {
-					weatherModel.create({
-						dateTime: dt,
-						srcType: 'owm',
-						place: w.name,
-						weather: w.weather[0].main,
-						temperature: w.main.temp,
-						humidity: w.main.humidity,
-						pressure: w.main.pressure,
-						windSpeed: w.wind.speed,
-						windDirection: w.wind.deg,
-						cloudCover: w.clouds.all
-					});
-				}
-			}
-		});
 	},
 
 	/** @func stop
@@ -187,6 +161,7 @@ let mainOwm = {
 		});
 
 	},
+
 	/**
 	 * コールバック関数の説明
 	 * @callback startCore-callback
@@ -206,9 +181,9 @@ let mainOwm = {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.setObserve() already started.') : 0;
 		}
 
-		// 監視はcronで実施、30分毎
-		mainOwm.observationJob = cron.schedule('*/30 * * * *', () => {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.cron.schedule()') : 0;
+		// 監視はcronで実施、１時間毎
+		mainOwm.observationJob = cron.schedule('0 */1 * * *', () => {
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.observationJob.schedule()') : 0;
 
 			// 天気を取得
 			http.get(mainOwm.url, function (res) {
@@ -220,12 +195,15 @@ let mainOwm = {
 				});
 
 				res.on('data', function (chunk) {
-					mainOwm.callback(body);
+					mainOwm.callback(body);		// 画面更新
+					mainOwm.storeData();		// 天気をDB記録
 				});
 			}).on('error', function (error) {
 				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.setObserve.cron.get errror:', error);
 			});
 		});
+
+		mainOwm.observationJob.start();
 	},
 
 	/** @func stopObservation
@@ -239,6 +217,29 @@ let mainOwm = {
 		if (mainOwm.observationJob) {
 			mainOwm.observationJob.stop();
 			mainOwm.observationJob = null;
+		}
+	},
+
+	/** 
+	 * @func storeData
+	 * @desc persistをDBに保存する
+	 */
+	storeData: function () {
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.storeData().') : 0;
+
+		if (persist) {
+			weatherModel.create({
+				dateTime: dt,
+				srcType: 'owm',
+				place: persist.name,
+				weather: persist.weather[0].main,
+				temperature: persist.main.temp,
+				humidity: persist.main.humidity,
+				pressure: persist.main.pressure,
+				windSpeed: persist.wind.speed,
+				windDirection: persist.wind.deg,
+				cloudCover: persist.clouds.all
+			});
 		}
 	},
 
