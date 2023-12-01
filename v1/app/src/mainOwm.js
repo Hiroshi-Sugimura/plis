@@ -12,7 +12,7 @@ const Store = require('electron-store');
 const http = require('http');
 const cron = require('node-cron');
 require('date-utils'); // for log
-const { owmModel } = require('./models/localDBModels');   // DBデータと連携
+const { owmModel, weatherModel } = require('./models/localDBModels');   // DBデータと連携
 const { isObjEmpty, mergeDeeply } = require('./mainSubmodule');
 
 const store = new Store();
