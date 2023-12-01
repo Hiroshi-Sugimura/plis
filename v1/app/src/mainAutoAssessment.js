@@ -308,7 +308,7 @@ let mainAutoAssessment = {
 			// SELECT * FROM halexp.IOT_QuestionnaireAnswersModel
 			// where UID="U517290377a4861b16cc91c2d111f116d" and createdAt like "2022-05-11%" order by createdAt desc;
 			let qaRow = await IOT_QuestionnaireAnswersModel.findOne({
-				where: { createdAt: { [Op.like]: yesterday + "%" } },
+				where: { createdAt: { [Op.gte]: yesterday, [Op.lt]: today } },
 				order: [["createdAt", "desc"]]
 			});
 			if (qaRow) { // アンケートがあれば
@@ -323,7 +323,7 @@ let mainAutoAssessment = {
 			// await console.log('IoT');
 			let iotHumidityRows = await switchBotDataModel.findAll({
 				where: {
-					createdAt: { [Op.like]: yesterday + "%" },
+					where: { createdAt: { [Op.gte]: yesterday, [Op.lt]: today } },
 					[Op.or]: [{ deviceType: 'Meter' }, { deviceType: 'MeterPlus' }],
 					property: 'humidity'
 				},
@@ -390,7 +390,7 @@ let mainAutoAssessment = {
 				// minorResultsをCreate
 				minorResults.createdAt = now;
 				minorResults.updatedAt = now;
-				minorResults.assessmentSource = 'HEMS-Logger';
+				minorResults.assessmentSource = 'PLIS';
 				minorResults.date = today;
 				// console.log('Create IOT_MinorResultsModel:', minorResults);
 				await IOT_MinorResultsModel.create(minorResults);

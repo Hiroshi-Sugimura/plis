@@ -21,7 +21,7 @@ const sqlite3 = new Sequelize(
 });
 
 // freezeTableNameはモデルに渡した名前を実テーブルにマッピングする際に複数形に変換してしまうのを抑制する
-// timestamps: falseを入れておかないと，createdAt, updatedAtが勝手に追加されるみたい
+// timestamps: falseを入れておくと，createdAt, updatedAtが勝手に追加されない
 
 //////////////////////////////////////////////////////////////////////
 // eldata
@@ -221,16 +221,6 @@ const electricEnergyModel = sqlite3.define('ElectricEnergy', {
 	},
 	commulativeAmountsFixedTimeRiversePower: {  // EL ESM:eb, 定時積算電力量計測値（逆）, 電力量
 		type: Sequelize.INTEGER
-	},
-	createdAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
-	},
-	updatedAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
 	}
 }, {
 	freezeTableName: true,
@@ -322,16 +312,6 @@ const switchBotRawModel = sqlite3.define('switchBotRawTable', {
 	},
 	detail: {
 		type: Sequelize.TEXT('medium')
-	},
-	createdAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
-	},
-	updatedAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
 	}
 }, {
 	freezeTableName: true,
@@ -361,16 +341,6 @@ const switchBotDataModel = sqlite3.define('switchBotDataTable', {
 	},
 	value: {
 		type: Sequelize.TEXT('tiny')
-	},
-	createdAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
-	},
-	updatedAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
 	}
 }, {
 	freezeTableName: true,
@@ -386,16 +356,6 @@ const IOT_QuestionnaireAnswersModel = sqlite3.define('IOT_QuestionnaireAnswers',
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
 		primaryKey: true,
-		allowNull: false
-	},
-	createdAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
-	},
-	updatedAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
 		allowNull: false
 	},
 	date: {
@@ -651,16 +611,6 @@ const IOT_MajorResultsModel = sqlite3.define('IOT_MajorResults', {
 		autoIncrement: true,
 		primaryKey: true
 	},
-	createdAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
-	},
-	updatedAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
-	},
 	date: {
 		type: Sequelize.DATEONLY,
 		unique: true,
@@ -730,16 +680,6 @@ const IOT_MinorResultsModel = sqlite3.define('IOT_MinorResults', {
 		type: Sequelize.BIGINT,
 		autoIncrement: true,
 		primaryKey: true
-	},
-	createdAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
-	},
-	updatedAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
 	},
 	date: {
 		type: Sequelize.DATEONLY,
@@ -1120,16 +1060,6 @@ const roomEnvModel = sqlite3.define('roomEnv', {
 	},
 	heatStroke: {
 		type: Sequelize.FLOAT
-	},
-	createdAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
-	},
-	updatedAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
 	}
 }, {
 	freezeTableName: true,
@@ -1191,16 +1121,6 @@ const weatherModel = sqlite3.define('weather', {
 	},
 	heatStroke: {
 		type: Sequelize.FLOAT
-	},
-	createdAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
-	},
-	updatedAt: {
-		type: 'TIMESTAMP',
-		defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-		allowNull: false
 	}
 }, {
 	freezeTableName: true,
