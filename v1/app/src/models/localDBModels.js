@@ -1692,7 +1692,7 @@ const IOT_GarminActivityFilesModel = sqlite3.define('IOT_GarminActivityFiles', {
 
 
 // export
-module.exports = { Sequelize, Op, sqlite3, elrawModel, eldataModel, esmdataModel, esmrawModel, electricEnergyModel, huerawModel, arpModel, owmModel, netatmoModel, ikeaRawModel, ikeaDataModel, IOT_QuestionnaireAnswersModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_MinorkeyMeansModel, roomEnvModel, jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel, switchBotRawModel, switchBotDataModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel, IOT_GarminActivityFilesModel };
+module.exports = { Sequelize, Op, sqlite3, elrawModel, eldataModel, esmdataModel, esmrawModel, electricEnergyModel, huerawModel, arpModel, owmModel, netatmoModel, ikeaRawModel, ikeaDataModel, IOT_QuestionnaireAnswersModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_MinorkeyMeansModel, roomEnvModel, jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel, weatherModel, switchBotRawModel, switchBotDataModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel, IOT_GarminActivityFilesModel };
 
 //////////////////////////////////////////////////////////////////////
 // EOF
