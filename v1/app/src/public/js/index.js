@@ -163,40 +163,40 @@ function onLoad() {
 				//----------------------------------------------
 				// 電力スマメ関連
 				case "fclESM":
-					// console.log('main -> fclESM:', c.arg);
+					window.ESMDebugLog('main -> fclESM:', c.arg);
 					window.renewESM(c.arg);
 					break;
 
 				case "ESMLinked":
-					console.log('main -> ESMLinked:');
+					window.ESMDebugLog('main -> ESMLinked:');
 					window.addToast('Info', '電力スマートメータとLinkしました');
 					break;
 
 				case "renewESMConfigView":
-					console.log('main -> renewESMConfigView', c.arg);
+					window.ESMDebugLog('main -> renewESMConfigView', c.arg);
 					window.renewESMConfigView(c.arg);
 					break;
 
 				case "renewTodayElectricEnergy":  // WI-SUNのスマートメータ
+					window.ESMDebugLog('main -> renewTodayElectricEnergy');
 					window.renewEnergy(c.arg);
 					break;
 
 				//----------------------------------------------
 				// Philips hue関連
 				case "fclHue":
-					// console.log('main -> fclHue:', c.arg);
 					window.HueDebugLog('main -> fclHue:', c.arg);
 					window.renewHueLog(JSON.stringify(c.arg, null, '  '));
 					window.renewFacilitiesHue(c.arg);
 					break;
 
 				case "HueLinked": // HueとLinkできた
-					console.log('main -> HueLinked:', c.arg);
+					window.HueDebugLog('main -> HueLinked:', c.arg);
 					window.hueLinked(c.arg);
 					break;
 
 				case "renewHueConfigView":
-					console.log('main -> renewHueConfigView:', c.arg);
+					window.HueDebugLog('main -> renewHueConfigView:', c.arg);
 					window.renewHueConfigView(c.arg);
 					break;
 

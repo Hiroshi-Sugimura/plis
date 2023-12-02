@@ -102,7 +102,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	// 設定ボタン
 	window.btnNetatmoConfigSet_Click = function (checkBox) {
 		if (inNetatmoUse.checked == false) {
-			window.ipc.NetatmoStop(inNetatmoID.value, inNetatmoSecret.value, inNetatmoUsername.value, inNetatmoPassword.value, selNetatmoDebugMode.value);  // Netatmoの監視をstopする
+			window.ipc.NetatmoStop(inNetatmoID.value, inNetatmoSecret.value, inNetatmoUsername.value, inNetatmoPassword.value, selNetatmoDebugMode.value == 'true' ? true : false);  // Netatmoの監視をstopする
 			renewNetatmo();
 			return; // falseなら外すだけ
 		}
@@ -111,7 +111,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			inNetatmoUse.checked = false;
 			netatmoHelpDialog.showModal();
 		} else {  // キー指定ありで有効にしたら，そのキーで開始
-			window.ipc.NetatmoUse(inNetatmoID.value, inNetatmoSecret.value, inNetatmoUsername.value, inNetatmoPassword.value, selNetatmoDebugMode.value);
+			window.ipc.NetatmoUse(inNetatmoID.value, inNetatmoSecret.value, inNetatmoUsername.value, inNetatmoPassword.value, selNetatmoDebugMode.value == 'true' ? true : false);
 		}
 	};
 

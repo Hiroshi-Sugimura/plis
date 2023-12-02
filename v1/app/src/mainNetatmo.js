@@ -83,7 +83,7 @@ let mainNetatmo = {
 			return;
 		}
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() config:\x1b[32m', _config, '\x1b[0m') : 0;
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() config:\x1b[32m', config, '\x1b[0m') : 0;
 
 		try {
 			mainNetatmo.api = new netatmo({ 'client_id': config.id, 'client_secret': config.secret, 'username': config.username, 'password': config.password });

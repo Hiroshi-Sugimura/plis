@@ -23,6 +23,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	let inESMPassword = document.getElementById('inESMPassword');
 	let inUserAmpere = document.getElementById('inUserAmpere');
 	let inESMUserAmpere = document.getElementById('inESMUserAmpere');
+	let selESMDebugMode = document.getElementById('selESMDebugMode');  // debugフラグ
 	let btnESMConfigSet = document.getElementById('btnESMConfigSet');
 	let divESMSuggest = document.getElementById('divESMSuggest');  // 利用していないときに、利用の仕方へ誘導
 
@@ -144,7 +145,10 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.btnESMConfigSet_Click = function (checkBox) {
 		if (inESMUse.checked == false) {
-			window.ipc.ESMnotUse(inDongleType.value, inESMId.value, inESMPassword.value);  // ESM 連携停止
+			window.ipc.ESMnotUse(inDongleType.value,
+				inESMId.value,
+				inESMPassword.value,
+				selESMDebugMode.value == 'true' ? true : false);  // ESM 連携停止
 			window.addToast('Info', '電力スマートメーターとの連携を解除しました。');
 			renewESM();
 			return; // falseなら外すだけ
@@ -155,7 +159,11 @@ window.addEventListener('DOMContentLoaded', function () {
 			inESMUse.checked = false;
 			esmHelpDialog.showModal();
 		} else {  // 全情報あり
-			window.ipc.ESMUse(inDongleType.value, inConnectionType.value, inESMId.value, inESMPassword.value);
+			window.ipc.ESMUse(inDongleType.value,
+				inConnectionType.value,
+				inESMId.value,
+				inESMPassword.value,
+				selESMDebugMode.value == 'true' ? true : false);
 			window.addToast('Info', '電力スマートメーターとの連携を開始しました。実際の通信まで2分程度お待ちください。');
 		}
 	};
@@ -163,8 +171,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func window.ESMConfigSaved
 	 * @desc 設定完了
-	 * @param {void}
-	 * @return {void}
 	 */
 	window.ESMConfigSaved = function () {
 		btnESMConfigSet.disabled = false;
@@ -176,8 +182,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func window.renewESMConfigView
 	 * @desc mainプロセスから設定値をもらったので画面を更新
-	 * @param {void}
-	 * @return {void}
+	 * @param {object} arg - config
 	 */
 	window.renewESMConfigView = function (arg) {
 		inESMUse.checked = arg.enabled ? true : false;
@@ -187,6 +192,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		inESMPassword.value = arg.password;
 		inUserAmpere.value = arg.userAmpere;
 		inESMUserAmpere.value = arg.userAmpere;
+		selESMDebugMode.value = arg.debug;
 
 		if (inESMUse.checked) {  // 利用するのでデータ表示
 			H3ESM.style.display = 'block';
@@ -199,9 +205,17 @@ window.addEventListener('DOMContentLoaded', function () {
 			divESMChart.style.display = 'none';
 			divESMSuggest.style.display = 'block';
 		}
-
 	};
 
+
+	/** 
+	 * @func window.ESMDebugLog
+	 * @desc ESMモジュールがデバッグなら出力する
+	 * @param {...} values
+	 */
+	window.ESMDebugLog = function (param0, ...values) {
+		selESMDebugMode.value == 'true' ? console.log(param0, ...values) : 0;
+	};
 
 	//----------------------------------------------------------------------------------------------
 	// ESM chart
