@@ -1274,12 +1274,15 @@
 						<summary class="config"><i class="fa-solid fa-sun"></i> 気象庁</summary>
 						<div class="p">
 							天気予報の地域設定ができます。<br>
-							地域: <select id="inJmaArea" size="1" onChange="window.inJmaArea_Change();" /></select> 地域コード:
+							地域: <select id="selJmaArea" size="1" onChange="window.selJmaArea_Change();" /></select> 地域コード:
 							<span id="divJmaCode">13000</span><br>
+							デバッグモード： <select id="selJmaDebugMode" size="1">
+								<option value="true">有効</option>
+								<option value="false">無効</option>
+							</select> <small>（設定反映のためには再起動が必要です。）</small><br>
 							<button id="btnJmaConfigSet" onClick="window.btnJmaConfigSet_Click();">設定</button>
 						</div>
 					</details>
-
 
 					<!-- HAL -->
 					<a name="HALConfig"></a>
@@ -1289,6 +1292,11 @@
 						<div class="p">
 							クラウドサービスHALと連携し、生活状況を得点化して見える化します。<br>
 							API Key: <form class="secretBorder inline"><input id="inHALApiKey" class="secretText" type="password" value="" size="100" /><span id="inHALApiKeyButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inHALApiKey');"></span></form>
+							<br>
+							デバッグモード： <select id="selHALDebugMode" size="1">
+								<option value="true">有効</option>
+								<option value="false">無効</option>
+							</select> <small>（設定反映のためには再起動が必要です。）</small><strong>未実装です</strong><br>
 						</div>
 
 						<!-- デフォルトは設定されていないものとする -->
@@ -1334,8 +1342,13 @@
 							Bルート認証ID設定: <form class="secretBorder inline"><input id="inESMId" class="secretText" type="password" value="" size="50" /><span id="inESMIdButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inESMId');"></span></form> <br>
 							Bルート認証パスワード設定: <form class="secretBorder inline"><input id="inESMPassword" class="secretText" type="password" value="" size="50" /><span id="inESMPasswordButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inESMPassword');"></span></form><br>
 							契約アンペア: <form class="inline"><input id="inESMUserAmpere" value="" inputmode="numeric" />
-							</form>
-							A (グラフ表示に利用)<br>
+							</form> A (グラフ表示に利用)<br>
+							<br>
+							デバッグモード： <select id="selHALDebugMode" size="1">
+								<option value="true">有効</option>
+								<option value="false">無効</option>
+							</select> <small>（設定反映のためには再起動が必要です。）</small><strong>未実装です</strong><br>
+							<br>
 							<button id="btnESMConfigSet" onClick="window.btnESMConfigSet_Click();">設定</button>
 						</div>
 
@@ -1363,6 +1376,12 @@
 							<br>
 							<label><input type="checkbox" id="inHueUse">Use Hue</label><br>
 							Key: <form class="secretBorder inline"><input id="inHueKey" type="password" value="" size="50" class="secretText" /><span id="inHueKeyButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inHueKey');"></span></form><br>
+							<br>
+							デバッグモード： <select id="selHueDebugMode" size="1">
+								<option value="true">有効</option>
+								<option value="false">無効</option>
+							</select> <small>（設定反映のためには再起動が必要です。）</small><br>
+							<br>
 							<button id="btnHueConfigSet" onClick="window.btnHueConfigSet_Click();">設定</button>
 						</div>
 					</details>
@@ -1425,7 +1444,12 @@
 							Password: <form class="secretBorder inline"><input id="inNetatmoPassword" type="password" value="" class="secretText" size="20" /><span id="inNetatmoPasswordButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoPassword');"></span>
 							</form>
 							(e.g. password)<br>
-
+							<br>
+							デバッグモード： <select id="selNetatmoDebugMode" size="1">
+								<option value="true">有効</option>
+								<option value="false">無効</option>
+							</select> <small>（設定反映のためには再起動が必要です。）</small><br>
+							<br>
 							<button id="btnNetatmoConfigSet" onclick="window.btnNetatmoConfigSet_Click();">設定</button>
 
 							<h3>Netatmo設定方法</h3>
@@ -1442,7 +1466,7 @@
 					<!-- SwitchBot -->
 					<a name="SwitchBotConfig"></a>
 					<details class="config" id="SwitchBotConfigDetails">
-						<summary class="config"><i class="fa-solid fa-house"></i> SwitchBot</summary>
+						<summary class="config"><i class="fa-solid fa-house"></i> SwitchBot (外部サービス)</summary>
 						<div class="p">
 							すでにTokenをお持ちのかたは、入力したあとチェックボックスを有効にしてください。<br>
 							まだTokenをお持ちでないかたは、下記の案内に従ってTokenを取得してください。<br>
@@ -1451,6 +1475,11 @@
 							<label><input type="checkbox" id="inSwitchBotUse">Use SwitchBot</label><br>
 							Token: <form class="secretBorder inline"><input id="inSwitchBotToken" type="password" value="" size="50" class="secretText" /><span id="inSwitchBotTokenButtonEye" class="fa a-eye" onclick="window.pushHideButton('inSwitchBotToken');"></span></form><br>
 							Secret: <form class="secretBorder inline"><input id="inSwitchBotSecret" type="password" value="" size="50" class="secretText" /><span id="inSwitchBotSecretButtonEye" class="fa a-eye" onclick="window.pushHideButton('inSwitchBotSecret');"></span></form><br>
+							<br>
+							デバッグモード： <select id="selSwitchBotDebugMode" size="1">
+								<option value="true">有効</option>
+								<option value="false">無効</option>
+							</select> <small>（設定反映のためには再起動が必要です。）</small><br>
 							<button id="btnSwitchBotConfigSet" onclick="window.btnSwitchBotConfigSet_Click();">設定</button>
 						</div>
 						<h3>Token取得方法</h3>

@@ -22,6 +22,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	let inSwitchBotUse = document.getElementById('inSwitchBotUse'); // switchBot; use or not
 	let inSwitchBotToken = document.getElementById('inSwitchBotToken'); // switchBot; token
 	let inSwitchBotSecret = document.getElementById('inSwitchBotSecret'); // switchBot; secret
+	let selSwitchBotDebugMode = document.getElementById('selSwitchBotDebugMode'); // switchBot; debug
 	let btnSwitchBotConfigSet = document.getElementById('btnSwitchBotConfigSet'); // switchBot; 設定ボタン
 
 	// control tab
@@ -365,12 +366,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		btnSwitchBotConfigSet.textContent = '設定中...';
 
 		if (!inSwitchBotUse.checked || inSwitchBotToken.value == '' || inSwitchBotSecret.value == '') {
-			window.ipc.SwitchBotStop(inSwitchBotToken.value, inSwitchBotSecret.value);  // SwitchBot の監視を stopする
+			window.ipc.SwitchBotStop(inSwitchBotToken.value, inSwitchBotSecret.value, selSwitchBotDebugMode.value);  // SwitchBot の監視を stopする
 			renewFacilitiesSwitchBot(facilitiesSwitchBot);
 			return; // falseなら外すだけ
 		}
 
-		window.ipc.SwitchBotUse(inSwitchBotToken.value, inSwitchBotSecret.value);
+		window.ipc.SwitchBotUse(inSwitchBotToken.value, inSwitchBotSecret.value, selSwitchBotDebugMode.value);
 	};
 
 	/**
@@ -396,6 +397,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		inSwitchBotUse.checked = arg.enabled;
 		inSwitchBotToken.value = arg.token;
 		inSwitchBotSecret.value = arg.secret;
+		selSwitchBotDebugMode.value = arg.debug;
 		btnSwitchBotConfigSet.disabled = false;
 		btnSwitchBotConfigSet.textContent = '設定';
 
@@ -411,6 +413,18 @@ window.addEventListener('DOMContentLoaded', function () {
 			divSwitchBotSuggest.style.display = 'block';
 		}
 	};
+
+
+	/** 
+	 * @func window.SwitchBotDebugPrint
+	 * @desc SwitchBotモジュールがデバッグなら出力する
+	 * @param {...} values
+	 */
+	window.SwitchBotDebugLog = function (param0, ...values) {
+		selSwitchBotDebugMode.value == 'true' ? console.log(param0, ...values) : 0;
+	};
+
+
 
 	//----------------------------------------------------------------------------------------------
 	/**

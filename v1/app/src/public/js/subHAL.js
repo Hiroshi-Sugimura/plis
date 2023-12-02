@@ -65,6 +65,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	// config
 	let inHALApiKey = document.getElementById('inHALApiKey');  // HALApiKey
+	let selHALDebugMode = document.getElementById('selHALDebugMode');  // HALApiKey
+
 	let spanHALinfo = document.getElementById('spanHALinfo');  // tokenが登録されているとき
 	let spanHALsuggenst = document.getElementById('spanHALsuggenst');  // token未登録のとき
 	let pSetHalApiTokenErr = document.getElementById('pSetHalApiTokenErr');  // API登録エラー表示
@@ -519,6 +521,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		} else {
 			inHALApiKey.value = "";  // undefined がテキストボックスに表示されないように
 		}
+
+		selHALDebugMode.value = config.debug;
 	};
 
 	/**

@@ -26,10 +26,11 @@ window.addEventListener('DOMContentLoaded', function () {
 	let divHueSuggest = document.getElementById('divHueSuggest');  // Hue設定がないときのサジェスト
 
 	// config tab
-	let inHueUse        = document.getElementById('inHueUse');
-	let inHueKey        = document.getElementById('inHueKey');
+	let inHueUse = document.getElementById('inHueUse');  // Hue使うフラグ
+	let inHueKey = document.getElementById('inHueKey'); // HueのKey
+	let selHueDebugMode = document.getElementById('selHueDebugMode');  // デバッグモード
 	let btnHueConfigSet = document.getElementById('btnHueConfigSet');  // 設定ボタン
-	let dlgHuePush      = document.getElementById('dlgHuePush');  // 設定サポートダイアログ
+	let dlgHuePush = document.getElementById('dlgHuePush');  // 設定サポートダイアログ
 
 
 	/** 
@@ -38,37 +39,36 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @param {void}
 	 * @return {void}
 	 */
-	window.renewFacilitiesHue = function ( arg ) { //facilitiesHue = json = arg; // 機器情報確保
+	window.renewFacilitiesHue = function (arg) { //facilitiesHue = json = arg; // 機器情報確保
 		facilitiesHue = arg;
 		// console.log( 'window.renewFacilitiesHue() arg:', arg );
 
-		if( !inHueUse.checked ) {  // 機能無効なのにrenewが来た
+		if (!inHueUse.checked) {  // 機能無効なのにrenewが来た
 			return;
 		}
 
-		if ( !facilitiesHue || isObjEmpty(facilitiesHue ) ) {  // 機器情報なし
-			doc ='<img src="./img/loadingRed.gif">接続中';
+		if (!facilitiesHue || isObjEmpty(facilitiesHue)) {  // 機器情報なし
+			doc = '<img src="./img/loadingRed.gif">接続中';
 			divControlHue.innerHTML = doc;
 			return; // 機器情報なければやらない、存在も消す
 		}
 
 		let doc = '';
-		if( !hueConnected ) {  // 情報あるけど未接続
-			doc ='<img src="./img/loadingRed.gif">接続中';
+		if (!hueConnected) {  // 情報あるけど未接続
+			doc = '<img src="./img/loadingRed.gif">接続中';
 
-		}else{
+		} else {
 			doc = '';
 
-			for (const [key, value] of Object.entries(facilitiesHue))
-			{
+			for (const [key, value] of Object.entries(facilitiesHue)) {
 				let ip = key;
-				let bridge  = value.bridge;
+				let bridge = value.bridge;
 				let devices = value.devices;
 				doc += "<div class='LinearLayoutChild'> <section>";
 				doc += '<div class="tooltip"><img src="./img/hue_bridge.jpg" class="hue-dev" /><div class="description">' + bridge.model.serial + '&#013;&#010;' + bridge.ipaddress + '</div></div><br>' + bridge.name + '<br> </section> </div>';
 
 				for (const [key, value] of Object.entries(devices)) {
-					if( key == 0 ) { continue; } // デバイスがないときも、無しというエントリーが入っているので無視する
+					if (key == 0) { continue; } // デバイスがないときも、無しというエントリーが入っているので無視する
 
 					// key is light number
 					// value is details
@@ -102,7 +102,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @param {void}
 	 * @return {void}
 	 */
-	window.renewHueLog = function( text ) {
+	window.renewHueLog = function (text) {
 		txtHueLog.value = text;
 	};
 
@@ -115,22 +115,20 @@ window.addEventListener('DOMContentLoaded', function () {
 	window.hueLinked = function (key) {
 		hueConnected = true;
 		dlgHuePush.close();
-		window.addToast( 'Info', 'HueとLinkしました');
+		window.addToast('Info', 'HueとLinkしました');
 	};
 
 	//----------------------------------------------------------------------------------------------
 	/** 
 	 * @func window.btnHueConfigSet_Click
 	 * @desc Hue link unlink
-	 * @param {void}
-	 * @return {void}
 	 */
 	window.btnHueConfigSet_Click = function () {
-		console.log( 'window.btnHueConfigSet_Click():', inHueUse.checked );
+		window.HueDebugLog('window.btnHueConfigSet_Click():', inHueUse.checked);
 
 		// 使用しない
-		if( inHueUse.checked == false ) {
-			window.ipc.HueUseStop( inHueKey.value );;  // hueの監視をstopする
+		if (inHueUse.checked == false) {
+			window.ipc.HueUseStop(inHueKey.value, selHueDebugMode.value);  // hueの監視をstopする
 			hueConnected = false;
 
 			divControlHue.innerHTML = '';
@@ -138,25 +136,23 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 
 		// 使用する
-		if(inHueKey.value == '') { // キー無しで有効にしたらLinkボタンが必要
-			window.ipc.HueUse('');
+		if (inHueKey.value == '') { // キー無しで有効にしたらLinkボタンが必要
+			window.ipc.HueUse('', selHueDebugMode.value);
 			dlgHuePush.showModal();
-		}else{ // キー指定ありで有効にしたら，そのキーで開始
-			window.addToast( 'Info', 'Hue 連携を開始しました。実際の通信まで2分程度お待ちください。');
-			window.ipc.HueUse( inHueKey.value );
+		} else { // キー指定ありで有効にしたら，そのキーで開始
+			window.addToast('Info', 'Hue 連携を開始しました。実際の通信まで2分程度お待ちください。');
+			window.ipc.HueUse(inHueKey.value, selHueDebugMode.value);
 		}
 	};
 
 	/** 
 	 * @func windo.btnHueUseCancel_Click
 	 * @desc キャンセルボタンを押したとき
-	 * @param {void}
-	 * @return {void}
 	 */
 	window.btnHueUseCancel_Click = function () {
-		console.log('window.btnHueUseCancel_Click');
+		window.HueDebugLog('window.btnHueUseCancel_Click');
 		inHueUse.checked = false;
-		window.ipc.HueUseCancel( inHueKey.value );
+		window.ipc.HueUseCancel(inHueKey.value, selHueDebugMode.value);
 		dlgHuePush.close();
 	};
 
@@ -164,50 +160,56 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @func dlgHuePush_oncancel
 	 * @memberof subHue
 	 * @desc エスケープキーでキャンセルしたとき
-	 * @param {void}
-	 * @return {void}
 	 */
 	dlgHuePush.oncancel = function () {
-		console.log('dlgHuePush.oncancel');
+		window.HueDebugLog('dlgHuePush.oncancel');
 		inHueUse.checked = false;
-		window.ipc.HueUseCancel( inHueKey.value );
+		window.ipc.HueUseCancel(inHueKey.value);
 	};
 
 
 	/** 
 	 * @func window.HueConfigSaved
 	 * @desc 設定完了通知で、設定ボタンの復活（連打防止）
-	 * @param {void}
-	 * @return {void}
 	 */
 	window.HueConfigSaved = function () {
-		btnHueConfigSet.disabled    = false;
+		btnHueConfigSet.disabled = false;
 		btnHueConfigSet.textContent = '設定';
 
-		window.addToast( 'Info', 'Hue 設定を保存しました。');
+		window.addToast('Info', 'Hue 設定を保存しました。');
 	};
 
 	/** 
 	 * @func window.renewHueConfigView
 	 * @desc mainプロセスから設定値をもらったので画面を更新
-	 * @param {void}
-	 * @return {void}
+	 * @param {Object} arg
 	 */
 	window.renewHueConfigView = function (arg) {
-		inHueUse.checked   = arg.enabled;
-		inHueKey.value     = arg.key;
-		btnHueConfigSet.disabled    = false;
+		inHueUse.checked = arg.enabled;
+		inHueKey.value = arg.key;
+		selHueDebugMode.value = arg.debug;
+		btnHueConfigSet.disabled = false;
 		btnHueConfigSet.textContent = '設定';
 
-		if( arg.enabled ) {  // 利用する場合
+		if (arg.enabled) {  // 利用する場合
 			H2ControlHue.style.display = 'block';
 			divControlHue.style.display = '-webkit-flex';
 			divHueSuggest.style.display = 'none';
-		}else{  // 利用しない場合
+		} else {  // 利用しない場合
 			H2ControlHue.style.display = 'none';
 			divControlHue.style.display = 'none';
 			divHueSuggest.style.display = 'block';
 		}
+	};
+
+
+	/** 
+	 * @func window.HueDebugPrint
+	 * @desc Hueモジュールがデバッグなら出力する
+	 * @param {...} values
+	 */
+	window.HueDebugLog = function (param0, ...values) {
+		selHueDebugMode.value == 'true' ? console.log(param0, ...values) : 0;
 	};
 
 
@@ -216,8 +218,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func window.HuePowButton
 	 * @desc HuePowButton
-	 * @param {void}
-	 * @return {void}
+	 * @param {Button} btn
 	 */
 	window.HuePowButton = function (btn) {
 		let cmd = btn.value.split(",");
@@ -226,14 +227,14 @@ window.addEventListener('DOMContentLoaded', function () {
 
 		switch (cmd[1]) {
 			case 'on':
-			window.ipc.HueControl( sendurl, {"on":true} );
-			break;
+				window.ipc.HueControl(sendurl, { "on": true });
+				break;
 			case 'off':
-			window.ipc.HueControl( sendurl, {"on":false} );
-			break;
+				window.ipc.HueControl(sendurl, { "on": false });
+				break;
 			default:
-			console.error('unknown cmd');
-			console.error(cmd[1]);
+				console.error('unknown cmd');
+				console.error(cmd[1]);
 		}
 	};
 
@@ -245,8 +246,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @param {void}
 	 * @return {void}
 	 */
-	window.openHueRenameDlg = function( id ) {
-		let spanHueRenameBtn   = document.getElementById('spanHueRenameBtn');  // 更新ボタン
+	window.openHueRenameDlg = function (id) {
+		let spanHueRenameBtn = document.getElementById('spanHueRenameBtn');  // 更新ボタン
 		let dlgHueRenameDialog = document.getElementById('dlgHueRenameDialog');  // 開くダイアログ
 
 		spanHueRenameBtn.innerHTML = `<button type='button' onclick='window.HueRename("${id}");document.getElementById("dlgHueRenameDialog").close();'>更新</button>`;
@@ -261,17 +262,17 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	// 
-	window.HueRename = function ( id ) {
+	window.HueRename = function (id) {
 		let newName = document.getElementById('hueNewName').value;
 
 		let sendurl = "/lights/" + id;
 
-		if ( newName ) {
-			window.ipc.HueControl( sendurl, {"name": newName} );
-		}else{
-			console.error('bad name:', newName );
+		if (newName) {
+			window.ipc.HueControl(sendurl, { "name": newName });
+		} else {
+			console.error('bad name:', newName);
 		}
 	};
 
 
-} );
+});

@@ -224,8 +224,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	HueUse: (_key) => {
-		ipcRenderer.invoke('HueUse', { key: _key });
+	HueUse: (_key, _debug) => {
+		ipcRenderer.invoke('HueUse', { key: _key, debug: _debug });
 	},
 
 	/**
@@ -234,8 +234,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	HueUseCancel: (_key) => {
-		ipcRenderer.invoke('HueUseCancel', { key: _key });
+	HueUseCancel: (_key, _debug) => {
+		ipcRenderer.invoke('HueUseCancel', { key: _key, debug: _debug });
 	},
 
 	/**
@@ -244,8 +244,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	HueUseStop: (_key) => {
-		ipcRenderer.invoke('HueUseStop', { key: _key });
+	HueUseStop: (_key, _debug) => {
+		ipcRenderer.invoke('HueUseStop', { key: _key, debug: _debug });
 	},
 
 	/**
@@ -321,8 +321,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	JmaConfigSave: (_areaName, _areaCode) => {
-		ipcRenderer.invoke('JmaConfigSave', { area: _areaName, code: _areaCode });
+	JmaConfigSave: (_areaName, _areaCode, _debug) => {
+		ipcRenderer.invoke('JmaConfigSave', { area: _areaName, code: _areaCode, debug: _debug });
 	},
 
 
@@ -333,8 +333,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	NetatmoUse: (_id, _secret, _username, _password) => {
-		ipcRenderer.invoke('NetatmoUse', { id: _id, secret: _secret, username: _username, password: _password });
+	NetatmoUse: (_id, _secret, _username, _password, _debug) => {
+		ipcRenderer.invoke('NetatmoUse', { id: _id, secret: _secret, username: _username, password: _password, debug: _debug });
 	},
 
 	/**
@@ -343,8 +343,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	NetatmoStop: (_id, _secret, _username, _password) => {
-		ipcRenderer.invoke('NetatmoStop', { id: _id, secret: _secret, username: _username, password: _password });
+	NetatmoStop: (_id, _secret, _username, _password, _debug) => {
+		ipcRenderer.invoke('NetatmoStop', { id: _id, secret: _secret, username: _username, password: _password, debug: _debug });
 	},
 
 
@@ -397,8 +397,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	SwitchBotUse: (_token, _secret) => {
-		ipcRenderer.invoke('SwitchBotUse', { token: _token, secret: _secret });
+	SwitchBotUse: (_token, _secret, _debug) => {
+		ipcRenderer.invoke('SwitchBotUse', { token: _token, secret: _secret, debug: _debug });
 	},
 
 	/**
@@ -407,8 +407,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void} 
 	 * @return void
 	 */
-	SwitchBotStop: (_token, _secret) => {
-		ipcRenderer.invoke('SwitchBotStop', { token: _token, secret: _secret });
+	SwitchBotStop: (_token, _secret, _debug) => {
+		ipcRenderer.invoke('SwitchBotStop', { token: _token, secret: _secret, debug: _debug });
 	},
 
 	/**

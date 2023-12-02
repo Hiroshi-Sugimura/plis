@@ -13,7 +13,7 @@ const http = require('http');
 const cron = require('node-cron');
 require('date-utils'); // for log
 const { owmModel, weatherModel } = require('./models/localDBModels');   // DBデータと連携
-const { isObjEmpty, mergeDeeply } = require('./mainSubmodule');
+const { isObjEmpty, mergeDeeply, getNow } = require('./mainSubmodule');
 
 const store = new Store();
 
@@ -229,7 +229,7 @@ let mainOwm = {
 
 		if (persist) {
 			weatherModel.create({
-				dateTime: dt,
+				dateTime: getNow(),
 				srcType: 'owm',
 				place: persist.name,
 				weather: persist.weather[0].main,

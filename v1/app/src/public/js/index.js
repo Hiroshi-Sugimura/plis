@@ -184,7 +184,8 @@ function onLoad() {
 				//----------------------------------------------
 				// Philips hue関連
 				case "fclHue":
-					console.log('main -> fclHue:', c.arg);
+					// console.log('main -> fclHue:', c.arg);
+					window.HueDebugLog('main -> fclHue:', c.arg);
 					window.renewHueLog(JSON.stringify(c.arg, null, '  '));
 					window.renewFacilitiesHue(c.arg);
 					break;
@@ -297,18 +298,18 @@ function onLoad() {
 				//----------------------------------------------
 				// SwitchBot関連
 				case "fclSwitchBot":
-					console.log('main -> fclSwitchBot:', c.arg);
+					window.SwitchBotDebugLog('main -> fclSwitchBot:', c.arg);
 					window.renewFacilitiesSwitchBot(c.arg);
 					break;
 
 				case "renewSwitchBotConfigView":
-					console.log('main -> renewSwitchBotConfigView:', c.arg);
+					window.SwitchBotDebugLog('main -> renewSwitchBotConfigView:', c.arg);
 					window.renewSwitchBotConfigView(c.arg);
 					break;
 
 				case "renewRoomEnvSwitchBot":
-					// console.log( 'main -> renewRoomEnvSwitchBot:', c.arg );
-					console.log('main -> renewRoomEnvSwitchBot');
+					// window.SwitchBotDebugLog( 'main -> renewRoomEnvSwitchBot:', c.arg );
+					window.SwitchBotDebugLog('main -> renewRoomEnvSwitchBot');
 					window.renewRoomEnvSwitchBot(c.arg);
 					break;
 

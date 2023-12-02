@@ -24,7 +24,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	let divJma = document.getElementById('divJma'); // 気象庁の表示エリア
 	let btnJmaConfigSet = document.getElementById('btnJmaConfigSet');  // 設定ボタン
-	let inJmaArea = document.getElementById('inJmaArea');
+	let selJmaArea = document.getElementById('selJmaArea');  // エリア
+	let selJmaDebugMode = document.getElementById('selJmaDebugMode');  // デバッグ
 	let divJmaCode = document.getElementById('divJmaCode');
 
 	let areaCodes = {
@@ -1079,8 +1080,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		btnJmaConfigSet.disabled = true;
 		btnJmaConfigSet.textContent = '保存中…';
 
-		// console.log('areaName:', inJmaArea.options[inJmaArea.selectedIndex].text, 'areaCode:', inJmaArea.value );
-		window.ipc.JmaConfigSave(inJmaArea.options[inJmaArea.selectedIndex].text, inJmaArea.value);
+		// console.log('areaName:', selJmaArea.options[selJmaArea.selectedIndex].text, 'areaCode:', selJmaArea.value );
+		window.ipc.JmaConfigSave(selJmaArea.options[selJmaArea.selectedIndex].text, selJmaArea.value, selJmaDebugMode.value);
 	};
 
 	/** 
@@ -1103,10 +1104,10 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	window.renewJmaConfigView = function (arg) {
-		inJmaArea.value = arg.code;
-		divJmaCode.innerHTML = inJmaArea.value;
+		selJmaArea.value = arg.code;
+		selJmaDebugMode.value = arg.debug;
+		divJmaCode.innerHTML = selJmaArea.value;
 	};
-
 
 	/** 
 	 * @func 
@@ -1114,8 +1115,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @param {void}
 	 * @return {void}
 	 */
-	window.inJmaArea_Change = function () {
-		divJmaCode.innerHTML = inJmaArea.value;
+	window.selJmaArea_Change = function () {
+		divJmaCode.innerHTML = selJmaArea.value;
 	};
 
 	/** 
@@ -1127,7 +1128,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	window.makeJmaArea = function () {
 		// console.log('window.makeJmaArea()');
 		for (let i in areaCodes) {
-			inJmaArea.add(new Option(i, areaCodes[i]));
+			selJmaArea.add(new Option(i, areaCodes[i]));
 		}
 	};
 
