@@ -299,21 +299,23 @@ contextBridge.exposeInMainWorld('ipc', {
 	/**
 	 * @func 
 	 * @desc Open Weather Map関連
-	 * @param {void} 
-	 * @return void
+	 * @param {string}  _APIKey
+	 * @param {string}  _zipcode
+	 * @param {Bool}  _debug
 	 */
-	OwmUse: (_APIKey, _zipcode) => {
-		ipcRenderer.invoke('OwmUse', { APIKey: _APIKey, zipcode: _zipcode });
+	OwmUse: (_APIKey, _zipcode, _debug) => {
+		ipcRenderer.invoke('OwmUse', { APIKey: _APIKey, zipcode: _zipcode, debug: _debug });
 	},
 
 	/**
 	 * @func 
 	 * @desc Open Weather Map関連
-	 * @param {void} 
-	 * @return void
+	 * @param {string}  _APIKey
+	 * @param {string}  _zipcode
+	 * @param {Bool}  _debug
 	 */
-	OwmStop: (_APIKey, _zipcode) => {
-		ipcRenderer.invoke('OwmStop', { APIKey: _APIKey, zipcode: _zipcode });
+	OwmStop: (_APIKey, _zipcode, _debug) => {
+		ipcRenderer.invoke('OwmStop', { APIKey: _APIKey, zipcode: _zipcode, debug: _debug });
 	},
 
 	//----------------------------------------------------------------------------------------------

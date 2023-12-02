@@ -214,16 +214,15 @@ function onLoad() {
 					break;
 
 
-
 				//----------------------------------------------
 				// OpenWeatherMap関連
 				case "renewOwm": // OpenWeatherMapのデータをもらった
-					console.log('main -> renewOwm:', c.arg);
+					window.OwmDebugLog('main -> renewOwm:', c.arg);
 					window.renewOwm(c.arg);
 					break;
 
 				case "renewOwmConfigView":  // Configを画面に表示
-					console.log('main -> renewOwmConfigView:', c.arg);
+					window.OwmDebugLog('main -> renewOwmConfigView:', c.arg);
 					window.renewOwmConfigView(c.arg);
 					break;
 
