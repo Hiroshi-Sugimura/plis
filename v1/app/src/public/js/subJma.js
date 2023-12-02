@@ -1081,7 +1081,9 @@ window.addEventListener('DOMContentLoaded', function () {
 		btnJmaConfigSet.textContent = '保存中…';
 
 		// console.log('areaName:', selJmaArea.options[selJmaArea.selectedIndex].text, 'areaCode:', selJmaArea.value );
-		window.ipc.JmaConfigSave(selJmaArea.options[selJmaArea.selectedIndex].text, selJmaArea.value, selJmaDebugMode.value);
+		window.ipc.JmaConfigSave(selJmaArea.options[selJmaArea.selectedIndex].text,
+			selJmaArea.value,
+			selJmaDebugMode.value == 'true' ? true : false);
 	};
 
 	/** 
@@ -1131,6 +1133,17 @@ window.addEventListener('DOMContentLoaded', function () {
 			selJmaArea.add(new Option(i, areaCodes[i]));
 		}
 	};
+
+
+	/** 
+	 * @func window.JmaDebugLog
+	 * @desc JMAモジュールがデバッグなら出力する
+	 * @param {...} values
+	 */
+	window.JmaDebugLog = function (param0, ...values) {
+		selJmaDebugMode.value == 'true' ? console.log(param0, ...values) : 0;
+	};
+
 
 	window.makeJmaArea();
 });

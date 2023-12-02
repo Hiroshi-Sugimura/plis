@@ -231,17 +231,17 @@ function onLoad() {
 				//----------------------------------------------
 				// 気象庁関連
 				case "renewJmaAbst": // JMAのデータをもらった
-					console.log('main -> renewJmaAbst:', c.arg);
+					window.JmaDebugLog('main -> renewJmaAbst:', c.arg);
 					window.renewJmaAbst(c.arg);
 					break;
 
 				case "renewJmaDetail":
-					console.log('main -> renewJmaDetail:', c.arg);
+					window.JmaDebugLog('main -> renewJmaDetail:', c.arg);
 					window.renewJmaDetail(c.arg);
 					break;
 
 				case "renewJmaConfigView":
-					console.log('main -> renewJmaConfigView', c.arg);
+					window.JmaDebugLog('main -> renewJmaConfigView', c.arg);
 					window.renewJmaConfigView(c.arg);
 					break;
 

@@ -366,12 +366,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		btnSwitchBotConfigSet.textContent = '設定中...';
 
 		if (!inSwitchBotUse.checked || inSwitchBotToken.value == '' || inSwitchBotSecret.value == '') {
-			window.ipc.SwitchBotStop(inSwitchBotToken.value, inSwitchBotSecret.value, selSwitchBotDebugMode.value);  // SwitchBot の監視を stopする
+			window.ipc.SwitchBotStop(inSwitchBotToken.value, inSwitchBotSecret.value, selSwitchBotDebugMode.value == 'true' ? true : false);  // SwitchBot の監視を stopする
 			renewFacilitiesSwitchBot(facilitiesSwitchBot);
 			return; // falseなら外すだけ
 		}
 
-		window.ipc.SwitchBotUse(inSwitchBotToken.value, inSwitchBotSecret.value, selSwitchBotDebugMode.value);
+		window.ipc.SwitchBotUse(inSwitchBotToken.value, inSwitchBotSecret.value, selSwitchBotDebugMode.value == 'true' ? true : false);
 	};
 
 	/**

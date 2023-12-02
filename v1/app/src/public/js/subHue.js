@@ -128,7 +128,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 		// 使用しない
 		if (inHueUse.checked == false) {
-			window.ipc.HueUseStop(inHueKey.value, selHueDebugMode.value);  // hueの監視をstopする
+			window.ipc.HueUseStop(inHueKey.value,
+				selHueDebugMode.value == 'true' ? true : false);  // hueの監視をstopする
 			hueConnected = false;
 
 			divControlHue.innerHTML = '';
@@ -137,11 +138,13 @@ window.addEventListener('DOMContentLoaded', function () {
 
 		// 使用する
 		if (inHueKey.value == '') { // キー無しで有効にしたらLinkボタンが必要
-			window.ipc.HueUse('', selHueDebugMode.value);
+			window.ipc.HueUse('',
+				selHueDebugMode.value == 'true' ? true : false);
 			dlgHuePush.showModal();
 		} else { // キー指定ありで有効にしたら，そのキーで開始
 			window.addToast('Info', 'Hue 連携を開始しました。実際の通信まで2分程度お待ちください。');
-			window.ipc.HueUse(inHueKey.value, selHueDebugMode.value);
+			window.ipc.HueUse(inHueKey.value,
+				selHueDebugMode.value == 'true' ? true : false);
 		}
 	};
 
@@ -152,7 +155,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	window.btnHueUseCancel_Click = function () {
 		window.HueDebugLog('window.btnHueUseCancel_Click');
 		inHueUse.checked = false;
-		window.ipc.HueUseCancel(inHueKey.value, selHueDebugMode.value);
+		window.ipc.HueUseCancel(inHueKey.value,
+			selHueDebugMode.value == 'true' ? true : false);
 		dlgHuePush.close();
 	};
 
@@ -164,7 +168,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	dlgHuePush.oncancel = function () {
 		window.HueDebugLog('dlgHuePush.oncancel');
 		inHueUse.checked = false;
-		window.ipc.HueUseCancel(inHueKey.value);
+		window.ipc.HueUseCancel(inHueKey.value,
+			selHueDebugMode.value == 'true' ? true : false);
 	};
 
 
