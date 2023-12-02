@@ -332,8 +332,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @func renewCanvasESM
 	 * @desc renewCanvasESM
 	 * @memberof subESM
-	 * @param {void}
-	 * @return {void}
 	 */
 	let renewCanvasESM = function () {
 		if (myChartESM) { myChartESM.destroy(); }  // chartがすでにctxを使っていると、リエントラントで"Canvas is already in use."のエラーが出る
@@ -353,8 +351,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/** 
 	 * @func window.renewEnergy
 	 * @desc データをもらって画面更新
-	 * @param {void}
-	 * @return {void}
+	 * @param {array} _envDataArray
 	 */
 	window.renewEnergy = function (_envDataArray) {
 		// console.log( 'window.renewEnergy() _envDataArray', _envDataArray );
