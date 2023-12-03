@@ -93,7 +93,7 @@ let mainOmron = {
 				persist = sensorData;
 				persist.time = new Date().toFormat("YYYY-MM-DD HH24:MI:SS");
 				sendIPCMessage("renewOmron", persist);
-			});
+			}, { debug: config.debug });
 
 			// 3秒毎にセンサの値チェック、画面表示は3秒毎にするが、DBへの記録は1分毎とする
 			mainOmron.observationJob = cron.schedule('*/3 * * * * *', () => {
