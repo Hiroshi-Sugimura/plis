@@ -15,26 +15,27 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	let facilitiesOmron; // 宅内情報（omron）
 	let H3Omron = document.getElementById('H3Omron');
-	let divOmronAbst	= document.getElementById('divOmronAbst');
+	let divOmronAbst = document.getElementById('divOmronAbst');
 	let divOmronSuggest = document.getElementById('divOmronSuggest');
 
 	// config
-	let inOmronUse        = document.getElementById('inOmronUse'); // omron; use or not check box
-	let inOmronPlace      = document.getElementById('inOmronPlace'); // omron; place
+	let inOmronUse = document.getElementById('inOmronUse'); // omron; use or not check box
+	let inOmronPlace = document.getElementById('inOmronPlace'); // omron; place
+	let selOmronDebugMode = document.getElementById('selOmronDebugMode'); // omron; debug flag
 	let btnOmronConfigSet = document.getElementById('btnOmronConfigSet'); // 設定ボタン
 
 	// header
-	let spanOmronPlace  = document.getElementById('spanOmronPlace');
-	let spanOmronTime   = document.getElementById('spanOmronTime');
+	let spanOmronPlace = document.getElementById('spanOmronPlace');
+	let spanOmronTime = document.getElementById('spanOmronTime');
 
 	// abst data
-	let spanOmronTemperature     = document.getElementById('spanOmronTemperature');
-	let spanOmronHumidity        = document.getElementById('spanOmronHumidity');
-	let spanOmronPressure        = document.getElementById('spanOmronPressure');
-	let spanOmronNoise           = document.getElementById('spanOmronNoise');
-	let spanOmronAnbientLight    = document.getElementById('spanOmronAnbientLight');
+	let spanOmronTemperature = document.getElementById('spanOmronTemperature');
+	let spanOmronHumidity = document.getElementById('spanOmronHumidity');
+	let spanOmronPressure = document.getElementById('spanOmronPressure');
+	let spanOmronNoise = document.getElementById('spanOmronNoise');
+	let spanOmronAnbientLight = document.getElementById('spanOmronAnbientLight');
 	let spanOmronDiscomfortIndex = document.getElementById('spanOmronDiscomfortIndex');
-	let spanOmronHeatStroke      = document.getElementById('spanOmronHeatStroke');
+	let spanOmronHeatStroke = document.getElementById('spanOmronHeatStroke');
 	let spanOmronHeat_stroke_desc = document.getElementById('spanOmronHeat_stroke_desc');
 
 	//----------------------------------------------------------------------------------------------
@@ -44,12 +45,12 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @param {void}
 	 * @return {void}
 	 */
-	window.renewOmron = function( arg ) {
+	window.renewOmron = function (arg) {
 		facilitiesOmron = arg;
 
 		// console.log('renewOmron() facilitiesOmron:', facilitiesOmron );  // ログ5s毎なので多すぎるから、必要な時だけ有効にして
 
-		if( inOmronUse.checked == false || Object.keys(facilitiesOmron).length === 0 ) {
+		if (inOmronUse.checked == false || Object.keys(facilitiesOmron).length === 0) {
 			return;
 		}
 
@@ -71,15 +72,15 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 
 		spanOmronPlace.innerHTML = inOmronPlace.value;
-		spanOmronTime.innerHTML  = facilitiesOmron.time;
+		spanOmronTime.innerHTML = facilitiesOmron.time;
 
-		spanOmronTemperature.innerHTML     = facilitiesOmron.temperature;
-		spanOmronHumidity.innerHTML        = facilitiesOmron.humidity;
-		spanOmronPressure.innerHTML        = facilitiesOmron.pressure;
-		spanOmronNoise.innerHTML           = facilitiesOmron.noise;
-		spanOmronAnbientLight.innerHTML    = facilitiesOmron.anbient_light;
+		spanOmronTemperature.innerHTML = facilitiesOmron.temperature;
+		spanOmronHumidity.innerHTML = facilitiesOmron.humidity;
+		spanOmronPressure.innerHTML = facilitiesOmron.pressure;
+		spanOmronNoise.innerHTML = facilitiesOmron.noise;
+		spanOmronAnbientLight.innerHTML = facilitiesOmron.anbient_light;
 		spanOmronDiscomfortIndex.innerHTML = facilitiesOmron.discomfort_index;
-		spanOmronHeatStroke.innerHTML      = facilitiesOmron.heat_stroke;
+		spanOmronHeatStroke.innerHTML = facilitiesOmron.heat_stroke;
 		spanOmronHeat_stroke_desc.innerHTML = heat_stroke_desc;
 	};
 
@@ -106,11 +107,11 @@ window.addEventListener('DOMContentLoaded', function () {
 	window.omronDocSectionClicked = function (t) {
 		// console.log('t:', t);
 
-		console.log('data:', myChartOmron._metasets);
-		myChartOmron._metasets.forEach( (v) => {
-			if( v.label != t ) {
+		window.OmronDebugLog('data:', myChartOmron._metasets);
+		myChartOmron._metasets.forEach((v) => {
+			if (v.label != t) {
 				v.hidden = true;
-			}else{
+			} else {
 				v.hidden = false;
 			}
 		});
@@ -127,15 +128,16 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @param {void}
 	 * @return {void}
 	 */
-	window.btnOmronConfigSet_Click = function(checkBox) {
-		if( inOmronUse.checked == false ) {
+	window.btnOmronConfigSet_Click = function (checkBox) {
+		if (inOmronUse.checked == false) {
 			renewOmron();
-			window.ipc.OmronStop( inOmronPlace.value );  // OWMの監視をstopする
+			window.ipc.OmronStop(inOmronPlace.value,
+				selOmronDebugMode.value == 'true' ? true : false);  // OWMの監視をstopする
 			return; // falseなら外すだけ
 		}
 
-		window.ipc.OmronUse( inOmronPlace.value );
-
+		window.ipc.OmronUse(inOmronPlace.value,
+			selOmronDebugMode.value == 'true' ? true : false);
 	};
 
 	/** 
@@ -145,10 +147,10 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	window.OmronConfigSaved = function () {
-		btnOmronConfigSet.disabled    = false;
+		btnOmronConfigSet.disabled = false;
 		btnOmronConfigSet.textContent = '設定';
 
-		window.addToast( 'Info', 'Omron 設定を保存しました。');
+		window.addToast('Info', 'Omron 設定を保存しました。');
 	};
 
 	/** 
@@ -157,16 +159,17 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @param {void}
 	 * @return {void}
 	 */
-	window.renewOmronConfigView = function( arg ) {
+	window.renewOmronConfigView = function (arg) {
 		inOmronUse.checked = arg.enabled;
 		inOmronPlace.value = arg.place;
+		selOmronDebugMode.value = arg.debug;
 
-		if( inOmronUse.checked ) { // 利用するので表示する
+		if (inOmronUse.checked) { // 利用するので表示する
 			H3Omron.style.display = 'block';
 			divOmronAbst.style.display = 'block';
 			canRoomEnvChartOmron.style.display = 'block';
 			divOmronSuggest.style.display = 'none';
-		}else{
+		} else {
 			H3Omron.style.display = 'none';
 			divOmronAbst.style.display = 'none';
 			canRoomEnvChartOmron.style.display = 'none';
@@ -174,6 +177,15 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
+
+	/** 
+	 * @func window.OmronDebugLog
+	 * @desc Owmモジュールがデバッグなら出力する
+	 * @param {any} ...values
+	 */
+	window.OmronDebugLog = function (...values) {
+		selOmronDebugMode.value == 'true' ? console.log(...values) : 0;
+	};
 
 	//----------------------------------------------------------------------------------------------
 	// Omron chart
@@ -207,134 +219,134 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @param {void}
 	 * @return {void}
 	 */
-	let newLegendClickHandler = function(e, legendItem) {
+	let newLegendClickHandler = function (e, legendItem) {
 		let index = legendItem.datasetIndex;
 		let ci = this.chart;
 		let meta = ci.getDatasetMeta(index);
 
-		meta.hidden = meta.hidden === null? !ci.data.datasets[index].hidden : null;
+		meta.hidden = meta.hidden === null ? !ci.data.datasets[index].hidden : null;
 
 		ci.update();	// データセットを非表示にしました。チャートを再表示してください。
 
-		console.log( 'newLegendClickHandler() legendItem:', legendItem );
+		window.OmronDebugLog('newLegendClickHandler() legendItem:', legendItem);
 
-		switch( legendItem.text ) {
+		switch (legendItem.text) {
 			case "温度 [℃]":
-			if( legendItem.hidden ) {
-				const omronDocTempSec = document.getElementById('omronDocTempSec');
-				omronDocTempSec.classList.add("temp_color");
-				omronDocTempSec.classList.remove("disabled_color");
-			}else{
-				const omronDocTempSec = document.getElementById('omronDocTempSec');
-				omronDocTempSec.classList.remove("temp_color");
-				omronDocTempSec.classList.add("disabled_color");
-			}
-			break;
+				if (legendItem.hidden) {
+					const omronDocTempSec = document.getElementById('omronDocTempSec');
+					omronDocTempSec.classList.add("temp_color");
+					omronDocTempSec.classList.remove("disabled_color");
+				} else {
+					const omronDocTempSec = document.getElementById('omronDocTempSec');
+					omronDocTempSec.classList.remove("temp_color");
+					omronDocTempSec.classList.add("disabled_color");
+				}
+				break;
 
 			case "湿度 [%RH]":
-			if( legendItem.hidden ) {
-				const omronDocHumSec = document.getElementById('omronDocHumSec');
-				omronDocHumSec.classList.add("hum_color");
-				omronDocHumSec.classList.remove("disabled_color");
-			}else{
-				const omronDocHumSec = document.getElementById('omronDocHumSec');
-				omronDocHumSec.classList.remove("hum_color");
-				omronDocHumSec.classList.add("disabled_color");
-			}
-			break;
+				if (legendItem.hidden) {
+					const omronDocHumSec = document.getElementById('omronDocHumSec');
+					omronDocHumSec.classList.add("hum_color");
+					omronDocHumSec.classList.remove("disabled_color");
+				} else {
+					const omronDocHumSec = document.getElementById('omronDocHumSec');
+					omronDocHumSec.classList.remove("hum_color");
+					omronDocHumSec.classList.add("disabled_color");
+				}
+				break;
 
 			case "気圧 [hPa]":
-			if( legendItem.hidden ) {
-				const omronDocPressSec = document.getElementById('omronDocPressSec');
-				omronDocPressSec.classList.add("pressure_color");
-				omronDocPressSec.classList.remove("disabled_color");
-			}else{
-				const omronDocPressSec = document.getElementById('omronDocPressSec');
-				omronDocPressSec.classList.remove("pressure_color");
-				omronDocPressSec.classList.add("disabled_color");
-			}
-			break;
+				if (legendItem.hidden) {
+					const omronDocPressSec = document.getElementById('omronDocPressSec');
+					omronDocPressSec.classList.add("pressure_color");
+					omronDocPressSec.classList.remove("disabled_color");
+				} else {
+					const omronDocPressSec = document.getElementById('omronDocPressSec');
+					omronDocPressSec.classList.remove("pressure_color");
+					omronDocPressSec.classList.add("disabled_color");
+				}
+				break;
 
 			case "光 [lx]":
-			if( legendItem.hidden ) {
-				const omronDocAnbientSec = document.getElementById('omronDocAnbientSec');
-				omronDocAnbientSec.classList.add("anbientLight_color");
-				omronDocAnbientSec.classList.remove("disabled_color");
-			}else{
-				const omronDocAnbientSec = document.getElementById('omronDocAnbientSec');
-				omronDocAnbientSec.classList.remove("anbientLight_color");
-				omronDocAnbientSec.classList.add("disabled_color");
-			}
-			break;
+				if (legendItem.hidden) {
+					const omronDocAnbientSec = document.getElementById('omronDocAnbientSec');
+					omronDocAnbientSec.classList.add("anbientLight_color");
+					omronDocAnbientSec.classList.remove("disabled_color");
+				} else {
+					const omronDocAnbientSec = document.getElementById('omronDocAnbientSec');
+					omronDocAnbientSec.classList.remove("anbientLight_color");
+					omronDocAnbientSec.classList.add("disabled_color");
+				}
+				break;
 
 			case "騒音 [dB]":
-			if( legendItem.hidden ) {
-				const omronDocNoiseSec = document.getElementById('omronDocNoiseSec');
-				omronDocNoiseSec.classList.add("noise_color");
-				omronDocNoiseSec.classList.remove("disabled_color");
-			}else{
-				const omronDocNoiseSec = document.getElementById('omronDocNoiseSec');
-				omronDocNoiseSec.classList.remove("noise_color");
-				omronDocNoiseSec.classList.add("disabled_color");
-			}
-			break;
+				if (legendItem.hidden) {
+					const omronDocNoiseSec = document.getElementById('omronDocNoiseSec');
+					omronDocNoiseSec.classList.add("noise_color");
+					omronDocNoiseSec.classList.remove("disabled_color");
+				} else {
+					const omronDocNoiseSec = document.getElementById('omronDocNoiseSec');
+					omronDocNoiseSec.classList.remove("noise_color");
+					omronDocNoiseSec.classList.add("disabled_color");
+				}
+				break;
 
 			// eCO2は数値が頼れないので表示しない
 			case "eCO2 [ppm]":
-			/*
-			if( legendItem.hidden ) {
-				const omronDocCo2Sec = document.getElementById('omronDocCo2Sec');
-				omronDocCo2Sec.classList.add("co2_color");
-				omronDocCo2Sec.classList.remove("disabled_color");
-			}else{
-				const omronDocCo2Sec = document.getElementById('omronDocCo2Sec');
-				omronDocCo2Sec.classList.remove("co2_color");
-				omronDocCo2Sec.classList.add("disabled_color");
-			}
-			*/
-			break;
+				/*
+				if( legendItem.hidden ) {
+					const omronDocCo2Sec = document.getElementById('omronDocCo2Sec');
+					omronDocCo2Sec.classList.add("co2_color");
+					omronDocCo2Sec.classList.remove("disabled_color");
+				}else{
+					const omronDocCo2Sec = document.getElementById('omronDocCo2Sec');
+					omronDocCo2Sec.classList.remove("co2_color");
+					omronDocCo2Sec.classList.add("disabled_color");
+				}
+				*/
+				break;
 
 			// eTVOCはあまり参考にならない
 			case "eTVOC [ppb]":
-			/*
-			if( legendItem.hidden ) {
-				const omronDocTvocSec = document.getElementById('omronDocTvocSec');
-				omronDocTvocSec.classList.add("tvoc_color");
-				omronDocTvocSec.classList.remove("disabled_color");
-			}else{
-				const omronDocTvocSec = document.getElementById('omronDocTvocSec');
-				omronDocTvocSec.classList.remove("tvoc_color");
-				omronDocTvocSec.classList.add("disabled_color");
-			}
-			*/
-			break;
+				/*
+				if( legendItem.hidden ) {
+					const omronDocTvocSec = document.getElementById('omronDocTvocSec');
+					omronDocTvocSec.classList.add("tvoc_color");
+					omronDocTvocSec.classList.remove("disabled_color");
+				}else{
+					const omronDocTvocSec = document.getElementById('omronDocTvocSec');
+					omronDocTvocSec.classList.remove("tvoc_color");
+					omronDocTvocSec.classList.add("disabled_color");
+				}
+				*/
+				break;
 
 			case "不快指数":
-			if( legendItem.hidden ) {
-				const omronDocDiscomfortSec = document.getElementById('omronDocDiscomfortSec');
-				omronDocDiscomfortSec.classList.add("discomfort_color");
-				omronDocDiscomfortSec.classList.remove("disabled_color");
-			}else{
-				const omronDocDiscomfortSec = document.getElementById('omronDocDiscomfortSec');
-				omronDocDiscomfortSec.classList.remove("discomfort_color");
-				omronDocDiscomfortSec.classList.add("disabled_color");
-			}
-			break;
+				if (legendItem.hidden) {
+					const omronDocDiscomfortSec = document.getElementById('omronDocDiscomfortSec');
+					omronDocDiscomfortSec.classList.add("discomfort_color");
+					omronDocDiscomfortSec.classList.remove("disabled_color");
+				} else {
+					const omronDocDiscomfortSec = document.getElementById('omronDocDiscomfortSec');
+					omronDocDiscomfortSec.classList.remove("discomfort_color");
+					omronDocDiscomfortSec.classList.add("disabled_color");
+				}
+				break;
 
 			case "熱中症警戒度":
-			if( legendItem.hidden ) {
-				const omronDocHeatStrokeSec = document.getElementById('omronDocHeatStrokeSec');
-				omronDocHeatStrokeSec.classList.add("heatStroke_color");
-				omronDocHeatStrokeSec.classList.remove("disabled_color");
-			}else{
-				const omronDocHeatStrokeSec = document.getElementById('omronDocHeatStrokeSec');
-				omronDocHeatStrokeSec.classList.remove("heatStroke_color");
-				omronDocHeatStrokeSec.classList.add("disabled_color");
-			}
-			break;
+				if (legendItem.hidden) {
+					const omronDocHeatStrokeSec = document.getElementById('omronDocHeatStrokeSec');
+					omronDocHeatStrokeSec.classList.add("heatStroke_color");
+					omronDocHeatStrokeSec.classList.remove("disabled_color");
+				} else {
+					const omronDocHeatStrokeSec = document.getElementById('omronDocHeatStrokeSec');
+					omronDocHeatStrokeSec.classList.remove("heatStroke_color");
+					omronDocHeatStrokeSec.classList.add("disabled_color");
+				}
+				break;
 
 			default:
-			break;
+				break;
 		}
 	};
 
@@ -386,7 +398,7 @@ window.addEventListener('DOMContentLoaded', function () {
 					autoSkip: false,
 					maxTicksLimit: 49,   // 24h * 2 + 1
 					maxRotation: 90,
-					callback: function( value, index, ticks ) {
+					callback: function (value, index, ticks) {
 						return moment.tz(value, 'Asia/Tokyo').format('HH:mm');
 					}
 				}
@@ -404,16 +416,16 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @param {void}
 	 * @return {void}
 	 */
-	let renewCanvasOmron = function() {
+	let renewCanvasOmron = function () {
 		canRoomEnvChartOmron.style.display = 'block';
 
-		if( myChartOmron ) {
+		if (myChartOmron) {
 			// すでにチャートがあればアップデートだけ
 			myChartOmron.data.datasets = datasetsOmron;
 			myChartOmron.update();
-		}else{
+		} else {
 			// 初回起動はチャートオブジェクトを作る
-			myChartOmron = new Chart( ctxOmron, {
+			myChartOmron = new Chart(ctxOmron, {
 				type: 'line',
 				data: {
 					// labels: LABEL_X,
@@ -432,13 +444,13 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @param {void}
 	 * @return {void}
 	 */
-	window.renewRoomEnvOmron = function ( _envDataArray ) {
-		let envDataArray = JSON.parse( _envDataArray );
+	window.renewRoomEnvOmron = function (_envDataArray) {
+		let envDataArray = JSON.parse(_envDataArray);
 		// console.log( 'window.renewRoomEnvOnron()', envDataArray );
 
 		datasetsOmron = [];
 
-		if( envDataArray ) {
+		if (envDataArray) {
 			oTemperature = [];
 			oHumidity = [];
 			oPressure = [];
@@ -449,42 +461,56 @@ window.addEventListener('DOMContentLoaded', function () {
 			oDiscomfortIndex = [];
 			oHeatStroke = [];
 
-			for( const d of envDataArray ) {
-				oTemperature.push( { x:moment(d.time), y:d.temperature} );
-				oHumidity.push( { x:moment(d.time), y:d.humidity} );
-				oPressure.push( { x:moment(d.time), y:d.pressure} );
-				oAnbientLight.push( { x:moment(d.time), y:d.anbientLight} );
-				oNoise.push( { x:moment(d.time), y:d.noise} );
+			for (const d of envDataArray) {
+				oTemperature.push({ x: moment(d.time), y: d.temperature });
+				oHumidity.push({ x: moment(d.time), y: d.humidity });
+				oPressure.push({ x: moment(d.time), y: d.pressure });
+				oAnbientLight.push({ x: moment(d.time), y: d.anbientLight });
+				oNoise.push({ x: moment(d.time), y: d.noise });
 				// oCO2.push( { x:moment(d.time), y:d.CO2} );  // 表示しない
 				// oTVOC.push( { x:moment(d.time), y:d.TVOC} ); // 表示しない
-				oDiscomfortIndex.push( { x:moment(d.time), y:d.discomfortIndex} );
-				oHeatStroke.push( { x:moment(d.time), y:d.heatStroke} );
+				oDiscomfortIndex.push({ x: moment(d.time), y: d.discomfortIndex });
+				oHeatStroke.push({ x: moment(d.time), y: d.heatStroke });
 			}
 
 			datasetsOmron.push(
-				{ label: '温度 [℃]',    type: 'line', data: oTemperature, borderColor: "rgba(255,178,178,1.0)", backgroundColor: "rgba(255,178,178,1.0)",
-					radius:1.5, borderWidth:1, yAxisID: 'y-axis-left', xAxisID:'x', borderDash: [2,1] },
-				{ label: '湿度 [%RH]',   type: 'line', data: oHumidity, borderColor: "rgba(255,178,255,1.0)", backgroundColor: "rgba(255,178,255,1.0)",
-					radius:1.5, borderWidth:1, yAxisID: 'y-axis-left',  xAxisID:'x', borderDash: [2,1]},
-				{ label: '気圧 [hPa]',   type: 'line', data: oPressure, borderColor: "rgba(178,178,255,1.0)", backgroundColor: "rgba(178,178,255,1.0)",
-					radius:1.5, borderWidth:1, yAxisID: 'y-axis-right', xAxisID:'x', borderDash: [2,1]},
-				{ label: '光 [lx]',      type: 'line', data: oAnbientLight, borderColor: "rgba(255,196,137,1.0)", backgroundColor: "rgba(178,178,255,1.0)",
-					radius:1.5, borderWidth:1, yAxisID: 'y-axis-right', xAxisID:'x', borderDash: [2,1]},
-				{ label: '騒音 [dB]',    type: 'line', data: oNoise, borderColor: "rgba(70,70,220,1.0)", backgroundColor: "rgba(70,70,220,1.0)",
-					radius:1.5, borderWidth:1, yAxisID: 'y-axis-left', xAxisID:'x', borderDash: [2,1] },
+				{
+					label: '温度 [℃]', type: 'line', data: oTemperature, borderColor: "rgba(255,178,178,1.0)", backgroundColor: "rgba(255,178,178,1.0)",
+					radius: 1.5, borderWidth: 1, yAxisID: 'y-axis-left', xAxisID: 'x', borderDash: [2, 1]
+				},
+				{
+					label: '湿度 [%RH]', type: 'line', data: oHumidity, borderColor: "rgba(255,178,255,1.0)", backgroundColor: "rgba(255,178,255,1.0)",
+					radius: 1.5, borderWidth: 1, yAxisID: 'y-axis-left', xAxisID: 'x', borderDash: [2, 1]
+				},
+				{
+					label: '気圧 [hPa]', type: 'line', data: oPressure, borderColor: "rgba(178,178,255,1.0)", backgroundColor: "rgba(178,178,255,1.0)",
+					radius: 1.5, borderWidth: 1, yAxisID: 'y-axis-right', xAxisID: 'x', borderDash: [2, 1]
+				},
+				{
+					label: '光 [lx]', type: 'line', data: oAnbientLight, borderColor: "rgba(255,196,137,1.0)", backgroundColor: "rgba(178,178,255,1.0)",
+					radius: 1.5, borderWidth: 1, yAxisID: 'y-axis-right', xAxisID: 'x', borderDash: [2, 1]
+				},
+				{
+					label: '騒音 [dB]', type: 'line', data: oNoise, borderColor: "rgba(70,70,220,1.0)", backgroundColor: "rgba(70,70,220,1.0)",
+					radius: 1.5, borderWidth: 1, yAxisID: 'y-axis-left', xAxisID: 'x', borderDash: [2, 1]
+				},
 				// eCO2は数値が頼れないので表示しない
 				// { label: 'eCO2 [ppm]',   type: 'line', data: oCO2, borderColor: "rgba(50,100,0,1.0)", backgroundColor: "rgba(50,100,0,1.0)",
 				// radius:1.5, borderWidth:1, yAxisID: 'y-axis-right', xAxisID:'x', borderDash: [2,1]},
 				// { label: 'eTVOC [ppb]',  type: 'line', data: oTVOC, borderColor: "rgba(178,255,255,1.0)", backgroundColor: "rgba(255,137,196,1.0)",
 				// radius:1.5, borderWidth:1, yAxisID: 'y-axis-right', xAxisID:'x', borderDash: [2,1]},
-				{ label: '不快指数',     type: 'line', data: oDiscomfortIndex, borderColor: "rgba(196,137,255,1.0)", backgroundColor: "rgba(150,81,77,1.0)",
-					radius:1.5, borderWidth:1, yAxisID: 'y-axis-left', xAxisID:'x', borderDash: [2,1]},
-				{ label: '熱中症警戒度', type: 'line', data: oHeatStroke, borderColor: "rgba(137,196,255,1.0)", backgroundColor: "rgba(44,79,84,1.0)",
-					radius:1.5, borderWidth:1, yAxisID: 'y-axis-left', xAxisID:'x', borderDash: [2,1] }
-				);
+				{
+					label: '不快指数', type: 'line', data: oDiscomfortIndex, borderColor: "rgba(196,137,255,1.0)", backgroundColor: "rgba(150,81,77,1.0)",
+					radius: 1.5, borderWidth: 1, yAxisID: 'y-axis-left', xAxisID: 'x', borderDash: [2, 1]
+				},
+				{
+					label: '熱中症警戒度', type: 'line', data: oHeatStroke, borderColor: "rgba(137,196,255,1.0)", backgroundColor: "rgba(44,79,84,1.0)",
+					radius: 1.5, borderWidth: 1, yAxisID: 'y-axis-left', xAxisID: 'x', borderDash: [2, 1]
+				}
+			);
 		}
 
 		renewCanvasOmron();
 	};
 
-} );
+});

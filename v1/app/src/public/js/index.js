@@ -261,17 +261,17 @@ function onLoad() {
 				//----------------------------------------------
 				// Omron関連
 				case "renewOmron": // Omronのデータをもらった
-					// console.log( 'main -> renewOmron:', c.arg );  // ログ多過ぎるので必要な時だけ有効にする
+					window.OmronDebugLog('main -> renewOmron:', c.arg);  // ログ多過ぎるので必要な時だけ有効にする
 					window.renewOmron(c.arg);
 					break;
 
 				case "omronDisconnected": // Omron切断
-					console.log('main -> omronDisconnected:');  // ログ多過ぎるので必要な時だけ有効にする
+					window.OmronDebugLog('main -> omronDisconnected:');  // ログ多過ぎるので必要な時だけ有効にする
 					window.disconnectedOmron();
 					break;
 
 				case "renewOmronConfigView": // Omronの設定データをもらった
-					console.log('main -> renewOmronConfigView:', c.arg);
+					window.OmronDebugLog('main -> renewOmronConfigView:', c.arg);
 					window.renewOmronConfigView(c.arg);
 					break;
 
@@ -322,8 +322,7 @@ function onLoad() {
 					break;
 
 				case "renewRoomEnvOmron":
-					// console.log( 'main -> newRoomEnvOmron:', c.arg);   // ログ多すぎる
-					console.log('main -> newRoomEnvOmron');
+					window.OmronDebugLog('main -> newRoomEnvOmron:', c.arg);   // ログ多すぎる
 					window.renewRoomEnvOmron(c.arg);
 					break;
 

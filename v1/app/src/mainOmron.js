@@ -38,8 +38,7 @@ let mainOmron = {
 	/**
 	 * @func start
 	 * @desc Omronセンサの処理開始
-	 * @param {Object} _sendIPCMessage
-	 * @return void
+	 * @param {Function} _sendIPCMessage
 	 * @throw error
 	 */
 	start: function (_sendIPCMessage) {

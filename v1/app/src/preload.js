@@ -356,21 +356,21 @@ contextBridge.exposeInMainWorld('ipc', {
 	/**
 	 * @func 
 	 * @desc Omron関連
-	 * @param {void} 
-	 * @return void
+	 * @param {string} _plase
+	 * @param {Bool} _debug
 	 */
-	OmronUse: (_place) => {
-		ipcRenderer.invoke('OmronUse', { place: _place });
+	OmronUse: (_place, _debug) => {
+		ipcRenderer.invoke('OmronUse', { place: _place, debug: _debug });
 	},
 
 	/**
 	 * @func 
 	 * @desc Omron関連
-	 * @param {void} 
-	 * @return void
+	 * @param {string} _place
+	 * @param {Bool} _debug
 	 */
-	OmronStop: (_place) => {
-		ipcRenderer.invoke('OmronStop', { place: _place });
+	OmronStop: (_place, _debug) => {
+		ipcRenderer.invoke('OmronStop', { place: _place, debug: _debug });
 	},
 
 	//----------------------------------------------------------------------------------------------
