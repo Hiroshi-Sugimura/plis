@@ -67,8 +67,6 @@ window.addEventListener('DOMContentLoaded', function () {
 			let cloudIcon = '';
 			let batteryIcon = '';
 			let control = '';
-			let temp = '';
-			let color = '#000000';
 			// console.log('window.renewFacilitiesSwitchBot() d:', d, 'devState:', devState);
 			doc += "<div class='LinearLayoutChild'> <section>";
 
@@ -251,11 +249,11 @@ window.addEventListener('DOMContentLoaded', function () {
 				case 'Color Bulb':
 					switch (devState.power) {
 						case 'on':
-							control = `<button onClick='window.SwitchBotBulb("${d.deviceId}", "turnOff", "default");'>OFF</button><br>`;
+							control = `<button onClick='window.SwitchBotBulb("${d.deviceId}", "turnOff", "default");'><i class="fa-solid fa-power-off"></i> OFF</button><br>`;
 							icon = 'fa-regular fa-lightbulb';
 							break;
 						case 'off':
-							control = `<button onClick='window.SwitchBotBulb("${d.deviceId}", "turnOn", "default");'>ON</button><br>`;
+							control = `<button onClick='window.SwitchBotBulb("${d.deviceId}", "turnOn", "default");'><i class="fa-solid fa-power-off"></i> ON</button><br>`;
 							icon = 'fa-solid fa-lightbulb';
 							break;
 					}
@@ -266,30 +264,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
 					}
 
-
-					// 色を16進表記にかえる r:g:b -> $rrggbb
-					temp = devState.color.split(/:/);
-					color = `#${toHexString(temp[0])}${toHexString(temp[1])}${toHexString(temp[2])}`;
-
-					// color時に、colorTemperatureが0になるみたいだけど、値域としておかしいので補正
-					devState.colorTemperature = devState.colorTemperature == 0 ? 2700 : devState.colorTemperature;
-
-					control += `<form class='inline'>Brightness: `  // brightness
-						+ `<input type='number' id="inSwitchBotBulbBriNumber_${d.deviceId}" value='${devState.brightness}' min='0' max='100' step='5' onChange='window.inSwitchBotBulbBriNumber_Change("${d.deviceId}", this.value);'><br>`
-						+ `<input type='range'  id="inSwitchBotBulbBriRange_${d.deviceId}"  value='${devState.brightness}' min='0' max='100' step='5' onChange='window.inSwitchBotBulbBriRange_Change("${d.deviceId}", this.value);'>`
-						+ `</form>`
-						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateBrightnessSettings("${d.deviceId}");'>送信</button>`
-						+ `<br>`
-						+ `<form class='inline'>Color: `  // color
-						+ `<input type='color' id="inSwitchBotBulbColor_${d.deviceId}" value='${color}' />`
-						+ `</form>`
-						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateColorSettings("${d.deviceId}");'>送信</button>`
-						+ `<br>`
-						+ `<form class='inline'>Color temperature: `  // colorTemperature
-						+ `<input type='number' id="inSwitchBotBulbTempNumber_${d.deviceId}" value='${devState.colorTemperature}' min='2700' max='6500' step='100' onChange='window.inSwitchBotBulbTempNumber_Change("${d.deviceId}", this.value);'><br>`
-						+ `<input type='range'  id="inSwitchBotBulbTempNumber_${d.deviceId}" value='${devState.colorTemperature}' min='2700' max='6500' step='100' onChange='window.inSwitchBotBulbTempRange_Change("${d.deviceId}", this.value);'>`
-						+ `</form>`
-						+ `<button type='button' onclick='window.btnSwitchBotBulbUpdateColorTemperatureSettings("${d.deviceId}");'>送信</button>`;
+					control += `<button onClick='window.showDlgSwitchBotSettingsDialog4Bulb("${d.deviceId}");'><i class="fa-solid fa-sliders"></i> Details</button><br>`;
 
 					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br>${control}`;
 					break;
@@ -427,6 +402,50 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
+	/**
+	 * @func
+	 * @desc SwitchBot のBulbを詳細設定するダイアログを作成して表示する
+	 * @param {string} deviceId
+	 */
+	window.showDlgSwitchBotSettingsDialog4Bulb = function (deviceId) {
+		console.log('window.showDlgSwitchBotSettingsDialog4Bulb() deviceId:', deviceId);
+
+		let devState = facilitiesSwitchBot[deviceId];
+		let control = '';
+		let temp = '';
+		let color = '#000000';
+
+		// 色を16進表記にかえる r:g:b -> $rrggbb
+		temp = devState.color.split(/:/);
+		color = `#${toHexString(temp[0])}${toHexString(temp[1])}${toHexString(temp[2])}`;
+
+		// color時に、colorTemperatureが0になるみたいだけど、値域としておかしいので補正
+		devState.colorTemperature = devState.colorTemperature == 0 ? 2700 : devState.colorTemperature;
+
+		divSwitchBotSettingsContents.innerHTML = `<table>`
+			+ `<tr><td>ON/OFF</td>`  // ON/OFF
+			+ `<td>${devState.power}</td>`
+			+ `<td><button onClick='window.SwitchBotBulb("${deviceId}", "turnOff", "default");'><i class="fa-solid fa-power-off"></i> OFF</button></td>`
+			+ `<td><button onClick='window.SwitchBotBulb("${deviceId}", "turnOn", "default");'><i class="fa-solid fa-power-off"></i> ON</button></td>`
+			+ `</tr>`
+			+ `<tr><td>Brightness</td>`  // brightness
+			+ `<td><input type='number' id="inSwitchBotBulbBriNumber_${deviceId}" value='${devState.brightness}' min='0' max='100' step='5' onChange='window.inSwitchBotBulbBriNumber_Change("${deviceId}", this.value);'></td>`
+			+ `<td><input type='range' id="inSwitchBotBulbBriRange_${deviceId}"  value='${devState.brightness}' min='0' max='100' step='5' onChange='window.inSwitchBotBulbBriRange_Change("${deviceId}", this.value);'></td>`
+			+ `<td><button type='button' onclick='window.btnSwitchBotBulbUpdateBrightnessSettings("${deviceId}");'>送信</button>`
+			+ `</td></tr>`
+			+ `<tr><td>Color</td>`  // color
+			+ `<td><input type='color' id="inSwitchBotBulbColor_${deviceId}" value='${color}' /></td><td></td>`
+			+ `<td><button type='button' onclick='window.btnSwitchBotBulbUpdateColorSettings("${deviceId}");'>送信</button></td>`
+			+ `</tr>`
+			+ `<tr><td>Color temperature</td>`  // colorTemperature
+			+ `<td><input type='number' id="inSwitchBotBulbTempNumber_${deviceId}" value='${devState.colorTemperature}' min='2700' max='6500' step='100' onChange='window.inSwitchBotBulbTempNumber_Change("${deviceId}", this.value);'></td>`
+			+ `<td><input type='range'  id="inSwitchBotBulbTempNumber_${deviceId}" value='${devState.colorTemperature}' min='2700' max='6500' step='100' onChange='window.inSwitchBotBulbTempRange_Change("${deviceId}", this.value);'></td>`
+			+ `<td><button type='button' onclick='window.btnSwitchBotBulbUpdateColorTemperatureSettings("${deviceId}");'>送信</button></td></tr></table>`;
+
+		dlgSwitchBotSettingsDialog.showModal();
+	};
+
+
 	/**
 	 * @func
 	 * @desc SwitchBot control for Plug
