@@ -81,11 +81,11 @@ window.addEventListener('DOMContentLoaded', function () {
 						if (operatingStatus == true) {
 							doc += `<a href='javascript: window.openHueRenameDlg("${key}");'><span class='fa-solid fa-gear hue-settings-btn'> </span></a>`;
 							doc += `<div class='tooltip'><i class='fa-regular fa-lightbulb hue-dev'></i><div class='description'>${makerCode}&#013;&#010;${ip}</div></div><br>${devName}<br>`
-								+ `<button onclick='HuePowButton(this)' value='${key},off'>OFF</button><br>`;
+								+ `<button onclick='HuePowButton(this)' value='${key},off'><i class="fa-solid fa-power-off"></i> OFF</button><br>`;
 						} else {
 							doc += `<a href='javascript: window.openHueRenameDlg("${key}");'><span class='fa-solid fa-gear hue-settings-btn'> </span></a>`;
 							doc += `<div class='tooltip'><i class='fa-solid fa-lightbulb hue-dev'></i><div class='description'>${makerCode}&#013;&#010;${ip}</div></div><br>${devName}<br>`
-								+ `<button onclick='HuePowButton(this)' value='${key},on'>ON</button><br>`;
+								+ `<button onclick='HuePowButton(this)' value='${key},on'><i class="fa-solid fa-power-off"></i> ON</button><br>`;
 						}
 					}
 					doc += "</section> </div>";  // ボタン設置

@@ -105,11 +105,11 @@ window.addEventListener('DOMContentLoaded', function () {
 				if (operatingStatus === 'ON(30)') {
 					ret = "<div class='tooltip'><img src=\"./img/0135_30.png\" class='el-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + obj[0] + "<br>";
 					ret += "場所:" + instLocation + "<br>";
-					ret += "<button onClick=\"ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,31\">OFF</button><br>";
+					ret += "<button onClick=\"ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,31\"><i class='fa-solid fa-power-off'></i> OFF</button><br>";
 				} else {
 					ret = "<div class='tooltip'><img src=\"./img/0135_31.png\" class='el-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + obj[0] + "<br>";
 					ret += "場所:" + instLocation + "<br>";
-					ret += "<button onClick=\"ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,30\">ON</button><br>";
+					ret += "<button onClick=\"ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,30\"><i class='fa-solid fa-power-off'></i> ON</button><br>";
 				}
 				break;
 
@@ -261,12 +261,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 				if (operatingStatus === 'ON(30)') {
 					ret = "<div class='tooltip'><img src=\"./img/0290_30.png\" class='el-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + obj[0] + "<br>";
-					ret += "場所:" + instLocation + "<br>";
-					ret += "<button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,31\">OFF</button><br>";
+					ret += `場所:${instLocation}<br>`;
+					ret += `<button onclick="window.ELpowButton(this);" value="${ip},${obj[1]},80,31"><i class="fa-solid fa-power-off"></i> OFF</button><br>`;
 				} else {
 					ret = "<div class='tooltip'><img src=\"./img/0290_31.png\" class='el-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + obj[0] + "<br>";
-					ret += "場所:" + instLocation + "<br>";
-					ret += "<button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,30\">ON</button><br>";
+					ret += `場所:${instLocation}<br>`;
+					ret += `<button onclick="window.ELpowButton(this);" value="${ip},${obj[1]},80,30"><i class="fa-solid fa-power-off"></i> ON</button><br>`;
 				}
 				break;
 
@@ -275,12 +275,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 				if (operatingStatus === 'ON(30)') {
 					ret = "<div class='tooltip'><img src=\"./img/0291_30.png\" class='el-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + obj[0] + "<br>";
-					ret += "場所:" + instLocation + "<br>";
-					ret += "<button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,31\">OFF</button><br>";
+					ret += `場所:${instLocation}<br>`;
+					ret += `<button onclick="window.ELpowButton(this);" value="${ip},${obj[1]},80,31"><i class="fa-solid fa-power-off"></i> OFF</button><br>`;
 				} else {
 					ret = "<div class='tooltip'><img src=\"./img/0291_31.png\" class='el-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + obj[0] + "<br>";
-					ret += "場所:" + instLocation + "<br>";
-					ret += "<button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,30\">ON</button><br>";
+					ret += `場所:${instLocation}<br>`;
+					ret += `<button onclick="window.ELpowButton(this);" value="${ip},${obj[1]},80,30"><i class="fa-solid fa-power-off"></i> ON</button><br>`;
 				}
 				break;
 
@@ -377,11 +377,11 @@ window.addEventListener('DOMContentLoaded', function () {
 				if (operatingStatus === 'ON(30)') {
 					ret = "<div class='tooltip'><img src=\"./img/0602_30.png\" class='el-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + obj[0] + "<br>";
 					ret += "場所:" + instLocation + "<br>";
-					ret += "<button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,31\">OFF</button><br>";
+					ret += "<button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,31\"><i class='fa-solid fa-power-off'></i> OFF</button><br>";
 				} else {
 					ret = "<div class='tooltip'><img src=\"./img/0602_31.png\" class='el-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + obj[0] + "<br>";
 					ret += "場所:" + instLocation + "<br>";
-					ret += "<button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,30\">ON</button><br>";
+					ret += "<button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,30\"><i class='fa-solid fa-power-off'></i> ON</button><br>";
 				}
 				break;
 
@@ -473,6 +473,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	window.ELpowButton = function (btn) {
+		console.log(btn);
 		let cmd = btn.value.split(",");
 		let msg = "1081000005ff01" + cmd[1] + "6101" + cmd[2] + "01" + cmd[3];
 		window.ipc.Elsend(cmd[0], msg);
