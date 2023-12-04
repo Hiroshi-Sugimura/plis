@@ -27,6 +27,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	let inIkeaSecurityCode = document.getElementById('inIkeaSecurityCode');
 	let inIkeaIdentity = document.getElementById('inIkeaIdentity');
 	let inIkeaPsk = document.getElementById('inIkeaPsk');
+	let selIkeaDebugMode = document.getElementById('selIkeaDebugMode');
 	let btnIkeaConfigSet = document.getElementById('btnIkeaConfigSet');
 
 	/** 
@@ -113,7 +114,7 @@ window.addEventListener('DOMContentLoaded', function () {
 					break;
 
 				case 1: // slaveRemote
-					console.log('subIkea.js, slaveRemote:', value);
+					window.IkeaDebugPrint('subIkea.js, slaveRemote:', value);
 					break;
 
 				case 2: // bulb, light
@@ -134,11 +135,11 @@ window.addEventListener('DOMContentLoaded', function () {
 					break;
 
 				case 3: // plug
-					console.log('subIkea.js, plug:', value);
+					window.IkeaDebugPrint('subIkea.js, plug:', value);
 					break;
 
 				case 4: // motion sensor
-					console.log('subIkea.js, plug:', value);
+					window.IkeaDebugPrint('subIkea.js, plug:', value);
 					break;
 
 				case 6: // signal repeater
@@ -155,15 +156,15 @@ window.addEventListener('DOMContentLoaded', function () {
 					break;
 
 				case 8: // sound remote
-					console.log('subIkea.js, sound remote:', value);
+					window.IkeaDebugPrint('subIkea.js, sound remote:', value);
 					break;
 
 				case 10: // air purifier
-					console.log('subIkea.js, air purifier:', value);
+					window.IkeaDebugPrint('subIkea.js, air purifier:', value);
 					break;
 
 				default:
-					console.log('subIkea.js, default value:', value);
+					window.IkeaDebugPrint('subIkea.js, default value:', value);
 					break;
 			}
 			doc += "</section> </div>";  // ボタン設置
@@ -243,14 +244,16 @@ window.addEventListener('DOMContentLoaded', function () {
 
 		// 使用しない
 		if (!inIkeaUse.checked) {
-			window.ipc.IkeaUseStop(inIkeaSecurityCode.value, inIkeaIdentity.value, inIkeaPsk.value);  // ikeaの監視をstopする
+			window.ipc.IkeaUseStop(inIkeaSecurityCode.value, inIkeaIdentity.value, inIkeaPsk.value,
+				selIkeaDebugMode.value == 'true' ? true : false);  // ikeaの監視をstopする
 			return;
 		}
 
 		// 使用する
 		if (inIkeaSecurityCode.value != '' && inIkeaIdentity.value != '' && inIkeaPsk.value != '') {
 			window.addToast('Info', 'Ikea 連携を開始しました。実際の通信まで2分程度お待ちください。');
-			window.ipc.IkeaUse(inIkeaSecurityCode.value, inIkeaIdentity.value, inIkeaPsk.value);
+			window.ipc.IkeaUse(inIkeaSecurityCode.value, inIkeaIdentity.value, inIkeaPsk.value,
+				selIkeaDebugMode.value == 'true' ? true : false);
 		} else {
 			inIkeaUse.checked = false;
 			window.addToast('Info', 'Ikea 連携を開始できません。設定を確認してください。');
@@ -282,6 +285,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		inIkeaSecurityCode.value = arg.securityCode;
 		inIkeaIdentity.value = arg.identity;
 		inIkeaPsk.value = arg.psk;
+		selIkeaDebugMode.value = arg.debug;
 		btnIkeaConfigSet.disabled = false;
 		btnIkeaConfigSet.textContent = '設定';
 
@@ -294,6 +298,17 @@ window.addEventListener('DOMContentLoaded', function () {
 			divControlIkea.style.display = 'none';
 			divIkeaSuggest.style.display = 'block';
 		}
+	};
+
+
+
+	/** 
+	 * @func window.IkeaDebugPrint
+	 * @desc Ikeaモジュールがデバッグなら出力する
+	 * @param {...} values
+	 */
+	window.IkeaDebugPrint = function (param0, ...values) {
+		selIkeaDebugMode.value == 'true' ? console.log(param0, ...values) : 0;
 	};
 
 });

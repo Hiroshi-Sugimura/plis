@@ -264,27 +264,31 @@ contextBridge.exposeInMainWorld('ipc', {
 	//----------------------------------------------------------------------------------------------
 	/**
 	 * @func 
-	 * @desc Ikea関連
-	 * @param {void} 
-	 * @return void
+	 * @desc Ikea開始
+	 * @param {string} _securityCode
+	 * @param {string} _identity
+	 * @param {string} _psk
+	 * @param {string} _debug
 	 */
-	IkeaUse: (_securityCode, _identity, _psk) => {
-		ipcRenderer.invoke('IkeaUse', { securityCode: _securityCode, identity: _identity, psk: _psk });
+	IkeaUse: (_securityCode, _identity, _psk, _debug) => {
+		ipcRenderer.invoke('IkeaUse', { securityCode: _securityCode, identity: _identity, psk: _psk, debug: _debug });
 	},
 
 	/**
 	 * @func 
-	 * @desc Ikea関連
-	 * @param {void} 
-	 * @return void
+	 * @desc Ikea停止
+	 * @param {string} _securityCode
+	 * @param {string} _identity
+	 * @param {string} _psk
+	 * @param {string} _debug
 	 */
-	IkeaUseStop: (_securityCode, _identity, _psk) => {
-		ipcRenderer.invoke('IkeaUseStop', { securityCode: _securityCode, identity: _identity, psk: _psk });
+	IkeaUseStop: (_securityCode, _identity, _psk, _debug) => {
+		ipcRenderer.invoke('IkeaUseStop', { securityCode: _securityCode, identity: _identity, psk: _psk, debug: _debug });
 	},
 
 	/**
 	 * @func 
-	 * @desc Ikea関連
+	 * @desc Ikea制御
 	 * @param {string} key
 	 * @param {string} type
 	 * @param {object} command

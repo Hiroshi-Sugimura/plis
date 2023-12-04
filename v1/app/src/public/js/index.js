@@ -204,12 +204,12 @@ function onLoad() {
 				//----------------------------------------------
 				// Ikea関連
 				case "fclIkea":
-					console.log('main -> fclIkea', c.arg);
+					window.IkeaDebugPrint('main -> fclIkea', c.arg);
 					window.renewFacilitiesIkea(c.arg);
 					break;
 
 				case "renewIkeaConfigView":
-					console.log('main -> renewIkeaConfigView', c.arg);
+					window.IkeaDebugPrint('main -> renewIkeaConfigView', c.arg);
 					window.renewIkeaConfigView(c.arg);
 					break;
 

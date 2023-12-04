@@ -1402,7 +1402,12 @@
 							Identity: <form class="secretBorder inline"><input id="inIkeaIdentity" type="password" value="" size="50" class="secretText" /><span id="inIkeaIdentityButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inIkeaIdentity');"></span></form>
 							<br>
 							PSK: <form class="secretBorder inline"><input id="inIkeaPsk" type="password" value="" size="50" class="secretText" /><span id="inIkeaPskButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inIkeaPsk');"></span></form><br>
-
+							<br>
+							デバッグモード： <select id="selIkeaDebugMode" size="1">
+								<option value="true">有効</option>
+								<option value="false">無効</option>
+							</select> <small>（設定反映のためには再起動が必要です。）</small><br>
+							<br>
 							<button id="btnIkeaConfigSet" onClick="window.btnIkeaConfigSet_Click();">設定</button>
 						</div>
 					</details>
