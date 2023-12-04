@@ -64,8 +64,8 @@ window.addEventListener('DOMContentLoaded', function () {
 				let ip = key;
 				let bridge = value.bridge;
 				let devices = value.devices;
-				doc += "<div class='LinearLayoutChild'> <section class='dev'>";
-				doc += '<div class="tooltip"><img src="./img/hue_bridge.jpg" class="hue-dev" /><div class="description">' + bridge.model.serial + '&#013;&#010;' + bridge.ipaddress + '</div></div><br>' + bridge.name + '<br> </section> </div>';
+
+				H2ControlHue.innerHTML = `Philips Hue : ${bridge.name}`;
 
 				for (const [key, value] of Object.entries(devices)) {
 					if (key == 0) { continue; } // デバイスがないときも、無しというエントリーが入っているので無視する

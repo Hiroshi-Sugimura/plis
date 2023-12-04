@@ -75,11 +75,11 @@ window.addEventListener('DOMContentLoaded', function () {
 					switch (devState.power) {
 						case 'on':
 							icon = `<span class='icon_layers'><i class='fa-regular fa-square switchBot-dev icon_layers_icon'></i><span class='icon_layers_text_black'>ON</span></span>`
-							control = `<button onClick="window.SwitchBotBot('${d.deviceId}', 'turnOff', 'default');">OFF</button>`;
+							control = `<button onClick="window.SwitchBotBot('${d.deviceId}', 'turnOff', 'default');"><i class="fa-solid fa-power-off"></i> OFF</button>`;
 							break;
 						case 'off':
 							icon = `<span class='icon_layers'><i class='fa-regular fa-square switchBot-dev icon_layers_icon'></i><span class='icon_layers_text_black'>OFF</span></span>`
-							control = `<button onClick="window.SwitchBotBot('${d.deviceId}', 'turnOn', 'default');">ON</button>`;
+							control = `<button onClick="window.SwitchBotBot('${d.deviceId}', 'turnOn', 'default');"><i class="fa-solid fa-power-off"></i> ON</button>`;
 							break;
 					}
 
@@ -205,10 +205,10 @@ window.addEventListener('DOMContentLoaded', function () {
 				case 'Plug Mini (US)':
 				case 'Plug Mini (JP)':
 					if (devState.power == 'on') {
-						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOff', 'default');">OFF</button>`;
+						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOff', 'default');"><i class="fa-solid fa-power-off"></i> OFF</button>`;
 						icon = 'fa-plug-circle-bolt';
 					} else {
-						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOff', 'default');">ON</button>`;
+						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOff', 'default');"><i class="fa-solid fa-power-off"></i> ON</button>`;
 						icon = 'fa-plug';
 					}
 
@@ -226,10 +226,10 @@ window.addEventListener('DOMContentLoaded', function () {
 
 				case 'Plug':
 					if (devState.power == 'on') {
-						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOff', 'default');">OFF</button>`;
+						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOff', 'default');"><i class="fa-solid fa-power-off"></i> OFF</button>`;
 						icon = 'fa-plug-circle-bolt';
 					} else {
-						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOn', 'default');">OFF</button>`;
+						control = `<button onClick="window.SwitchBotPlug('${d.deviceId}', 'turnOn', 'default');"><i class="fa-solid fa-power-off"></i> OFF</button>`;
 						icon = 'fa-plug';
 					}
 

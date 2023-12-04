@@ -124,10 +124,10 @@ window.addEventListener('DOMContentLoaded', function () {
 
 					if (value.lightList[0].onOff) { // true = on
 						icon = 'fa-regular fa-lightbulb';
-						control = `<button onClick="window.btnIkeaBulbOnOff_Click('${key}', 'light', 'off');">OFF</button>`;
+						control = `<button onClick="window.btnIkeaBulbOnOff_Click('${key}', 'light', 'off');"><i class="fa-solid fa-power-off"></i> OFF</button>`;
 					} else { // false = off
 						icon = 'fa-solid fa-lightbulb';
-						control = `<button onClick="window.btnIkeaBulbOnOff_Click('${key}', 'light', 'on');">ON</button>`;
+						control = `<button onClick="window.btnIkeaBulbOnOff_Click('${key}', 'light', 'on');"><i class="fa-solid fa-power-off"></i> ON</button>`;
 					}
 
 					doc += `<div class='tooltip'><i class='${icon} ikea-dev'></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive}<br>${name}<br>${control}`;
@@ -148,11 +148,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 				case 7: // blind
 					// console.log('subIkea.js, blind value:', value);
-					// control = `<button onClick="window.btnIkeaBlindUpDown_Click('${key}', 'blind', 'up');">Up</button>`
-					// + `<button onClick="window.btnIkeaBlindUpDown_Click('${key}', 'blind', 'down');">Down</button>`;
-
-					control = `<form class='inline'><input type='range' id="inIkeaBlindApertureRange_${key}" value='${value.blindList[0].position}' min='0' max='100' step='5' onChange='window.inIkeaBlindApertureRange_Change("${key}", this.value);'>`
-						+ `<input type='number' id="inIkeaBlindApertureNumber_${key}" value='${value.blindList[0].position}' min='0' max='100' step='5' onChange='window.inIkeaBlindApertureNumber_Change("${key}", this.value);'></form>`
+					control = `<input type='range' id="inIkeaBlindApertureRange_${key}" value='${value.blindList[0].position}' min='0' max='100' step='5' onChange='window.inIkeaBlindApertureRange_Change("${key}", this.value);'><br>`
+						+ `開度: <input type='number' id="inIkeaBlindApertureNumber_${key}" value='${value.blindList[0].position}' min='0' max='100' step='5' onChange='window.inIkeaBlindApertureNumber_Change("${key}", this.value);'>`
 
 					doc += `<div class='tooltip'><i class="fa-solid fa-warehouse ikea-dev"></i><div class='description'>${makerCode}&#013;&#010;</div></div>${alive} ${battery}<br>${name}<br>${control}<br>`;
 					break;
