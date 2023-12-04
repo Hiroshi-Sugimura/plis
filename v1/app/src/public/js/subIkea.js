@@ -104,7 +104,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 			let control = ''; // 制御できるものがあれば
 
-			doc += "<div class='LinearLayoutChild'> <section>";
+			doc += "<div class='LinearLayoutChild'> <section class='dev'>";
 
 			switch (type) {
 				case 0:  // remote controller

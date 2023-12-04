@@ -68,7 +68,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			let batteryIcon = '';
 			let control = '';
 			// console.log('window.renewFacilitiesSwitchBot() d:', d, 'devState:', devState);
-			doc += "<div class='LinearLayoutChild'> <section>";
+			doc += "<div class='LinearLayoutChild'> <section class='dev'>";
 
 			switch (d.deviceType) {
 				case 'Bot':

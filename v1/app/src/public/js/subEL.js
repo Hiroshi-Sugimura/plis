@@ -92,7 +92,7 @@ window.addEventListener('DOMContentLoaded', function () {
 					let obj = eoj.split(/\(|\)/);  // マルかっこで分割
 					if (obj[1] === '0ef001') { return; } // Node Profileはコントローラとしては無視, eachではcontinueではなくreturn
 
-					doc += "<div class='LinearLayoutChild'> <section>"
+					doc += "<div class='LinearLayoutChild'> <section class='dev'>"
 						+ `<span id='ELSettingsButton' class='fa-solid fa-gear el-settings-btn' onclick='window.ELSettings("${ip}", "${eoj}");'> </span>`
 						+ window.createControlELButton(facilitiesEL, ip, eoj)
 						+ "</section> </div>";  // ボタン設置

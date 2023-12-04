@@ -1090,33 +1090,6 @@ input[name="haltab_item"] {
 	height: 22px;
 }
 
-.el-dev {
-	height: 75px;
-}
-
-.el-settings-btn {
-	position: absolute;
-	right: 10px;
-}
-
-.hue-dev {
-	height: 100px;
-}
-
-.hue-settings-btn {
-	position: absolute;
-	right: 10px;
-}
-
-.ikea-dev {
-	height: 30px;
-}
-
-
-.switchBot-dev {
-	height: 30px;
-}
-
 .dev-type-icon {
 	position: absolute;
 	left: 10px;
@@ -1138,6 +1111,61 @@ input[name="haltab_item"] {
 .disabled {
 	background-color: #d9d9d9;
 }
+
+
+
+/*********************************************************************/
+/* control tab */
+
+section.dev {
+	position: relative;
+	background-color: var(--inner-bg);
+	margin: 1px;
+	padding: 10px;
+	/* 影付け */
+	border: 1px solid var(--shadow);
+	-moz-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+	-webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+	box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+	width: 120px;
+	min-height: 120px;
+
+	filter: progid:DXImageTransform.Microsoft.Shadow(color=#777777, direction=0, strength=3, enabled=true);
+	/* IE以外なら丸角も */
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+}
+
+.el-dev {
+	height: 50px;
+}
+
+.el-settings-btn {
+	position: absolute;
+	right: 10px;
+}
+
+.hue-dev {
+	height: 30px;
+}
+
+.hue-settings-btn {
+	position: absolute;
+	right: 10px;
+}
+
+.ikea-dev {
+	height: 30px;
+}
+
+
+.switchBot-dev {
+	height: 30px;
+}
+
+
+
 
 /*********************************************************************/
 /* tooltip */

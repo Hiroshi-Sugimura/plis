@@ -64,7 +64,7 @@ window.addEventListener('DOMContentLoaded', function () {
 				let ip = key;
 				let bridge = value.bridge;
 				let devices = value.devices;
-				doc += "<div class='LinearLayoutChild'> <section>";
+				doc += "<div class='LinearLayoutChild'> <section class='dev'>";
 				doc += '<div class="tooltip"><img src="./img/hue_bridge.jpg" class="hue-dev" /><div class="description">' + bridge.model.serial + '&#013;&#010;' + bridge.ipaddress + '</div></div><br>' + bridge.name + '<br> </section> </div>';
 
 				for (const [key, value] of Object.entries(devices)) {
@@ -74,18 +74,18 @@ window.addEventListener('DOMContentLoaded', function () {
 					// value is details
 					let devName = key + ':' + value.name;
 					let makerCode = value.manufacturername;
-					doc += "<div class='LinearLayoutChild'> <section>";
+					doc += "<div class='LinearLayoutChild'> <section class='dev'>";
 
 					if (value.state) {
 						let operatingStatus = value.state.on;
 						if (operatingStatus == true) {
 							doc += `<a href='javascript: window.openHueRenameDlg("${key}");'><span class='fa-solid fa-gear hue-settings-btn'> </span></a>`;
-							doc += "<div class='tooltip'><img src=\"./img/hue_on.png\" class='hue-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + devName + "<br>" +
-								'<button onclick="HuePowButton(this)" value="' + key + ',off">OFF</button><br>';
+							doc += `<div class='tooltip'><i class='fa-regular fa-lightbulb hue-dev'></i><div class='description'>${makerCode}&#013;&#010;${ip}</div></div><br>${devName}<br>`
+								+ `<button onclick='HuePowButton(this)' value='${key},off'>OFF</button><br>`;
 						} else {
 							doc += `<a href='javascript: window.openHueRenameDlg("${key}");'><span class='fa-solid fa-gear hue-settings-btn'> </span></a>`;
-							doc += "<div class='tooltip'><img src=\"./img/hue_off.png\" class='hue-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + devName + "<br>" +
-								'<button onclick="HuePowButton(this)" value="' + key + ',on">ON</button><br>';
+							doc += `<div class='tooltip'><i class='fa-solid fa-lightbulb hue-dev'></i><div class='description'>${makerCode}&#013;&#010;${ip}</div></div><br>${devName}<br>`
+								+ `<button onclick='HuePowButton(this)' value='${key},on'>ON</button><br>`;
 						}
 					}
 					doc += "</section> </div>";  // ボタン設置
