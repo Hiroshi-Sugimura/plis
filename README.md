@@ -22,7 +22,7 @@ PLISは個人利用を前提に提供しております。
 
 PLISのアプリケーション及びソースコードはMITライセンスにて配布しています。
 
-[LICENSE file](https://github.com/Hiroshi-Sugimura/plis/LICENSE)
+[LICENSE file](https://github.com/Hiroshi-Sugimura/plis/blob/main/LICENSE)
 
 正確には原文を読んで欲しいのですが、簡単に表現すれば次のようになります。
 
