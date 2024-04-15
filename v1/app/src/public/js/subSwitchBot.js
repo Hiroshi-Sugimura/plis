@@ -110,7 +110,7 @@ window.addEventListener('DOMContentLoaded', function () {
 					} else if (devState.battery >= 40) {
 						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
 					} else if (devState.battery >= 20) {
-						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-quater icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-quarter icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
 					} else {
 						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-empty icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
 					}
@@ -156,7 +156,7 @@ window.addEventListener('DOMContentLoaded', function () {
 					} else if (devState.battery >= 40) {
 						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-half icon_layers_icon'></i><span class='icon_layers_counter_green'>${devState.battery}</span></span>`
 					} else if (devState.battery >= 20) {
-						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-quater icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
+						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-quarter icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
 					} else {
 						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-empty icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
 					}
@@ -390,7 +390,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
+	/**
 	 * @func window.SwitchBotDebugPrint
 	 * @desc SwitchBotモジュールがデバッグなら出力する
 	 * @param {...} values
