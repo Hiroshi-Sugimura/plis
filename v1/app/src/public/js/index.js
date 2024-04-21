@@ -377,7 +377,7 @@ function onLoad() {
 
 						default:
 							// window.alert('設定を保存しました。');
-							window.addToast('Info', '${c.arg} 設定を保存しました。');
+							window.addToast('Info', `${c.arg} 設定を保存しました。`);
 							break;
 					}
 					break;

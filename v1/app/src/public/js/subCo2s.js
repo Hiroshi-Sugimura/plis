@@ -34,8 +34,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc Co2s デバイス情報のrenew
 	 * @param {void}
 	 * @return {void}
@@ -49,6 +49,8 @@ window.addEventListener('DOMContentLoaded', function () {
 			return;
 		}
 
+		console.log(facilitiesCo2s);
+
 		spanCo2sPlace.innerHTML = inCo2sPlace.value;
 		spanCo2sTime.innerHTML = facilitiesCo2s.time;
 
@@ -58,8 +60,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc Co2s USBと切断
 	 * @param {void}
 	 * @return {void}
@@ -71,13 +73,13 @@ window.addEventListener('DOMContentLoaded', function () {
 		inCo2sUse.checked = false;
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 左のボタンからグラフ制御
 	 * @param {void}
 	 * @return {void}
 	 */
-	window.Co2sDocSectionClicked = function (t) {
+	window.co2sDocSectionClicked = function (t) {
 		// console.log('t:', t);
 
 		console.log('data:', myChartCo2s._metasets);
@@ -95,8 +97,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	//----------------------------------------------------------------------------------------------
 	// Co2s config
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 設定ボタン
 	 * @param {void}
 	 * @return {void}
@@ -112,8 +114,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 設定完了通知
 	 * @param {void}
 	 * @return {void}
@@ -125,8 +127,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast('Info', 'Co2s 設定を保存しました。');
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc mainプロセスから設定値をもらったので画面を更新
 	 * @param {void}
 	 * @return {void}
@@ -168,8 +170,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		'18:00', '18:15', '18:30', '18:45', '19:00', '19:15', '19:30', '19:45', '20:00', '20:15', '20:30', '20:45',
 		'21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45', '23:00', '23:15', '23:30', '23:45', '24:00']; */
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc newLegendClickHandler
 	 * @memberof subCo2s
 	 * @param {void}
@@ -287,8 +289,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	// 表示データ（動的）
 	let datasetsCo2s = [];
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc renewCanvasCo2s
 	 * @memberof subCo2s
 	 * @param {void}
@@ -316,8 +318,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//////////////////////////////////////////////////////////////////
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc データをもらって画面更新
 	 * @param {void}
 	 * @return {void}
