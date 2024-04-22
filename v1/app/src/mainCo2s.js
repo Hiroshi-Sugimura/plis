@@ -34,7 +34,7 @@ let mainCo2s = {
 	storeJob: null,
 
 	//////////////////////////////////////////////////////////////////////
-	// 
+	//
 	/**
 	 * @func start
 	 * @desc Co2sセンサの処理開始
@@ -132,7 +132,7 @@ let mainCo2s = {
 	 * @func stop
 	 * @desc stop
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -154,7 +154,7 @@ let mainCo2s = {
 	 * @func stopWithoutSave
 	 * @desc stopWithoutSave
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -173,7 +173,7 @@ let mainCo2s = {
 	 * @func setConfig
 	 * @desc setConfig
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -191,7 +191,7 @@ let mainCo2s = {
 	 * @func getConfig
 	 * @desc getConfig
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -203,7 +203,7 @@ let mainCo2s = {
 	 * @func getPersist
 	 * @desc getPersist
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -219,7 +219,7 @@ let mainCo2s = {
 	 * @func getCases
 	 * @desc getCases
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -266,7 +266,7 @@ let mainCo2s = {
 	 * @func getRows
 	 * @desc getRows
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -308,7 +308,7 @@ let mainCo2s = {
 	 * @func getTodayRoomEnv
 	 * @desc getTodayRoomEnv
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -356,7 +356,7 @@ let mainCo2s = {
 	 * @func sendTodayRoomEnv
 	 * @desc sendTodayRoomEnv
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
