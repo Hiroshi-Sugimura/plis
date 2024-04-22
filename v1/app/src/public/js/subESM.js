@@ -46,7 +46,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	let divControlESM = document.getElementById('divControlESM');
 
 	//----------------------------------------------------------------------------------------------
-	/** 
+	/**
 	 * @func convRT
 	 * @desc R相、T相を数値に
 	 * @memberof subESM
@@ -58,7 +58,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		return parseFloat(n).toFixed(2);
 	};
 
-	/** 
+	/**
 	 * @func window.renewESM
 	 * @desc ESM デバイス情報のrenew
 	 * @param {void}
@@ -106,7 +106,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
-	/** 
+	/**
 	 * @func window.esmDocSectionClicked
 	 * @desc 左のボタンからグラフ制御
 	 * @param {void}
@@ -123,7 +123,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		myChartESM.update();
 	};
 
-	/** 
+	/**
 	 * @func window.disconnectedESM
 	 * @desc ESM USBと切断
 	 * @param {void}
@@ -137,7 +137,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	//----------------------------------------------------------------------------------------------
-	/** 
+	/**
 	 * @func window.btnESMConfigSet_Click
 	 * @desc ESM config
 	 * @param {void}
@@ -146,6 +146,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	window.btnESMConfigSet_Click = function (checkBox) {
 		if (inESMUse.checked == false) {
 			window.ipc.ESMnotUse(inDongleType.value,
+				inConnectionType.value,
 				inESMId.value,
 				inESMPassword.value,
 				selESMDebugMode.value == 'true' ? true : false);  // ESM 連携停止
@@ -163,12 +164,12 @@ window.addEventListener('DOMContentLoaded', function () {
 				inConnectionType.value,
 				inESMId.value,
 				inESMPassword.value,
-				selESMDebugMode.value == 'true' ? true : false);
+				selESMDebugMode.value == 'true' ? true : false);  // ESM 連携開始
 			window.addToast('Info', '電力スマートメーターとの連携を開始しました。実際の通信まで2分程度お待ちください。');
 		}
 	};
 
-	/** 
+	/**
 	 * @func window.ESMConfigSaved
 	 * @desc 設定完了
 	 */
@@ -179,7 +180,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast('Info', 'ESM 設定を保存しました。');
 	};
 
-	/** 
+	/**
 	 * @func window.renewESMConfigView
 	 * @desc mainプロセスから設定値をもらったので画面を更新
 	 * @param {object} arg - config
@@ -208,7 +209,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
+	/**
 	 * @func window.ESMDebugLog
 	 * @desc ESMモジュールがデバッグなら出力する
 	 * @param {...} values
@@ -328,7 +329,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	// 表示データ（動的）
 	let datasetsESM = [];
 
-	/** 
+	/**
 	 * @func renewCanvasESM
 	 * @desc renewCanvasESM
 	 * @memberof subESM
@@ -348,7 +349,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//////////////////////////////////////////////////////////////////
-	/** 
+	/**
 	 * @func window.renewEnergy
 	 * @desc データをもらって画面更新
 	 * @param {array} _envDataArray
