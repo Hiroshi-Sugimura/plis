@@ -465,8 +465,8 @@ let mainAutoAssessment = {
 		mainAutoAssessment.isRun = true;
 		sendIPCMessage = _sendIPCMessage;
 
-		// mainAutoAssessment.observationJob = cron.schedule('0 0 9 * * *', async () => {  // 本番用の AM9:00
-		mainAutoAssessment.observationJob = cron.schedule('*/10 * * * * *', async () => {  // debug用の10秒毎
+		mainAutoAssessment.observationJob = cron.schedule('0 0 9 * * *', async () => {  // 本番用の AM9:00
+		// mainAutoAssessment.observationJob = cron.schedule('*/10 * * * * *', async () => {  // debug用の10秒毎
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.start().observationJob') : 0;
 
 			let today = getToday();
