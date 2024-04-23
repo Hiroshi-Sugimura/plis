@@ -26,7 +26,7 @@ let config = {
 
 const minorSchema = {
 	date: "",
-	assessmentSource: "HAL",
+	assessmentSource: "PLIS",
 	r_1_1: null,
 	r_1_2: null,
 	r_1_3: null,
@@ -153,14 +153,19 @@ let mainAutoAssessment = {
 	/**
 	 * @func lastMR2mr
 	 * @desc 以前のMinorResultsからMinorResults（1日経過処理）
-	 * @async
+	 * @param {Object} mrRow
+	 * @param {Object} mr
+	 * @return {Object}
 	 */
-	lastMR2mr: async function (mrRow, mr) {
-
-		await Object.keys(mr).forEach(async function (key) {
-			// await console.log( `mr[${key}] == ${mr[key]}  <==  mrRow[${key}] == ${mrRow[key]}` );
+	lastMR2mr: function (mrRow, mr) {
+		// console.log('mr:', mr, 'mrRow:', mrRow)
+		Object.keys(mr).forEach(function (key) {
 			if (mr[key] == null) {
-				mr[key] = mrRow[key] - 1;
+				if (mrRow[key] > 0) {
+					mr[key] = mrRow[key] - 1;
+				} else {
+					mr[key] = 0;
+				}
 			}
 		});
 
@@ -172,6 +177,7 @@ let mainAutoAssessment = {
 	 * @func calcMajorResults
 	 * @desc MinorResultsから MajorResultsを計算する
 	 * @async
+	 * @param {Object} mr
 	 */
 	calcMajorResults: function (mr) {
 		let clothing_sum = 0;
@@ -311,7 +317,9 @@ let mainAutoAssessment = {
 				where: { createdAt: { [Op.like]: yesterday + "%" } },
 				order: [["createdAt", "desc"]]
 			});
-			if (qaRow) { // アンケートがあれば
+
+			// アンケートがあればその得点を確保
+			if (qaRow) {
 				minorResults = await mainAutoAssessment.qa2mr(qaRow, minorResults);
 				// console.log( 'There is questionnaire.' );
 			}
@@ -329,13 +337,10 @@ let mainAutoAssessment = {
 				},
 				order: [["createdAt", "desc"]]
 			});
-			// if (iotHumidityRows.length != 0) { // データがあれば
-			if (iotHumidityRows) { // データが無くても実行する（debug用）
-				// 3=住居, 8=湿度
-				minorResults = await mainAutoAssessment.humidityPoint(iotHumidityRows, minorResults);
-				// console.log(minorResults.r_3_8);  // 点数の確認
-			}
 
+			if (iotHumidityRows.length != 0) { // 3=住居, 8=湿度
+				minorResults.r_3_8 = await mainAutoAssessment.humidityPoint(iotHumidityRows, minorResults);
+			}
 
 			//--------------------------------------------------------
 			// nullの場所だけ、前日以前の得点を利用する。各得点は-1することで放置していると0点になる
@@ -345,14 +350,16 @@ let mainAutoAssessment = {
 			let mrRow = await IOT_MinorResultsModel.findOne({
 				order: [["date", "desc"]]
 			});
-			if (mrRow) { // 以前のMinorResultsがあれば
-				minorResults = await mainAutoAssessment.lastMR2mr(mrRow, minorResults);
-				// console.log( 'There is latest MinorResults.' );
+
+			// 以前のMinorResultsがあれば null を旧得点の-1でうめる
+			if (mrRow) {
+				minorResults = mainAutoAssessment.lastMR2mr(mrRow, minorResults);
+				// console.log('Complemented latest MinorResults:', minorResults);
 			}
 
 			// それでも残るnullは0点
 			// await console.log('Null fix');
-			await Object.keys(minorResults).forEach(function (key) {
+			Object.keys(minorResults).forEach(function (key) {
 				if (minorResults[key] == undefined || minorResults[key] == null) {
 					minorResults[key] = 0;
 				}
@@ -425,7 +432,7 @@ let mainAutoAssessment = {
 				majorResults.createdAt = now;
 				majorResults.updatedAt = now;
 				majorResults.date = today;
-				majorResults.assessmentSource = 'HAL';
+				majorResults.assessmentSource = 'PLIS';
 				// console.log('Create IOT_MajorResultsModel:', majorResults);
 				await IOT_MajorResultsModel.create(majorResults);
 			}
@@ -458,8 +465,8 @@ let mainAutoAssessment = {
 		mainAutoAssessment.isRun = true;
 		sendIPCMessage = _sendIPCMessage;
 
-		mainAutoAssessment.observationJob = cron.schedule('0 0 9 * * *', async () => {  // 本番用の AM9:00
-			// mainAutoAssessment.observationJob = cron.schedule('*/10 * * * * *', async () => {  // debug用の10秒毎
+		// mainAutoAssessment.observationJob = cron.schedule('0 0 9 * * *', async () => {  // 本番用の AM9:00
+		mainAutoAssessment.observationJob = cron.schedule('*/10 * * * * *', async () => {  // debug用の10秒毎
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.start().observationJob') : 0;
 
 			let today = getToday();
