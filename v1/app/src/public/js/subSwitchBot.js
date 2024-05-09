@@ -57,7 +57,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			return; // 機器情報なければやらない、存在も消す
 		}
 
-		spanSwitchBotTime.innerHTML = `${moment().format("YYYY/MM/DD HH:mm:ss")} 取得, ${arg.count} calls/day`;
+		spanSwitchBotTime.innerHTML = `${moment().format("YYYY-MM-DD HH:mm:ss")} 取得, ${arg.count} calls/day`;
 
 		let devs = facilitiesSwitchBot.deviceList; // array
 		for (const d of devs) {
@@ -910,7 +910,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			let envDataArray = envDataObj[meter];
 			// console.log( 'window.renewRoomEnvSwitchBot() meter:', meter, ', envDataArray:', envDataArray );
 
-			spanSwitchBotEnvTime.innerHTML = moment().format("YYYY/MM/DD HH:mm:ss取得");
+			spanSwitchBotEnvTime.innerHTML = moment().format("YYYY-MM-DD HH:mm:ss取得");
 
 			if (envDataArray) {
 				let oTemperature = new Array();
@@ -944,7 +944,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			let envDataArray = envDataObj[plug];
 			// console.log( 'window.renewRoomEnvSwitchBot() plug:', plug, ', envDataArray:', envDataArray );
 
-			spanSwitchBotPowerTime.innerHTML = moment().format("YYYY/MM/DD HH:mm:ss取得");
+			spanSwitchBotPowerTime.innerHTML = moment().format("YYYY-MM-DD HH:mm:ss取得");
 
 			if (envDataArray) {
 				let oWatt = new Array();
