@@ -1,0 +1,55 @@
+{
+    "source": {
+        "include": [
+            "../app/src"
+        ],
+        "exclude": [
+            "../app/src/node_modules"
+        ],
+        "includePattern": ".+\\.js(doc)?$",
+        "excludePattern": "(^|\\/|\\\\)_"
+    },
+    "opts": {
+        "encoding": "utf8",
+        "destination": "./jsdoc",
+        "readme": "../README.md",
+        "recurse": true,
+        "template": "node_modules/docdash"
+    },
+    "tags": {
+        "allowUnknownTags": true,
+        "dictionaries": [
+            "jsdoc",
+            "closure"
+        ]
+    },
+    "docdash": {
+        "sectionOrder": [
+            "Namespaces",
+            "Classes",
+            "Modules",
+            "Externals",
+            "Events",
+            "Mixins",
+            "Tutorials",
+            "Interfaces"
+        ],
+        "search": true,
+        "collapse": true,
+        "wrap": false,
+        "menu": {
+            "Website": {
+                "href": "https://hiroshi-sugimura.github.io/plis/",
+                "target": "_blank",
+                "class": "menu-item",
+                "id": "forum_link"
+            },
+            "Github": {
+                "href": "https://github.com/Hiroshi-Sugimura/plis",
+                "target": "_blank",
+                "class": "menu-item",
+                "id": "website_link"
+            }
+        }
+    }
+}
