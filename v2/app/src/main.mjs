@@ -18,7 +18,7 @@ import { sqlite3 } from './models/localDBModels.cjs';   // DBデータと連携
 
 import {mainSystem} from './mainSystem.mjs';  // System configの管理
 import {mainAutoAssessment} from './mainAutoAssessment.mjs';  // 成績付け
-import {mainUser} from './mainUser';     // User configの管理
+import {mainUser} from './mainUser.mjs';     // User configの管理
 // const mainArp = require('./mainArp');     // arpの管理
 // const mainEL = require('./mainEL');      // ELの管理
 // const mainESM = require('./mainESM'); // スマートメータの管理
@@ -62,11 +62,11 @@ function createWindow () {
       preload: path.join(__dirname, 'preload.js')
     }
   });
-  mainWindow.loadFile('tabbar.html');
+  mainWindow.loadFile('src/tabbar.html');
 
   mainWindow.webContents.on('did-finish-load', () => {
     setupView('https://electronjs.org');
-    setupViewLocal('local.html');
+    setupViewLocal('src/local.html');
   });
 
   mainWindow.on('resize', () => {
