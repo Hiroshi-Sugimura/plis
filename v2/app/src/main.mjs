@@ -21,7 +21,7 @@ import {mainAutoAssessment} from './mainAutoAssessment.mjs';  // 成績付け
 import {mainUser} from './mainUser.mjs';     // User configの管理
 import {mainArp} from './mainArp.mjs';     // arpの管理
 import {mainEL} from './mainEL.mjs';      // ELの管理
-// const mainESM = require('./mainESM'); // スマートメータの管理
+import {mainESM} from './mainESM.mjs'; // スマートメータの管理
 // const mainHue = require('./mainHue');     // hueの管理
 // const mainIkea = require('./mainIkea');    // Ikeaの管理
 // const mainNetatmo = require('./mainNetatmo');  // netatmoの管理

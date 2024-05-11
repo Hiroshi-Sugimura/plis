@@ -8,15 +8,27 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-const fs = require('fs');
-const path = require('path');
-const cron = require('node-cron');
-const Store = require('electron-store');
-const eSM = require('e-smartmeter-echonet-lite');
-const EL = require('echonet-lite');
-const ELconv = require('echonet-lite-conv');
-const { Sequelize, Op, esmdataModel, esmrawModel, electricEnergyModel } = require('./models/localDBModels');   // DBデータと連携
-const { objectSort, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
+// const fs = require('fs');
+// const path = require('path');
+// const cron = require('node-cron');
+// const Store = require('electron-store');
+// const eSM = require('e-smartmeter-echonet-lite');
+// const EL = require('echonet-lite');
+// const ELconv = require('echonet-lite-conv');
+// const { Sequelize, Op, esmdataModel, esmrawModel, electricEnergyModel } = require('./models/localDBModels');   // DBデータと連携
+// const { objectSort, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
+import { fileURLToPath } from "node:url";
+import path from 'node:path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import Store from 'electron-store';
+import cron from 'node-cron';
+import EL from 'echonet-lite';
+import ELconv from 'echonet-lite-conv';
+import { Sequelize, Op, esmdataModel, esmrawModel, electricEnergyModel } from './models/localDBModels.cjs';   // DBデータと連携
+import { objectSort, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
+
+
 
 // 基礎設定
 const appDir = process.env.NODE_ENV === 'development' ? __dirname : __dirname;
@@ -117,7 +129,7 @@ let mainESM = {
 	 * @func stop
 	 * @desc シリアルポートを開放して連携終了、設定や現在の数値を永続化する
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 */
 	stop: async function () {
 		mainESM.isRun = false;
@@ -134,7 +146,7 @@ let mainESM = {
 	 * @func stopWithoutSave
 	 * @desc シリアルポートを開放して連携終了、設定や現在の数値を永続化しない
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @throw error
 	 */
 	stopWithoutSave: async function () {
@@ -168,7 +180,7 @@ let mainESM = {
 	 * @func getConfig
 	 * @desc 現在の設定を取得する
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return config config
 	 */
 	getConfig: function () {
@@ -179,7 +191,7 @@ let mainESM = {
 	 * @func getPersist
 	 * @desc 現在のデータを取得する
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return persist persist
 	 */
 	getPersist: function () {
@@ -194,7 +206,7 @@ let mainESM = {
 	 * @func observe
 	 * @desc スマートメータを監視する、初回受信時にトリガー
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -244,7 +256,7 @@ let mainESM = {
 	 * @func stopObservation
 	 * @desc 監視をやめる
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	stopObservation: function () {
@@ -265,7 +277,7 @@ let mainESM = {
 	 * @func insertDB
 	 * @desc 現在のデータをDBにinsertする、基本的には１分に１回呼ばれる
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	insertDB: async () => {
@@ -365,7 +377,7 @@ let mainESM = {
 	 * @func renewPortList
 	 * @desc シリアルポートリストを取得する
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return Array シリアルポートリスト
 	 * @throw error
 	 */
@@ -495,7 +507,7 @@ let mainESM = {
 	 * @func getRows
 	 * @desc DBから今日のデータを取得
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return Array[] rows
 	 */
 	getRows: async function () {
@@ -592,7 +604,7 @@ let mainESM = {
 	 * @func sendTodayEnergy
 	 * @desc 現在持っているデータをRendererに送る
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -610,7 +622,8 @@ let mainESM = {
 };
 
 
-module.exports = mainESM;
+// module.exports = mainESM;
+export {mainESM};
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////
