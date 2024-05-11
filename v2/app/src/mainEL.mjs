@@ -4,20 +4,38 @@
 /**
  * @module mainEL
  */
-'use strict'
+// 'use strict'
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-const fs = require('fs');
-const path = require('path');
-const Store = require('electron-store');
-const cron = require('node-cron');  // 監視はechonet-liteモジュールに頼らないで自前でやる
-const EL = require('echonet-lite');
-const ELconv = require('echonet-lite-conv');
-const mainArp = require('./mainArp');     // arpの管理
-const mainSystem = require('./mainSystem');     // systemの管理(network部分を利用)
-const { Sequelize, Op, elrawModel, eldataModel, electricEnergyModel } = require('./models/localDBModels');   // DBデータと連携
-const { objectSort, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
+// const fs = require('fs');
+// const path = require('path');
+import { fileURLToPath } from "node:url";
+import path from 'node:path';
+import os from 'os';
+import fs from 'node:fs/promises';
+
+// const Store = require('electron-store');
+import Store from 'electron-store';
+// const cron = require('node-cron');  // 監視はechonet-liteモジュールに頼らないで自前でやる
+import cron from 'node-cron';
+// const EL = require('echonet-lite');
+import EL from 'echonet-lite';
+// const ELconv = require('echonet-lite-conv');
+import ELconv from 'echonet-lite-conv';
+// const mainArp = require('./mainArp');     // arpの管理
+import {mainArp} from './mainArp.mjs';     // arpの管理
+// const mainSystem = require('./mainSystem');     // systemの管理(network部分を利用)
+import {mainSystem} from './mainSystem.mjs';     // systemの管理(network部分を利用)
+// const { Sequelize, Op, elrawModel, eldataModel, electricEnergyModel } = require('./models/localDBModels');   // DBデータと連携
+import { Sequelize, Op, elrawModel, eldataModel, electricEnergyModel } from './models/localDBModels.cjs';   // DBデータと連携
+// const { objectSort, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
+import { objectSort, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 
 // 基礎設定
 const appDir = process.env.NODE_ENV === 'development' ? __dirname : __dirname;
@@ -685,7 +703,8 @@ let mainEL = {
 };
 
 
-module.exports = mainEL;
+// module.exports = mainEL;
+export {mainEL};
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////

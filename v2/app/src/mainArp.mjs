@@ -8,11 +8,17 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-const Store = require('electron-store');
-const arp = require('@network-utils/arp-lookup');
-const cron = require('node-cron');
-require('date-utils'); // for log
-const { Sequelize, sqlite3, arpModel } = require('./models/localDBModels');   // DBデータと連携
+// const Store = require('electron-store');
+import Store from 'electron-store';
+// const arp = require('@network-utils/arp-lookup');
+import arp from '@network-utils/arp-lookup';
+// const cron = require('node-cron');
+import cron from 'node-cron';
+// require('date-utils'); // for log
+import * as dateUtils from 'date-utils';
+// const { Sequelize, sqlite3, arpModel } = require('./models/localDBModels');   // DBデータと連携
+import { Sequelize, sqlite3, arpModel } from './models/localDBModels.cjs';   // DBデータと連携
+
 
 const store = new Store();
 let config = {
@@ -191,7 +197,8 @@ let mainArp = {
 };
 
 
-module.exports = mainArp;
+// module.exports = mainArp;
+export {mainArp};
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////
