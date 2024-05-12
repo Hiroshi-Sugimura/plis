@@ -13,7 +13,8 @@
 import { fileURLToPath } from "node:url";
 import path from 'node:path';
 import os from 'os';
-import fs from 'node:fs/promises';
+//import fs from 'node:fs/promises';
+import fs from 'fs';
 
 // const Store = require('electron-store');
 import Store from 'electron-store';
@@ -24,9 +25,9 @@ import EL from 'echonet-lite';
 // const ELconv = require('echonet-lite-conv');
 import ELconv from 'echonet-lite-conv';
 // const mainArp = require('./mainArp');     // arpの管理
-import {mainArp} from './mainArp.mjs';     // arpの管理
+import { mainArp } from './mainArp.mjs';     // arpの管理
 // const mainSystem = require('./mainSystem');     // systemの管理(network部分を利用)
-import {mainSystem} from './mainSystem.mjs';     // systemの管理(network部分を利用)
+import { mainSystem } from './mainSystem.mjs';     // systemの管理(network部分を利用)
 // const { Sequelize, Op, elrawModel, eldataModel, electricEnergyModel } = require('./models/localDBModels');   // DBデータと連携
 import { Sequelize, Op, elrawModel, eldataModel, electricEnergyModel } from './models/localDBModels.cjs';   // DBデータと連携
 // const { objectSort, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
@@ -704,7 +705,7 @@ let mainEL = {
 
 
 // module.exports = mainEL;
-export {mainEL};
+export { mainEL };
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////

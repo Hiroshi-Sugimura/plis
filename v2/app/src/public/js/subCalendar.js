@@ -19,7 +19,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	let showDate; // 現在表示位置
 
 	//----------------------------------------------------------------------------------------------
-	/** 
+	/**
 	 * @Func Window.createCalendar
 	 * @Desc カレンダー初期作成
 	 * @Param {Void}
@@ -32,7 +32,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		showProcess(today);
 	};
 
-	/** 
+	/**
 	 * @Func Window.renewCalendar
 	 * @Desc カレンダー日替わり処理などで更新する
 	 * @Param {Void}
@@ -44,7 +44,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		showProcess(today);
 	};
 
-	/** 
+	/**
 	 * @func window.calendarPrev
 	 * @desc 前の月表示ボタン
 	 * @param {void}
@@ -56,7 +56,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		showProcess(showDate);
 	};
 
-	/** 
+	/**
 	 * @func window.calendarNext
 	 * @desc 次の月表示ボタン
 	 * @param {void}
@@ -68,7 +68,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		showProcess(showDate);
 	};
 
-	/** 
+	/**
 	 * @func window.btnCalendarRenewSyukujitsu_Click
 	 * @desc 祝日の再取得ボタン クリック
 	 * @param {void}
@@ -80,7 +80,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
+	/**
 	 * @func
 	 * @memberof subCalendar
 	 * @desc 指定した日時のカレンダー表示
@@ -96,7 +96,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		document.querySelector('#calendar').innerHTML = calendar;
 	}
 
-	/** 
+	/**
 	 * @func
 	 * @memberof subCalendar
 	 * @desc カレンダー作成
@@ -150,7 +150,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	//////////////////////////////////////////////////////////////////////
 	// 内部関数
-	/** 
+	/**
 	 * @func checkDate
 	 * @memberof subCalendar
 	 * @desc 日付チェック、createProcessで呼ばれる
@@ -174,7 +174,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		};
 	}
 
-	/** 
+	/**
 	 * @func isToday
 	 * @memberof subCalendar
 	 * @desc 当日かどうかcheckDateで呼ばれる
@@ -189,7 +189,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			&& day == today.getDate());
 	}
 
-	/** 
+	/**
 	 * @func isHoliday
 	 * @memberof subCalendar
 	 * @desc 祝日かどうかcheckDateで呼ばれる
@@ -198,6 +198,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	function isHoliday(year, month, day) {
 		let checkDate = year + '/' + (month + 1) + '/' + day;
+		console.log(holiday);
 		let dateList = holiday.split('\n');
 		// 1行目はヘッダーのため、初期値1で開始
 		for (let i = 1; i < dateList.length; i++) {

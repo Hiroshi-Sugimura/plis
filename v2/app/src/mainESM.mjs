@@ -4,7 +4,7 @@
 /**
  * @module mainESM
  */
-'use strict'
+// 'use strict'
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
@@ -18,6 +18,7 @@
 // const { Sequelize, Op, esmdataModel, esmrawModel, electricEnergyModel } = require('./models/localDBModels');   // DBデータと連携
 // const { objectSort, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
 import { fileURLToPath } from "node:url";
+import fs from 'fs';
 import path from 'node:path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -624,7 +625,7 @@ let mainESM = {
 
 
 // module.exports = mainESM;
-export {mainESM};
+export { mainESM };
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////
