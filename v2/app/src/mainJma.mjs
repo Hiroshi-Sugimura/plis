@@ -8,17 +8,11 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-// const Store = require('electron-store');
 import Store from 'electron-store';
-// const request = require('request');
 import request from 'request';
-// const cron = require('node-cron');
 import cron from 'node-cron';
-// require('date-utils'); // for log
 import * as dateUtils from 'date-utils';
-// const { jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel } = require('./models/localDBModels');   // DBデータと連携
 import { jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel } from './models/localDBModels.cjs';   // DBデータと連携
-// const { isObjEmpty, mergeDeeply } = require('./mainSubmodule');
 import { isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 
 

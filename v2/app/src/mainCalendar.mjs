@@ -6,18 +6,11 @@
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
 import { fileURLToPath } from "node:url";
-// const path = require('path');
 import path from 'node:path';
-// const fs = require('fs');
-// import fs from 'node:fs/promises';
 import fs from 'fs';
-// const axios = require('axios');
 import axios from 'axios';
-// const Store = require('electron-store');
 import Store from 'electron-store';
-// const cron = require('node-cron');
 import cron from 'node-cron';
-// require('date-utils'); // for log
 import * as dateUtils from 'date-utils';
 
 
@@ -174,7 +167,7 @@ let mainCalendar = {
 
 
 // module.exports = mainCalendar;
-export {mainCalendar};
+export { mainCalendar };
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////

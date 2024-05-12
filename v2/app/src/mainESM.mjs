@@ -8,15 +8,6 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-// const fs = require('fs');
-// const path = require('path');
-// const cron = require('node-cron');
-// const Store = require('electron-store');
-// const eSM = require('e-smartmeter-echonet-lite');
-// const EL = require('echonet-lite');
-// const ELconv = require('echonet-lite-conv');
-// const { Sequelize, Op, esmdataModel, esmrawModel, electricEnergyModel } = require('./models/localDBModels');   // DBデータと連携
-// const { objectSort, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
 import { fileURLToPath } from "node:url";
 import fs from 'fs';
 import path from 'node:path';

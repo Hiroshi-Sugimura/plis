@@ -8,17 +8,11 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-// const Store = require('electron-store');
 import Store from 'electron-store';
-// const TF = require('tradfri-handler');
 import TF from 'tradfri-handler';
-// const cron = require('node-cron');
 import cron from 'node-cron';
-// const { ikeaRawModel, ikeaDataModel } = require('./models/localDBModels');   // DBデータと連携
 import { ikeaRawModel, ikeaDataModel } from './models/localDBModels.cjs';   // DBデータと連携
-// const { isObjEmpty, mergeDeeply } = require('./mainSubmodule');
 import { isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
-
 
 let sendIPCMessage = null;
 
@@ -365,7 +359,7 @@ let mainIkea = {
 
 
 // module.exports = mainIkea;
-export {mainIkea};
+export { mainIkea };
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////

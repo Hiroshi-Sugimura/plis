@@ -8,17 +8,11 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-// const Store = require('electron-store');
 import Store from 'electron-store';
-// const co2s = require('usb-ud-co2s');
 import co2s from 'usb-ud-co2s';
-// const cron = require('node-cron');
 import cron from 'node-cron';
-// require('date-utils'); // for log
 import * as dateUtils from 'date-utils';
-// const { Sequelize, Op, roomEnvModel } = require('./models/localDBModels');   // DBデータと連携
 import { Sequelize, Op, roomEnvModel } from './models/localDBModels.cjs';   //
-// const { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
 import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 
 let sendIPCMessage = null;
@@ -380,7 +374,7 @@ let mainCo2s = {
 
 
 // module.exports = mainCo2s;
-export {mainCo2s};
+export { mainCo2s };
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////

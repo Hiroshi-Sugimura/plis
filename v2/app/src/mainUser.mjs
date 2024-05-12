@@ -4,7 +4,6 @@
 /**
  * @module mainUser
  */
-// 'use strict'
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
@@ -31,6 +30,7 @@ const store = new Store();
  *  debug: false
  * }}
  */
+
 let config = {  // config.user
 	nickname: 'user',
 	height: '165',

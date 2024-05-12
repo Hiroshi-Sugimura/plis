@@ -8,20 +8,12 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-
-// const Store = require('electron-store');
 import Store from 'electron-store';
-// const https = require('https');
 import https from 'https';
-// const cron = require('node-cron');
 import cron from 'node-cron';
-// require('date-utils'); // for log
 import * as dateUtils from 'date-utils';
-// const { Op, eldataModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel } = require('./models/localDBModels');   // DBデータと連携
 import { Op, eldataModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel } from './models/localDBModels.cjs';   // DBデータと連携
-// const { getToday, mergeDeeply } = require('./mainSubmodule');
 import { getToday, mergeDeeply } from './mainSubmodule.cjs';
-
 
 const store = new Store();
 const HAL_API_BASE_URL = 'https://hal.sugi-lab.net/api';
@@ -1063,7 +1055,7 @@ let mainHALsync = {
 
 
 // module.exports = mainHALsync;
-export {mainHALsync};
+export { mainHALsync };
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////

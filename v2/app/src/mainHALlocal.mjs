@@ -9,13 +9,11 @@
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
 import { sqlite3, eldataModel, IOT_QuestionnaireAnswersModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_MinorkeyMeansModel, MinorkeyMeansValues } from './models/localDBModels.cjs';   // DBデータと連携
-
 import { Op } from "sequelize";
-
 import Store from 'electron-store';
-const store = new Store();
-
 import { getToday, roundFloat } from './mainSubmodule.cjs';
+
+const store = new Store();
 
 //////////////////////////////////////////////////////////////////////
 // config
