@@ -8,11 +8,11 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-const Hue = require('hue-handler');
-const Store = require('electron-store');
-const { Sequelize, sqlite3, huerawModel } = require('./models/localDBModels');   // DBデータと連携
-const { objectSort, getNow, getToday, isObjEmpty, mergeDeeply} = require('./mainSubmodule');
-const cron = require('node-cron');
+import  Hue from 'hue-handler';
+import Store from 'electron-store';
+import { Sequelize, sqlite3, huerawModel } from './models/localDBModels.cjs';   // DBデータと連携
+import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply} from './mainSubmodule.cjs';
+import cron from 'node-cron';
 
 let sendIPCMessage = null;
 
@@ -40,7 +40,7 @@ let mainHue = {
 	 * @func start
 	 * @desc start
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -106,7 +106,7 @@ let mainHue = {
 	 * @func stop
 	 * @desc stop
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -127,7 +127,7 @@ let mainHue = {
 	 * @func stopWithoutSave
 	 * @desc stopWithoutSave
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -147,7 +147,7 @@ let mainHue = {
 	 * @func control
 	 * @desc control
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -159,7 +159,7 @@ let mainHue = {
 	 * @func setConfig
 	 * @desc setConfig
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -174,7 +174,7 @@ let mainHue = {
 	 * @func getConfig
 	 * @desc getConfig
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -186,7 +186,7 @@ let mainHue = {
 	 * @func getPersist
 	 * @desc getPersist
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -199,7 +199,7 @@ let mainHue = {
 	 * @func received
 	 * @desc Hue受信の処理, inner functions
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -235,7 +235,7 @@ let mainHue = {
 	 * @func dummy
 	 * @desc dummy
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -248,7 +248,7 @@ let mainHue = {
 	 * @func startCore
 	 * @desc startCore
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -281,7 +281,7 @@ let mainHue = {
 	 * @func cancel
 	 * @desc cancel
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -294,7 +294,7 @@ let mainHue = {
 	 * @func startObserve
 	 * @desc 監視する，自動取得開始
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -317,7 +317,7 @@ let mainHue = {
 	 * @func stopObserve
 	 * @desc 監視をやめる，自動取得停止
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -331,7 +331,8 @@ let mainHue = {
 	}
 };
 
-module.exports = mainHue;
+// module.exports = mainHue;
+export {mainHue};
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////

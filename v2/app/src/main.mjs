@@ -1,54 +1,98 @@
-import { app, BrowserView, BrowserWindow, Menu, ipcMain } from 'electron';
+//////////////////////////////////////////////////////////////////////
+//	Copyright (C) Hiroshi SUGIMURA 2018.03.16
+//  Last updated: 2021.09.25
+//////////////////////////////////////////////////////////////////////
+/**
+ * @module main
+ */
+
+
+//////////////////////////////////////////////////////////////////////
+// 基本ライブラリ
+import { app, BrowserView, BrowserWindow, Menu, ipcMain, shell, clipboard } from 'electron';
+
 import { fileURLToPath } from "node:url";
 import path from 'node:path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 import os from 'os';
 import fs from 'node:fs/promises';
 import { exec } from 'child_process';
 import * as dateUtils from 'date-utils';
 
-let mainWindow;
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
+//////////////////////////////////////////////////////////////////////
+// 追加ライブラリ
+app.disableHardwareAcceleration(); // electron設定とmain window
 import Store from 'electron-store';
 import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 import * as openAboutWindow from 'about-window';  // このアプリについて
 import { sqlite3 } from './models/localDBModels.cjs';   // DBデータと連携
-
 import {mainSystem} from './mainSystem.mjs';  // System configの管理
 import {mainAutoAssessment} from './mainAutoAssessment.mjs';  // 成績付け
 import {mainUser} from './mainUser.mjs';     // User configの管理
 import {mainArp} from './mainArp.mjs';     // arpの管理
 import {mainEL} from './mainEL.mjs';      // ELの管理
 import {mainESM} from './mainESM.mjs'; // スマートメータの管理
-// const mainHue = require('./mainHue');     // hueの管理
-// const mainIkea = require('./mainIkea');    // Ikeaの管理
-// const mainNetatmo = require('./mainNetatmo');  // netatmoの管理
-// const mainOwm = require('./mainOwm');      // open weather mapの管理
-// const mainOmron = require('./mainOmron');    // Omron/USBの管理
-// const mainHALlocal = require('./mainHALlocal'); // HAL，独立で動く部分
-// const mainHALsync = require('./mainHALsync');  // HAL，連携する部分
-// const mainJma = require('./mainJma');    // 天気予報、気象庁
-// const mainSwitchBot = require('./mainSwitchBot'); // SwitchBot
-// const mainCalendar = require('./mainCalendar'); // カレンダー準備
-// const mainCo2s = require('./mainCo2s');  // usb-ud-co2センサー
-// const licenses = require('./modules.json');  // モジュールのライセンス
+import {mainHue} from './mainHue.mjs';     // hueの管理
+import {mainIkea} from './mainIkea.mjs';    // Ikeaの管理
+import {mainNetatmo} from './mainNetatmo.mjs';  // netatmoの管理
+import {mainOwm} from './mainOwm.mjs';      // open weather mapの管理
+import {mainOmron} from './mainOmron.mjs';    // Omron/USBの管理
+import {mainHALlocal} from './mainHALlocal.mjs'; // HAL，独立で動く部分
+import {mainHALsync} from './mainHALsync.mjs';  // HAL，連携する部分
+import {mainJma} from './mainJma.mjs';    // 天気予報、気象庁
+import {mainSwitchBot} from './mainSwitchBot.mjs'; // SwitchBot
+import {mainCalendar} from './mainCalendar.mjs'; // カレンダー準備
+import {mainCo2s} from './mainCo2s.mjs';  // usb-ud-co2センサー
+import licenses from './modules.json' with { type: "json" };
 
 
+//////////////////////////////////////////////////////////////////////
+// 基本設定，electronのファイル読み込み対策，developmentで変更できるようにした（けどつかってない）
+const appname = 'PLIS';
+const appDir = process.env.NODE_ENV === 'development' ? __dirname : __dirname;
+const isWin = process.platform == "win32" ? true : false;
+const isMac = process.platform == "darwin" ? true : false;
+const userHome = process.env[isWin ? "USERPROFILE" : "HOME"];
+const isDevelopment = process.env.NODE_ENV == 'development'
+const databaseDir = path.join(userHome, appname);  // SQLite3ファイルの置き場
 
 
-// NIC情報を集める
+/** electronのmain window */
+let mainWindow = null;
+
 /** NICリスト */
 let localaddresses = [];
 
-let interfaces = os.networkInterfaces();
-for (let k in interfaces) {
-	for (let k2 in interfaces[k]) {
-		let address = interfaces[k][k2];
-		if (address.family == 'IPv4' && !address.internal) {
-			localaddresses.push(address.address);
+/** 管理しているデバイスやサービスのリストにユーザが名前を付けたい */
+// [{ type: '', id: '', ip: '', mac: '', alias, '' }]
+let managedThings = [];
+
+const store = new Store();
+
+/** config */
+let config = {};
+
+/** persist */
+let persist = {};
+
+//////////////////////////////////////////////////////////////////////
+// local function
+//////////////////////////////////////////////////////////////////////
+/**
+ * @func
+ * @desc IPC通信の定式
+ * @param {string} cmdStr
+ * @param {string} argStr
+ */
+let sendIPCMessage = function (cmdStr, argStr) {
+	try {
+		if (mainWindow != null && mainWindow.webContents != null) {
+			mainWindow.webContents.send('to-renderer', JSON.stringify({ cmd: cmdStr, arg: argStr }));
 		}
+	} catch (error) {
+		console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.sendIPCMessage() error:\x1b[32m', error, '\x1b[0m');
+		mainWindow.reload();  // sendIPCMessage がミスする。本来はミスの原因を直す必要があるが、ここでは暫定で対応
 	}
 }
 

@@ -14,12 +14,18 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-const Store = require('electron-store');
-const { SwitchBotHandler } = require('switchbot-handler');
-const cron = require('node-cron');
-require('date-utils'); // for log
-const { Sequelize, Op, switchBotRawModel, switchBotDataModel } = require('./models/localDBModels');   // DBデータと連携
-const { objectSort, isObjEmpty, mergeDeeply, getToday } = require('./mainSubmodule');
+// const Store = require('electron-store');
+import Store from 'electron-store';
+// const { SwitchBotHandler } = require('switchbot-handler');
+import SwitchBotHandler from 'switchbot-handler';
+// const cron = require('node-cron');
+import cron from 'node-cron';
+// require('date-utils'); // for log
+import * as dateUtils from 'date-utils';
+// const { Sequelize, Op, switchBotRawModel, switchBotDataModel } = require('./models/localDBModels');   // DBデータと連携
+import { Sequelize, Op, switchBotRawModel, switchBotDataModel } from './models/localDBModels.cjs';   //
+// const { objectSort, isObjEmpty, mergeDeeply, getToday } = require('./mainSubmodule');
+import { objectSort, isObjEmpty, mergeDeeply, getToday } from './mainSubmodule.cjs';
 
 const store = new Store();
 
@@ -1058,7 +1064,8 @@ let mainSwitchBot = {
 };
 
 
-module.exports = mainSwitchBot;
+// module.exports = mainSwitchBot;
+export {mainSwitchBot};
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////

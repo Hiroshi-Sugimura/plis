@@ -8,12 +8,18 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-const Store = require('electron-store');
-const omron = require('usb-2jcie-bu');
-const cron = require('node-cron');
-require('date-utils'); // for log
-const { Sequelize, Op, roomEnvModel } = require('./models/localDBModels');   // DBデータと連携
-const { mergeDeeply } = require('./mainSubmodule');
+// const Store = require('electron-store');
+import Store from 'electron-store';
+// const omron = require('usb-2jcie-bu');
+import omron from 'usb-2jcie-bu';
+// const cron = require('node-cron');
+import cron from 'node-cron';
+// require('date-utils'); // for log
+import * as dateUtils from 'date-utils';
+// const { Sequelize, Op, roomEnvModel } = require('./models/localDBModels');   // DBデータと連携
+import { Sequelize, Op, roomEnvModel } from './models/localDBModels.cjs';   // DBデータと連携
+// const { mergeDeeply } = require('./mainSubmodule');
+import { mergeDeeply } from './mainSubmodule.cjs';
 
 let sendIPCMessage = null;
 const store = new Store();
@@ -34,7 +40,7 @@ let mainOmron = {
 	storeJob: null,
 
 	//////////////////////////////////////////////////////////////////////
-	// 
+	//
 	/**
 	 * @func start
 	 * @desc Omronセンサの処理開始
@@ -410,7 +416,8 @@ let mainOmron = {
 };
 
 
-module.exports = mainOmron;
+// module.exports = mainOmron;
+export {mainOmron};
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////

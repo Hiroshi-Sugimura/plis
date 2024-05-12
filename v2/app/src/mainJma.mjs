@@ -8,12 +8,19 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-const Store = require('electron-store');
-const request = require('request');
-const cron = require('node-cron');
-require('date-utils'); // for log
-const { jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel } = require('./models/localDBModels');   // DBデータと連携
-const { isObjEmpty, mergeDeeply } = require('./mainSubmodule');
+// const Store = require('electron-store');
+import Store from 'electron-store';
+// const request = require('request');
+import request from 'request';
+// const cron = require('node-cron');
+import cron from 'node-cron';
+// require('date-utils'); // for log
+import * as dateUtils from 'date-utils';
+// const { jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel } = require('./models/localDBModels');   // DBデータと連携
+import { jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel } from './models/localDBModels.cjs';   // DBデータと連携
+// const { isObjEmpty, mergeDeeply } = require('./mainSubmodule');
+import { isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
+
 
 let sendIPCMessage = null;
 const store = new Store();
@@ -99,7 +106,7 @@ let mainJma = {
 	/**
 	 * @func start
 	 * @desc 気象庁天気取得の処理、重複起動は防いでいる
-	 * @param {function} _sendIPCMessage 
+	 * @param {function} _sendIPCMessage
 	 * @return void
 	 * @throw error
 	 */
@@ -485,7 +492,8 @@ let mainJma = {
 
 
 
-module.exports = mainJma;
+// module.exports = mainJma;
+export {mainJma};
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////

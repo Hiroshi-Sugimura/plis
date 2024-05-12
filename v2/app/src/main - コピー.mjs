@@ -6,26 +6,46 @@
  * @module main
  */
 
-'use strict'
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
+import { app, BrowserView, BrowserWindow, Menu, ipcMain, shell, clipboard } from 'electron';
+
 import { fileURLToPath } from "node:url";
 import path from 'node:path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-// const os = require('os');
 import os from 'os';
-// const fs = require('fs');
 import fs from 'node:fs/promises';
-// const { exec } = require('child_process');
 import { exec } from 'child_process';
-// require('date-utils'); // for log
 import * as dateUtils from 'date-utils';
-// const { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } = require('./mainSubmodule');
-import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 
+
+//////////////////////////////////////////////////////////////////////
+// 追加ライブラリ
+app.disableHardwareAcceleration(); // electron設定とmain window
+import Store from 'electron-store';
+import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
+import * as openAboutWindow from 'about-window';  // このアプリについて
+import { sqlite3 } from './models/localDBModels.cjs';   // DBデータと連携
+import {mainSystem} from './mainSystem.mjs';  // System configの管理
+import {mainAutoAssessment} from './mainAutoAssessment.mjs';  // 成績付け
+import {mainUser} from './mainUser.mjs';     // User configの管理
+import {mainArp} from './mainArp.mjs';     // arpの管理
+import {mainEL} from './mainEL.mjs';      // ELの管理
+import {mainESM} from './mainESM.mjs'; // スマートメータの管理
+import {mainHue} from './mainHue.mjs';     // hueの管理
+import {mainIkea} from './mainIkea.mjs';    // Ikeaの管理
+import {mainNetatmo} from './mainNetatmo.mjs';  // netatmoの管理
+import {mainOwm} from './mainOwm.mjs';      // open weather mapの管理
+import {mainOmron} from './mainOmron.mjs';    // Omron/USBの管理
+import {mainHALlocal} from './mainHALlocal.mjs'; // HAL，独立で動く部分
+import {mainHALsync} from './mainHALsync.mjs';  // HAL，連携する部分
+import {mainJma} from './mainJma.mjs';    // 天気予報、気象庁
+import {mainSwitchBot} from './mainSwitchBot.mjs'; // SwitchBot
+import {mainCalendar} from './mainCalendar.mjs'; // カレンダー準備
+import {mainCo2s} from './mainCo2s.mjs';  // usb-ud-co2センサー
+import licenses from './modules.json' with { type: "json" };
 
 //////////////////////////////////////////////////////////////////////
 // 基本設定，electronのファイル読み込み対策，developmentで変更できるようにした（けどつかってない）
@@ -37,41 +57,6 @@ const userHome = process.env[isWin ? "USERPROFILE" : "HOME"];
 const isDevelopment = process.env.NODE_ENV == 'development'
 const databaseDir = path.join(userHome, appname);  // SQLite3ファイルの置き場
 
-//////////////////////////////////////////////////////////////////////
-// 追加ライブラリ
-// const { app, BrowserWindow, ipcMain, Menu, shell, clipboard } = require('electron');
-import { app, BrowserView, BrowserWindow, Menu, ipcMain, shell, clipboard } from 'electron';
-app.disableHardwareAcceleration(); // electron設定とmain window
-// const Store = require('electron-store');
-import Store from 'electron-store';
-
-// const openAboutWindow = require('about-window').default;  // このアプリについて
-import * as openAboutWindow from 'about-window';  // このアプリについて
-// const { sqlite3 } = require('./models/localDBModels');   // DBデータと連携
-import { sqlite3 } from './models/localDBModels.cjs';   // DBデータと連携
-// const mainSystem = require('./mainSystem');  // System configの管理
-import {mainSystem} from './mainSystem.mjs';  // System configの管理
-// const mainAutoAssessment = require('./mainAutoAssessment');  // 成績付け
-import {mainAutoAssessment} from './mainAutoAssessment.mjs';  // 成績付け
-// const mainUser = require('./mainUser');     // User configの管理
-import {mainUser} from './mainUser.mjs';     // User configの管理
-// const mainArp = require('./mainArp');     // arpの管理
-import {mainArp} from './mainArp.mjs';     // arpの管理
-// const mainEL = require('./mainEL');      // ELの管理
-import {mainEL} from './mainEL.mjs';      // ELの管理
-// const mainESM = require('./mainESM'); // スマートメータの管理
-// const mainHue = require('./mainHue');     // hueの管理
-// const mainIkea = require('./mainIkea');    // Ikeaの管理
-// const mainNetatmo = require('./mainNetatmo');  // netatmoの管理
-// const mainOwm = require('./mainOwm');      // open weather mapの管理
-// const mainOmron = require('./mainOmron');    // Omron/USBの管理
-// const mainHALlocal = require('./mainHALlocal'); // HAL，独立で動く部分
-// const mainHALsync = require('./mainHALsync');  // HAL，連携する部分
-// const mainJma = require('./mainJma');    // 天気予報、気象庁
-// const mainSwitchBot = require('./mainSwitchBot'); // SwitchBot
-// const mainCalendar = require('./mainCalendar'); // カレンダー準備
-// const mainCo2s = require('./mainCo2s');  // usb-ud-co2センサー
-// const licenses = require('./modules.json');  // モジュールのライセンス
 
 /** electronのmain window */
 let mainWindow = null;

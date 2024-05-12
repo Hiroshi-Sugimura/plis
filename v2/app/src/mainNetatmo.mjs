@@ -8,12 +8,19 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-const Store = require('electron-store');
-const netatmo = require('netatmo');
-const cron = require('node-cron');
-require('date-utils');// for log
-const { Sequelize, Op, netatmoModel, roomEnvModel } = require('./models/localDBModels');// DBデータと連携
-const { mergeDeeply } = require('./mainSubmodule');
+// const Store = require('electron-store');
+import Store from 'electron-store';
+// const netatmo = require('netatmo');
+import netatmo from 'netatmo';
+// const cron = require('node-cron');
+import cron from 'node-cron';
+// require('date-utils');// for log
+import * as dateUtils from 'date-utils';
+// const { Sequelize, Op, netatmoModel, roomEnvModel } = require('./models/localDBModels');// DBデータと連携
+import { Sequelize, Op, netatmoModel, roomEnvModel } from './models/localDBModels.cjs';   // DBデータと連携
+// const { mergeDeeply } = require('./mainSubmodule');
+import { mergeDeeply } from './mainSubmodule.cjs';
+
 
 let sendIPCMessage = null;
 const store = new Store();
@@ -450,7 +457,8 @@ let mainNetatmo = {
 };
 
 
-module.exports = mainNetatmo;
+// module.exports = mainNetatmo;
+export {mainNetatmo};
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////

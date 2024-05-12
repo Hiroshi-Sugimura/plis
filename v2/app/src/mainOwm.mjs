@@ -8,12 +8,19 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-const Store = require('electron-store');
-const http = require('http');
-const cron = require('node-cron');
-require('date-utils'); // for log
-const { owmModel, weatherModel } = require('./models/localDBModels');   // DBデータと連携
-const { isObjEmpty, mergeDeeply, getNow } = require('./mainSubmodule');
+// const Store = require('electron-store');
+import Store from 'electron-store';
+// const http = require('http');
+import http from 'http';
+// const cron = require('node-cron');
+import cron from 'node-cron';
+// require('date-utils'); // for log
+import * as dateUtils from 'date-utils';
+// const { owmModel, weatherModel } = require('./models/localDBModels');   // DBデータと連携
+import { owmModel, weatherModel } from './models/localDBModels.cjs';   // DBデータと連携
+// const { isObjEmpty, mergeDeeply, getNow } = require('./mainSubmodule');
+import { isObjEmpty, mergeDeeply, getNow } from './mainSubmodule.cjs';
+
 
 const store = new Store();
 
@@ -220,7 +227,7 @@ let mainOwm = {
 		}
 	},
 
-	/** 
+	/**
 	 * @func storeData
 	 * @desc persistをDBに保存する
 	 */
@@ -280,7 +287,8 @@ let mainOwm = {
 };
 
 
-module.exports = mainOwm;
+// module.exports = mainOwm;
+export {mainOwm};
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////
