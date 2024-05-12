@@ -22,6 +22,7 @@ import path from 'node:path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import Store from 'electron-store';
+import eSM from 'e-smartmeter-echonet-lite';
 import cron from 'node-cron';
 import EL from 'echonet-lite';
 import ELconv from 'echonet-lite-conv';

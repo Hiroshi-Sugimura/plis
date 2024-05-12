@@ -505,8 +505,19 @@ ipcMain.handle('SwitchBotControl', async (event, arg) => {
 });
 
 
+//////////////////////////////////////////////////////////////////////
+// foreground
+// ここがEntrypointと考えても良い
+/**
+ * @func createWindow
+ * @desc Add two numbers together. (JSDoc test)
+ * @param {number} a - The first number. (JSDoc test)
+ * @param {number} b - The second number. (JSDoc test)
+ * @returns {number} The sum of the two numbers. (JSDoc test)
+ */
 
-function createWindow () {
+async function createWindow () {
+	try {
 	mainWindow = new BrowserWindow({
 		width: 800,
 		height: 600,
@@ -521,6 +532,10 @@ function createWindow () {
 	});
 	mainWindow.loadFile('src/tabbar.html');
 
+	if (config.debug) { // debugモード:true ならDebugGUIひらく
+		mainWindow.webContents.openDevTools();
+	}
+
 	mainWindow.webContents.on('did-finish-load', () => {
 		setupView('https://electronjs.org');
 		setupViewLocal('src/local.html');
@@ -532,7 +547,13 @@ function createWindow () {
 		})
 	});
 
-	createMenu();
+	menuInitialize();
+		// SQLite のデータベースのレコードの削除処理
+		mainHALlocal.truncatelogs();
+
+	} catch (error) {
+		console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.createWindow() error:\x1b[32m', error, '\x1b[0m');
+	}
 }
 
 function setupView(url) {
@@ -561,44 +582,237 @@ function resizeView(view) {
 		view.setBounds({ x: 0, y: height, width: bound.width, height: bound.height - height });
 }
 
+//=============================================================================
+// 起動
+// ready: Electronの初期化完了後に実行される
+// activate: Mac only, MacはWindowが無くてもプロセスを終了しないでおいておくことができ、その際の再度起動の時よばれる
+// did-become-active: Mac only
+
 app.whenReady().then(() => {
 	createWindow();
-
+	// アプリケーションがアクティブになった時の処理（Mac only）
 	app.on('activate', function () {
 		if (BrowserWindow.getAllWindows().length === 0) createWindow();
 	});
 });
 
-app.on('window-all-closed', function () {
-	if (process.platform !== 'darwin') app.quit();
+
+
+//=============================================================================
+// 通常終了（Windowが全て閉じられたのでアプリ終了とする場合）
+// window-all-closed -> before-quit -> will-quit -> quit -> BrowserWindow.closed
+// 強制終了、外部要因からの終了（終了命令がきたので、Windowを閉じて終了とする場合）
+// before-quit -> window-all-closed -> will-quit -> quit -> BrowserWindow.closed
+
+// windowが全部閉じられた、SIGTERM, SIGINTの場合はbefore-quitがこれより先に動く
+app.on('window-all-closed', () => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.window-all-closed') : 0;
+	app.quit();	// macだろうとプロセスはkillしちゃう
 });
 
-function createMenu() {
-	const template = [
-		{
-			label: 'View',
-			submenu: [
-				{
-					label: 'open dev tool',
-					click() {
-						mainWindow.webContents.openDevTools({ mode: 'detach' });
+
+// アプリを終了する直前、app.quitが呼ばれたときに動く
+app.once('before-quit', async () => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.before-quit') : 0;
+	await saveConfig();
+	await savePersist();
+
+	await mainArp.stopWithoutSave();
+	await mainEL.stopWithoutSave();
+	await mainESM.stopWithoutSave();
+	await mainHue.stopWithoutSave();
+	await mainNetatmo.stopWithoutSave();
+	await mainOwm.stopWithoutSave();
+	await mainJma.stopWithoutSave();
+	await mainOmron.stopWithoutSave();
+	await mainCo2s.stopWithoutSave();
+	await mainIkea.stopWithoutSave();
+	await mainSwitchBot.stopWithoutSave();
+	await mainCalendar.stopWithoutSave();
+	await mainUser.stop();
+	await mainSystem.stop();
+});
+
+
+// 終了する直前、quitの前
+app.once('will-quit', async () => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.will-quit') : 0;
+});
+
+
+// 終了処理、quitのあとBrowserWindow.closedが本当の最後に呼ばれる
+app.once('quit', async () => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.quit') : 0;
+});
+
+
+
+// menu
+const menuItems = [
+	{
+		label: appname,
+		submenu: [
+			{
+				label: 'Show your database',
+				accelerator: isMac ? 'Command+s' : 'Control+s',
+				click: async function () { shell.showItemInFolder(databaseDir); }
+			},
+			{
+				label: 'Preferences...',
+				accelerator: isMac ? 'Command+,' : 'Control+,',
+				click: async function () {
+					// await HALConfigSave(  );  // ここまだ
+					await saveConfig();
+					sendIPCMessage("configSaved", 'All');  // 保存したので画面に通知
+
+					store.openInEditor();
+				}
+			},
+			{ type: "separator" },
+			{
+				label: 'Quit',
+				accelerator: isMac ? 'Command+Q' : 'Alt+F4',
+				click: function () { app.quit(); }
+			}]
+	}, {
+		label: 'Edit',
+		submenu: [  // 基本機能だけど、用意しておかないとMac開発時にショートカットが効かない
+			{
+				label: 'Cut',
+				accelerator: isMac ? 'Command+X' : 'Control+X',
+				selector: 'cut:'
+			},
+			{
+				label: 'Copy',
+				accelerator: isMac ? 'Command+C' : 'Control+C',
+				selector: 'copy:'
+			},
+			{
+				label: 'Paste',
+				accelerator: isMac ? 'Command+V' : 'Control+V',
+				selector: 'paste:'
+			},
+			{ type: "separator" },
+			{
+				label: "Undo",
+				accelerator: isMac ? 'Command+Z' : 'Control+Z',
+				selector: "undo:"
+			},
+			{
+				label: "Redo",
+				accelerator: isMac ? 'Shift+Command+Z' : 'Shift+Control+Z',
+				selector: "redo:"
+			},
+			{
+				label: "Select All",
+				accelerator: isMac ? 'Command+A' : 'Control+A',
+				selector: "selectAll:"
+			},
+			{ type: "separator" },
+			{
+				label: 'Search in page',
+				accelerator: isMac ? 'Command+F' : 'Control+F',
+				click: function (item, focusedWindow) { sendIPCMessage("openSearch", '') }
+			}
+		]
+	}, {
+		label: 'View',
+		submenu: [
+			{
+				label: 'Reload',
+				accelerator: isMac ? 'Command+R' : 'Control+R',
+				click: function (item, focusedWindow) { if (focusedWindow) focusedWindow.reload() }
+			},
+			{
+				label: 'Toggle Full Screen',
+				accelerator: isMac ? 'Ctrl+Command+F' : 'F11',
+				click: function () { mainWindow.setFullScreen(!mainWindow.isFullScreen()); }
+			},
+			{ type: "separator" },
+			{
+				label: 'Zoom (+)',
+				accelerator: isMac ? 'Command+plus' : 'Control+plus',
+				click: function () { mainWindow.webContents.setZoomFactor(mainWindow.webContents.getZoomFactor() + 0.1); }
+			},
+			{
+				label: 'Zoom (-)',
+				accelerator: isMac ? 'Command+-' : 'Control+-',
+				click: function () {
+					if (mainWindow.webContents.getZoomFactor() >= 0.2) {
+						mainWindow.webContents.setZoomFactor(mainWindow.webContents.getZoomFactor() - 0.1);
+					} else {
+						sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'main', stackLog: 'Minimum zoom' });
 					}
-				},
-				{ role: 'quit' }
-				]
-		}
-		];
-	if (!app.isPackaged) {
-		template.unshift({
-			label: 'Debug',
-			submenu: [
-				{ role: 'forceReload' }
-				]
-		});
-	}
-	const menu = Menu.buildFromTemplate(template);
+				}
+			},
+			{
+				label: 'Zoom (Reset)',
+				accelerator: isMac ? 'Command+0' : 'Control+0',
+				click: function () { mainWindow.webContents.setZoomFactor(1); }
+			},
+			{
+				label: 'Create shortcut',
+				click: function () { createShortCut(); }
+			}]
+	}, {
+		label: 'Information',
+		submenu: [
+			{
+				label: 'About PLIS',
+				click: function () {
+					openAboutWindow({
+						icon_path: path.join(__dirname, 'icons', 'plis_linux_icon.png'),
+						copyright: 'Copyright (c) 2023 Sugimura Lab.',
+						package_json_dir: __dirname
+					});
+				}
+			},
+			{
+				label: 'About PLIS (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/'); }
+			},
+			{
+				label: 'User manual (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/userManual.html'); }
+			},
+			{
+				label: 'Developper manual (External contents)',
+				click: function () { shell.openExternal('https://hiroshi-sugimura.github.io/plis//v1/docs/jsdoc/'); }
+			},
+			{
+				label: 'Terms (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/terms.html'); }
+			},
+			{
+				label: 'Privacy Policy (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/privacyPolicy.html'); }
+			},
+			{
+				label: 'EURA (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/eula.html'); }
+			},
+			{ type: "separator" },
+			{
+				label: 'Developer Tools',
+				accelerator: isMac ? 'Ctrl+Command+I' : 'Control+Shift+I',
+				click: function () { mainWindow.toggleDevTools(); }
+			}
+		]
+	}];
+
+/**
+ * @func menuInitialize
+ * @desc menuInitialize
+ * @async
+ * @param {void}
+ * @return void
+ * @throw error
+ */
+function menuInitialize() {
+	let menu = Menu.buildFromTemplate(menuItems);
 	Menu.setApplicationMenu(menu);
-}
+	mainWindow.setMenu(menu);
+};
 
 function switchView(url) {
 	const views = mainWindow.getBrowserViews().filter(view => view.webContents.getURL().includes(url));
