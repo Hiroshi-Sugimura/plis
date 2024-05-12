@@ -20,7 +20,6 @@ import fs from 'node:fs/promises';
 import { exec } from 'child_process';
 import * as dateUtils from 'date-utils';
 
-
 //////////////////////////////////////////////////////////////////////
 // 追加ライブラリ
 app.disableHardwareAcceleration(); // electron設定とmain window
@@ -28,24 +27,25 @@ import Store from 'electron-store';
 import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 import * as openAboutWindow from 'about-window';  // このアプリについて
 import { sqlite3 } from './models/localDBModels.cjs';   // DBデータと連携
-import {mainSystem} from './mainSystem.mjs';  // System configの管理
-import {mainAutoAssessment} from './mainAutoAssessment.mjs';  // 成績付け
-import {mainUser} from './mainUser.mjs';     // User configの管理
-import {mainArp} from './mainArp.mjs';     // arpの管理
-import {mainEL} from './mainEL.mjs';      // ELの管理
-import {mainESM} from './mainESM.mjs'; // スマートメータの管理
-import {mainHue} from './mainHue.mjs';     // hueの管理
-import {mainIkea} from './mainIkea.mjs';    // Ikeaの管理
-import {mainNetatmo} from './mainNetatmo.mjs';  // netatmoの管理
-import {mainOwm} from './mainOwm.mjs';      // open weather mapの管理
-import {mainOmron} from './mainOmron.mjs';    // Omron/USBの管理
-import {mainHALlocal} from './mainHALlocal.mjs'; // HAL，独立で動く部分
-import {mainHALsync} from './mainHALsync.mjs';  // HAL，連携する部分
-import {mainJma} from './mainJma.mjs';    // 天気予報、気象庁
-import {mainSwitchBot} from './mainSwitchBot.mjs'; // SwitchBot
-import {mainCalendar} from './mainCalendar.mjs'; // カレンダー準備
-import {mainCo2s} from './mainCo2s.mjs';  // usb-ud-co2センサー
+import { mainSystem } from './mainSystem.mjs';  // System configの管理
+import { mainAutoAssessment } from './mainAutoAssessment.mjs';  // 成績付け
+import { mainUser } from './mainUser.mjs';     // User configの管理
+import { mainArp } from './mainArp.mjs';     // arpの管理
+import { mainEL } from './mainEL.mjs';      // ELの管理
+import { mainESM } from './mainESM.mjs'; // スマートメータの管理
+import { mainHue } from './mainHue.mjs';     // hueの管理
+import { mainIkea } from './mainIkea.mjs';    // Ikeaの管理
+import { mainNetatmo } from './mainNetatmo.mjs';  // netatmoの管理
+import { mainOwm } from './mainOwm.mjs';      // open weather mapの管理
+import { mainOmron } from './mainOmron.mjs';    // Omron/USBの管理
+import { mainHALlocal } from './mainHALlocal.mjs'; // HAL，独立で動く部分
+import { mainHALsync } from './mainHALsync.mjs';  // HAL，連携する部分
+import { mainJma } from './mainJma.mjs';    // 天気予報、気象庁
+import { mainSwitchBot } from './mainSwitchBot.mjs'; // SwitchBot
+import { mainCalendar } from './mainCalendar.mjs'; // カレンダー準備
+import { mainCo2s } from './mainCo2s.mjs';  // usb-ud-co2センサー
 import licenses from './modules.json' with { type: "json" };
+
 
 //////////////////////////////////////////////////////////////////////
 // 基本設定，electronのファイル読み込み対策，developmentで変更できるようにした（けどつかってない）
@@ -515,6 +515,7 @@ ipcMain.handle('SwitchBotControl', async (event, arg) => {
  * @param {number} b - The second number. (JSDoc test)
  * @returns {number} The sum of the two numbers. (JSDoc test)
  */
+
 async function createWindow() {
 	try {
 		mainWindow = new BrowserWindow({
@@ -529,45 +530,57 @@ async function createWindow() {
 			},
 			icon: path.join(__dirname, "assets/icon.png")
 		});
-		menuInitialize();
-		// mainWindow.loadURL(path.join(__dirname, 'public', 'index.htm'));  // MacだとloadURL聞かない
-		mainWindow.loadFile(path.join(__dirname, 'public', 'index.htm'));
+		mainWindow.loadFile('src/tabbar.html');
 
 		if (config.debug) { // debugモード:true ならDebugGUIひらく
 			mainWindow.webContents.openDevTools();
 		}
 
-		// PageInSearchして発見したときに呼ばれる
-		mainWindow.webContents.on('found-in-page', (event, result) => {
-			// console.log('event:', event, 'result:', result);
-			if (result.finalUpdate) {
-				mainWindow.webContents.stopFindInPage('keepSelection');
-				sendIPCMessage('foundResultShow', result);
-			}
+		mainWindow.webContents.on('did-finish-load', () => {
+			setupView('https://electronjs.org');
+			setupViewLocal('src/local.html');
 		});
 
-		// 閉じるときに呼ばれる
-		mainWindow.on('close', async () => {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.close') : 0;
-			config.windowWidth = mainWindow.getSize()[0];
-			config.windowHeight = mainWindow.getSize()[1];
-
-			await mainSystem.setConfig(config);
+		mainWindow.on('resize', () => {
+			mainWindow.getBrowserViews().forEach((view) => {
+				resizeView(view);
+			})
 		});
 
-		// 閉じた後でよばれる
-		mainWindow.on('closed', () => {
-			console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.closed');
-			mainWindow = null;
-		});
-
+		menuInitialize();
 		// SQLite のデータベースのレコードの削除処理
-		await mainHALlocal.truncatelogs();
+		mainHALlocal.truncatelogs();
 
 	} catch (error) {
 		console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.createWindow() error:\x1b[32m', error, '\x1b[0m');
 	}
-};
+}
+
+function setupView(url) {
+	const view = new BrowserView();
+	mainWindow.addBrowserView(view);
+	resizeView(view);
+	view.webContents.loadURL(url);
+}
+
+function setupViewLocal(file) {
+	const view = new BrowserView({
+		webPreferences: {
+			preload: path.join(__dirname, 'local_preload.js')
+		}
+	});
+	mainWindow.addBrowserView(view);
+	resizeView(view);
+	view.webContents.loadFile(file);
+	view.setBackgroundColor('white');
+	// view.webContents.openDevTools({ mode: 'detach' });
+}
+
+function resizeView(view) {
+	const bound = mainWindow.getBounds();
+	const height = process.platform !== 'win32' ? 60 : 40
+	view.setBounds({ x: 0, y: height, width: bound.width, height: bound.height - height });
+}
 
 //=============================================================================
 // 起動
@@ -576,7 +589,8 @@ async function createWindow() {
 // did-become-active: Mac only
 
 // windows用デスクトップとスタートメニューにショートカットを追加する
-if (require('electron-squirrel-startup')) return;
+// if (require('electron-squirrel-startup')) return;
+
 
 // Entry point
 app.on('ready', async () => {
@@ -628,6 +642,7 @@ app.on('ready', async () => {
 	await sqlite3.sync().then(() => {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.ready. Local lifelog DB is ready.') : 0;
 	});		// 起動時DBの準備，SQLite の初期化の完了を待つ
+
 
 	createWindow();
 });
@@ -688,6 +703,7 @@ app.once('will-quit', async () => {
 app.once('quit', async () => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.quit') : 0;
 });
+
 
 
 // menu
@@ -857,6 +873,26 @@ function menuInitialize() {
 	mainWindow.setMenu(menu);
 };
 
+function switchView(url) {
+	const views = mainWindow.getBrowserViews().filter(view => view.webContents.getURL().includes(url));
+	console.assert(views.length === 1);
+	mainWindow.setTopBrowserView(views[0]);
+}
+
+ipcMain.handle('tab1', e => {
+	console.log('tab1');
+	switchView('electronjs');
+});
+
+ipcMain.handle('tab2', e => {
+	console.log('tab2');
+	switchView('local.html');
+});
+
+ipcMain.handle('switch-to-electronjs', (e, message) => {
+	console.log('from local.mjs', message);
+	switchView('electronjs');
+});
 
 /**
  * @func createShortCut
@@ -940,7 +976,6 @@ async function savePersist() {
 	// systemはpersistなし
 	await store.set('persist', persist);
 };
-
 
 //////////////////////////////////////////////////////////////////////
 // EOF
