@@ -14,7 +14,7 @@
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
 import Store from 'electron-store';
-import SwitchBotHandler from 'switchbot-handler';
+import { SwitchBotHandler } from 'switchbot-handler';
 import cron from 'node-cron';
 import * as dateUtils from 'date-utils';
 import { Sequelize, Op, switchBotRawModel, switchBotDataModel } from './models/localDBModels.cjs';   //
