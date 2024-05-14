@@ -708,7 +708,7 @@ const menuItems = [
 					await saveConfig();
 					sendIPCMessage("configSaved", 'All');  // 保存したので画面に通知
 
-					store.openInEditor();
+					shell.showItemInFolder(store.path);
 				}
 			},
 			{ type: "separator" },

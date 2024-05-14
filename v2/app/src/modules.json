@@ -2692,7 +2692,7 @@
     "path": "C:\\Users\\sugimura\\Documents\\plis\\v2\\app\\node_modules\\electron-prebuilt-compile",
     "licenseFile": "C:\\Users\\sugimura\\Documents\\plis\\v2\\app\\node_modules\\electron-prebuilt-compile\\README.md"
   },
-  "electron-squirrel-startup@1.0.0": {
+  "electron-squirrel-startup@1.0.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/mongodb-js/electron-squirrel-startup",
     "publisher": "Lucas Hrabovsky",
@@ -2720,7 +2720,7 @@
     "path": "C:\\Users\\sugimura\\Documents\\plis\\v2\\app\\node_modules\\electron-winstaller",
     "licenseFile": "C:\\Users\\sugimura\\Documents\\plis\\v2\\app\\node_modules\\electron-winstaller\\LICENSE"
   },
-  "electron@30.0.3": {
+  "electron@30.0.4": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/electron",
     "publisher": "Electron Community",
