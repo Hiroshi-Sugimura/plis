@@ -26,7 +26,8 @@ import * as dateUtils from 'date-utils';
 app.disableHardwareAcceleration(); // electron設定とmain window
 import Store from 'electron-store';
 import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
-import * as openAboutWindow from 'about-window';  // このアプリについて
+import oaw from 'about-window';  // このアプリについて Common JSモジュール対応、デフォルトエクスポート
+const { default: openAboutWindow } = oaw;  // このアプリについて Common JSモジュール対応、オブジェクトのデストラクチャリング
 import { sqlite3 } from './models/localDBModels.cjs';   // DBデータと連携
 import { mainSystem } from './mainSystem.mjs';  // System configの管理
 import { mainAutoAssessment } from './mainAutoAssessment.mjs';  // 成績付け
