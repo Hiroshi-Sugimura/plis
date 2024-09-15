@@ -17,6 +17,7 @@
     "electron-store": "^10.0.0",
     "hue-handler": "^2.1.1",
     "netatmo": "^2.4.0",
+    "node-aead-crypto": "^3.0.1",
     "node-cron": "^3.0.3",
     "node-tradfri-client": "^3.2.0",
     "request-promise-native": "^1.0.9",
