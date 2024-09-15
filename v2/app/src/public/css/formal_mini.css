@@ -1,0 +1,1159 @@
+/*********************************************************************
+	Style Seet
+	Copyright (C) Hiroshi SUGIMURA 2020.05.26
+	IoT programming Lab., Kanagawa Institute of Technology
+ *********************************************************************/
+/* 変数定義 */
+:root {
+	--main-bg: #F0F0F0;
+	--main-text: #000000;
+	--sub-bg: #ffdddd;
+	--sub-text: #bb4444;
+	--accent: #2A7762;
+	--strong: #DC143C;
+	--link-text: #880000;
+	--shadow: #333333;
+	--inner-bg: #FFFFFF;
+	--p_red: #ffb2b2;
+	--p_purple: #ffb2ff;
+	--p_blue: #b2b2ff;
+	--p_water: #b2ffff;
+	--p_green: #b2ffb2;
+	--p_yellow: #ffffb2;
+	--temprature: rgba( 255, 178, 178, .5);
+	--humidity: rgba( 255, 178, 255, .5);
+	--pressure: rgba( 178, 178, 255, .5);
+	--anbientLight: rgba( 255, 196, 137, .2);
+	--noise: rgba( 70, 70, 220, .2);
+	--co2: rgba( 50, 100, 0, .2);
+	--tvoc: rgba( 178, 255, 255, .2);
+	--discomfort: rgba( 196, 137, 255, .2);
+	--heatStroke: rgba( 137, 196, 255, .2);
+	--watt: rgba(70, 70, 220, 0.3);
+	--ampereR: rgba(178, 178, 255, 0.3);
+	--ampereT: rgba(255, 196, 137, 0.3);
+	--comWattNorm: rgba(255, 178, 178, 0.2);
+	--comWattRev: rgba(255, 178, 255, 0.2);
+	--fixComWattNorm: rgba(178, 255, 178, 0.2);
+	--fixComWattRev: rgba(178, 255, 178, 0.2);
+}
+
+
+
+
+/*********************************************************************
+	共通利用のクラス
+ *********************************************************************/
+/* 回り込みの解除 */
+.clear {
+	clear: both;
+}
+
+
+/* 改行しない */
+.inline {
+	display: inline;
+}
+
+/* 右寄せ */
+.right {
+	text-align: right;
+}
+
+/* 中央揃え */
+.center {
+	text-align: center;
+}
+
+/* 取り消し線 */
+.del {
+	text-decoration: line-through;
+}
+
+
+/* フロート */
+.f_left {
+	float: left;
+}
+
+.f_right {
+	float: right;
+}
+
+/* 影付き文字 */
+.shadow {
+	text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5);
+}
+
+
+/* 画面が小さくなった時に省略可能要素 */
+.omitable {
+	display: none;
+}
+
+
+/* ===================================== */
+/* レイアウト */
+.layoutIndex {
+	margin: 0 auto;
+	/*ブラウザの中央に配置*/
+	width: 95%;
+
+	/* boxレイアウトの指定 */
+	display: -webkit-flex;
+	flex-direction: row;
+	flex-wrap: wrap;
+
+	/* 中央寄せ */
+	box-pack: justify;
+	-webkit-box-pack: justify;
+	-moz-box-pack: justify;
+	justify-content: center;
+}
+
+.leftboxIndex {
+	margin: 0.5em;
+	padding: 0;
+	width: 100%;
+	flex-wrap: wrap;
+	order: 1;
+}
+
+.rightboxIndex {
+	margin: 0.3em;
+	padding: 0em;
+	width: 100%;
+	flex-wrap: wrap;
+	order: 2;
+}
+
+
+
+/* top絵 */
+.topimg {
+	text-align: center;
+	width: 200px;
+	padding: 5px;
+}
+
+
+.followimg {
+	text-align: center;
+	width: 200px;
+	padding: 5px;
+}
+
+.temp_color {
+	background-color: var(--temprature);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+.hum_color {
+	background-color: var(--humidity);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+.pressure_color {
+	background-color: var(--pressure);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+.anbientLight_color {
+	background-color: var(--anbientLight);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+.noise_color {
+	background-color: var(--noise);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+.co2_color {
+	background-color: var(--co2);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+.tvoc_color {
+	background-color: var(--tvoc);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+
+.discomfort_color {
+	background-color: var(--discomfort);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+.heatStroke_color {
+	background-color: var(--heatStroke);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+/* abst 瞬時電力 */
+.watt_color {
+	background-color: var(--watt);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+/* abst 瞬時電流R */
+.ampereR_color {
+	background-color: var(--ampereR);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+/* abst 瞬時電流T */
+.ampereT_color {
+	background-color: var(--ampereT);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+/* abst 積算電力量（正） */
+.comWattNorm_color {
+	background-color: var(--comWattNorm);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+/* abst 積算電力量（逆） */
+.comWattRev_color {
+	background-color: var(--comWattRev);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+/* abst 定時積算電力量（正） */
+.fixComWattNorm_color {
+	background-color: var(--fixComWattNorm);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+/* abst 定時積算電力量（逆） */
+.fixComWattRev_color {
+	background-color: var(--fixComWattRev);
+	margin: 0px;
+	padding: 5px;
+	border: 0px;
+}
+
+/* ===================================== */
+/* その他のページレイアウト */
+.layout {
+	margin: 0 auto;
+	/*ブラウザの中央に配置*/
+	width: 95%;
+	display: flex;
+	justify-content: center;
+}
+
+.leftbox {
+	margin: 1em;
+	padding: 1em;
+	display: inline-block;
+	box-flex: 1;
+	-ms-box-sizing: content-box;
+	/* Internet Explorer 8用 */
+}
+
+.rightbox {
+	margin: 1em;
+	padding: 1em;
+	width: 100%;
+	min-width: 300px;
+	display: inline-block;
+	box-flex: 1;
+	-ms-box-sizing: content-box;
+	/* Internet Explorer 8用 */
+}
+
+
+
+
+
+/* 写真 */
+.pict {
+	display: block;
+	/* ブロックレベル表示に */
+	-moz-box-shadow: 0 4px 10px var(--shadow);
+	/* 影を落とす */
+	-webkit-box-shadow: 0 4px 10px var(--shadow);
+	box-shadow: 0 4px 10px var(--shadow);
+	-webkit-transform: rotate(5deg);
+	/* 回転 */
+	-moz-transform: rotate(5deg);
+	-ms-transform: rotate(52deg);
+	transform: rotate(5deg);
+	border: 2px dotted var(--strong);
+	/*ボーダーの太さ・種類（ドット線）・色*/
+	opacity: 0.9;
+}
+
+
+section {
+	position: relative;
+	background-color: var(--inner-bg);
+	/* margin: 0.5em; */
+	padding: 0.5em;
+	/* 影付け */
+	border: 1px solid #f0f0f0;
+	-moz-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+	-webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+	box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+
+	filter: progid:DXImageTransform.Microsoft.Shadow(color=#777777, direction=0, strength=3, enabled=true);
+	/* IE以外なら丸角も */
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+
+	margin-top: 0.5em;
+	margin-left: 0.1em;
+	margin-right: auto;
+	margin-bottom: 0.5em;
+	min-width: 340px;
+}
+section.terminal {
+	color: white;
+	background-color: black;
+}
+
+section.inf_toast {
+	color: black;
+	background-color: var(--main-bg);
+}
+
+section.err_toast {
+	color: black;
+	background-color: var(--sub-bg);
+	border-color: var(--strong);
+}
+
+
+details {
+	margin: 5px 1em 5px 5px;
+	padding: 2px 1em 2px 2px;
+	/*ボーダーの太さ・種類（ドット線）・色*/
+	border: 2px dotted var(--accent);
+	opacity: 0.9;
+}
+
+
+/* configタブの項目 */
+details.config {
+	margin: 0px;
+	padding: 0px;
+	border: 0px;
+}
+
+summary.config {
+	color: var(--sub-text);
+	font-size: 100%;
+	border-left: solid 1em var(--sub-text);
+	border-bottom: solid 2px var(--sub-text);
+	padding-left: 0.5em;
+	margin-top: 10px;
+	margin-left: 5px;
+}
+
+
+.scrollbox{
+	background-color: var(--inner-bg);
+	margin: 1.5em 1.5em 1.5em 1.5em;
+	padding: 1em;
+	/* 影付け */
+	border: 1px solid var(--shadow);
+	-moz-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+	-webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+	box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+
+	filter: progid:DXImageTransform.Microsoft.Shadow(color=#777777, direction=0, strength=3, enabled=true);
+	/* IE以外なら丸角も */
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	/* はみ出たらスクロール */
+	font-size: 80%;
+	white-space:nowrap;
+	overflow: scroll;
+	height: 500px;
+}
+
+section img {
+	padding-left: 1em;
+	min-width: 10px;
+	max-width: 100px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.absolute {
+	position: absolute;
+}
+
+.toast {
+	position: fixed;
+	top: 50px;
+	right: 50px;
+	max-width: 400px;
+}
+
+
+/*********************************************************************
+ 個別設定
+ *********************************************************************/
+
+html {
+	height: 100%;
+	width: 100%;
+	position: relative;
+	/* font-family: Helvetica , "游ゴシック" , "Yu Gothic" , sans-serif; */
+	font-family: "游明朝体", "Yu Mincho", YuMincho, "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, "ＭＳ ゴシック", sans-serif;
+	scroll-behavior: smooth;
+}
+
+
+
+/* 本体メイン */
+
+body {
+	height: 100%;
+	min-width: 375px;
+	margin: 0px;
+	color: var(--main-text);
+	background-color: var(--main-bg);
+	font-size: medium;
+	position: relative;
+}
+
+#contents {
+	width: 100%;
+	margin-top: 0;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 0;
+	height: auto;
+	padding: 0;
+}
+
+.iframe-wrap {
+	position: relative;
+	width: 100%;
+	padding: 500 0 0;
+	text-align: center;
+}
+
+.iframe-wrap iframe {
+	top: 0;
+	left: 0;
+	width: 90%;
+	min-height: 500px;
+	margin: auto;
+}
+
+
+/* アンカー */
+a {
+	color: var(--strong);
+	text-decoration: none;
+	/* border: solid 1px #ff0000; */
+}
+
+
+/* タイトル */
+h1 {
+	color: var(--accent);
+	font-size: 130%;
+	font-weight: bold;
+	margin-left: 10px;
+}
+
+/* パート */
+h2 {
+	color: var(--sub-text);
+	font-size: 110%;
+	border-left: solid 1em var(--sub-text);
+	border-bottom: solid 2px var(--sub-text);
+	padding-left: 5px;
+	margin-top: 5px;
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+/* チャプター */
+h3 {
+	background-color: var(--inner-bg);
+	color: var(--sub-text);
+	font-size: 105%;
+	border-left: solid 0.5em var(--sub-text);
+	border-bottom: 2px dashed;
+	padding-right: 2px;
+	padding-left: 5px;
+	margin-left: 2px;
+	margin-right: 2px;
+	margin-top: 3px;
+}
+
+/* セクション */
+h4 {
+	color: var(--sub-text);
+	background-color: var(--inner-bg);
+	font-size: 100%;
+	border-left: solid 0.1em var(--sub-text);
+	border-bottom: 2px dashed;
+	padding-right: 1em;
+	padding-left: 0.5em;
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+	margin-left: 0.3em;
+	margin-right: 1px;
+}
+
+
+/* サブセクション */
+h5 {
+	color: var(--sub-text);
+	background-color: var(--inner-bg);
+	font-size: 100%;
+	border-left: solid 0.1em var(--sub-text);
+	border-bottom: 2px dashed;
+	padding-right: 1em;
+	padding-left: 0.5em;
+	margin-left: 1.3em;
+	margin-right: 1px;
+}
+
+
+/* ラインリスト */
+
+
+/* ヘッダーのラインリスト */
+
+header ul {
+	margin: 0px;
+	color: var(--inner-bg);
+	background-color: var(--sub-bg);
+	padding-left: 4px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	border-top: 2px solid var(--sub-text);
+	border-bottom: 2px solid var(--sub-text);
+	font-weight: bold;
+}
+
+li {
+	/* margin-left: 0.2em; */
+	font-size: 90%;
+}
+
+
+
+/* パラグラフ(段落) */
+p {
+	margin-left: 0.4em;
+	margin-right: 1px;
+	padding-left: 0.4em;
+	font-size: 90%;
+}
+
+dl{
+	margin-left: 0.4em;
+	margin-right: 1px;
+	padding: 0.2em;
+	font-size: 90%;
+}
+
+dl ol{  /* ol はcounterが付くため，ulから継承して+2文字分つける*/
+	margin-left: 2.4em;
+}
+dl ul{  /* ol はcounterが付くため，ulから継承して+2文字分つける*/
+	margin-left: 2.4em;
+}
+
+
+div.right {
+	text-align: right;
+}
+
+div.small {
+	font-size: 70%;
+}
+
+/* pタグが有効じゃない場合の代替 */
+div.p {
+	margin-left: 15px;
+	font-size: 100%;
+}
+
+
+dt {
+	border-bottom: solid 1px #cccccc;
+	margin-top: 1em;
+}
+
+dd {
+	border: inherit;
+	padding-left: 1em;
+	font-size: 90%;
+}
+
+
+
+
+/* 取り消し線 */
+font.del {
+	text-decoration: line-through;
+}
+
+
+
+/* アドレスを改行しないで */
+address {
+	/* display: inline; */
+}
+
+
+
+/* 整形済み文章 */
+
+pre {
+	margin-left: 4em;
+	margin-right: 5em;
+	margin-bottom: 5pt;
+	margin-top: 5pt;
+	color: var(--strong);
+	background: var(--inner-bg);
+	padding: 1em;
+	border: 3px dashed var(--sub-text);
+	white-space: pre;
+	font-size: 90%;
+}
+
+b {
+	color: var(--sub-text);
+}
+
+
+/* アナウンスに下線 */
+strong {
+	background: linear-gradient(transparent 60%, var(--accent) 100%);
+}
+
+strong.error {
+	background: linear-gradient(transparent 60%, var(--strong) 100%);
+}
+
+
+table {
+	border-collapse: collapse;
+	/* 隣接セルの間をあけずに配置 */
+	background-color: var(--sub-bg);
+	border-top-color: var(--sub-bg);
+	border-left-color: var(--sub-bg);
+	border-right-color: var(--strong);
+	border-bottom-color: var(--strong);
+	width:95%;
+	margin-left: 1em;
+	margin-right: 1em;
+}
+
+table.data {
+	border-collapse: collapse;
+	/* 隣接セルの間をあけずに配置 */
+	background-color: #ffdddd;
+	border-top-color: var(--sub-bg);
+	border-left-color: var(--sub-bg);
+	border-right-color: var(--strong);
+	border-bottom-color: var(--strong);
+	margin-left: 5em;
+}
+
+table td {
+	background-color: var(--inner-bg);
+	border-top-color: var(--strong);
+	border-left-color:  none;
+	border-right-color: dotted var(--sub-bg);
+	border-bottom-color: dotted var(--sub-bg);
+	text-align: center;
+}
+
+table td.edt {
+	background-color: var(--inner-bg);
+	border-top-color: var(--strong);
+	border-left-color: none;
+	border-right-color: none;
+	border-bottom-color:  dotted var(--sub-bg);
+	text-align: left;
+	word-break: break-word;
+}
+
+table.data td {
+	background-color: var(--inner-bg);
+	border-top: 0px solid var(--strong);
+	border-left: 0px solid var(--strong);
+	border-right: 1px solid var(--sub-bg);
+	border-bottom: 1px solid var(--sub-bg);
+}
+
+header {
+	padding-top: 0.5px;
+	padding-left: 0px;
+	/* padding-bottom: 10px; */
+	background-color: var(--sub-bg);
+	/* font-size: 120%; */
+	border-bottom: 2px solid var(--sub-text);
+}
+
+#nav {
+	padding-top: 0px;
+	padding-bottom: 10px;
+	padding-left: 0px;
+	background-color: var(--sub-bg);
+	display: flexbox;
+}
+
+#nav ol {
+	margin: 0px;
+	margin-top: 20px;
+	padding: 0px;
+	flex-wrap: wrap;
+	display: inline-flex;
+}
+
+#nav li {
+	display: inline;
+	font-weight: bold;
+	border-left: solid 0.5em var(--strong);
+	border-bottom: solid 1px var(--strong);
+	margin-left: 2px;
+	padding-top: 3px;
+	padding-bottom: 3px;
+	padding-left: 3px;
+	width: 90px;
+}
+
+button {
+	padding: 0.3em 1em;
+	display: inline-block;
+	border: solid 2px #67c5ff;
+	text-decoration: none;
+	color: #67c5ff;
+	border-radius: 3px;
+	transition: .4s;
+	position: relative;
+}
+
+button:hover {
+	background: #67c5ff;
+	color: white;
+}
+
+footer {
+	position: absolute;
+	border-top: 2px solid var(--sub-text);
+	margin-top: auto;
+	margin-bottom: 0;
+	margin-left: 0;
+	margin-right: 0;
+	padding-top: 20px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-bottom: 20px;
+	background-color: var(--sub-bg);
+	font-size: 80%;
+}
+
+
+#facilitiesTextarea {
+	margin: 10px auto;
+	width: 80%;
+	max-width: 500px;
+}
+
+#query {
+	margin: 10px 5px 10px 5px;
+	width: 75%;
+	max-width: 500px;
+}
+
+#rawlog {
+	margin: 10px auto 5px auto;
+	width: 100%;
+	max-width: 500px;
+}
+
+textarea {
+	width: 95%;
+	/* 影付け */
+	border: 1px solid var(--shadow);
+	-moz-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+	-webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
+	box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+
+	filter: progid:DXImageTransform.Microsoft.Shadow(color=#777777, direction=0, strength=3, enabled=true);
+	/* IE以外なら丸角も */
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+
+}
+
+.secretText {
+	border: none; /* デフォルトの枠線を消す */
+}
+
+.secretBorder {
+	border-width: thin;
+	border-style: solid;
+	width: 200px;
+}
+
+/*********************************************************************
+/* 特別 */
+
+/* グローバルヘッダー */
+.gheader {
+	position: relative;
+}
+
+/* HAL同期ボタン */
+#hal-control-box {
+	position: absolute;
+	top: 22px;
+	right: 1rem;
+	text-align: right;
+	display: none;
+}
+
+
+/*********************************************************************
+/*タブ切り替え全体のスタイル*/
+.tab_area {
+	margin-top: 50px;
+	padding-bottom: 0px;
+	background-color: #ffffff;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	width: 98%;
+	margin: 0 auto;
+}
+
+/*タブのスタイル，widthはタブの数に合わせて指定する*/
+.tab_item {
+	width: calc(100%/6);
+	height: 50px;
+	border-bottom: 3px solid var(--sub-text);
+	background-color: #d9d9d9;
+	line-height: 50px;
+	font-size: 16px;
+	text-align: center;
+	color: #565656;
+	display: block;
+	float: left;
+	text-align: center;
+	font-weight: bold;
+	transition: all 0.2s ease;
+}
+
+.tab_item:hover {
+	opacity: 0.75;
+}
+
+/*ラジオボタンを全て消す*/
+input[name="tab_item"] {
+	display: none;
+}
+
+/*タブ切り替えの中身のスタイル*/
+.tab_content {
+	display: none;
+	padding: 5px 5px 0;
+	clear: both;
+	overflow: hidden;
+}
+
+/*選択されているタブのコンテンツのみを表示, ここをコンテンツに合わせる*/
+/* button:check ~ tab*/
+#top:checked           ~ #divTop_tab,
+#control:checked ~ #divControl_tab,
+#hal:checked           ~ #divHal_tab,
+#questionnaire:checked ~ #divQestionnaire_tab,
+#details:checked ~ #divDetails_tab,
+#configTab:checked     ~ #divConfig_tab
+{
+	display: block;
+}
+
+
+/*選択されているタブのスタイルを変える*/
+.tab_area input:checked + .tab_item {
+	background-color: var(--sub-text);
+	color: #fff;
+}
+
+/*アナウンスに下線をひいた*/
+strong{
+	background: linear-gradient(transparent 60%, #a7d6ff 60%);
+}
+
+.tab-icon{
+	height: 40px;
+	float: center;
+	vertical-align: middle;
+
+}
+
+/*********************************************************************/
+
+/*タブ切り替え全体のスタイル*/
+.haltab_area {
+	margin-top: 50px;
+	padding-bottom: 5px;
+	background-color: #ffffff;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+	width: 100%;
+	margin: 0 auto;
+}
+
+/*タブのスタイル，widthはタブの数に合わせて指定する*/
+.haltab_item {
+	width: calc(100%/7);
+	height: 50px;
+	border-bottom: 3px solid var(--sub-text);
+	background-color: #d9d9d9;
+	line-height: 50px;
+	font-size: 16px;
+	text-align: center;
+	color: #565656;
+	display: block;
+	float: left;
+	text-align: center;
+	font-weight: bold;
+	transition: all 0.2s ease;
+}
+
+.haltab_item:hover {
+	opacity: 0.75;
+}
+
+/*ラジオボタンを全て消す*/
+input[name="haltab_item"] {
+	display: none;
+}
+
+/*タブ切り替えの中身のスタイル*/
+.haltab_content {
+	display: none;
+	padding: 5px 5px 0;
+	clear: both;
+	overflow: hidden;
+}
+
+/*選択されているタブのコンテンツのみを表示, ここをコンテンツに合わせる*/
+/* button:check ~ tab*/
+#general:checked  ~ #general_content,
+#clothing:checked ~ #clothing_content,
+#food:checked     ~ #food_content,
+#housing:checked  ~ #housing_content,
+#physical:checked ~ #physical_content,
+#mental:checked   ~ #mental_content,
+#ecology:checked  ~ #ecology_content
+{
+	display: block;
+}
+
+/*選択されているタブのスタイルを変える*/
+.haltab_area input:checked + .haltab_item {
+	background-color: var(--sub-text);
+	color: #fff;
+}
+
+
+.hover-image:hover {
+	background-image: src("./img/Ray.png");
+	background-repeat: no-repeat;
+}
+
+.tab-icon{
+	height: 40px;
+	float: center;
+	vertical-align: middle;
+}
+
+.weather-icon {
+	margin-left: 10px;
+	margin-right: 10px;
+	padding: 0px;
+	width: 50px;
+}
+
+.env-icon {
+	margin-left: 10px;
+	margin-right: 10px;
+	height: 30px;
+	width: 30px;
+}
+
+.el-dev {
+	height: 75px;
+}
+
+.el-settings-btn {
+	position: absolute;
+	right: 10px;
+}
+
+.hue-dev {
+	height: 100px;
+}
+
+.dev-type-icon {
+	margin-right: 10px;
+	padding: 0px;
+	height: 30px;
+}
+
+.devTypeOmron {
+	position: absolute;
+	left: 10px;
+	height: 15px;
+}
+
+
+.canRoomEnvChart {
+	display: none;
+}
+
+.disabled {
+	background-color: #d9d9d9;
+}
+
+/*********************************************************************/
+/* tooltip */
+
+/* 呼び出し対象を指定 */
+.tooltip{
+	position: relative;
+	cursor: pointer;
+	display:  inline-block;
+}
+
+/* 吹き出しの中身を指定 */
+.description {
+	display: none;
+	position: absolute;
+	padding: 10px;
+	font-size: 12px;
+	line-height: 1.6em;
+	color: #ffffff;
+	border-radius: 5px;
+	background: #000000;
+}
+
+/* 吹き出しの三角 */
+.description:before {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	border: 15px solid transparent;
+	border-top: 15px solid #000;
+	margin-left: -15px;
+}
+
+/* 全体の位置 */
+.tooltip:hover .description{
+	display: inline-block;
+}
+
+/* 追従するTOPへ戻るボタン */
+#page-top {
+    position: fixed;
+    right: 5px;
+    bottom: 20px;
+    height: 50px;
+    text-decoration: none;
+    font-weight: bold;
+    transform: rotate(90deg);
+    font-size: 90%;
+    line-height: 1.5rem;
+    color: #737373;
+    padding: 0 0 0 35px;
+    border-top: solid 1px;
+}
+
+#page-top::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: -1px;
+    left: 0px;
+    width: 15px;
+    border-top: solid 1px;
+    transform: rotate(35deg);
+    transform-origin: left top;
+}
+
+/*********************************************************************/
+/* fontawesome */
+
+.icon::before {
+	font-family: "Font Awesome 5 Free";
+	font-weight: 900;
+	content: "\f000";
+}
+
+
+/*********************************************************************/
+/* calendar */
+
+td:first-child,
+td.holiday {
+    color: red;
+}
+
+
+
+/* clock */
+.clock-wrap {
+	margin: auto;
+	width: 200px;
+	height: 200px;
+	text-align: center;
+
+}
+
+.clock {
+	display: block;
+	margin: auto;
+}
+
+
+/*********************************************************************
+	EOF
+ *********************************************************************/

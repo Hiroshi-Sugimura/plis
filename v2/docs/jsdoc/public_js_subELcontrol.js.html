@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>public/js/subELcontrol.js - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://hiroshi-sugimura.github.io/plis/" target="_blank" class="menu-item" id="forum_link" >Website</a></h2><h2><a href="https://github.com/Hiroshi-Sugimura/plis" target="_blank" class="menu-item" id="website_link" >Github</a></h2><h3>Namespaces</h3><ul><li><a href="subCalendar.html">subCalendar</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subCalendar.html#.checkDate">checkDate</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.createProcess">createProcess</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.isHoliday">isHoliday</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.isToday">isToday</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.showProcess">showProcess</a></li></ul></li><li><a href="subClock.html">subClock</a></li><li><a href="subCo2s.html">subCo2s</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subCo2s.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subCo2s.html#.renewCanvasCo2s">renewCanvasCo2s</a></li></ul></li><li><a href="subEL.html">subEL</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subEL.html#.convRT">convRT</a></li><li data-type='method' style='display: none;'><a href="subEL.html#.renewCanvasSubESM">renewCanvasSubESM</a></li></ul></li><li><a href="subELcontrol.html">subELcontrol</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subELcontrol.html#.colorButton">colorButton</a></li></ul></li><li><a href="subESM.html">subESM</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subESM.html#.convRT">convRT</a></li><li data-type='method' style='display: none;'><a href="subESM.html#.renewCanvasESM">renewCanvasESM</a></li></ul></li><li><a href="subGarmin.html">subGarmin</a></li><li><a href="subHAL.html">subHAL</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subHAL.html#.btnQuestionnaireSubmit_click">btnQuestionnaireSubmit_click</a></li><li data-type='method' style='display: none;'><a href="subHAL.html#.ranking">ranking</a></li><li data-type='method' style='display: none;'><a href="subHAL.html#.renewMajorResults">renewMajorResults</a></li><li data-type='method' style='display: none;'><a href="subHAL.html#.renewMinorResults">renewMinorResults</a></li></ul></li><li><a href="subHue.html">subHue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subHue.html#.dlgHuePush_oncancel">dlgHuePush_oncancel</a></li></ul></li><li><a href="subIkea.html">subIkea</a></li><li><a href="subJma.html">subJma</a></li><li><a href="subLog.html">subLog</a></li><li><a href="subNetatmo.html">subNetatmo</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subNetatmo.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subNetatmo.html#.renewCanvasNetatmo">renewCanvasNetatmo</a></li></ul></li><li><a href="subOmron.html">subOmron</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subOmron.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subOmron.html#.renewCanvasOmron">renewCanvasOmron</a></li></ul></li><li><a href="subOwm.html">subOwm</a></li><li><a href="subQuestionnaire.html">subQuestionnaire</a></li><li><a href="subSwitchBot.html">subSwitchBot</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.newPowerLegendClickHandler">newPowerLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.renewCanvasSwitchBot">renewCanvasSwitchBot</a></li><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.renewPowerCanvasSwitchBot">renewPowerCanvasSwitchBot</a></li></ul></li><li><a href="subSystem.html">subSystem</a></li><li><a href="subToast.html">subToast</a></li><li><a href="subUser.html">subUser</a></li><li><a href="window_.html">window</a><ul class='methods'><li data-type='method' style='display: none;'><a href="window_.html#.Co2sConfigSaved">Co2sConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.Co2sDocSectionClicked">Co2sDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELAAirconChangeMode">ELAAirconChangeMode</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELAirconShowControlDialog">ELAirconShowControlDialog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELConfigSaved">ELConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELLightingScineButton">ELLightingScineButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELSendTest">ELSendTest</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELSettings">ELSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELUpdateLocation">ELUpdateLocation</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELUpdateSettings">ELUpdateSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELpowButton">ELpowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELpowButton">ELpowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ESMConfigSaved">ESMConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALRedraw">HALRedraw</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALSyncResponse">HALSyncResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALdeleteApiTokenResponse">HALdeleteApiTokenResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALgetUserProfileResponse">HALgetUserProfileResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALsetApiTokenResponse">HALsetApiTokenResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HueConfigSaved">HueConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HuePowButton">HuePowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HueRename">HueRename</a></li><li data-type='method' style='display: none;'><a href="window_.html#.IkeaConfigSaved">IkeaConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.IkeaPowButton">IkeaPowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.JmaConfigSaved">JmaConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.NetatmoConfigSaved">NetatmoConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OmronConfigSaved">OmronConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OwmConfigSaved">OwmConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotConfigSaved">SwitchBotConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotPlug">SwitchBotPlug</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SystemConfigSaved">SystemConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.URLopen">URLopen</a></li><li data-type='method' style='display: none;'><a href="window_.html#.UserConfigSaved">UserConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.addToast">addToast</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnCalendarRenewSyukujitsu_Click">btnCalendarRenewSyukujitsu_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnCo2sConfigSet_Click">btnCo2sConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnDeleteHalApiToken_Click">btnDeleteHalApiToken_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnELConfigSet_Click">btnELConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnESMConfigSet_Click">btnESMConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnHALsync_Click">btnHALsync_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnHueConfigSet_Click">btnHueConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnIkeaConfigSet_Click">btnIkeaConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnJmaConfigSet_Click">btnJmaConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnNetatmoConfigSet_Click">btnNetatmoConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnNetworkConfigSet_Click">btnNetworkConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnOmronConfigSet_Click">btnOmronConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnOwmConfigSet_Click">btnOwmConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSetHalApiTokenBtn_Click">btnSetHalApiTokenBtn_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotConfigSet_Click">btnSwitchBotConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSystemConfigSet_Click">btnSystemConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnUserProfileSet_Click">btnUserProfileSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.calendarNext">calendarNext</a></li><li data-type='method' style='display: none;'><a href="window_.html#.calendarPrev">calendarPrev</a></li><li data-type='method' style='display: none;'><a href="window_.html#.createControlELButton">createControlELButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.disconnectedCo2s">disconnectedCo2s</a></li><li data-type='method' style='display: none;'><a href="window_.html#.disconnectedESM">disconnectedESM</a></li><li data-type='method' style='display: none;'><a href="window_.html#.disconnectedOmron">disconnectedOmron</a></li><li data-type='method' style='display: none;'><a href="window_.html#.esmDocSectionClicked">esmDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.getQuestionnaire">getQuestionnaire</a></li><li data-type='method' style='display: none;'><a href="window_.html#.hueLinked">hueLinked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inJmaArea_Change">inJmaArea_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.makeJmaArea">makeJmaArea</a></li><li data-type='method' style='display: none;'><a href="window_.html#.netatmoDocSectionClicked">netatmoDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.omronDocSectionClicked">omronDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.onLoad">onLoad</a></li><li data-type='method' style='display: none;'><a href="window_.html#.openHueRenameDlg">openHueRenameDlg</a></li><li data-type='method' style='display: none;'><a href="window_.html#.pushHideButton">pushHideButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.redrawToast">redrawToast</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewCo2s">renewCo2s</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewCo2sConfigView">renewCo2sConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewELConfigView">renewELConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewESM">renewESM</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewESMConfigView">renewESMConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewEnergy">renewEnergy</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewEnergySubmeter">renewEnergySubmeter</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesEL">renewFacilitiesEL</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesHue">renewFacilitiesHue</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesIkea">renewFacilitiesIkea</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesSwitchBot">renewFacilitiesSwitchBot</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHALConfigView">renewHALConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHALProfile">renewHALProfile</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHALToken">renewHALToken</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHueConfigView">renewHueConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHueLog">renewHueLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewIkeaConfigView">renewIkeaConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewIkeaLog">renewIkeaLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJma">renewJma</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJmaAbst">renewJmaAbst</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJmaConfigView">renewJmaConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJmaDetail">renewJmaDetail</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewNetatmo">renewNetatmo</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewNetatmoConfigView">renewNetatmoConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOmron">renewOmron</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOmronConfigView">renewOmronConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOwm">renewOwm</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOwmConfigView">renewOwmConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvCo2s">renewRoomEnvCo2s</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvNetatmo">renewRoomEnvNetatmo</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvOmron">renewRoomEnvOmron</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvSwitchBot">renewRoomEnvSwitchBot</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewSubESM">renewSubESM</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewSwitchBotConfigView">renewSwitchBotConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewSystemConfigView">renewSystemConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewUserConfigView">renewUserConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.showGarminData">showGarminData</a></li></ul></li><li><a href="window.ipc.html">ipc</a></li></ul><h3>Modules</h3><ul><li><a href="module-main.html">main</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-main.html#~createShortCut">createShortCut</a></li><li data-type='method' style='display: none;'><a href="module-main.html#~createWindow">createWindow</a></li><li data-type='method' style='display: none;'><a href="module-main.html#~menuInitialize">menuInitialize</a></li><li data-type='method' style='display: none;'><a href="module-main.html#~saveConfig">saveConfig</a></li><li data-type='method' style='display: none;'><a href="module-main.html#~savePersist">savePersist</a></li></ul></li><li><a href="module-mainArp.html">mainArp</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainArp.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainArp.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainArp.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainArp.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainArp.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainArp.html#~stopObservation">stopObservation</a></li><li data-type='method' style='display: none;'><a href="module-mainArp.html#~stopWithoutSave">stopWithoutSave</a></li><li data-type='method' style='display: none;'><a href="module-mainArp.html#~toMAC">toMAC</a></li></ul></li><li><a href="module-mainAutoAssessment.html">mainAutoAssessment</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainAutoAssessment.html#~assessment">assessment</a></li><li data-type='method' style='display: none;'><a href="module-mainAutoAssessment.html#~calcMajorResults">calcMajorResults</a></li><li data-type='method' style='display: none;'><a href="module-mainAutoAssessment.html#~lastMR2mr">lastMR2mr</a></li><li data-type='method' style='display: none;'><a href="module-mainAutoAssessment.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainAutoAssessment.html#~stop">stop</a></li></ul></li><li><a href="module-mainCalendar.html">mainCalendar</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainCalendar.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainCalendar.html#~getHolidays">getHolidays</a></li><li data-type='method' style='display: none;'><a href="module-mainCalendar.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainCalendar.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainCalendar.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainCalendar.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainCo2s.html">mainCo2s</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~getCases">getCases</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~getRows">getRows</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~getTodayRoomEnv">getTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~sendTodayRoomEnv">sendTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainEL.html">mainEL</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainEL.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~getStatic">getStatic</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~getTodayElectricEnergy_submeter">getTodayElectricEnergy_submeter</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~init">init</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~observation">observation</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~received">received</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~search">search</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~sendMsg">sendMsg</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~sendOPC1">sendOPC1</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~sendTodayEnergy">sendTodayEnergy</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~setCron">setCron</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~sleep">sleep</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~stopObservation">stopObservation</a></li><li data-type='method' style='display: none;'><a href="module-mainEL.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainESM.html">mainESM</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainESM.html#~changeCallback">changeCallback</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~getCases">getCases</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~getRows">getRows</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~getTodayElectricEnergy">getTodayElectricEnergy</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~insertDB">insertDB</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~observe">observe</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~received">received</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~renewPortList">renewPortList</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~sendTodayEnergy">sendTodayEnergy</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~stopObservation">stopObservation</a></li><li data-type='method' style='display: none;'><a href="module-mainESM.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainHALlocal.html">mainHALlocal</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainHALlocal.html#~calcMajorResults">calcMajorResults</a></li><li data-type='method' style='display: none;'><a href="module-mainHALlocal.html#~getLastData">getLastData</a></li><li data-type='method' style='display: none;'><a href="module-mainHALlocal.html#~getToday">getToday</a></li><li data-type='method' style='display: none;'><a href="module-mainHALlocal.html#~initialize">initialize</a></li><li data-type='method' style='display: none;'><a href="module-mainHALlocal.html#~roundMajorFloat">roundMajorFloat</a></li><li data-type='method' style='display: none;'><a href="module-mainHALlocal.html#~submitQuestionnaire">submitQuestionnaire</a></li><li data-type='method' style='display: none;'><a href="module-mainHALlocal.html#~truncatelogs">truncatelogs</a></li></ul></li><li><a href="module-mainHALsync.html">mainHALsync</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~ConfigSave">ConfigSave</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~deleteHalApiToken">deleteHalApiToken</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~garminDownload">garminDownload</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~getHalUserProfileRequest">getHalUserProfileRequest</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~httpGetRequest">httpGetRequest</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~httpPostRequest">httpPostRequest</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~renewConfigView">renewConfigView</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~setHalApiTokenRequest">setHalApiTokenRequest</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~startSync">startSync</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~startUploadEldata">startUploadEldata</a></li><li data-type='method' style='display: none;'><a href="module-mainHALsync.html#~stop">stop</a></li></ul></li><li><a href="module-mainHue.html">mainHue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainHue.html#~cancel">cancel</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~control">control</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~dummy">dummy</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~received">received</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~startCore">startCore</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~startObserve">startObserve</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~stopObserve">stopObserve</a></li><li data-type='method' style='display: none;'><a href="module-mainHue.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainIkea.html">mainIkea</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~observe">observe</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~received">received</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~startCore">startCore</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainIkea.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainJma.html">mainJma</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainJma.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~gets">gets</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~parseAbst">parseAbst</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~parseAbstRaw">parseAbstRaw</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~parseDetail">parseDetail</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~parseDetailRaw">parseDetailRaw</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~setObserve">setObserve</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~stopObservation">stopObservation</a></li><li data-type='method' style='display: none;'><a href="module-mainJma.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainNetatmo.html">mainNetatmo</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~getCases">getCases</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~getRows">getRows</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~getTodayRoomEnv">getTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~sendTodayRoomEnv">sendTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~setObserve">setObserve</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~stopObservation">stopObservation</a></li><li data-type='method' style='display: none;'><a href="module-mainNetatmo.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainOmron.html">mainOmron</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getCases">getCases</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getRows">getRows</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getTodayRoomEnv">getTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~sendTodayRoomEnv">sendTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainOwm.html">mainOwm</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~setObserve">setObserve</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~startCore">startCore</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~stopObservation">stopObservation</a></li><li data-type='method' style='display: none;'><a href="module-mainOwm.html#~stopWithoutSave">stopWithoutSave</a></li></ul></li><li><a href="module-mainSubmodule.html">mainSubmodule</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~checkValue">checkValue</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getNow">getNow</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getToday">getToday</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getYesterday">getYesterday</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~isObjEmpty">isObjEmpty</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~mergeDeeply">mergeDeeply</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~objectSort">objectSort</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~roundFloat">roundFloat</a></li></ul></li><li><a href="module-mainSwitchBot.html">mainSwitchBot</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~control">control</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getCases">getCases</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getCurrentRows">getCurrentRows</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getHumidityRows">getHumidityRows</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getMeterList">getMeterList</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getPersist">getPersist</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getTempratureRows">getTempratureRows</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getTodayRoomEnvSwitchBot">getTodayRoomEnvSwitchBot</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getVoltageRows">getVoltageRows</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~getWeightRows">getWeightRows</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~plugMiniList">plugMiniList</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~renewFacilities">renewFacilities</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~sendTodayRoomEnv">sendTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~stop">stop</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~stopObservation">stopObservation</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~stopWithoutSave">stopWithoutSave</a></li><li data-type='method' style='display: none;'><a href="module-mainSwitchBot.html#~storeData">storeData</a></li></ul></li><li><a href="module-mainSystem.html">mainSystem</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainSystem.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainSystem.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainSystem.html#~stop">stop</a></li></ul></li><li><a href="module-mainUser.html">mainUser</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainUser.html#~getConfig">getConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainUser.html#~setConfig">setConfig</a></li><li data-type='method' style='display: none;'><a href="module-mainUser.html#~start">start</a></li><li data-type='method' style='display: none;'><a href="module-mainUser.html#~stop">stop</a></li></ul></li><li><a href="module-preload.html">preload</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-preload.html#~CalendarRenewHolidays">CalendarRenewHolidays</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~Co2sStop">Co2sStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~Co2sUse">Co2sUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELStop">ELStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELStopOldSearch">ELStopOldSearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELUse">ELUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELUseOldSearch">ELUseOldSearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELsearch">ELsearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ESMUse">ESMUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ESMnotUse">ESMnotUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~Elsend">Elsend</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ElsendOPC1">ElsendOPC1</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALSyncRequeset">HALSyncRequeset</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALdeleteApiToken">HALdeleteApiToken</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALgetApiTokenRequest">HALgetApiTokenRequest</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALgetUserProfileRequest">HALgetUserProfileRequest</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALrenew">HALrenew</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALsetApiTokenRequest">HALsetApiTokenRequest</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALsubmitQuestionnaire">HALsubmitQuestionnaire</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueControl">HueControl</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueUse">HueUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueUseCancel">HueUseCancel</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueUseStop">HueUseStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~IkeaSend">IkeaSend</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~IkeaUse">IkeaUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~IkeaUseStop">IkeaUseStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~JmaConfigSave">JmaConfigSave</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~NetatmoStop">NetatmoStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~NetatmoUse">NetatmoUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OmronStop">OmronStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OmronUse">OmronUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OwmStop">OwmStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OwmUse">OwmUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearch">PageInSearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearchNext">PageInSearchNext</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearchPrev">PageInSearchPrev</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearchStop">PageInSearchStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ScreenMode">ScreenMode</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SwitchBotControl">SwitchBotControl</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SwitchBotStop">SwitchBotStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SwitchBotUse">SwitchBotUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SystemSetConfig">SystemSetConfig</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~URLopen">URLopen</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~already">already</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~userProfileSave">userProfileSave</a></li></ul></li></ul><h3>Events</h3><ul><li><a href="multicastSearch.html#event:click">click</a></li><li><a href="window.ipc.html#.event:to-renderer">to-renderer</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">public/js/subELcontrol.js</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>//////////////////////////////////////////////////////////////////////
+//	Copyright (C) SUGIMURA Lab. 2022.08.26
+//////////////////////////////////////////////////////////////////////
+'use strict'
+
+
+////////////////////////////////////////////////////////////////////////////////
+// HTMLロードしたら準備
+/**
+ * @namespace subELcontrol
+ */
+window.addEventListener('DOMContentLoaded', function () {
+	console.dir('## DOMContentLoaded subELcontrol.js');
+
+	let facilitiesEL = {};  // main.js の shallow copy、 createControlELButtonの呼び出しの時に毎回更新しておく
+
+
+	////////////////////////////////////////////////////////////////////////////////
+	/** 
+	 * @func window.createControlELButton
+	 * @desc ECHONET Lite, Each control interface
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.createControlELButton = function (_facilitiesEL, ip, eoj) {
+		facilitiesEL = _facilitiesEL; // ボタン更新とともに、facilitiesELも更新しておく
+
+		let ret = "";
+		let obj = "";
+		try {
+			obj = eoj.split(/\(|\)/);  // マルかっこで分割
+		} catch (error) {
+			console.error('Error: subEL.window.renewFacilitiesEL() control tab, error:', error);
+			console.error('ip:', ip, 'eoj:', eoj);
+			return;
+		}
+
+		if (obj[1] === '0ef001') { return; } // Node Profileはコントローラとしては無視, eachではcontinueではなくreturn
+
+		let operatingStatus = facilitiesEL[ip][eoj]["動作状態(80)"];
+		let instLocation = facilitiesEL[ip][eoj]["設置場所(81)"] || "不明";
+		let makerCode = facilitiesEL[ip][eoj]["メーカコード(8A)"];
+
+		// 機器オブジェクトになくて，ノードプロファイルにある読む場合
+		if (makerCode == undefined &amp;&amp; facilitiesEL[ip]["ノードプロファイル01(0ef001)"]) {
+			makerCode = facilitiesEL[ip]["ノードプロファイル01(0ef001)"]["メーカコード(8A)"];
+		}
+
+		if (makerCode != undefined) {
+			makerCode = makerCode.split('(')[0];  // メーカ名だけにする
+		}
+
+		// 画像
+		// オブジェクトによって処理（インタフェース）を変える
+		switch (obj[1].substring(0, 4)) {
+			case "0011": // 温度センサ
+				operatingStatus = facilitiesEL[ip][eoj]["温度計測値(E0)"];
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0011.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+
+				if (operatingStatus != undefined) {
+					ret += operatingStatus + "&lt;br>";
+				}
+				break;
+
+			case "0022": // 電力量センサ
+				let volt = undefined;
+				if (facilitiesEL[ip][eoj]["実効電圧値計測値(E5)"]) {
+					volt = facilitiesEL[ip][eoj]["実効電圧値計測値(E5)"].split('V')[0];
+				}
+
+				let watt = facilitiesEL[ip][eoj]["小容量センサ瞬時電力値計測値(E2)"];
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0022.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+
+				if (volt != undefined) {
+					ret += volt + "[V]&lt;br>";
+				}
+				if (watt != undefined) {
+					ret += watt + "[W]&lt;br>";
+				}
+				break;
+
+			case "0130": // エアコン
+				operatingStatus = facilitiesEL[ip][eoj]["動作状態(80)"];
+
+				if (operatingStatus === 'ON(30)') {
+					ret = `&lt;div class='tooltip'>&lt;img src='./img/0130_30.png' class='el-dev' />&lt;div class='description' onclick='window.ELAirconShowControlDialog("${ip}", "${eoj}")'>` + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onClick='ELpowButton(this);' value='" + ip + "," + obj[1] + ",80,31'>OFF&lt;/button>&lt;br>";
+				} else {
+					ret = `&lt;div class='tooltip'>&lt;img src='./img/0130_31.png' class='el-dev' />&lt;div class='description' onclick='window.ELAirconShowControlDialog("${ip}", "${eoj}")'>` + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onClick='ELpowButton(this);' value='" + ip + "," + obj[1] + ",80,30'>ON&lt;/button>&lt;br>";
+				}
+				break;
+
+			case "0133": // 換気扇
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0133.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+			case "0135": // 空気清浄機
+				operatingStatus = facilitiesEL[ip][eoj]["動作状態(80)"];
+				if (operatingStatus === 'ON(30)') {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0135_30.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onClick=\"ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,31\">OFF&lt;/button>&lt;br>";
+				} else {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0135_31.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onClick=\"ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,30\">ON&lt;/button>&lt;br>";
+				}
+				break;
+
+			case "015a": // レンジフード
+				operatingStatus = facilitiesEL[ip][eoj]["動作状態(80)"];
+				if (operatingStatus === 'ON(30)') {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/015a_30.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onClick=\"ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,31\">OFF&lt;/button>&lt;br>";
+				} else {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/015a_31.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onClick=\"ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,30\">ON&lt;/button>&lt;br>";
+				}
+				break;
+
+			case "0260": // 日よけ・ブラインド
+				operatingStatus = facilitiesEL[ip][eoj]["開閉（張出し／収納）動作設定(E0)"];
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0260.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				if (operatingStatus === '開(41)') {
+					ret += "開 → &lt;button onClick=\"ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",E0,42\">閉&lt;/button>&lt;br>";
+				} else {
+					ret += "閉 → &lt;button onClick=\"ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",E0,41\">開&lt;/button>&lt;br>";
+				}
+				break;
+
+			case "0263": // シャッター
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0263.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+
+			case "026b": // 電気温水器
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/026b.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+			case "026f": // 電気錠
+				operatingStatus = facilitiesEL[ip][eoj]["施錠設定1(E0)"];
+				if (operatingStatus === '施錠(41)') {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/026f_41.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",E0,42\">解錠&lt;/button>&lt;br>";
+				} else {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/026f_42.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",E0,41\">施錠&lt;/button>&lt;br>";
+				}
+				break;
+
+			case "0272": // 瞬間式給湯器
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0272.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+			case "0279": // 太陽光発電
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0279.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+			case "027b": // 床暖房
+				operatingStatus = facilitiesEL[ip][eoj]["動作状態(80)"];
+				if (operatingStatus === 'ON(30)') {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/027b_30.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onClick=\"ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,31\">OFF&lt;/button>&lt;br>";
+				} else {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/027b_31.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onClick=\"ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,30\">ON&lt;/button>&lt;br>";
+				}
+				break;
+
+			case "027c": // 燃料発電
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/027c.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+			case "027d": // 蓄電池
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/027d.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+
+			case "0280": // 電力量メータ
+				// let amountGus = facilitiesEL[ip][eoj]["積算ガス消費量計測値(E0)"];
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0280.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				// if (amountGus != undefined) {
+				// ret += (amountGus.split('m')[0] * 0.001) + "[m&lt;sup>3&lt;/sup>]&lt;br>";
+				// }
+				break;
+
+			case "0281": // 水流量メータ
+				let amountWater = facilitiesEL[ip][eoj]["積算水流量計測値(E0)"];
+				let unitAmountWater = facilitiesEL[ip][eoj]["積算水流量計測値単位(E1)"] != undefined ? facilitiesEL[ip][eoj]["積算水流量計測値単位(E1)"] : '0.0001(No data)';
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0281.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				if (amountWater != undefined) {
+					ret += (amountWater.split('m')[0] * unitAmountWater.split('(')[0]) + "[m&lt;sup>3&lt;/sup>]&lt;br>";
+				}
+				break;
+
+			case "0282": // ガスメータ
+				let amountGus = facilitiesEL[ip][eoj]["積算ガス消費量計測値(E0)"];
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0282.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				if (amountGus != undefined) {
+					ret += (amountGus.split('m')[0] * 0.001) + "[m&lt;sup>3&lt;/sup>]&lt;br>";
+				}
+				break;
+
+			case "0287": // 分電盤メータリング
+				operatingStatus = facilitiesEL[ip][eoj]["瞬時電力計測値(E7)"];
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0287.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				if (operatingStatus != undefined) {
+					ret += operatingStatus + "&lt;br>";
+				}
+				break;
+
+			case "0288": // 低圧スマート電力メータ
+				operatingStatus = facilitiesEL[ip][eoj]["瞬時電力計測値(E7)"];
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0288.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				if (operatingStatus != undefined) {
+					ret += operatingStatus + "&lt;br>";
+				}
+				break;
+
+			case "028a": // 高圧スマート電力メータ
+				operatingStatus = facilitiesEL[ip][eoj]["瞬時電力計測値(E7)"];
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/028a.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				if (operatingStatus != undefined) {
+					ret += operatingStatus + "&lt;br>";
+				}
+				break;
+
+
+			case "028d": // スマート電力サブメーター
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/028d.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+			case "0290": // 一般照明
+				operatingStatus = facilitiesEL[ip][eoj]["動作状態(80)"];
+
+				if (operatingStatus === 'ON(30)') {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0290_30.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,31\">OFF&lt;/button>&lt;br>";
+				} else {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0290_31.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,30\">ON&lt;/button>&lt;br>";
+				}
+				break;
+
+			case "0291": // 単機能照明
+				operatingStatus = facilitiesEL[ip][eoj]["動作状態(80)"];
+
+				if (operatingStatus === 'ON(30)') {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0291_30.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,31\">OFF&lt;/button>&lt;br>";
+				} else {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0291_31.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,30\">ON&lt;/button>&lt;br>";
+				}
+				break;
+
+			case "02a1": // 電気自動車充電器
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/02a1.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+			case "02a6": // ハイブリッド給湯機
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/02a6.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+
+			case "0273": // 浴室暖房乾燥機
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0273.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+			case "027e": // 電気自動車充放電気
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/02a1.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+			case "02a3": // 照明システム
+				operatingStatus = facilitiesEL[ip][eoj]["動作状態(80)"];
+				let scineNow = facilitiesEL[ip][eoj]["シーン制御設定(C0)"];
+				let scineNum = facilitiesEL[ip][eoj]["シーン制御設定可能数(C1)"];
+
+				if (scineNum == undefined) {				// シーンの個数が取れていないので取りに行く
+					// console.log( scineNum );
+					window.ipc.Elsend(ip, '1081000005ff01' + obj[1] + '6201c100');
+				}
+
+				if (operatingStatus === 'ON(30)') {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/02a3_30.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,31\">Scine:" + scineNum + " / OFF&lt;/button>&lt;br>";
+				} else {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/02a3_31.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,30\">ON&lt;/button>&lt;br>";
+				}
+
+				for (let i = 1; i &lt;= 4; i += 1) { // シーンボタン，scineNumを使うべきだが，20とか数値が返ってくるので
+					ret += "&lt;button onclick=\"window.ELLightingScineButton(this);\" value=\"" + ip + "," + obj[1] + ",C0,0" + i + "\">" + i + "&lt;/button> ";
+				}
+				break;
+
+			case "03b7": // 冷蔵庫
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/03b7.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+			case "03b8": // 電子レンジ
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/03b8.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+			case "03d3": // 洗濯機
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/03d3.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+			case "03cb": // 掃除機
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/03cb.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+
+			case "05fd": // スイッチ JEMA/HA
+				operatingStatus = facilitiesEL[ip][eoj]["動作状態(80)"];
+
+				if (operatingStatus === 'ON(30)') {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/05fd_30.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,31\">OFF&lt;/button>&lt;br>";
+				} else {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/05fd_31.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,30\">ON&lt;/button>&lt;br>";
+				}
+				break;
+
+			case "05ff": // コントローラ
+				ret = "&lt;div class='tooltip'>&lt;img src=\"./img/05ff.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br class='omitable'>" + obj[0] + "&lt;br>";
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+
+
+			case "0602": // テレビ
+				operatingStatus = facilitiesEL[ip][eoj]["動作状態(80)"];
+
+				if (operatingStatus === 'ON(30)') {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0602_30.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,31\">OFF&lt;/button>&lt;br>";
+				} else {
+					ret = "&lt;div class='tooltip'>&lt;img src=\"./img/0602_31.png\" class='el-dev' />&lt;div class='description'>" + makerCode + "&amp;#013;&amp;#010;" + ip + "&lt;/div>&lt;/div>&lt;br>" + obj[0] + "&lt;br>";
+					ret += "場所:" + instLocation + "&lt;br>";
+					ret += "&lt;button onclick=\"window.ELpowButton(this);\" value=\"" + ip + "," + obj[1] + ",80,30\">ON&lt;/button>&lt;br>";
+				}
+				break;
+
+			default:
+				console.log('subELcontrols.createControlELButton(), no case device, using default:', ip, eoj);
+				// console.dir(facilitiesEL[ip][eoj]);
+				ret = `&lt;div class='tooltip'>&lt;img src='./img/${obj[1].substring(0, 2)}.png' class='el-dev' />&lt;div class='description'>${makerCode}&amp;#013;&amp;#010;${ip}&lt;/div>&lt;/div>&lt;br class='omitable'>${obj[0]}&lt;br>`;
+				ret += "場所:" + instLocation + "&lt;br>";
+				break;
+		}
+
+		return ret;
+	};
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////
+	/** 
+	 * @func window.ELSettings
+	 * @desc GUIイベント，関数で閉じてしまっているので，Global変数のWindowからアクセスできるようにしておく
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.ELSettings = function (ip, obj) {
+		let eoj = obj.split(/\(|\)/)[1];  // マルかっこで分割
+		console.log('ELSettings ip:', ip, 'obj:', obj, 'eoj:', eoj);
+
+		if (eoj === '0ef001') { return; } // Node Profileはコントローラとしては無視, eachではcontinueではなくreturn
+
+		let instLocation = facilitiesEL[ip][obj]["設置場所(81)"] || "不明";
+
+		ELSettingsContents.innerHTML = "&lt;form>";
+		ELSettingsContents.innerHTML += "設置場所（現在）:" + instLocation + "&lt;i class='fa-solid fa-right-long'>&lt;/i>"
+			+ "設置場所（変更後）:"
+			+ "&lt;select id='UpdateInstLocation' id='UpdateInstLocationSelecter'> \
+				  &lt;option value='08'>居間、リビング&lt;/option> \
+				  &lt;option value='10'>食堂、ダイニング&lt;/option> \
+				  &lt;option value='18'>台所、キッチン&lt;/option> \
+				  &lt;option value='20'>浴槽、バス&lt;/option> \
+				  &lt;option value='28'>トイレ&lt;/option> \
+				  &lt;option value='30'>洗面所、脱衣所&lt;/option> \
+				  &lt;option value='38'>廊下&lt;/option> \
+				  &lt;option value='40'>部屋&lt;/option> \
+				  &lt;option value='48'>階段&lt;/option> \
+				  &lt;option value='50'>玄関&lt;/option> \
+				  &lt;option value='58'>納屋&lt;/option> \
+				  &lt;option value='60'>庭、外周&lt;/option> \
+				  &lt;option value='68'>車庫&lt;/option> \
+				  &lt;option value='70'>ベランダ、バルコニー&lt;/option> \
+				  &lt;option value='78'>その他&lt;/option> \
+				  &lt;option value='00'>未設定&lt;/option> \
+				  &lt;option value='ff'>不定&lt;/option> \
+				&lt;/select>" ;
+
+		ELSettingsContents.innerHTML += "&lt;/form>";
+
+		ELSettingsContents.innerHTML += `&lt;button type='button' onclick='window.ELUpdateSettings("${ip}", "${eoj}");document.getElementById("ELSettingsDialog").close();'>更新&lt;/button>`
+			+ '&lt;button type="button" onclick="document.getElementById(\'ELSettingsDialog\').close()">キャンセル&lt;/button>';
+
+		ELSettingsDialog.showModal();
+	};
+
+	/** 
+	 * @func window.ELUpdateSettings
+	 * @desc 設定更新ボタン
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.ELUpdateSettings = function (ip, eoj) {
+		console.log("window.ELUpdateSettings");
+		let newLocation = document.getElementById('UpdateInstLocation');
+		window.ELUpdateLocation(ip, eoj, newLocation.value);
+	};
+
+
+	/** 
+	 * @func window.ELSendTest
+	 * @desc 送信ボタンが押された
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.ELSendTest = function () {
+		let msg = "10810000" + eltestSEOJ.value + eltestDEOJ.value + eltestESV.value + "01" + eltestEPC.value + eltestDETAILs.value;
+		window.ipc.Elsend(toIP.value, msg);
+	};
+
+	/** 
+	 * @func window.ELpowButton
+	 * @desc 電源ボタンが押された
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.ELpowButton = function (btn) {
+		let cmd = btn.value.split(",");
+		let msg = "1081000005ff01" + cmd[1] + "6101" + cmd[2] + "01" + cmd[3];
+		window.ipc.Elsend(cmd[0], msg);
+	};
+
+	/** 
+	 * @func colorButton
+	 * @desc 色変化
+	 * @memberof subELcontrol
+	 * @param {void}
+	 * @return {void}
+	 */
+	let colorButton = function (btn) {
+		let cmd = btn.name.split(",");
+		let col = btn.value;
+		let msg = cmd[0] + " " + "1081000005ff01" + cmd[1] + "6101c003" + col.substring(1, 7);
+
+		window.ipc.ELsend(cmd[0], msg);
+	};
+
+	/** 
+	 * @func window.ELLightingScineButton
+	 * @desc window.ELLightingScineButton
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.ELLightingScineButton = function (btn) {
+		let cmd = btn.value.split(",");
+		let msg = "1081000005ff01" + cmd[1] + "6101" + cmd[2] + "01" + cmd[3];
+		window.ipc.Elsend(cmd[0], msg);
+	};
+
+	/** 
+	 * @func window.ELUpdateLocation
+	 * @desc 設置場所変更
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.ELUpdateLocation = function (ip, eoj, location) {
+		console.log(ip, eoj, location);
+		let msg = "1081000005ff01" + eoj + "61018101" + location;
+		window.ipc.Elsend(ip, msg);
+		// window.ipc.ElsendOPC1(ip, [0x05,0xff,0x01], eoj, 0x61, 0x81, location );  // HTML内部の文字を数値&amp;配列にするのがめんどい
+	};
+
+	/** 
+	 * @func window.ELAirconShowControlDialog
+	 * @desc エアコンの詳細コントロールダイアログを表示
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.ELAirconShowControlDialog = function (ip, obj) {
+		let eoj = obj.split(/\(|\)/)[1];  // 丸括弧 = Parenthesisで分割
+		// console.log('ELAirconShowControlDialog:', ip, eoj);
+
+		ELSettingsContents.innerHTML = "&lt;form>"
+			+ `&lt;input type='radio' name='elaircon_mode' value='automatic' onclick='window.ELAAirconChangeMode(this, "${ip}", "${eoj}")'>自動&lt;br>`
+			+ `&lt;input type='radio' name='elaircon_mode' value='cooling' onclick='window.ELAAirconChangeMode(this, "${ip}", "${eoj}")'>冷房&lt;br>`
+			+ `&lt;input type='radio' name='elaircon_mode' value='heating' onclick='window.ELAAirconChangeMode(this, "${ip}", "${eoj}")'>暖房&lt;br>`
+			+ `&lt;input type='radio' name='elaircon_mode' value='defumidication' onclick='window.ELAAirconChangeMode(this, "${ip}", "${eoj}")''>除湿&lt;br>`
+			+ `&lt;input type='radio' name='elaircon_mode' value='aircirculator' onclick='window.ELAAirconChangeMode(this, "${ip}", "${eoj}")'>送風&lt;br>`
+			+ `&lt;input type='radio' name='elaircon_mode' value='other' onclick='window.ELAAirconChangeMode(this, "${ip}", "${eoj}")'>その他&lt;br>`
+			+ `&lt;/form>`
+			+ '&lt;button type="button" onclick="this.parentNode.parentNode.parentNode.close()">閉じる&lt;/button>';
+
+		let radios = document.getElementsByName('elaircon_mode');
+		let mode = facilitiesEL[ip][obj]["運転モード設定(B0)"];
+
+		switch (mode) {
+			case '自動(41)': radios[0].checked = true; break;
+			case '冷房(42)': radios[1].checked = true; break;
+			case '暖房(43)': radios[2].checked = true; break;
+			case '除湿(44)': radios[3].checked = true; break;
+			case '送風(45)': radios[4].checked = true; break;
+			case 'その他(40)': radios[5].checked = true; break;
+			default: break;  // Undefined, NULL 対策
+		}
+
+		ELSettingsDialog.showModal();
+	}
+
+	/** 
+	 * @func
+	 * @desc エアコンのモード切り替え（詳細コントロールダイアログから呼ばれる）
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.ELAAirconChangeMode = function (radio, ip, eoj) {
+		// console.log(ip, eoj, radio.value);
+		let msg = "1081000005ff01" + eoj + "6101B001";
+		switch (radio.value) {
+			case 'cooling': msg += '42'; break;
+			case 'heating': msg += '43'; break;
+			case 'defumidication': msg += '44'; break;
+			case 'aircirculator': msg += '45'; break;
+			case 'other': msg += '40'; break;
+			case 'automatic':
+			default:
+				msg += '41'; break;
+		}
+
+		window.ipc.Elsend(ip, msg);
+	}
+
+
+	/** 
+	 * @func window.ELpowButton
+	 * @desc 電源ボタンが押された
+	 * @param {void}
+	 * @return {void}
+	 */
+	window.ELpowButton = function (btn) {
+		let cmd = btn.value.split(",");
+		let msg = "1081000005ff01" + cmd[1] + "6101" + cmd[2] + "01" + cmd[3];
+		window.ipc.Elsend(cmd[0], msg);
+	};
+
+
+});
+//////////////////////////////////////////////////////////////////////
+// EOF
+//////////////////////////////////////////////////////////////////////
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.2</a> on Thu Nov 09 2023 10:41:14 GMT+0900 (日本標準時) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

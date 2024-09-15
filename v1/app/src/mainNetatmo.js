@@ -45,7 +45,7 @@ let mainNetatmo = {
 	 * @func start
 	 * @desc start
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -87,6 +87,27 @@ let mainNetatmo = {
 
 		try {
 			mainNetatmo.api = new netatmo({ 'client_id': config.id, 'client_secret': config.secret, 'username': config.username, 'password': config.password });
+
+			mainNetatmo.api.on("error", (error) => {
+				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.api.on() error:', error);
+
+				sendIPCMessage('Error', {
+					datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"),
+					moduleName: 'mainNetatmo',
+					stackLog: `Netatmo: Error Detail: ${error}`
+				});
+			});
+
+			mainNetatmo.api.on("warning", (error) => {
+				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.api.on() warning:', error);
+
+				sendIPCMessage('Info', {
+					datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"),
+					moduleName: 'mainNetatmo',
+					stackLog: `Netatmo: Warning Detail: ${error}`
+				});
+			});
+
 			mainNetatmo.data = {};
 			mainNetatmo.callback = function (err, devices) {
 				if (err) {
@@ -121,7 +142,7 @@ let mainNetatmo = {
 	 * @func stop
 	 * @desc stop
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -138,7 +159,7 @@ let mainNetatmo = {
 	 * @func stopWithoutSave
 	 * @desc stopWithoutSave
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -153,7 +174,7 @@ let mainNetatmo = {
 	 * @func setConfig
 	 * @desc setConfig
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -170,7 +191,7 @@ let mainNetatmo = {
 	 * @func getConfig
 	 * @desc getConfig
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -182,7 +203,7 @@ let mainNetatmo = {
 	 * @func getPersist
 	 * @desc getPersist
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -198,7 +219,7 @@ let mainNetatmo = {
 	 * @func getCases
 	 * @desc getRows
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -247,7 +268,7 @@ let mainNetatmo = {
 	 * @func getRows
 	 * @desc DBからテーブル取得
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -290,7 +311,7 @@ let mainNetatmo = {
 	 * @func getTodayRoomEnv
 	 * @desc getTodayRoomEnv
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -343,7 +364,7 @@ let mainNetatmo = {
 	 * @func sendTodayRoomEnv
 	 * @desc sendTodayRoomEnv
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -361,7 +382,7 @@ let mainNetatmo = {
 	 * @func setObserve
 	 * @desc netatmoを監視する
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
@@ -414,7 +435,7 @@ let mainNetatmo = {
 	 * @func stopObservation
 	 * @desc 監視をやめる
 	 * @async
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 * @throw error
 	 */
