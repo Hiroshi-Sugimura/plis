@@ -1,4 +1,4 @@
-<img src='https://hiroshi-sugimura.github.io/plis/v1/img/plis_main_yoko_w.png' alt='logo'>
+<img src='https://hiroshi-sugimura.github.io/plis/img/plis_main_yoko_w.png' alt='logo'>
 
 # README for PLIS developpers
 
@@ -19,7 +19,7 @@ PLISが実行されるPCでは、通信ログをデータベースで記録し�
 
 <embed src='../lifelog.pdf' width='220' height='317'>
 
-[Download](https://github.com/Hiroshi-Sugimura/plis/v1/docs/lifelog.pdf)
+[Download](https://github.com/Hiroshi-Sugimura/plis/docs/lifelog.pdf)
 
 
 # License
@@ -51,7 +51,7 @@ PLISのアプリケーション及びソースコードはMITライセンスに�
 PLISは他のモジュールを含んでおり、それらのライセンスに関しては各モジュールのライセンスをご確認ください。
 利用しているモジュール群は下記ファイルにまとめています。
 
-[Modules.json](https://hiroshi-sugimura.github.io/plis/v1/app/src/modules.json)
+[Modules.json](https://hiroshi-sugimura.github.io/plis/app/src/modules.json)
 
 基本的にはPLIS作成時において、利用している全モジュールが著作権をクリアしていることを確認しているつもりですが、各モジュール開発者がバージョンアップによってライセンスを変更した場合に追従できていない可能性はあります。
 およその場合は、個人利用＆非商用において問題になることはないと思いますが、PLISのソースコードを利用して商用ソフトウェアを開発する場合には各社で知財を確認して保証する必要があります。
