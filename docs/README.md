@@ -19,7 +19,7 @@ PLISが実行されるPCでは、通信ログをデータベースで記録し�
 
 <embed src='../lifelog.pdf' width='220' height='317'>
 
-[Download](https://github.com/Hiroshi-Sugimura/plis/docs/lifelog.pdf)
+[Download](https://github.com/Hiroshi-Sugimura/plis/blob/main/docs/lifelog.pdf)
 
 
 # License

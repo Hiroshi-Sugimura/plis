@@ -1,4 +1,4 @@
-<img src='https://hiroshi-sugimura.github.io/plis/img/plis_main_yoko_w.png' alt='logo'>
+<img src='https://github.com/Hiroshi-Sugimura/plis/blob/main/img/plis_main_yoko_w.png' alt='logo'>
 
 PLIS (Platform for Life Improvement and Support)
 
@@ -8,7 +8,7 @@ PLIS (Platform for Life Improvement and Support)
 
 # Developper's Manual
 
-- [for PLIS developper's README](https://hiroshi-sugimura.github.io/plis//docs/jsdoc/)
+- [for PLIS developper's README](https://hiroshi-sugimura.github.io/plis/docs/jsdoc/)
 
 
 # Licenses
