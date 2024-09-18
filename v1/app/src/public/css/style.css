@@ -1,8 +1,0 @@
-/*********************************************************************
-	Style Seet
-	Copyright (C) Hiroshi SUGIMURA 2020.05.26
-	IoT programming Lab., Kanagawa Institute of Technology
- *********************************************************************/
-/* 画面解像度，横幅でPCかモバイルかを決定する */
-@import url(formal.css) screen and (min-width: 975px);
-@import url(formal_mini.css) screen and (max-width: 974px);

@@ -1,0 +1,49 @@
+{
+  "name": "PLIS",
+  "productName": "PLIS",
+  "memo": "publish時にはappx/appxmanifest.xmlのバージョンも変更すること",
+  "version": "2.0.0",
+  "description": "Platform for Life Improvement and Support",
+  "type": "module",
+  "main": "src/main.mjs",
+  "scripts": {
+    "start": "electron-forge start",
+    "preinstall": "npm i license-checker npm-check-updates && pushd . && cd src && npm i && popd",
+    "forge-install": "npm install --save-dev @electron-forge/cli && npm exec --package=@electron-forge/cli -c \"electron-forge import\"",
+    "win": "chcp 65001 && npm run license-check && electron-forge start",
+    "mac": "npx license-checker --json > ./src/modules.json && electron-forge start",
+    "ncu": "npx ncu -u && npm i && cd src && npx ncu -u && npm i && popd",
+    "package": "electron-forge package",
+    "make": "electron-forge make",
+    "publish": "electron-forge publish",
+    "macsign": "electron-osx-sign ./out/PLIS-darwin-arm64/PLIS.app --identity='Developer ID Application' --no-gatekeeper-assess",
+    "winsign": "mmc",
+    "lint": "echo \"No linting configured\"",
+    "license-check": "license-checker --json > ./src/modules.json"
+  },
+  "keywords": [],
+  "author": {
+    "name": "SUGIMURA Hiroshi (Kanagawa Institute of Technology)",
+    "email": "hiroshi.sugimura@gmail.com"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@electron-forge/cli": "^7.4.0",
+    "@electron-forge/maker-appx": "^7.4.0",
+    "@electron-forge/maker-deb": "^7.4.0",
+    "@electron-forge/maker-dmg": "^7.4.0",
+    "@electron-forge/maker-rpm": "^7.4.0",
+    "@electron-forge/maker-squirrel": "^7.4.0",
+    "@electron-forge/maker-zip": "^7.4.0",
+    "@electron-forge/plugin-auto-unpack-natives": "^7.4.0",
+    "@electron-forge/plugin-fuses": "^7.4.0",
+    "@electron-forge/publisher-github": "^7.4.0",
+    "@electron/fuses": "^1.8.0",
+    "electron": "^32.1.0",
+    "license-checker": "^25.0.1"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.1",
+    "npm-check-updates": "^17.1.1"
+  }
+}
