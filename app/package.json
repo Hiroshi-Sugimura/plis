@@ -14,7 +14,7 @@
     "mac": "npx license-checker --json > ./src/modules.json && electron-forge start",
     "ncu": "npx ncu -u && npm i && cd src && npx ncu -u && npm i && popd",
     "package": "electron-forge package",
-    "make": "electron-forge make",
+    "make": "npx license-checker --json > ./src/modules.json && electron-forge make",
     "publish": "electron-forge publish",
     "macsign": "electron-osx-sign ./out/PLIS-darwin-arm64/PLIS.app --identity='Developer ID Application' --no-gatekeeper-assess",
     "winsign": "mmc",
