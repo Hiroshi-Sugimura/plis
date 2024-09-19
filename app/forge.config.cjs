@@ -27,7 +27,7 @@ module.exports = {
       config: {
         target: 'portable',
         setupIcon: 'src/icons/plis.ico'
-	  },
+      },
     },
     {
       name: '@electron-forge/maker-appx',
@@ -50,20 +50,28 @@ module.exports = {
       platforms: ['darwin'],
     },
     {
+      name: '@electron-forge/maker-dmg',
+      config: {
+        background: './assets/dmg-background.png',
+        background: '',
+        format: 'ULFO'
+      }
+    },
+    {
       name: '@electron-forge/maker-deb',
       config: {
-		  options: {
+        options: {
           icon: 'src/icons/plis_linux_icon.png'
         }
-	  },
+      },
     },
     {
       name: '@electron-forge/maker-rpm',
       config: {
-          options: {
+        options: {
           icon: 'src/icons/plis_linux_icon.png'
         }
-	  },
+      },
     },
   ],
   publishers: [

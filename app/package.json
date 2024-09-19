@@ -39,11 +39,11 @@
     "@electron-forge/plugin-fuses": "^7.4.0",
     "@electron-forge/publisher-github": "^7.4.0",
     "@electron/fuses": "^1.8.0",
-    "electron": "^32.1.0",
+    "electron": "^32.1.1",
     "license-checker": "^25.0.1"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.1",
-    "npm-check-updates": "^17.1.1"
+    "npm-check-updates": "^17.1.2"
   }
 }
