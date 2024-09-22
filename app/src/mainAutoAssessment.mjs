@@ -10,6 +10,7 @@
 // 基本ライブラリ
 import cron from 'node-cron';
 import * as dateUtils from 'date-utils';
+import moment from 'moment';
 import { sqlite3, Op, IOT_MajorResultsModel, IOT_MinorResultsModel, switchBotDataModel, IOT_QuestionnaireAnswersModel } from './models/localDBModels.cjs';   // DBデータと連携
 import { getToday, getYesterday, roundFloat, checkValue } from './mainSubmodule.cjs';
 
@@ -295,6 +296,12 @@ let mainAutoAssessment = {
 
 		let now = new Date();
 
+
+// "yesterday" の開始と終了を取得
+const yesterdayStartOfDay = moment(yesterday).startOf('day').toDate(); // 昨日の 00:00:00
+const yesterdayEndOfDay = moment(yesterday).endOf('day').toDate(); // 昨日の 23:59:59
+
+
 		// DB トランザクション開始
 		let t = await sqlite3.transaction();
 
@@ -305,15 +312,18 @@ let mainAutoAssessment = {
 
 			////////////////////////////////////////////////////////////////////////////////////////
 			// MinorResults
-			// await console.log( '-- MinorResults' );
+			await console.log( '-- MinorResults' );
 
 			//--------------------------------------------------------
 			// アンケートデータでまずは点数をつける
-			// await console.log('questionnaire');
+			await console.log('questionnaire');
 			// SELECT * FROM halexp.IOT_QuestionnaireAnswersModel
 			// where UID="U517290377a4861b16cc91c2d111f116d" and createdAt like "2022-05-11%" order by createdAt desc;
 			let qaRow = await IOT_QuestionnaireAnswersModel.findOne({
-				where: { createdAt: { [Op.like]: yesterday + "%" } },
+				where: {
+					// createdAt: { [Op.like]: yesterday + "%" }
+					createdAt: {  [Op.between]: [yesterdayStartOfDay, yesterdayEndOfDay] }
+				},
 				order: [["createdAt", "desc"]]
 			});
 
@@ -327,10 +337,11 @@ let mainAutoAssessment = {
 
 			//--------------------------------------------------------
 			// IoTデータで点数をつける
-			// await console.log('IoT');
+			await console.log('IoT');
 			let iotHumidityRows = await switchBotDataModel.findAll({
 				where: {
-					createdAt: { [Op.like]: yesterday + "%" },
+					// createdAt: { [Op.like]: yesterday + "%" },
+					createdAt: {  [Op.between]: [yesterdayStartOfDay, yesterdayEndOfDay] },
 					[Op.or]: [{ deviceType: 'Meter' }, { deviceType: 'MeterPlus' }],
 					property: 'humidity'
 				},
@@ -343,7 +354,7 @@ let mainAutoAssessment = {
 
 			//--------------------------------------------------------
 			// nullの場所だけ、前日以前の得点を利用する。各得点は-1することで放置していると0点になる
-			// await console.log('latest MinorResults');
+			await console.log('latest MinorResults');
 			// SELECT * FROM halexp.IOT_MinorResults
 			// where UID="U517290377a4861b16cc91c2d111f116d" order by date desc;
 			let mrRow = await IOT_MinorResultsModel.findOne({
@@ -357,7 +368,7 @@ let mainAutoAssessment = {
 			}
 
 			// それでも残るnullは0点
-			// await console.log('Null fix');
+			await console.log('Null fix');
 			Object.keys(minorResults).forEach(function (key) {
 				if (minorResults[key] == undefined || minorResults[key] == null) {
 					minorResults[key] = 0;
@@ -365,7 +376,7 @@ let mainAutoAssessment = {
 			});
 
 			// 最終的な値のチェック、min = 0, max = 100
-			// await console.log('checkValues');
+			await console.log('checkValues');
 			await Object.keys(minorResults).forEach(function (key) {
 				minorResults[key] = checkValue(minorResults[key], 0, 100);
 			});
@@ -405,7 +416,7 @@ let mainAutoAssessment = {
 
 			//--------------------------------------------------------------------------------------
 			// MajorResults
-			// await console.log( '-- MajorResults' );
+			await console.log( '-- MajorResults' );
 			majorResults = mainAutoAssessment.calcMajorResults(minorResults);  // minorからmajorを計算
 
 			// IOT_MajorResults テーブルから該当ユーザーの今日のレコードを取得
@@ -438,11 +449,11 @@ let mainAutoAssessment = {
 
 			// コミット
 			await t.commit();
-			// console.log('commit');
+			console.log('commit');
 		} catch (error) {
 			// ロールバック
 			await t.rollback();
-			// console.log('rollback');
+			console.log('rollback');
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|', error);
 		}
 
@@ -465,7 +476,7 @@ let mainAutoAssessment = {
 		sendIPCMessage = _sendIPCMessage;
 
 		mainAutoAssessment.observationJob = cron.schedule('0 0 9 * * *', async () => {  // 本番用の AM9:00
-		// mainAutoAssessment.observationJob = cron.schedule('*/10 * * * * *', async () => {  // debug用の10秒毎
+		// mainAutoAssessment.observationJob = cron.schedule('*/1 * * * *', async () => {  // debug用の1分毎
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.start().observationJob') : 0;
 
 			let today = getToday();
