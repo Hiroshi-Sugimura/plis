@@ -14,9 +14,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	// renderer to main
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc PLIS全体、rendererが準備できた羅呼ばれる
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	already: () => {
@@ -24,9 +24,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc URLopen
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	URLopen: (url) => {
@@ -34,9 +34,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc ページ内検索
-	 * @param {text} 
+	 * @param {text}
 	 * @return void
 	 */
 	PageInSearch: (text) => {
@@ -44,9 +44,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc ページ内検索前方
-	 * @param {text} 
+	 * @param {text}
 	 * @return void
 	 */
 	PageInSearchNext: (text) => {
@@ -54,9 +54,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc ページ内検索後方
-	 * @param {text} 
+	 * @param {text}
 	 * @return void
 	 */
 	PageInSearchPrev: (text) => {
@@ -64,9 +64,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc ページ内検索停止
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	PageInSearchStop: () => {
@@ -74,9 +74,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc Calendar
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	CalendarRenewHolidays: () => {
@@ -84,9 +84,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc system settings
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	SystemSetConfig: (_screenMode, _debug, _elLogExpireDays, _resultExpireDays, _IPver, _IPv4, _IPv6) => {
@@ -94,9 +94,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc ScreenMode
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	ScreenMode: (_screenMode) => {
@@ -105,9 +105,9 @@ contextBridge.exposeInMainWorld('ipc', {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func 
+	 * @func
 	 * @desc Profile関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	userProfileSave: (_nickname, _age, _height, _weight, _ampere) => {
@@ -117,9 +117,9 @@ contextBridge.exposeInMainWorld('ipc', {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func 
+	 * @func
 	 * @desc HAL関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	HALsetApiTokenRequest: (HALtoken) => {
@@ -127,9 +127,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc HAL関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	HALgetApiTokenRequest: () => {
@@ -137,9 +137,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc HAL関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	HALdeleteApiToken: () => {
@@ -147,9 +147,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc HAL関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	HALSyncRequeset: () => {
@@ -157,9 +157,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc HAL関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	HALrenew: () => {
@@ -167,9 +167,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc HAL関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	HALsubmitQuestionnaire: (submitData) => {
@@ -177,20 +177,35 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc HAL関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	HALgetUserProfileRequest: () => {
 		ipcRenderer.invoke('HALgetUserProfileRequest', '');
 	},
 
+
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func 
+	 * @func
+	 * @desc AutoAssessment関連
+	 * @param {void}
+	 * @return void
+	 */
+	AutoAssessmentConfig: (_debug) => {
+		ipcRenderer.invoke('AutoAssessmentConfig', {
+			debug: _debug
+		});
+	},
+
+
+	//----------------------------------------------------------------------------------------------
+	/**
+	 * @func
 	 * @desc ESM関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	ESMUse: (_dongleType, _connectionType, _id, _password, _debug) => {
@@ -204,9 +219,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc ESM関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	ESMnotUse: (_dongleType, _connectionType, _id, _password, _debug) => {
@@ -221,9 +236,9 @@ contextBridge.exposeInMainWorld('ipc', {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func 
+	 * @func
 	 * @desc Hue関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	HueUse: (_key, _debug) => {
@@ -231,9 +246,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc Hue関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	HueUseCancel: (_key, _debug) => {
@@ -241,9 +256,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc Hue関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	HueUseStop: (_key, _debug) => {
@@ -251,9 +266,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc Hue関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	HueControl: (_url, _json) => {
@@ -263,7 +278,7 @@ contextBridge.exposeInMainWorld('ipc', {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func 
+	 * @func
 	 * @desc Ikea開始
 	 * @param {string} _securityCode
 	 * @param {string} _identity
@@ -275,7 +290,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc Ikea停止
 	 * @param {string} _securityCode
 	 * @param {string} _identity
@@ -287,7 +302,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc Ikea制御
 	 * @param {string} key
 	 * @param {string} type
@@ -301,7 +316,7 @@ contextBridge.exposeInMainWorld('ipc', {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func 
+	 * @func
 	 * @desc Open Weather Map関連
 	 * @param {string}  _APIKey
 	 * @param {string}  _zipcode
@@ -312,7 +327,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc Open Weather Map関連
 	 * @param {string}  _APIKey
 	 * @param {string}  _zipcode
@@ -324,9 +339,9 @@ contextBridge.exposeInMainWorld('ipc', {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func 
+	 * @func
 	 * @desc JMA関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	JmaConfigSave: (_areaName, _areaCode, _debug) => {
@@ -336,9 +351,9 @@ contextBridge.exposeInMainWorld('ipc', {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func 
+	 * @func
 	 * @desc Netatmo関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	NetatmoUse: (_id, _secret, _username, _password, _debug) => {
@@ -346,9 +361,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc Netatmo関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	NetatmoStop: (_id, _secret, _username, _password, _debug) => {
@@ -358,7 +373,7 @@ contextBridge.exposeInMainWorld('ipc', {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func 
+	 * @func
 	 * @desc Omron関連
 	 * @param {string} _plase
 	 * @param {Bool} _debug
@@ -368,7 +383,7 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc Omron関連
 	 * @param {string} _place
 	 * @param {Bool} _debug
@@ -379,9 +394,9 @@ contextBridge.exposeInMainWorld('ipc', {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func 
+	 * @func
 	 * @desc I/O DATA CO2S 関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	Co2sUse: (_place) => {
@@ -389,9 +404,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc I/O DATA CO2S関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	Co2sStop: (_place) => {
@@ -400,9 +415,9 @@ contextBridge.exposeInMainWorld('ipc', {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func 
+	 * @func
 	 * @desc SwitchBot関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	SwitchBotUse: (_token, _secret, _debug) => {
@@ -410,9 +425,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc SwitchBot関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	SwitchBotStop: (_token, _secret, _debug) => {
@@ -420,9 +435,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc SwitchBot関連
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	SwitchBotControl: (_id, _command, _param) => {
@@ -432,9 +447,9 @@ contextBridge.exposeInMainWorld('ipc', {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func 
+	 * @func
 	 * @desc EL利用開始
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	ELUse: () => {
@@ -442,9 +457,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc EL利用停止
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	ELStop: () => {
@@ -452,9 +467,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc EL旧バージョン検索有効
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	ELUseOldSearch: () => {
@@ -462,9 +477,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc EL旧バージョン検索無効
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	ELStopOldSearch: () => {
@@ -472,9 +487,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc EL関連制御
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	Elsend: (ip, sendmsg) => {
@@ -482,9 +497,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc EL関連制御
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	ElsendOPC1: (ip, seoj, deoj, esv, epc, edt) => {
@@ -492,9 +507,9 @@ contextBridge.exposeInMainWorld('ipc', {
 	},
 
 	/**
-	 * @func 
+	 * @func
 	 * @desc EL関連制御
-	 * @param {void} 
+	 * @param {void}
 	 * @return void
 	 */
 	ELsearch: () => {
@@ -522,5 +537,3 @@ contextBridge.exposeInMainWorld('ipc', {
 	}
 
 });
-
-

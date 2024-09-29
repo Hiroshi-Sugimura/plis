@@ -140,6 +140,12 @@ function onLoad() {
 					window.HALSyncResponse(c.arg);
 					break;
 
+				// AutoAssessment
+				case "renewAutoAssessmentConfigView":  // HAL: AutoAssessmentの応答
+					console.log('main -> renewAutoAssessmentConfigView:', c.arg);
+					// window.renewAutoAssessmentConfigView(c.arg);
+					break;
+
 				// Garmin
 				case "showGarmin":  // Garminデータ表示
 					console.log('main -> showGarmin:', c.arg);

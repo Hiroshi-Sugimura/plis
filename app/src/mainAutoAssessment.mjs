@@ -8,13 +8,16 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
+import Store from 'electron-store';
 import cron from 'node-cron';
 import * as dateUtils from 'date-utils';
 import moment from 'moment';
 import { sqlite3, Op, IOT_MajorResultsModel, IOT_MinorResultsModel, switchBotDataModel, IOT_QuestionnaireAnswersModel } from './models/localDBModels.cjs';   // DBデータと連携
-import { getToday, getYesterday, roundFloat, checkValue } from './mainSubmodule.cjs';
+import { mergeDeeply, getToday, getYesterday, roundFloat, checkValue } from './mainSubmodule.cjs';
+import { mainHALlocal } from './mainHALlocal.mjs';
 
-import {mainHALlocal} from './mainHALlocal.mjs';
+const store = new Store();
+let sendIPCMessage = null;
 
 
 //////////////////////////////////////////////////////////////////////
@@ -139,8 +142,6 @@ const majorSchema = {
 	ecologyRawScore: 0,
 	comments: "やったね！"
 };
-
-let sendIPCMessage = null;
 
 
 //////////////////////////////////////////////////////////////////////
@@ -292,14 +293,13 @@ let mainAutoAssessment = {
 	 * @param {string} yesterday - "YYYY-MM-DD"
 	 */
 	assessment: async function (today, yesterday) {
-		console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment - today:', today, ' yesterday:', yesterday);
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment - today:', today, ' yesterday:', yesterday) : 0;
 
 		let now = new Date();
 
-
-// "yesterday" の開始と終了を取得
-const yesterdayStartOfDay = moment(yesterday).startOf('day').toDate(); // 昨日の 00:00:00
-const yesterdayEndOfDay = moment(yesterday).endOf('day').toDate(); // 昨日の 23:59:59
+		// "yesterday" の開始と終了を取得
+		const yesterdayStartOfDay = moment(yesterday).startOf('day').toDate(); // 昨日の 00:00:00
+		const yesterdayEndOfDay = moment(yesterday).endOf('day').toDate(); // 昨日の 23:59:59
 
 
 		// DB トランザクション開始
@@ -312,17 +312,17 @@ const yesterdayEndOfDay = moment(yesterday).endOf('day').toDate(); // 昨日の 
 
 			////////////////////////////////////////////////////////////////////////////////////////
 			// MinorResults
-			await console.log( '-- MinorResults' );
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() MinorResults') : 0;
 
 			//--------------------------------------------------------
 			// アンケートデータでまずは点数をつける
-			await console.log('questionnaire');
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() Assess questionnaire') : 0;
 			// SELECT * FROM halexp.IOT_QuestionnaireAnswersModel
 			// where UID="U517290377a4861b16cc91c2d111f116d" and createdAt like "2022-05-11%" order by createdAt desc;
 			let qaRow = await IOT_QuestionnaireAnswersModel.findOne({
 				where: {
 					// createdAt: { [Op.like]: yesterday + "%" }
-					createdAt: {  [Op.between]: [yesterdayStartOfDay, yesterdayEndOfDay] }
+					createdAt: { [Op.between]: [yesterdayStartOfDay, yesterdayEndOfDay] }
 				},
 				order: [["createdAt", "desc"]]
 			});
@@ -337,11 +337,11 @@ const yesterdayEndOfDay = moment(yesterday).endOf('day').toDate(); // 昨日の 
 
 			//--------------------------------------------------------
 			// IoTデータで点数をつける
-			await console.log('IoT');
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() Assess IoT') : 0;
 			let iotHumidityRows = await switchBotDataModel.findAll({
 				where: {
 					// createdAt: { [Op.like]: yesterday + "%" },
-					createdAt: {  [Op.between]: [yesterdayStartOfDay, yesterdayEndOfDay] },
+					createdAt: { [Op.between]: [yesterdayStartOfDay, yesterdayEndOfDay] },
 					[Op.or]: [{ deviceType: 'Meter' }, { deviceType: 'MeterPlus' }],
 					property: 'humidity'
 				},
@@ -354,7 +354,7 @@ const yesterdayEndOfDay = moment(yesterday).endOf('day').toDate(); // 昨日の 
 
 			//--------------------------------------------------------
 			// nullの場所だけ、前日以前の得点を利用する。各得点は-1することで放置していると0点になる
-			await console.log('latest MinorResults');
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() Assess latest MinorResults') : 0;
 			// SELECT * FROM halexp.IOT_MinorResults
 			// where UID="U517290377a4861b16cc91c2d111f116d" order by date desc;
 			let mrRow = await IOT_MinorResultsModel.findOne({
@@ -368,7 +368,7 @@ const yesterdayEndOfDay = moment(yesterday).endOf('day').toDate(); // 昨日の 
 			}
 
 			// それでも残るnullは0点
-			await console.log('Null fix');
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() Null fix') : 0;
 			Object.keys(minorResults).forEach(function (key) {
 				if (minorResults[key] == undefined || minorResults[key] == null) {
 					minorResults[key] = 0;
@@ -376,7 +376,7 @@ const yesterdayEndOfDay = moment(yesterday).endOf('day').toDate(); // 昨日の 
 			});
 
 			// 最終的な値のチェック、min = 0, max = 100
-			await console.log('checkValues');
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() checkValues') : 0;
 			await Object.keys(minorResults).forEach(function (key) {
 				minorResults[key] = checkValue(minorResults[key], 0, 100);
 			});
@@ -416,7 +416,7 @@ const yesterdayEndOfDay = moment(yesterday).endOf('day').toDate(); // 昨日の 
 
 			//--------------------------------------------------------------------------------------
 			// MajorResults
-			await console.log( '-- MajorResults' );
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() MajorResults') : 0;
 			majorResults = mainAutoAssessment.calcMajorResults(minorResults);  // minorからmajorを計算
 
 			// IOT_MajorResults テーブルから該当ユーザーの今日のレコードを取得
@@ -449,12 +449,12 @@ const yesterdayEndOfDay = moment(yesterday).endOf('day').toDate(); // 昨日の 
 
 			// コミット
 			await t.commit();
-			console.log('commit');
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() commit') : 0;
 		} catch (error) {
 			// ロールバック
 			await t.rollback();
-			console.log('rollback');
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|', error);
+			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() rollback');
+			console.error(error);
 		}
 
 	},
@@ -476,7 +476,7 @@ const yesterdayEndOfDay = moment(yesterday).endOf('day').toDate(); // 昨日の 
 		sendIPCMessage = _sendIPCMessage;
 
 		mainAutoAssessment.observationJob = cron.schedule('0 0 9 * * *', async () => {  // 本番用の AM9:00
-		// mainAutoAssessment.observationJob = cron.schedule('*/1 * * * *', async () => {  // debug用の1分毎
+			// mainAutoAssessment.observationJob = cron.schedule('*/1 * * * *', async () => {  // debug用の1分毎
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.start().observationJob') : 0;
 
 			let today = getToday();
@@ -504,6 +504,31 @@ const yesterdayEndOfDay = moment(yesterday).endOf('day').toDate(); // 昨日の 
 
 
 	/**
+	 * @async
+	 * @func setConfig
+	 * @desc 設定を変更して保存。_config=nullなら設定保存のみ
+	 * @param {Object} _config
+	 */
+	setConfig: async function (_config) {
+		if (_config) {
+			config = mergeDeeply(config, _config);
+		}
+		await store.set('config.autoAssessment', config);
+		sendIPCMessage("renewAutoAssessmentConfigView", config);
+		sendIPCMessage("configSaved", 'AutoAssessment');  // 保存したので画面に通知
+	},
+
+	/**
+	 * @func getConfig
+	 * @return {Object} config
+	 * @desc 現在の設定値を返す
+	 */
+	getConfig: function () {
+		return config;
+	},
+
+
+	/**
 	 * 湿度の点数を入れる
 	 * @param {Object} iotRows
 	 * @param {Object} minorResults
@@ -520,7 +545,7 @@ const yesterdayEndOfDay = moment(yesterday).endOf('day').toDate(); // 昨日の 
 
 
 // module.exports = mainAutoAssessment;
-export {mainAutoAssessment};
+export { mainAutoAssessment };
 //////////////////////////////////////////////////////////////////////
 // EOF
 //////////////////////////////////////////////////////////////////////

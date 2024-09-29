@@ -1271,7 +1271,7 @@
 					<!-- 気象庁、JMA -->
 					<a name="jmaConfig"></a>
 					<details class="config" id="jmaConfigDetail">
-						<summary class="config"><i class="fa-solid fa-sun"></i> 気象庁</summary>
+						<summary class="config"><i class="fa-solid fa-sun"></i> 気象庁 天気予報取得設定</summary>
 						<div class="p">
 							天気予報の地域設定ができます。<br>
 							地域: <select id="selJmaArea" size="1" onChange="window.selJmaArea_Change();" /></select> 地域コード:
@@ -1287,7 +1287,7 @@
 					<!-- HAL -->
 					<a name="HALConfig"></a>
 					<details class="config" id="HALConfigDetail">
-						<summary class="config"><i class="fa-solid fa-cloud"></i> HAL (Home-life Assessment List) 連携設定</summary>
+						<summary class="config"><i class="fa-solid fa-cloud"></i> HAL Cloud 連携設定</summary>
 
 						<div class="p">
 							クラウドサービスHALと連携し、生活状況を得点化して見える化します。<br>
@@ -1327,10 +1327,23 @@
 						</p>
 					</details>
 
+					<!-- AutoAssessment -->
+					<a name="autoAssessmentConfig"></a>
+					<details class="config" id="autoAssessmentConfigDetail">
+						<summary class="config"><i class="fa-solid fa-clipboard"></i>自動HAL採点設定</summary>
+						<div class="p">
+							デバッグモード： <select id="selAutoAssessmentDebugMode" size="1">
+								<option value="true">有効</option>
+								<option value="false">無効</option>
+							</select> <small>（設定反映のためには再起動が必要です。）</small><br>
+							<button id="btnAutoAssessmentConfigSet" onClick="window.btnAutoAssessmentConfigSet_Click();">設定</button>
+						</div>
+					</details>
+
 					<!-- ESM: Electricity Smart Meter -->
 					<a name="ElectricSmartMeter"></a>
 					<details class="config" id="ESMConfigDetails">
-						<summary class="config"><i class="fa-solid fa-bolt"></i> 電力スマートメータ</summary>
+						<summary class="config"><i class="fa-solid fa-bolt"></i> Wi-Sun 電力スマートメータ 連携設定</summary>
 						<div class="p">
 							<label><input type="checkbox" id="inESMUse">Use Electric Smart Meter</label><br>
 							Donble Type: <select id="inDongleType" size="1" />
@@ -1369,7 +1382,7 @@
 					<!-- Philips hue -->
 					<a name="HueConfig"></a>
 					<details class="config" id="HueConfigDetails">
-						<summary class="config"><i class="fa-solid fa-house"></i> Philips hue</summary>
+						<summary class="config"><i class="fa-solid fa-house"></i> Philips hue 連携設定</summary>
 						<div class="p">
 							すでにKeyをお持ちのかたは、Keyに入力したあとチェックボックスを有効にしてください。<br>
 							まだKeyをお持ちでないかたは、Use Hueをチェックするとダイアログが出ますので，HueのGatewayのアクセススイッチを押してください。<br>
@@ -1390,7 +1403,7 @@
 					<!-- Ikea Tradfri -->
 					<a name="IkeaConfig"></a>
 					<details class="config" id="IkeaConfigDetails">
-						<summary class="config"><i class="fa-solid fa-house"></i> IKEA Tradfri</summary>
+						<summary class="config"><i class="fa-solid fa-house"></i> IKEA Tradfri 連携設定</summary>
 						<div class="p">
 							すでにIdentityとPSKをお持ちのかたは、（key, identity, psk）の3か所に入力したあとチェックボックスを有効にしてください。<br>
 							まだIdentityとPSKをお持ちでないかたは、ゲートウェイの背面にあるKeyのみをSerucity codeに入力してからUse IKEA
@@ -1416,7 +1429,7 @@
 					<!-- OpenWeatherMap -->
 					<a name="OpenWeatherMapConfig"></a>
 					<details class="config" id="OWMConfigDetails">
-						<summary class="config" id="h2owmConfig"><i class="fa-solid fa-sun"></i> OpenWeatherMap (外部サービス)</summary>
+						<summary class="config" id="h2owmConfig"><i class="fa-solid fa-sun"></i> OpenWeatherMap (外部サービス) 天気予報取得設定</summary>
 						<div class="p">
 							<a href="#OpenWeatherMapConfig" onClick='window.URLopen("https://openweathermap.org/");'>OpenWeatherMap</a>
 							（こちらから無料アカウントを作成し，API keyを取得してください。）<br>
@@ -1442,7 +1455,7 @@
 					<!-- Netatmo -->
 					<a name="NetatmoConfig"></a>
 					<details class="config" id="NetatmoConfigDetails">
-						<summary class="config" id="netatmoConfig"><i class="fa-solid fa-sun"></i> Netatmo (外部サービス)</summary>
+						<summary class="config" id="netatmoConfig"><i class="fa-solid fa-sun"></i> Netatmoクラウド 連携設定</summary>
 						<div class="p">
 							<label><input type="checkbox" id="inNetatmoUse" value="on">Use Netatmo</label><br>
 							Client ID: <form class="secretBorder inline"><input id="inNetatmoID" type="password" value="" class="secretText" size="50" /><span id="inNetatmoIDButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoID');"></span></form>
@@ -1477,7 +1490,7 @@
 					<!-- SwitchBot -->
 					<a name="SwitchBotConfig"></a>
 					<details class="config" id="SwitchBotConfigDetails">
-						<summary class="config"><i class="fa-solid fa-house"></i> SwitchBot (外部サービス)</summary>
+						<summary class="config"><i class="fa-solid fa-house"></i> SwitchBotクラウド 連携設定</summary>
 						<div class="p">
 							すでにTokenをお持ちのかたは、入力したあとチェックボックスを有効にしてください。<br>
 							まだTokenをお持ちでないかたは、下記の案内に従ってTokenを取得してください。<br>
@@ -1510,7 +1523,7 @@
 					<!-- ECHONET Lite -->
 					<a name="ELConfig"></a>
 					<details class="config" id="ELConfigDetails">
-						<summary class="config"><i class="fa-solid fa-house"></i> ECHONET Lite</summary>
+						<summary class="config"><i class="fa-solid fa-house"></i> ECHONET Lite 通信設定</summary>
 						<div class="p">
 							ECHONET Lite機器を利用したくないかたは、チェックボックスを無効にしてください。（default: checked）<br>
 							<br>
@@ -1524,7 +1537,7 @@
 					<!-- Omron -->
 					<a name="OmronConfig"></a>
 					<details class="config" id="OmronConfigDetails">
-						<summary class="config"><i class="fa-brands fa-usb"></i> OMRON USB Sensor</summary>
+						<summary class="config"><i class="fa-brands fa-usb"></i> OMRON USB Sensor 利用設定</summary>
 						<div class="p">
 							OmronのUSBセンサをお持ちのかたは、デバイスドライバをインストールしてから、USBに挿してチェックボックスを有効にしてください。<br>
 							<br>
@@ -1560,7 +1573,7 @@
 					<!-- I/O DATA, UD-CO2S -->
 					<a name="Co2sConfig"></a>
 					<details class="config" id="Co2sConfigDetails">
-						<summary class="config"><i class="fa-brands fa-usb"></i> I/O DATA CO2センサー USB Sensor</summary>
+						<summary class="config"><i class="fa-brands fa-usb"></i> I/O DATA CO2センサー USB Sensor 利用設定</summary>
 						<div class="p">
 							I/O DATAのUSBセンサ (UD-CO2S)をお持ちのかたは、USBに挿してチェックボックスを有効にしてください。<br>
 							<br>
@@ -1581,7 +1594,7 @@
 					<!-- System -->
 					<a name="SystemConfig"></a>
 					<details class="config" id="SystemConfigDetails">
-						<summary class="config"><i class="fa-solid fa-wrench"></i> System</summary>
+						<summary class="config"><i class="fa-solid fa-wrench"></i> System 一般設定</summary>
 						<div class="p">
 							スクリーンモード： <select id="inScreenMode" size="1">
 								<option value="window">Window</option>
@@ -1637,7 +1650,7 @@
 					<!-- Log -->
 					<a name="SystemLog"></a>
 					<details class="config" id="LogConfigDetails">
-						<summary class="config"><i class="fa-solid fa-list"></i> Log</summary>
+						<summary class="config"><i class="fa-solid fa-list"></i> Log表示</summary>
 						<div class="p">
 
 							<details class="config" id="SystemLog_ELLog">
@@ -1862,6 +1875,7 @@
 <script src="./js/subSwitchBot.js"></script>
 <script src="./js/subQuestionnaire.js"></script>
 <script src="./js/subGarmin.js"></script>
+<script src="./js/subAutoAssessment.js"></script>
 <script src="./js/subHAL.js"></script>
 <script src="./js/index.js"></script> <!-- 一応index.jsが最後にloadされるようにする。実際はonLoadで順序制御できてるはず -->
 

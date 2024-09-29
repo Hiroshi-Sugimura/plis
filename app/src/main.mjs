@@ -296,6 +296,13 @@ ipcMain.handle('HALsubmitQuestionnaire', async (event, arg) => {
 });
 
 //----------------------------------
+// AutoAssessment関連
+ipcMain.handle('AutoAssessmentConfig', (event, arg) => {
+	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- AutoAssessmentConfig, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	mainAutoAssessment.setConfig(arg);
+});
+
+//----------------------------------
 // EL関連
 ipcMain.handle('ELUse', async (event, arg) => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ELUse, arg:', arg) : 0;
@@ -910,6 +917,7 @@ async function saveConfig() {
 	_config.JMA = mainJma.getConfig(); // JMA
 	_config.SwitchBot = mainSwitchBot.getConfig(); // SwitchBot
 	_config.Calendar = mainCalendar.getConfig(); // Calendar settings
+	_config.AutoAssessment = mainAutoAssessment.getConfig() // AutoAssessment settings
 	_config.system = mainSystem.getConfig(); // system settings
 	_config.user = mainUser.getConfig(); // user settings
 	await store.set('config', _config);
