@@ -140,18 +140,19 @@ function onLoad() {
 					window.HALSyncResponse(c.arg);
 					break;
 
-				// AutoAssessment
+				//----------------------------------------------
+				// AutoAssessment関連
 				case "renewAutoAssessmentConfigView":  // HAL: AutoAssessmentの応答
 					console.log('main -> renewAutoAssessmentConfigView:', c.arg);
-					// window.renewAutoAssessmentConfigView(c.arg);
+					window.renewAutoAssessmentConfigView(c.arg);
 					break;
 
-				// Garmin
+				//----------------------------------------------
+				// Garmin関連
 				case "showGarmin":  // Garminデータ表示
 					console.log('main -> showGarmin:', c.arg);
 					window.showGarminData(c.arg);
 					break;
-
 
 				//----------------------------------------------
 				// EL関連
@@ -380,6 +381,7 @@ function onLoad() {
 						case "EL": window.ELConfigSaved(); break;
 						case "ESM": window.ESMConfigSaved(); break;
 						case "SwitchBot": window.SwitchBotConfigSaved(); break;
+						case "AutoAssessment": window.autoAssessmentConfigSaved(); break;
 
 						default:
 							// window.alert('設定を保存しました。');

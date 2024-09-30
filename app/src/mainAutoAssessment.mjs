@@ -474,6 +474,8 @@ let mainAutoAssessment = {
 		}
 		mainAutoAssessment.isRun = true;
 		sendIPCMessage = _sendIPCMessage;
+		config.debug = store.get('config.AutoAssessment.debug', config.debug);
+		sendIPCMessage("renewAutoAssessmentConfigView", config);
 
 		mainAutoAssessment.observationJob = cron.schedule('0 0 9 * * *', async () => {  // 本番用の AM9:00
 			// mainAutoAssessment.observationJob = cron.schedule('*/1 * * * *', async () => {  // debug用の1分毎
@@ -513,7 +515,7 @@ let mainAutoAssessment = {
 		if (_config) {
 			config = mergeDeeply(config, _config);
 		}
-		await store.set('config.autoAssessment', config);
+		await store.set('config.AutoAssessment', config);
 		sendIPCMessage("renewAutoAssessmentConfigView", config);
 		sendIPCMessage("configSaved", 'AutoAssessment');  // 保存したので画面に通知
 	},
