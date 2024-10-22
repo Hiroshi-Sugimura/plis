@@ -8,7 +8,7 @@ PLIS (Platform for Life Improvement and Support)
 
 # Developper's Manual
 
-- [for PLIS developper's README](https://hiroshi-sugimura.github.io/plis/docs/jsdoc/)
+- [for PLIS developper's README](https://hiroshi-sugimura.github.io/plis/jsdoc/)
 
 
 # Licenses
@@ -79,5 +79,3 @@ PLISでは多種多様なIoT商品のAPI及びプロトコルを利用してい�
 # Copyright
 
 Copyright © 2023 Sugimura Laboratory All Rights Reserved.
-
-
