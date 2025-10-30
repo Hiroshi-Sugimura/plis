@@ -21,7 +21,7 @@
  * @Return {Void}
  */
 function isObjEmpty(obj) {
-	return Object.keys(obj).length === 0;
+    return Object.keys(obj).length === 0;
 }
 
 
@@ -142,7 +142,7 @@ function onLoad() {
 
 				//----------------------------------------------
 				// AutoAssessment関連
-				case "renewAutoAssessmentConfigView":  // HAL: AutoAssessmentの応答
+				case "renewAutoAssessmentConfigView":  // HAL: AutoAssessmentの応応
 					console.log('main -> renewAutoAssessmentConfigView:', c.arg);
 					window.renewAutoAssessmentConfigView(c.arg);
 					break;
@@ -152,6 +152,12 @@ function onLoad() {
 				case "showGarmin":  // Garminデータ表示
 					console.log('main -> showGarmin:', c.arg);
 					window.showGarminData(c.arg);
+					break;
+
+				// 【修正】window.subGarminAdviceに統一
+				case "showGarminAdvice":
+					console.log('main -> showGarminAdvice:', c.arg);
+					window.subGarminAdvice.showGarminAdvice(c.arg);
 					break;
 
 				//----------------------------------------------

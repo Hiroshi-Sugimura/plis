@@ -1,0 +1,554 @@
+
+/* Copyright (C) SUGIMURA Lab. 2024                                 */
+/* Garminアドバイス表示用スタイルシート                              */
+/* アンケート回答とGarminヘルスデータに基づくアドバイスUI            */
+
+
+/* ===================================================================
+   アドバイスセクション全体
+   ================================================================ */
+
+.garmin-advice-section {
+    margin-top: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    border-radius: 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.advice-wrapper {
+    min-height: 200px;
+}
+
+.advice-section {
+    animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===================================================================
+   更新ボタン
+   ================================================================ */
+
+.btn-advice {
+    padding: 8px 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95em;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    margin-left: 15px;
+}
+
+.btn-advice:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+.btn-advice:active {
+    transform: translateY(0);
+}
+
+.btn-advice:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.btn-advice i {
+    margin-right: 5px;
+}
+
+/* ===================================================================
+   プレースホルダー（初期表示）
+   ================================================================ */
+
+.advice-placeholder {
+    text-align: center;
+    padding: 60px 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.advice-placeholder i {
+    display: block;
+    margin-bottom: 20px;
+}
+
+.advice-placeholder p {
+    margin: 15px 0;
+    color: #555;
+}
+
+.btn-get-advice-large {
+    margin-top: 25px;
+    padding: 15px 35px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.btn-get-advice-large:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.6);
+}
+
+.btn-get-advice-large i {
+    margin-right: 8px;
+}
+
+/* ===================================================================
+   ローディング表示
+   ================================================================ */
+
+.advice-loading {
+    text-align: center;
+    padding: 80px 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.advice-loading i {
+    font-size: 3em;
+    color: #667eea;
+    margin-bottom: 20px;
+}
+
+.advice-loading p {
+    font-size: 1.1em;
+    color: #666;
+}
+
+/* ===================================================================
+   エラー表示
+   ================================================================ */
+
+.advice-error {
+    text-align: center;
+    padding: 60px 40px;
+    background: #fff3e0;
+    border: 2px solid #ff9800;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.advice-error i {
+    font-size: 3em;
+    color: #ff9800;
+    margin-bottom: 20px;
+}
+
+.advice-error p {
+    font-size: 1.1em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.btn-retry {
+    padding: 12px 24px;
+    background: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-retry:hover {
+    background: #f57c00;
+    transform: translateY(-2px);
+}
+
+/* ===================================================================
+   総合アドバイスセクション
+   ================================================================ */
+
+.advice-overall-section {
+    margin-bottom: 35px;
+}
+
+.advice-overall {
+    padding: 25px;
+    border-radius: 10px;
+    font-size: 1.05em;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-left: 6px solid;
+    margin-bottom: 20px;
+    animation: slideIn 0.5s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* ===================================================================
+   カテゴリー別セクション
+   ================================================================ */
+
+.advice-category-section {
+    margin-bottom: 30px;
+}
+
+.advice-category-title {
+    margin: 30px 0 20px 0;
+    padding: 12px 0;
+    border-bottom: 3px solid #667eea;
+    color: #333;
+    font-size: 1.4em;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+}
+
+.advice-category-title i {
+    margin-right: 12px;
+    color: #667eea;
+}
+
+/* ===================================================================
+   アドバイスカード共通スタイル
+   ================================================================ */
+
+.advice-card {
+    background: white;
+    border-left: 5px solid;
+    padding: 20px;
+    margin: 15px 0;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.advice-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateX(5px);
+}
+
+.advice-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.advice-icon {
+    font-size: 1.6em;
+    flex-shrink: 0;
+}
+
+.advice-title {
+    margin: 0;
+    font-size: 1.2em;
+    font-weight: 700;
+    color: #333;
+}
+
+.advice-message {
+    margin: 12px 0;
+    color: #555;
+    line-height: 1.7;
+    font-size: 1em;
+}
+
+/* ===================================================================
+   レベル別カラーリング
+   ================================================================ */
+
+/* 警告レベル */
+.advice-warning {
+    border-left-color: #ff9800;
+    background: linear-gradient(135deg, #fff9f0 0%, #ffe8cc 100%);
+}
+
+.advice-warning .advice-icon {
+    color: #ff9800;
+}
+
+/* 成功レベル */
+.advice-success {
+    border-left-color: #4caf50;
+    background: linear-gradient(135deg, #f1f8f4 0%, #c8e6c9 100%);
+}
+
+.advice-success .advice-icon {
+    color: #4caf50;
+}
+
+/* 情報レベル */
+.advice-info {
+    border-left-color: #2196f3;
+    background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+}
+
+.advice-info .advice-icon {
+    color: #2196f3;
+}
+
+/* 通知レベル */
+.advice-notice {
+    border-left-color: #9c27b0;
+    background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);
+}
+
+.advice-notice .advice-icon {
+    color: #9c27b0;
+}
+
+/* ===================================================================
+   改善ヒントセクション
+   ================================================================ */
+
+.advice-tips-section {
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.advice-tips-header {
+    display: block;
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 0.95em;
+}
+
+.advice-tips-header i {
+    margin-right: 6px;
+    color: #ffc107;
+}
+
+.advice-tips {
+    margin: 8px 0 0 20px;
+    padding: 0;
+    list-style-type: none;
+}
+
+.advice-tips li {
+    margin: 8px 0;
+    padding-left: 20px;
+    color: #444;
+    line-height: 1.6;
+    position: relative;
+}
+
+.advice-tips li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: #4caf50;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+/* ===================================================================
+   優先事項リスト
+   ================================================================ */
+
+.advice-priority {
+    margin-top: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 6px;
+    border-left: 4px solid #667eea;
+}
+
+.advice-priority strong {
+    display: block;
+    margin-bottom: 10px;
+    color: #333;
+    font-size: 1em;
+}
+
+.advice-priority-list {
+    margin: 8px 0 0 25px;
+    padding: 0;
+    color: #444;
+}
+
+.advice-priority-list li {
+    margin: 8px 0;
+    line-height: 1.6;
+    font-weight: 500;
+}
+
+/* ===================================================================
+   レスポンシブデザイン
+   ================================================================ */
+
+@media screen and (max-width: 768px) {
+    .garmin-advice-section {
+        padding: 15px;
+        margin-top: 20px;
+    }
+
+    .advice-card {
+        padding: 15px;
+        margin: 12px 0;
+    }
+
+    .advice-overall {
+        padding: 18px;
+    }
+
+    .advice-category-title {
+        font-size: 1.2em;
+        padding: 10px 0;
+    }
+
+    .advice-title {
+        font-size: 1.05em;
+    }
+
+    .advice-message {
+        font-size: 0.95em;
+    }
+
+    .advice-icon {
+        font-size: 1.4em;
+    }
+
+    .btn-advice {
+        padding: 6px 12px;
+        font-size: 0.9em;
+    }
+
+    .advice-placeholder {
+        padding: 40px 20px;
+    }
+
+    .btn-get-advice-large {
+        padding: 12px 25px;
+        font-size: 1em;
+    }
+
+    .advice-tips li {
+        font-size: 0.9em;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .garmin-advice-section {
+        padding: 10px;
+    }
+
+    .advice-card {
+        padding: 12px;
+    }
+
+    .advice-header {
+        gap: 8px;
+    }
+
+    .advice-category-title {
+        font-size: 1.1em;
+    }
+
+    .advice-tips {
+        margin-left: 15px;
+    }
+
+    .btn-advice {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+}
+
+/* ===================================================================
+   印刷時のスタイル
+   ================================================================ */
+
+@media print {
+    .garmin-advice-section {
+        background: white;
+        box-shadow: none;
+    }
+
+    .advice-card {
+        page-break-inside: avoid;
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+
+    .btn-advice,
+    .btn-get-advice-large,
+    .btn-retry {
+        display: none;
+    }
+
+    .advice-card:hover {
+        transform: none;
+    }
+}
+
+/* ===================================================================
+   アクセシビリティ対応
+   ================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    .advice-card,
+    .advice-section,
+    .advice-overall,
+    .btn-advice,
+    .btn-get-advice-large {
+        animation: none;
+        transition: none;
+    }
+
+    .advice-card:hover {
+        transform: none;
+    }
+}
+
+/* ハイコントラストモード対応 */
+@media (prefers-contrast: high) {
+    .advice-card {
+        border-width: 2px;
+        border-style: solid;
+    }
+
+    .advice-warning {
+        border-color: #000;
+        background: #fff;
+    }
+
+    .advice-success {
+        border-color: #000;
+        background: #fff;
+    }
+
+    .advice-info {
+        border-color: #000;
+        background: #fff;
+    }
+}

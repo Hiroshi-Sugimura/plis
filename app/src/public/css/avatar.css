@@ -1,0 +1,140 @@
+/* ========================================
+   VRMアバター表示用スタイル (Wearableタブ用)
+======================================== */
+
+.avatar-display-section {
+    margin-top: 30px;
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 20px;
+}
+
+.avatar-display-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.avatar-info-panel {
+    background: rgba(102, 126, 234, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    border-left: 4px solid #667eea;
+}
+
+.avatar-info-panel p {
+    margin: 5px 0;
+    color: #ccc;
+}
+
+.avatar-hint {
+    font-size: 0.9em;
+    color: #999 !important;
+}
+
+.avatar-viewport-wearable {
+    width: 100%;
+    height: 500px;
+    background: radial-gradient(circle, #2a2a2a 0%, #1a1a1a 100%);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+}
+
+.avatar-placeholder-wearable {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: #999;
+}
+
+.btn-load-avatar-large {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 15px;
+    transition: all 0.3s ease;
+}
+
+.btn-load-avatar-large:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.avatar-controls-panel {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn-avatar-control {
+    background: #333;
+    color: #fff;
+    border: 1px solid #555;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.btn-avatar-control:hover {
+    background: #667eea;
+    border-color: #667eea;
+}
+
+.btn-avatar-control i {
+    margin-right: 8px;
+}
+
+.btn-advice {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-advice:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.loading-indicator {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    font-size: 24px;
+    color: #667eea;
+}
+
+.loading-indicator i {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+/* レスポンシブ対応 */
+@media (max-width: 768px) {
+    .avatar-viewport-wearable {
+        height: 400px;
+    }
+    
+    .avatar-controls-panel {
+        flex-direction: column;
+    }
+    
+    .btn-avatar-control {
+        width: 100%;
+    }
+}
