@@ -69,7 +69,8 @@ function onLoad() {
 	window.ipc.on('to-renderer', (event, obj) => {
 		// console.log( '->', obj );
 		// console.log('to-renderer, event:', event); eventは 'to-renderer' が入ってる
-		let c = JSON.parse(obj);    // obj = {cmd, arg} の形式でくる
+	// main からは構造化オブジェクトが届く想定だが、後方互換で文字列にも対応
+	let c = (typeof obj === 'string') ? JSON.parse(obj) : obj;    // obj = {cmd, arg}
 		// console.log(c);
 		try {
 			switch (c.cmd) {
