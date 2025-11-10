@@ -9,7 +9,7 @@
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
 import Store from 'electron-store';
-import netatmo from 'netatmo';
+import axios from 'axios';
 import cron from 'node-cron';
 import * as dateUtils from 'date-utils';
 import { Sequelize, Op, netatmoModel, roomEnvModel } from './models/localDBModels.cjs';   // DBデータと連携
@@ -23,8 +23,7 @@ let config = {
 	enabled: false,
 	id: "",
 	secret: "",
-	username: "",
-	password: "",
+	accessToken: "",
 	debug: false
 };
 
@@ -34,11 +33,12 @@ let persist = {};
 //////////////////////////////////////////////////////////////////////
 // config
 let mainNetatmo = {
-	api: null,
+	accessToken: null,
+	refreshToken: null,
+	tokenExpires: null,
 	observationJob: null,
 	data: {},
 	debug: false,
-	callback: null,
 	isRun: false,
 
 	//////////////////////////////////////////////////////////////////////
@@ -51,22 +51,21 @@ let mainNetatmo = {
 	 * @throw error
 	 */
 	// netatmo start
-	start: function (_sendIPCMessage) {
+	start: async function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
 
 		if (mainNetatmo.isRun) {
 			sendIPCMessage("renewNetatmoConfigView", config);
 			sendIPCMessage("renewNetatmo", persist);
-			mainNetatmo.sendTodayRoomEnv();// 現在持っているデータを送っておく
+			mainNetatmo.sendTodayRoomEnv();
 			return;
 		}
 
-		config.enabled = store.get('config.Netatmo.enabled', false);
-		config.id = store.get('config.Netatmo.id', '');
-		config.secret = store.get('config.Netatmo.secret', '');
-		config.username = store.get('config.Netatmo.username', '');
-		config.password = store.get('config.Netatmo.password', '');
-		config.debug = store.get('config.Netatmo.debug', false);
+	config.enabled = store.get('config.Netatmo.enabled', false);
+	config.id = store.get('config.Netatmo.id', '');
+	config.secret = store.get('config.Netatmo.secret', '');
+	config.accessToken = store.get('config.Netatmo.accessToken', '');
+	config.debug = store.get('config.Netatmo.debug', false);
 		sendIPCMessage("renewNetatmoConfigView", config);
 
 		persist = store.get('persist.Netatmo', {});
@@ -79,59 +78,60 @@ let mainNetatmo = {
 		mainNetatmo.isRun = true;
 
 		// configがなければ実行しない。
-		if (config.id == '' || config.secret == '' || config.username == '' || config.password == '') {
+		if (config.id == '' || config.secret == '' || config.accessToken == '') {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() no config.') : 0;
+			if (sendIPCMessage) {
+				sendIPCMessage('NetatmoAuthError', '設定が不足しています（Client ID / Secret / Access Token）');
+			}
 			return;
 		}
 
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() config:\x1b[32m', config, '\x1b[0m') : 0;
 
+		// すでに取得済みのアクセストークンを使う
 		try {
-			mainNetatmo.api = new netatmo({ 'client_id': config.id, 'client_secret': config.secret, 'username': config.username, 'password': config.password });
-
-			mainNetatmo.api.on("error", (error) => {
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.api.on() error:', error);
-
-				sendIPCMessage('Error', {
-					datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"),
-					moduleName: 'mainNetatmo',
-					stackLog: `Netatmo: Error Detail: ${error}`
-				});
-			});
-
-			mainNetatmo.api.on("warning", (error) => {
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.api.on() warning:', error);
-
-				sendIPCMessage('Info', {
-					datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"),
-					moduleName: 'mainNetatmo',
-					stackLog: `Netatmo: Warning Detail: ${error}`
-				});
-			});
-
-			mainNetatmo.data = {};
-			mainNetatmo.callback = function (err, devices) {
-				if (err) {
-					console.error(err);
-					return;
-				}
-				persist = devices;
-				sendIPCMessage("renewNetatmo", persist);
-				netatmoModel.create({ detail: JSON.stringify(persist) });// dbに入れる
-			};
-
-			mainNetatmo.api.on('get-stationsdata', (err, devices) => {// イベント登録
-				mainNetatmo.callback(err, devices);
-			});
-
-			mainNetatmo.setObserve();// 定期的チェック開始
+			await mainNetatmo.fetchStationsData();
+			mainNetatmo.setObserve();
 		} catch (e) {
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() error:', e);
+			sendIPCMessage('NetatmoAuthError', e.message || e);
 		}
 
 		sendIPCMessage("renewNetatmo", persist);
+		mainNetatmo.sendTodayRoomEnv();
+	},
+	/**
+	 * @func getAccessToken
+	 * @desc Netatmo OAuth2認証でaccess_token取得
+	 */
+	getAccessToken: async function () {
+		// アクセストークンはconfigから直接取得
+		mainNetatmo.accessToken = config.accessToken;
+		if (!mainNetatmo.accessToken) {
+			throw new Error('Netatmoアクセストークンが設定されていません');
+		}
+	},
 
-		mainNetatmo.sendTodayRoomEnv();// 現在持っているデータを送っておく
+	/**
+	 * @func fetchStationsData
+	 * @desc Netatmo APIでステーションデータ取得
+	 */
+	fetchStationsData: async function () {
+		if (!mainNetatmo.accessToken) {
+			await mainNetatmo.getAccessToken();
+		}
+		try {
+			const res = await axios.get('https://api.netatmo.com/api/getstationsdata', {
+				headers: {
+					Authorization: `Bearer ${mainNetatmo.accessToken}`
+				}
+			});
+			persist = res.data.body.devices;
+			sendIPCMessage("renewNetatmo", persist);
+			await netatmoModel.create({ detail: JSON.stringify(persist) });
+		} catch (error) {
+			throw new Error('Netatmoデータ取得失敗: ' + error);
+		}
 	},
 
 
@@ -394,19 +394,18 @@ let mainNetatmo = {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.observe() start.') : 0;
 
 		// 監視はcronで実施、1分毎
-		mainNetatmo.observationJob = cron.schedule('*/1 * * * *', () => {
+		mainNetatmo.observationJob = cron.schedule('*/1 * * * *', async () => {
 			try {
 				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.cron.schedule() every 1min') : 0;
 
-				// 部屋の環境を記録、Netatmo
-				mainNetatmo.api.getStationsData();
+				// トークン期限切れなら再取得
+				if (!mainNetatmo.accessToken || (mainNetatmo.tokenExpires && Date.now() > mainNetatmo.tokenExpires - 60000)) {
+					await mainNetatmo.getAccessToken();
+				}
+				await mainNetatmo.fetchStationsData();
 
 				let dt = new Date();
-
-				//------------------------------------------------------------
-				// 部屋の環境を記録、Netatmo
 				if (config.enabled && persist.length != 0) {
-					// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.cron.schedule() Store Netatmo'):0;
 					let n = persist[0];
 					if (n) {
 						roomEnvModel.create({
@@ -421,13 +420,11 @@ let mainNetatmo = {
 						});
 					}
 				}
-
-				mainNetatmo.sendTodayRoomEnv();// 本日のデータの定期的送信
+				mainNetatmo.sendTodayRoomEnv();
 			} catch (error) {
 				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.cron.schedule() each 1min, error:', error);
 			}
 		});
-
 		mainNetatmo.observationJob.start();
 	},
 

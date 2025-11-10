@@ -356,8 +356,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void}
 	 * @return void
 	 */
-	NetatmoUse: (_id, _secret, _username, _password, _debug) => {
-		ipcRenderer.invoke('NetatmoUse', { id: _id, secret: _secret, username: _username, password: _password, debug: _debug });
+	NetatmoUse: (_id, _secret, _accessToken, _debug) => {
+		ipcRenderer.invoke('NetatmoUse', { id: _id, secret: _secret, accessToken: _accessToken, debug: _debug });
 	},
 
 	/**
@@ -366,8 +366,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void}
 	 * @return void
 	 */
-	NetatmoStop: (_id, _secret, _username, _password, _debug) => {
-		ipcRenderer.invoke('NetatmoStop', { id: _id, secret: _secret, username: _username, password: _password, debug: _debug });
+	NetatmoStop: (_id, _secret, _accessToken, _debug) => {
+		ipcRenderer.invoke('NetatmoStop', { id: _id, secret: _secret, accessToken: _accessToken, debug: _debug });
 	},
 
 

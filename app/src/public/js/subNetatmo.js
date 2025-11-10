@@ -13,6 +13,13 @@
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subNetatmo.js');
 
+		// Netatmo認証エラー通知（mainからIPCで受け取る）
+		if (window.ipc && window.ipc.on) {
+			window.ipc.on('NetatmoAuthError', function (msg) {
+				window.addToast('Error', 'Netatmo認証失敗: ' + (msg || '認証情報を確認してください。'));
+			});
+		}
+
 	let facilitiesNetatmo; // 宅内情報（netatmo）
 
 	let H3Netatmo = document.getElementById('H3Netatmo');
@@ -23,8 +30,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	let inNetatmoUse = document.getElementById('inNetatmoUse');  // checkbox
 	let inNetatmoID = document.getElementById('inNetatmoID');  // netatmo
 	let inNetatmoSecret = document.getElementById('inNetatmoSecret');
-	let inNetatmoUsername = document.getElementById('inNetatmoUsername');
-	let inNetatmoPassword = document.getElementById('inNetatmoPassword');
+	let inNetatmoAccessToken = document.getElementById('inNetatmoAccessToken');
 	let selNetatmoDebugMode = document.getElementById('selNetatmoDebugMode');
 	let btnNetatmoConfigSet = document.getElementById('btnNetatmoConfigSet');
 
@@ -44,8 +50,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc Netatmo デバイス情報のrenew
 	 * @param {void}
 	 * @return {void}
@@ -70,8 +76,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		spanNetatmoNoise.innerHTML = facilitiesNetatmo[0].dashboard_data.Noise;
 	}
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 左のボタンからグラフ制御
 	 * @param {void}
 	 * @return {void}
@@ -93,8 +99,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	//----------------------------------------------------------------------------------------------
 	// Netatmo config
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 左のボタンからグラフ制御
 	 * @param {void}
 	 * @return {void}
@@ -102,21 +108,21 @@ window.addEventListener('DOMContentLoaded', function () {
 	// 設定ボタン
 	window.btnNetatmoConfigSet_Click = function (checkBox) {
 		if (inNetatmoUse.checked == false) {
-			window.ipc.NetatmoStop(inNetatmoID.value, inNetatmoSecret.value, inNetatmoUsername.value, inNetatmoPassword.value, selNetatmoDebugMode.value == 'true' ? true : false);  // Netatmoの監視をstopする
+			window.ipc.NetatmoStop(inNetatmoID.value, inNetatmoSecret.value, inNetatmoAccessToken.value, selNetatmoDebugMode.value == 'true' ? true : false);  // Netatmoの監視をstopする
 			renewNetatmo();
 			return; // falseなら外すだけ
 		}
 
-		if (inNetatmoID.value == '' || inNetatmoSecret.value == '' || inNetatmoUsername.value == '' || inNetatmoPassword.value == '') { // 情報不足で有効にしたら解説ダイアログ
+		if (inNetatmoID.value == '' || inNetatmoSecret.value == '' || inNetatmoAccessToken.value == '') { // 情報不足で有効にしたら解説ダイアログ
 			inNetatmoUse.checked = false;
 			netatmoHelpDialog.showModal();
 		} else {  // キー指定ありで有効にしたら，そのキーで開始
-			window.ipc.NetatmoUse(inNetatmoID.value, inNetatmoSecret.value, inNetatmoUsername.value, inNetatmoPassword.value, selNetatmoDebugMode.value == 'true' ? true : false);
+			window.ipc.NetatmoUse(inNetatmoID.value, inNetatmoSecret.value, inNetatmoAccessToken.value, selNetatmoDebugMode.value == 'true' ? true : false);
 		}
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 設定完了通知
 	 * @param {void}
 	 * @return {void}
@@ -128,19 +134,18 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast('Info', 'Netatmo 設定を保存しました。');
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc mainプロセスから設定値をもらったので画面を更新
 	 * @param {void}
 	 * @return {void}
 	 */
 	window.renewNetatmoConfigView = function (arg) {
-		inNetatmoUse.checked = arg.enabled;
-		inNetatmoID.value = arg.id;
-		inNetatmoSecret.value = arg.secret;
-		inNetatmoUsername.value = arg.username;
-		inNetatmoPassword.value = arg.password;
-		selNetatmoDebugMode.value = arg.debug;
+	inNetatmoUse.checked = arg.enabled;
+	inNetatmoID.value = arg.id;
+	inNetatmoSecret.value = arg.secret;
+	inNetatmoAccessToken.value = arg.accessToken;
+	selNetatmoDebugMode.value = arg.debug;
 
 		if (inNetatmoUse.checked) {  // Netatmo有効なので画面表示
 			H3Netatmo.style.display = 'block';
@@ -177,7 +182,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		'18:00', '18:15', '18:30', '18:45', '19:00', '19:15', '19:30', '19:45', '20:00', '20:15', '20:30', '20:45',
 		'21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45', '23:00', '23:15', '23:30', '23:45', '24:00'];
 
-	/** 
+	/**
 	 * @func newLegendClickHandler
 	 * @desc newLegendClickHandler
 	 * @memberof subNetatmo
@@ -318,8 +323,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 内部関数
 	 * @memberof subNetatmo
 	 * @param {void}
@@ -338,8 +343,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		});
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc データをもらって画面更新
 	 * @param {void}
 	 * @return {void}

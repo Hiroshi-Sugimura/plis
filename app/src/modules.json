@@ -1515,8 +1515,8 @@
     "repository": "https://github.com/jprichardson/node-fs-extra",
     "publisher": "JP Richardson",
     "email": "jprichardson@gmail.com",
-    "path": "/Users/sugimura/Documents/plis/app/node_modules/electron-winstaller/node_modules/fs-extra",
-    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron-winstaller/node_modules/fs-extra/LICENSE"
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/electron-windows-store/node_modules/fs-extra",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron-windows-store/node_modules/fs-extra/LICENSE"
   },
   "fs-extra@8.1.0": {
     "licenses": "MIT",

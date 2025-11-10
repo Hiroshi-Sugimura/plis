@@ -1463,11 +1463,7 @@
 							1234567890abcdefghijklmn)<br>
 							Client Secret: <form class="secretBorder inline"><input id="inNetatmoSecret" type="password" value="" class="secretText" size="50" /><span id="inNetatmoSecretButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoSecret');"></span></form>
 							(e.g. 012345678910abcdefghijklmnopqrstuvwxyz123)<br>
-							Username (E-mail): <form class="secretBorder inline"><input id="inNetatmoUsername" type="password" value="" class="secretText" size="50" /><span id="inNetatmoUsernameButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoUsername');"></span></form> (e.g.
-							sugi-lab@example.com)<br>
-							Password: <form class="secretBorder inline"><input id="inNetatmoPassword" type="password" value="" class="secretText" size="20" /><span id="inNetatmoPasswordButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoPassword');"></span>
-							</form>
-							(e.g. password)<br>
+							Access Token: <form class="secretBorder inline"><input id="inNetatmoAccessToken" type="password" value="" class="secretText" size="50" /><span id="inNetatmoAccessTokenButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoAccessToken');"></span></form> (e.g. xxxxxxxxxxxxxxxxx)<br>
 							<br>
 							デバッグモード： <select id="selNetatmoDebugMode" size="1">
 								<option value="true">有効</option>
@@ -1797,8 +1793,8 @@
 			<dialog id="netatmoHelpDialog">
 				<h3>説明：NetatmoのAPI連携を有効にするには</h3>
 				<p>
-					Client ID, Client Secret, Username, Passwordを設定してから，チェックボックスを有効にしてください。<br>
-					上記情報は，こちらから無料アカウントを作成して取得してください。<br>
+					Client ID, Client Secret, Access Token を設定してから，チェックボックスを有効にしてください。<br>
+					Client ID/Secret は開発者ページのMy Appsから取得できます。Access Token は認可フローで発行したトークンを入力してください。<br>
 					<a href="#" onClick='window.URLopen("https://dev.netatmo.com/");'>Netatmo Developersへ</a><br>
 				</p>
 				<p>
