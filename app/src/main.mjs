@@ -88,12 +88,18 @@ let persist = {};
  */
 let sendIPCMessage = function (cmdStr, argStr) {
 	try {
-		if (mainWindow != null && mainWindow.webContents != null) {
-			mainWindow.webContents.send('to-renderer', JSON.stringify({ cmd: cmdStr, arg: argStr }));
+		if (
+			mainWindow != null &&
+			!mainWindow.isDestroyed?.() &&
+			mainWindow.webContents != null &&
+			!mainWindow.webContents.isDestroyed?.()
+		) {
+			// 構造化複製でそのまま送る（JSON.stringifyはしない）
+			mainWindow.webContents.send('to-renderer', { cmd: cmdStr, arg: argStr });
 		}
 	} catch (error) {
 		console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.sendIPCMessage() error:\x1b[32m', error, '\x1b[0m');
-		mainWindow.reload();  // sendIPCMessage がミスする。本来はミスの原因を直す必要があるが、ここでは暫定で対応
+		// 自動リロードは白画面化の一因になるため禁止。ログのみに留める。
 	}
 };
 
@@ -572,10 +578,40 @@ async function createWindow() {
 		// SQLite のデータベースのレコードの削除処理
 		await mainHALlocal.truncatelogs();
 
+		//=============================
+		// レンダラ/ GPU クラッシュ検出
+		//=============================
+		mainWindow.webContents.on('render-process-gone', (event, details) => {
+			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.render-process-gone:', details?.reason, details);
+			safeRecreateWindow();
+		});
+		mainWindow.on('unresponsive', () => {
+			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.window unresponsive');
+		});
+		mainWindow.webContents.on('gpu-process-crashed', (event, killed) => {
+			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.gpu-process-crashed. killed:', killed);
+		});
+
 	} catch (error) {
 		console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.createWindow() error:\x1b[32m', error, '\x1b[0m');
 	}
 };
+
+/**
+ * @func safeRecreateWindow
+ * @desc レンダラが落ちた場合に安全にウィンドウを再生成
+ */
+function safeRecreateWindow() {
+	try {
+		if (mainWindow && !mainWindow.isDestroyed?.()) {
+			mainWindow.destroy();
+		}
+	} catch (e) {
+		console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.safeRecreateWindow destroy error:\x1b[32m', e, '\x1b[0m');
+	} finally {
+		createWindow();
+	}
+}
 
 //=============================================================================
 // 起動
