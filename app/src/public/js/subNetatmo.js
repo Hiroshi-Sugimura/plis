@@ -113,10 +113,11 @@ window.addEventListener('DOMContentLoaded', function () {
 			return; // falseなら外すだけ
 		}
 
-		if (inNetatmoID.value == '' || inNetatmoSecret.value == '' || inNetatmoAccessToken.value == '') { // 情報不足で有効にしたら解説ダイアログ
+		// アクセストークンのみ必須
+		if (inNetatmoAccessToken.value == '') { // 情報不足で有効にしたら解説ダイアログ
 			inNetatmoUse.checked = false;
 			netatmoHelpDialog.showModal();
-		} else {  // キー指定ありで有効にしたら，そのキーで開始
+		} else {  // トークン指定ありで有効にしたら開始（ID/Secretは任意）
 			window.ipc.NetatmoUse(inNetatmoID.value, inNetatmoSecret.value, inNetatmoAccessToken.value, selNetatmoDebugMode.value == 'true' ? true : false);
 		}
 	};

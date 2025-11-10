@@ -75,22 +75,45 @@ let mainNetatmo = {
 			mainNetatmo.isRun = false;
 			return;
 		}
-		mainNetatmo.isRun = true;
 
-		// configがなければ実行しない。
-		if (config.id == '' || config.secret == '' || config.accessToken == '') {
+		// 必須の設定がなければ実行しない（アクセストークンのみ必須）。
+		if (config.accessToken == '') {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() no config.') : 0;
 			if (sendIPCMessage) {
-				sendIPCMessage('NetatmoAuthError', '設定が不足しています（Client ID / Secret / Access Token）');
+				sendIPCMessage('NetatmoAuthError', '設定が不足しています（Access Token）');
 			}
 			return;
 		}
+
+		// 実行開始
+		mainNetatmo.isRun = true;
 
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() config:\x1b[32m', config, '\x1b[0m') : 0;
 
 		// すでに取得済みのアクセストークンを使う
 		try {
 			await mainNetatmo.fetchStationsData();
+			// 初回も直ちに1レコード保存してUXを向上
+			try {
+				let dt = new Date();
+				if (config.enabled && persist && persist.length) {
+					let n = persist[0];
+					if (n && n.dashboard_data) {
+						await roomEnvModel.create({
+							dateTime: dt,
+							srcType: 'netatmo',
+							place: n.home_name,
+							temperature: n.dashboard_data.Temperature,
+							humidity: n.dashboard_data.Humidity,
+							pressure: n.dashboard_data.Pressure,
+							noise: n.dashboard_data.Noise,
+							CO2: n.dashboard_data.CO2
+						});
+					}
+				}
+			} catch (e) {
+				config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() initial save warn:', e) : 0;
+			}
 			mainNetatmo.setObserve();
 		} catch (e) {
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() error:', e);
@@ -343,7 +366,7 @@ let mainNetatmo = {
 					array.push({
 						id: t,
 						time: T1.toISOString(),
-						srcType: 'omron',
+						srcType: 'netatmo',
 						temperature: null,
 						humidity: null,
 						pressure: null,
