@@ -535,6 +535,7 @@ let mainEL = {
 	 * EL.facilities の最低限の健全性を確保する簡易サニタイズ。
 	 * 不正なエントリや非オブジェクト/未定義を削除し、EOJs配列を文字列のみに制限。
 	 * 各EOJキー配下の不正データ（非オブジェクト/配列）も除去する。
+	 * complementFacilities_sub内部でprops[epc].matchを呼ぶ前提なので、EPCキーの値が文字列でないものも削除。
 	 */
 	sanitizeFacilities: function () {
 		try {
@@ -551,13 +552,20 @@ let mainEL = {
 				} else {
 					fac.EOJs = [];
 				}
-				// 各EOJキー（例: "028801"）配下が不正なら削除
+				// 各EOJキー（例: "028801"）配下のプロパティマップをサニタイズ
 				for (const key of Object.keys(fac)) {
 					if (key === 'EOJs') continue;
 					const val = fac[key];
 					// complementFacilities内部でval[epc].matchを呼ぶ想定なので、オブジェクトでない場合削除
 					if (!val || typeof val !== 'object' || Array.isArray(val)) {
 						delete fac[key];
+						continue;
+					}
+					// EOJキー配下の各EPCキー（例: "9f"）の値が文字列でないなら削除（.match呼び出しエラー回避）
+					for (const epcKey of Object.keys(val)) {
+						if (val[epcKey] !== null && val[epcKey] !== '' && typeof val[epcKey] !== 'string') {
+							delete val[epcKey];
+						}
 					}
 				}
 			}
