@@ -11,7 +11,7 @@
     "about-window": "^1.15.2",
     "date-utils": "^1.2.21",
     "e-smartmeter-echonet-lite": "^2.8.0",
-    "echonet-lite": "^2.17.0",
+    "echonet-lite": "^2.17.2",
     "echonet-lite-conv": "^1.8.1",
     "electron-squirrel-startup": "^1.0.1",
     "electron-store": "^11.0.2",
