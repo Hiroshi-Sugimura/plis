@@ -28,9 +28,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	// config
 	let inNetatmoUse = document.getElementById('inNetatmoUse');  // checkbox
-	let inNetatmoID = document.getElementById('inNetatmoID');  // netatmo
-	let inNetatmoSecret = document.getElementById('inNetatmoSecret');
-	let inNetatmoAccessToken = document.getElementById('inNetatmoAccessToken');
+	let inNetatmoClientId = document.getElementById('inNetatmoClientId');  // netatmo
+	let inNetatmoClientSecret = document.getElementById('inNetatmoClientSecret');
+	let inNetatmoRefreshToken = document.getElementById('inNetatmoRefreshToken');
 	let selNetatmoDebugMode = document.getElementById('selNetatmoDebugMode');
 	let btnNetatmoConfigSet = document.getElementById('btnNetatmoConfigSet');
 
@@ -108,17 +108,19 @@ window.addEventListener('DOMContentLoaded', function () {
 	// 設定ボタン
 	window.btnNetatmoConfigSet_Click = function (checkBox) {
 		if (inNetatmoUse.checked == false) {
-			window.ipc.NetatmoStop(inNetatmoID.value, inNetatmoSecret.value, inNetatmoAccessToken.value, selNetatmoDebugMode.value == 'true' ? true : false);  // Netatmoの監視をstopする
+			window.ipc.NetatmoStop(inNetatmoClientId.value, inNetatmoClientSecret.value, inNetatmoRefreshToken.value, selNetatmoDebugMode.value == 'true' ? true : false);  // Netatmoの監視をstopする
 			renewNetatmo();
 			return; // falseなら外すだけ
 		}
 
-		// アクセストークンのみ必須
-		if (inNetatmoAccessToken.value == '') { // 情報不足で有効にしたら解説ダイアログ
+		// ClientID/ClientSecret/RefreshTokenが必須
+		if (inNetatmoRefreshToken.value == '' || inNetatmoClientId.value == '' || inNetatmoClientSecret.value == '') {
+			// 情報不足で有効にしたら解説ダイアログ
 			inNetatmoUse.checked = false;
 			netatmoHelpDialog.showModal();
-		} else {  // トークン指定ありで有効にしたら開始（ID/Secretは任意）
-			window.ipc.NetatmoUse(inNetatmoID.value, inNetatmoSecret.value, inNetatmoAccessToken.value, selNetatmoDebugMode.value == 'true' ? true : false);
+		} else {
+			// トークン指定ありで有効にしたら開始
+			window.ipc.NetatmoUse(inNetatmoClientId.value, inNetatmoClientSecret.value, inNetatmoRefreshToken.value, selNetatmoDebugMode.value == 'true' ? true : false);
 		}
 	};
 
@@ -143,9 +145,9 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.renewNetatmoConfigView = function (arg) {
 	inNetatmoUse.checked = arg.enabled;
-	inNetatmoID.value = arg.id;
-	inNetatmoSecret.value = arg.secret;
-	inNetatmoAccessToken.value = arg.accessToken;
+	inNetatmoClientId.value = arg.clientId;
+	inNetatmoClientSecret.value = arg.clientSecret;
+	inNetatmoRefreshToken.value = arg.refreshToken;
 	selNetatmoDebugMode.value = arg.debug;
 
 		if (inNetatmoUse.checked) {  // Netatmo有効なので画面表示

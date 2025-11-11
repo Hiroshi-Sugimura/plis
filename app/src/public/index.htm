@@ -94,6 +94,7 @@
 							</a>
 						</span>
 					</h3>
+
 					<div class="LinearLayoutParent_split">
 						<div class="LinearLayoutChild_left none" id="divNetatmoAbst"><!-- abst -->
 							<div class='LinearLayoutParent'>
@@ -129,6 +130,12 @@
 										</section>
 									</div>
 								</section>
+							</div>
+							<!-- 日付選択UI追加 -->
+							<div style="margin-top:1em;">
+								<label for="inNetatmoDate">表示日: </label>
+								<input type="date" id="inNetatmoDate" value="" style="font-size:1em;">
+								<button type="button" id="btnNetatmoDateChange">グラフ切替</button>
 							</div>
 						</div>
 						<div class="LinearLayoutChild_right" id="divNetatmoChart"><!-- graph -->
@@ -1458,12 +1465,12 @@
 						<summary class="config" id="netatmoConfig"><i class="fa-solid fa-sun"></i> Netatmoクラウド 連携設定</summary>
 						<div class="p">
 							<label><input type="checkbox" id="inNetatmoUse" value="on">Use Netatmo</label><br>
-							Client ID: <form class="secretBorder inline"><input id="inNetatmoID" type="password" value="" class="secretText" size="50" /><span id="inNetatmoIDButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoID');"></span></form>
+							Client ID: <form class="secretBorder inline"><input id="inNetatmoClientId" type="password" value="" class="secretText" size="50" /><span id="inNetatmoClientIdButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoClientId');"></span></form>
 							(e.g.
 							1234567890abcdefghijklmn)<br>
-							Client Secret: <form class="secretBorder inline"><input id="inNetatmoSecret" type="password" value="" class="secretText" size="50" /><span id="inNetatmoSecretButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoSecret');"></span></form>
+							Client Secret: <form class="secretBorder inline"><input id="inNetatmoClientSecret" type="password" value="" class="secretText" size="50" /><span id="inNetatmoClientSecretButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoClientSecret');"></span></form>
 							(e.g. 012345678910abcdefghijklmnopqrstuvwxyz123)<br>
-							Access Token: <form class="secretBorder inline"><input id="inNetatmoAccessToken" type="password" value="" class="secretText" size="50" /><span id="inNetatmoAccessTokenButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoAccessToken');"></span></form> (e.g. xxxxxxxxxxxxxxxxx)<br>
+							Refresh Token: <form class="secretBorder inline"><input id="inNetatmoRefreshToken" type="password" value="" class="secretText" size="50" /><span id="inNetatmoRefreshTokenButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inNetatmoRefreshToken');"></span></form> (e.g. yyyyyyyyyyyyyy)<br>
 							<br>
 							デバッグモード： <select id="selNetatmoDebugMode" size="1">
 								<option value="true">有効</option>
