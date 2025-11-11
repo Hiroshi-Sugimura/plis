@@ -12,6 +12,7 @@ import axios from 'axios';
 import Store from 'electron-store';
 import cron from 'node-cron';
 import * as dateUtils from 'date-utils';
+import { mergeDeeply } from './mainSubmodule.cjs';
 
 
 const store = new Store();
@@ -29,6 +30,19 @@ const databaseDir = path.join(userHome, appname);  // SQLite3ファイルの置�
 let config = {
 	debug: false
 }
+
+/**
+ * @typedef {Object} CalendarConfig
+ * @property {boolean} [debug=false] デバッグログを出すかどうか
+ */
+
+/**
+ * @typedef {Object} CalendarPersist
+ * @description 将来的な拡張用。現在は祝日CSVのキャッシュなどを想定。
+ */
+
+/** @type {CalendarPersist} */
+let persist = {};
 
 
 //////////////////////////////////////////////////////////////////////
@@ -48,10 +62,12 @@ let mainCalendar = {
 	//////////////////////////////////////////////////////////////////////
 	// interfaces
 	/**
-	 * @func start
-	 * @desc 初期化と機能開始
-	 * @param {IPCMessage} _sendIPCMessage
-	 * @throw error
+	 * 初期化して監視を開始する。
+	 * - 祝日CSVが無ければダウンロード
+	 * - Rendererへカレンダーデータを送信
+	 * - 毎日0:00に更新イベントを発火
+	 * @param {(channel:string, ...args:any[])=>void} _sendIPCMessage IPCへメッセージを送る関数
+	 * @returns {void}
 	 */
 	start: function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
@@ -89,15 +105,15 @@ let mainCalendar = {
 	},
 
 	/**
-	 * @func stopWithoutSave
-	 * @desc 保存しないで終了。監視をやめる
+	 * 保存せずに停止し、監視を解除する。
+	 * @returns {void}
 	 */
 	stopWithoutSave: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.stop()') : 0;
 
-		if (mainCalendar.observationJob) {
-			mainCalendar.observationJob.stop();
-			mainCalendar.observationJob = null;
+		if (mainCalendar.observationTask) {
+			mainCalendar.observationTask.stop();
+			mainCalendar.observationTask = null;
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.stopObserve() is stopped.') : 0;
 		} else {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.stopObserve() has already stopped.') : 0;
@@ -108,10 +124,9 @@ let mainCalendar = {
 
 
 	/**
-	 * @async
-	 * @func setConfig
-	 * @desc 設定を変更して保存。_config=nullなら設定保存のみ
-	 * @param {Object} _config
+	 * 設定をマージして保存する。_configがnull/undefinedの場合は現状を保存のみ。
+	 * @param {Partial<CalendarConfig>=} _config 上書きする設定
+	 * @returns {Promise<void>}
 	 */
 	setConfig: async function (_config) {
 		if (_config) {
@@ -123,19 +138,16 @@ let mainCalendar = {
 	},
 
 	/**
-	 * @func getConfig
-	 * @return {Object} config
-	 * @desc 現在の設定値を返す
+	 * 現在の設定値を返す。
+	 * @returns {CalendarConfig}
 	 */
 	getConfig: function () {
 		return config;
 	},
 
 	/**
-	 * @async
-	 * @func getPersist
-	 * @return {Object} persist
-	 * @desc 現在の状況を返す
+	 * 現在の永続データを返す。
+	 * @returns {CalendarPersist}
 	 */
 	getPersist: function () {
 		return persist;
@@ -145,9 +157,9 @@ let mainCalendar = {
 	//////////////////////////////////////////////////////////////////////
 	// 内部関数
 	/**
-	 * @async
-	 * @func getHolidays
-	 * @desc 祝日データを内閣府からHTTPで取得して、ストレージにファイルとして保存する
+	 * 祝日データを内閣府サイトから取得し、ユーザフォルダに syukujitsu.csv として保存する。
+	 * 成功時は Renderer に renewCalendar を送信する。
+	 * @returns {void}
 	 */
 	getHolidays: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.getHolidays()') : 0;

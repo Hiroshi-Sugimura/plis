@@ -19,15 +19,27 @@ import { mergeDeeply } from './mainSubmodule.cjs';
 let sendIPCMessage = null;
 const store = new Store();
 
-let config = {
+/**
+ * @typedef {Object} NetatmoConfig
+ * @property {boolean} enabled 機能が有効か
+ * @property {string} clientId Netatmo APIのClient ID
+ * @property {string} clientSecret Netatmo APIのClient Secret
+ * @property {string} refreshToken OAuth2 Refresh Token（使用毎にローテーション）
+ * @property {boolean} debug デバッグログを出すか
+ */
+let config = /** @type {NetatmoConfig} */ ({
 	enabled: false,
 	clientId: "",
 	clientSecret: "",
 	refreshToken: "",
 	debug: false
-};
+});
 
-let persist = {};
+/**
+ * @typedef {Object} NetatmoPersist
+ * @property {any[]} [devices] getstationsdata の devices 配列を想定（互換性維持のため既存構造を保持）
+ */
+let persist = /** @type {any} */ ({});
 
 
 //////////////////////////////////////////////////////////////////////
@@ -43,14 +55,12 @@ let mainNetatmo = {
 
 	//////////////////////////////////////////////////////////////////////
 	/**
-	 * @func start
-	 * @desc start
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * Netatmoモジュールを開始する。初回起動時は store から設定を読み、必要に応じてトークンのリフレッシュを行う。
+	 * 既に稼働中なら最新設定と当日集計をRendererへ再送してreturn。
+	 * エラー時は NetatmoAuthError IPC を通知。
+	 * @param {(channel:string, ...args:any[])=>void} _sendIPCMessage IPC送信用関数
+	 * @returns {Promise<void>}
 	 */
-	// netatmo start
 	start: async function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
 
@@ -153,8 +163,9 @@ let mainNetatmo = {
 		mainNetatmo.sendTodayRoomEnv();
 	},
 	/**
-	 * @func getAccessToken
-	 * @desc Netatmo OAuth2認証でaccess_token取得
+	 * （廃止）直接アクセストークンを取得する旧API。常に例外を投げる。
+	 * @deprecated refreshAccessToken() を使ってください。
+	 * @throws {Error} 常に廃止エラー
 	 */
 	getAccessToken: async function () {
 		// 直接設定は廃止。常にrefreshAccessToken()から取得する運用に変更。
@@ -162,8 +173,11 @@ let mainNetatmo = {
 	},
 
 	/**
-	 * @func refreshAccessToken
-	 * @desc リフレッシュトークンを使って新しいアクセストークンを取得
+	 * Refresh Token を使って新しい Access Token を取得し内部状態を更新する。
+	 * Access Token は永続化しない。Refresh Token はローテーションされるため最新値を保存する。
+	 * invalid_grant（古い/再利用Refresh Token）検出時はRefresh Tokenを消去しUIへ再設定促進のトーストを送る。
+	 * @returns {Promise<boolean>} 成功したら true
+	 * @throws {Error} 必須情報不足/HTTPエラー/invalid_grant
 	 */
 	refreshAccessToken: async function () {
 		if (!config.clientId || !config.clientSecret || !config.refreshToken) {
@@ -213,8 +227,11 @@ let mainNetatmo = {
 	},
 
 	/**
-	 * @func fetchStationsData
-	 * @desc Netatmo APIでステーションデータ取得
+	 * Netatmo API (getstationsdata) を叩いて最新デバイス情報を取得し persist に反映・DBへ保存。
+	 * 403で未リトライならトークンをリフレッシュして一度だけ再試行する。
+	 * @param {boolean} [isRetry=false] 内部再試行フラグ（無限ループ防止）
+	 * @returns {Promise<void>}
+	 * @throws {Error} API失敗/リフレッシュ失敗
 	 */
 	fetchStationsData: async function (isRetry = false) {
 		if (!mainNetatmo.accessToken) {
@@ -258,12 +275,8 @@ let mainNetatmo = {
 
 
 	/**
-	 * @func stop
-	 * @desc stop
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 観測ジョブを停止して現状設定を保存する。
+	 * @returns {Promise<void>}
 	 */
 	stop: async function () {
 		mainNetatmo.isRun = false;
@@ -275,12 +288,8 @@ let mainNetatmo = {
 	},
 
 	/**
-	 * @func stopWithoutSave
-	 * @desc stopWithoutSave
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 保存せずに観測ジョブのみ停止する。
+	 * @returns {Promise<void>}
 	 */
 	stopWithoutSave: async function () {
 		mainNetatmo.isRun = false;
@@ -290,12 +299,9 @@ let mainNetatmo = {
 
 
 	/**
-	 * @func setConfig
-	 * @desc setConfig
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 設定をディープマージして永続化・UIへ反映する。accessTokenキーは無視/除去。
+	 * @param {Partial<NetatmoConfig>} _config 変更したい設定
+	 * @returns {Promise<void>}
 	 */
 	setConfig: async function (_config) {
 		console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.setConfig() _config:\x1b[33m', _config, '\x1b[0m');
@@ -314,24 +320,16 @@ let mainNetatmo = {
 	},
 
 	/**
-	 * @func getConfig
-	 * @desc getConfig
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 現在の設定を返す。
+	 * @returns {NetatmoConfig}
 	 */
 	getConfig: function () {
 		return config;
 	},
 
 	/**
-	 * @func getPersist
-	 * @desc getPersist
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 最新のステーションデータ永続オブジェクトを返す。
+	 * @returns {any} persist構造（devices配列など）
 	 */
 	getPersist: function () {
 		return persist;
@@ -342,27 +340,10 @@ let mainNetatmo = {
 	// innser functions
 
 	/**
-	 * @func getCases
-	 * @desc getRows
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 日次集計用CASE式を生成する内部関数。3分刻み(24h * 20 = 480)で時間帯をバケット化。
+	 * @param {Date} date 対象日（その日の0:00起点）
+	 * @returns {string} SQL CASE 式断片
 	 */
-	// 定時処理、部屋環境のデータ送信
-	/*
-	getCases
-	input
-		date: Date="2023-01-06"
-
-	output
-		when createdAt >= "2023-01-05 23:57" and createdAt < "2023-01-06 00:00" then "00:00"
-		when createdAt >= "2023-01-06 00:00" and createdAt < "2023-01-06 00:03" then "00:03"
-		when createdAt >= "2023-01-06 00:03" and createdAt < "2023-01-06 00:06" then "00:06"
-		...
-		when createdAt >= "2023-01-06 23:54" and createdAt < "2023-01-06 23:57" then "23:57"
-		else "24:00"
-	*/
 	getCases: function (date) {
 		let T1 = new Date(date);
 		let T2 = new Date(date);
@@ -391,12 +372,9 @@ let mainNetatmo = {
 
 
 	/**
-	 * @func getRows
-	 * @desc DBからテーブル取得
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 指定日の環境データを3分刻みバケットで平均値集計して取得する。
+	 * @param {Date|string|null} [targetDate=null] 指定日。nullなら今日。
+	 * @returns {Promise<any[]>} Sequelize findAll結果
 	 */
 	getRows: async function (targetDate = null) {
 		try {
@@ -436,12 +414,9 @@ let mainNetatmo = {
 	},
 
 	/**
-	 * @func getTodayRoomEnv
-	 * @desc getTodayRoomEnv
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 指定日の3分刻み配列（欠損はnull）を作りUI送信用構造を返す。
+	 * @param {Date|string|null} [targetDate=null]
+	 * @returns {Promise<Array<{id:number,time:string,srcType:string,temperature:number|null,humidity:number|null,pressure:number|null,noise:number|null,CO2:number|null}>>}
 	 */
 	getTodayRoomEnv: async function (targetDate = null) {
 		// 画面に指定日のデータを送信するためのデータ作る
@@ -490,12 +465,8 @@ let mainNetatmo = {
 	},
 
 	/**
-	 * @func sendTodayRoomEnv
-	 * @desc sendTodayRoomEnv
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 当日（または最新）の環境データ配列をIPCでRendererへ送る。
+	 * @returns {Promise<void>}
 	 */
 	sendTodayRoomEnv: async function () {
 		let arg = {};
@@ -507,13 +478,9 @@ let mainNetatmo = {
 	},
 
 	/**
-	 * @func setObservesetObserve
-	 * @func setObserve
-	 * @desc netatmoを監視する
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 1分毎の監視cronを開始。トークン期限1分前ならリフレッシュし取得→DB保存→当日集計送信。
+	 * 再重複開始は無視。
+	 * @returns {void}
 	 */
 	setObserve: function () {
 		if (mainNetatmo.observationJob) {
@@ -558,12 +525,8 @@ let mainNetatmo = {
 
 
 	/**
-	 * @func stopObservation
-	 * @desc 監視をやめる
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 観測cronを停止する。
+	 * @returns {void}
 	 */
 	stopObservation: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.stop() observation.') : 0;

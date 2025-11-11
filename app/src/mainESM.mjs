@@ -28,7 +28,18 @@ const appDir = process.env.NODE_ENV === 'development' ? __dirname : __dirname;
 let sendIPCMessage = null;
 const store = new Store();
 
-let config = {
+/**
+ * @typedef {Object} ESMConfig
+ * @property {boolean} enabled 有効/無効
+ * @property {'ROHM'|'TESSERA'} dongleType ドングル種類
+ * @property {string} id BルートID
+ * @property {string} password Bルートパスワード
+ * @property {string} userAmpere 契約アンペア
+ * @property {Object} EPANDESC 接続情報
+ * @property {'stable'|'fast'} connectionType 接続方式
+ * @property {boolean} debug ライブラリのデバッグ
+ */
+let config = /** @type {ESMConfig} */ ({
 	enabled: false,  // 有効/無効
 	dongleType: 'TESSERA',  // 'ROHM' or 'TESSERA', default:TESSERA
 	id: '',   // Bルート認証ID設定, Your B route ID.
@@ -37,9 +48,10 @@ let config = {
 	EPANDESC: {},       // コネクション情報
 	connectionType: 'stable', // 接続方式, 'stable' or 'fast', stable:No use EPANDESC
 	debug: false     // スマメライブラリのデバッグ有効
-};
+});
 
-let persist = {};
+/** @typedef {{[key:string]: any, IPs?: string[]}} ESMPersist */
+let persist = /** @type {ESMPersist} */ ({});
 
 
 //////////////////////////////////////////////////////////////////////
@@ -55,12 +67,9 @@ let mainESM = {
 	//////////////////////////////////////////////////////////////////////
 
 	/**
-	 * @func start
-	 * @desc 初期化と開始
-	 * @async
-	 * @param {sendIPCMessage} _sendIPCMessage IPC通信関数
-	 * @return void
-	 * @throw error
+	 * 初期化して監視開始。起動済みなら現状送信してreturn。
+	 * @param {(ch:string,...args:any[])=>void} _sendIPCMessage IPC送信用関数
+	 * @returns {void}
 	 */
 	start: function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
@@ -119,10 +128,8 @@ let mainESM = {
 
 
 	/**
-	 * @func stop
-	 * @desc シリアルポートを開放して連携終了、設定や現在の数値を永続化する
-	 * @async
-	 * @param {void}
+	 * 監視停止・ポート解放・設定/persist保存。
+	 * @returns {Promise<void>}
 	 */
 	stop: async function () {
 		mainESM.isRun = false;
@@ -136,11 +143,8 @@ let mainESM = {
 	},
 
 	/**
-	 * @func stopWithoutSave
-	 * @desc シリアルポートを開放して連携終了、設定や現在の数値を永続化しない
-	 * @async
-	 * @param {void}
-	 * @throw error
+	 * 保存せず停止（監視停止とポート解放のみ）。
+	 * @returns {Promise<void>}
 	 */
 	stopWithoutSave: async function () {
 		mainESM.isRun = false;
@@ -152,12 +156,9 @@ let mainESM = {
 	},
 
 	/**
-	 * @func setConfig
-	 * @desc 設定をセットするとともに永続化する、引数なければ保存だけする
-	 * @async
-	 * @param {config} _config 設定、nullなら保存のみ
-	 * @return void
-	 * @throw error
+	 * 設定をディープマージして保存。引数省略時は現状保存のみ。
+	 * @param {Partial<ESMConfig>=} _config
+	 * @returns {Promise<void>}
 	 */
 	setConfig: async function (_config) {
 		if (_config) {
@@ -170,22 +171,16 @@ let mainESM = {
 	},
 
 	/**
-	 * @func getConfig
-	 * @desc 現在の設定を取得する
-	 * @async
-	 * @param {void}
-	 * @return config config
+	 * 現在の設定を返す。
+	 * @returns {ESMConfig}
 	 */
 	getConfig: function () {
 		return config;
 	},
 
 	/**
-	 * @func getPersist
-	 * @desc 現在のデータを取得する
-	 * @async
-	 * @param {void}
-	 * @return persist persist
+	 * 現在の保持データを返す。
+	 * @returns {ESMPersist}
 	 */
 	getPersist: function () {
 		return persist;
@@ -196,12 +191,7 @@ let mainESM = {
 	//////////////////////////////////////////////////////////////////////
 	// 定時処理のインタフェース
 	/**
-	 * @func observe
-	 * @desc スマートメータを監視する、初回受信時にトリガー
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 監視Cronを開始（1分毎）。接続/測定/DB登録/送信フローをドライブ。
 	 */
 	startObserve: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startObserve() start.') : 0;
@@ -246,11 +236,7 @@ let mainESM = {
 
 
 	/**
-	 * @func stopObservation
-	 * @desc 監視をやめる
-	 * @async
-	 * @param {void}
-	 * @return void
+	 * 監視Cronを停止。
 	 */
 	stopObservation: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.stopObserve() observation.') : 0;
@@ -267,11 +253,8 @@ let mainESM = {
 	//////////////////////////////////////////////////////////////////////
 
 	/**
-	 * @func insertDB
-	 * @desc 現在のデータをDBにinsertする、基本的には１分に１回呼ばれる
-	 * @async
-	 * @param {void}
-	 * @return void
+	 * 現在のデータをDBにinsert（1分毎想定）。
+	 * @returns {Promise<void>}
 	 */
 	insertDB: async () => {
 		try {
@@ -367,12 +350,8 @@ let mainESM = {
 	},
 
 	/**
-	 * @func renewPortList
-	 * @desc シリアルポートリストを取得する
-	 * @async
-	 * @param {void}
-	 * @return Array シリアルポートリスト
-	 * @throw error
+	 * シリアルポート一覧を取得。
+	 * @returns {Promise<any[]>}
 	 */
 	renewPortList: async function () {
 		return await eSM.renewPortList();
@@ -380,15 +359,12 @@ let mainESM = {
 
 
 	/**
-	 * @func received
-	 * @desc 受信処理
-	 * @async
-	 * @param {eSM} sm スマメオブジェクト
-	 * @param {rinfo} rinfo 送信元のIPアドレス
-	 * @param {ELStructure} els ECHONET Lite Structureの形で受信したデータ
-	 * @param {Error} error エラーオブジェクト、エラーがあったときに情報あり
-	 * @return void
-	 * @throw error
+	 * 受信処理。接続状態更新、DB格納、UI通知。
+	 * @param {any} sm e-smartmeterオブジェクト状態
+	 * @param {{address:string}} rinfo 送信元
+	 * @param {any} els 受信EL構造
+	 * @param {Error=} error エラー
+	 * @returns {void}
 	 */
 	received: function (sm, rinfo, els, error) {
 		// わからんエラー
@@ -440,11 +416,8 @@ let mainESM = {
 	},
 
 	/**
-	 * @func changeCallback
-	 * @desc 受信処理、変更があった場合に呼ばれる
-	 * @async
-	 * @param {facilities} facilities 変更後データ
-	 * @return void
+	 * 設備変化時のコールバック。解析してpersist更新＋UI送信。
+	 * @param {any} facilities
 	 */
 	changeCallback: function (facilities) {
 		ELconv.refer(objectSort(facilities), function (devs) {
@@ -456,18 +429,9 @@ let mainESM = {
 
 
 	/**
-	 * @func getCases
-	 * @desc 或る日のデータを3分単位で取得するためのwhen文を生成する
-	 * @async
-	 * @param {string} date 或る日
-	 * 	date: Date="2023-01-06"
-	 * @return {string} when文の文字列
-	 * 	when createdAt >= "2023-01-05 23:57" and createdAt < "2023-01-06 00:00" then "00:00"
-	 *	when createdAt >= "2023-01-06 00:00" and createdAt < "2023-01-06 00:03" then "00:03"
-	 *	when createdAt >= "2023-01-06 00:03" and createdAt < "2023-01-06 00:06" then "00:06"
-	 *	...
-	 *	when createdAt >= "2023-01-06 23:54" and createdAt < "2023-01-06 23:57" then "23:57"
-	 *	else "24:00"
+	 * 指定日の3分刻みバケットCASE式を生成。
+	 * @param {Date|string} date
+	 * @returns {string}
 	 */
 	getCases: function (date) {
 		let T1 = new Date(date);
@@ -497,11 +461,8 @@ let mainESM = {
 
 
 	/**
-	 * @func getRows
-	 * @desc DBから今日のデータを取得
-	 * @async
-	 * @param {void}
-	 * @return Array[] rows
+	 * DBから今日の3分刻み集計を取得。
+	 * @returns {Promise<any[]>}
 	 */
 	getRows: async function () {
 		try {
@@ -540,12 +501,8 @@ let mainESM = {
 
 
 	/**
-	 * @func getTodayElectricEnergy
-	 * @desc 今日のデータを配列として取得する
-	 * @async
-	 * @param {void}
-	 * @return Array[Object] 今日のデータ
-	 * @throw error
+	 * 今日の電力データを3分刻み配列で返す。
+	 * @returns {Promise<Array<{id:number,time:string,srcType:string,commulativeAmountNormal:number|null,commulativeAmountReverse:number|null,instantaneousPower:number|null,instantaneousCurrentsR:number|null,instantaneousCurrentsT:number|null}>>}
 	 */
 	getTodayElectricEnergy: async function () {
 		// 画面に今日のデータを送信するためのデータ作る
@@ -594,12 +551,8 @@ let mainESM = {
 	},
 
 	/**
-	 * @func sendTodayEnergy
-	 * @desc 現在持っているデータをRendererに送る
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 今日の電力データを取得してRendererへ送る。
+	 * @returns {Promise<void>}
 	 */
 	sendTodayEnergy: async function () {
 		let arg = {};

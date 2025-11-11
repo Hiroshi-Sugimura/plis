@@ -17,14 +17,23 @@ let sendIPCMessage = null;
 
 const store = new Store();
 
-let config = {
+/**
+ * Hue設定
+ * @typedef {Object} HueConfig
+ * @property {boolean} enabled 機能有効
+ * @property {string} key Bridge APIキー
+ * @property {boolean} connected リンク完了状態
+ * @property {boolean} debug デバッグログ
+ */
+let config = /** @type {HueConfig} */ ({
 	enabled: false,
 	key: "",
 	connected: false,
 	debug: false
-};
+});
 
-let persist = {};
+/** @typedef {{[key:string]:any}} HuePersist */
+let persist = /** @type {HuePersist} */ ({});
 
 //////////////////////////////////////////////////////////////////////
 // config
@@ -36,12 +45,9 @@ let mainHue = {
 	//////////////////////////////////////////////////////////////////////
 	// Philips hueの処理
 	/**
-	 * @func start
-	 * @desc start
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 起動: 設定ロード/前回状態再送。二重起動時は保持データのみ再送。
+	 * @param {(ch:string,...args:any[])=>void} _sendIPCMessage IPC送信用
+	 * @returns {Promise<void>}
 	 */
 	// interfaces
 	start: async function (_sendIPCMessage) {
@@ -101,12 +107,8 @@ let mainHue = {
 	},
 
 	/**
-	 * @func stop
-	 * @desc stop
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 保存あり停止。接続済みならpersist保存し監視停止、未接続ならキャンセル。
+	 * @returns {Promise<void>}
 	 */
 	stop: async function () {
 		mainHue.isRun = false;
@@ -122,12 +124,8 @@ let mainHue = {
 	},
 
 	/**
-	 * @func stopWithoutSave
-	 * @desc stopWithoutSave
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 保存なし停止。監視停止/キャンセルのみ。
+	 * @returns {Promise<void>}
 	 */
 	stopWithoutSave: async function () {
 		mainHue.isRun = false;
@@ -142,24 +140,18 @@ let mainHue = {
 	},
 
 	/**
-	 * @func control
-	 * @desc control
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * ライト制御: Hue RESTへ状態送信。
+	 * @param {string} _url Hue APIエンドポイント
+	 * @param {Record<string,any>} _json 送信ボディ
 	 */
 	control: function (_url, _json) {
 		Hue.setState(_url, JSON.stringify(_json));
 	},
 
 	/**
-	 * @func setConfig
-	 * @desc setConfig
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 設定をマージし保存/UI通知。
+	 * @param {Partial<HueConfig>} _config
+	 * @returns {Promise<void>}
 	 */
 	setConfig: async function (_config) {
 		config = mergeDeeply(config, _config);
@@ -168,38 +160,24 @@ let mainHue = {
 		sendIPCMessage("configSaved", 'Hue');  // 保存したので画面に通知
 	},
 
-	/**
-	 * @func getConfig
-	 * @desc getConfig
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
-	 */
+	/** 現在設定を返す。
+	 * @returns {HueConfig} */
 	getConfig: function () {
 		return config;
 	},
 
-	/**
-	 * @func getPersist
-	 * @desc getPersist
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
-	 */
+	/** 現在の保持データを返す。
+	 * @returns {HuePersist} */
 	getPersist: function () {
 		return persist;
 	},
 
 	//////////////////////////////////////////////////////////////////////
 	/**
-	 * @func received
-	 * @desc Hue受信の処理, inner functions
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * Hueライブラリ受信コールバック。成功レスポンスなら状態再取得、施設一覧更新時UI送信。
+	 * @param {string} gwIP ゲートウェイIP
+	 * @param {any} response ライブラリからのレスポンス
+	 * @param {Error=} error エラー
 	 */
 	received: function (gwIP, response, error) {
 		if (error) {
@@ -229,26 +207,17 @@ let mainHue = {
 		}
 	},
 
-	/**
-	 * @func dummy
-	 * @desc dummy
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
-	 */
+	/** 何もしないダミーコールバック */
 	dummy: function (json) {
 		// console.dir(json);
 	},
 
 
 	/**
-	 * @func startCore
-	 * @desc startCore
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * Hue初期化と監視開始。キー取得しlinked_cbに渡す。変化時change_cb。
+	 * @param {(key:string)=>void} linked_cb リンク完了コールバック
+	 * @param {(json:string)=>void} change_cb 施設変化コールバック(JSON文字列)
+	 * @returns {Promise<string>} 取得済みキー
 	 */
 	startCore: async function (linked_cb, change_cb) {
 		mainHue.callback = change_cb == undefined || change_cb == '' ? dummy : change_cb;
@@ -275,26 +244,14 @@ let mainHue = {
 		return config.key;
 	},
 
-	/**
-	 * @func cancel
-	 * @desc cancel
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
-	 */
+	/** Hue初期化キャンセル。 */
 	cancel: function () {
 		Hue.initializeCancel();
 	},
 
 
 	/**
-	 * @func startObserve
-	 * @desc 監視する，自動取得開始
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 1分毎に状態取得し変化を拾う監視タスク開始。
 	 */
 	startObserve: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.startObserve().') : 0;
@@ -311,14 +268,7 @@ let mainHue = {
 		mainHue.task.start();
 	},
 
-	/**
-	 * @func stopObserve
-	 * @desc 監視をやめる，自動取得停止
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
-	 */
+	/** 監視タスク停止。 */
 	stopObserve: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.stopObserve().') : 0;
 

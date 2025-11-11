@@ -18,7 +18,20 @@ import { getToday, mergeDeeply } from './mainSubmodule.cjs';
 const store = new Store();
 const HAL_API_BASE_URL = 'https://hal.sugi-lab.net/api';
 
-let config = {  // = config.HAL
+/**
+ * HAL Sync 設定
+ * @typedef {Object} HALSyncConfig
+ * @property {string} halApiToken HAL APIトークン
+ * @property {number} resultExpireDays 成績結果保持日数
+ * @property {number} ellogExpireDays 家電操作ログ保持日数
+ * @property {number} UPLOAD_UNIT_NUM 分割アップロード件数
+ * @property {number} UPLOAD_UNIT_INTERVAL 分割アップロード間隔(ms)
+ * @property {number} UPLOAD_START_INTERVAL アップロード開始間隔(ms)
+ * @property {number} lastUploadedTime 最終アップロードUNIX時刻
+ * @property {number} lastUploadedId 最終アップロードログID
+ * @property {boolean} debug デバッグ出力
+ */
+let config = /** @type {HALSyncConfig} */ ({  // = config.HAL
 	halApiToken: '',   // HALと連携するユーザ別のトークン
 	// startUploadEldataTime: 300000,
 	resultExpireDays: 365,
@@ -29,15 +42,24 @@ let config = {  // = config.HAL
 	lastUploadedTime: 0,  // 最終アップロード時間
 	lastUploadedId: 0,    // 最終アップロードID
 	debug: false
-};
+});
 
-let persist = {  // = persist.HAL
+/**
+ * HAL同期保持データ
+ * @typedef {Object} HALSyncPersist
+ * @property {string} name ユーザ名
+ * @property {string} UID UID
+ * @property {string} sex 性別
+ * @property {string|number} age 年齢
+ * @property {Object} garmin Garmin複合データダンプ
+ */
+let persist = /** @type {HALSyncPersist} */ ({  // = persist.HAL
 	name: 'No Profile',  // HALからのprofile
 	UID: 'No Data',
 	sex: 'No Data',
 	age: 'No Data',
 	garmin: {}
-};
+});
 
 let sendIPCMessage = null;
 
@@ -50,11 +72,9 @@ let mainHALsync = {
 
 	//----------------------------------
 	/**
-	 * @func start
-	 * @desc 初期化
-	 * @async
-	 * @param {function} _sendIPCMessage
-	 * @throw error
+	 * 初期化してUIへ現在設定/保持データ送信。重複起動は既存データ再送のみ。
+	 * @param {(ch:string,...args:any[])=>void} _sendIPCMessage IPC送信用
+	 * @returns {Promise<void>}
 	 */
 	start: async function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
@@ -91,10 +111,8 @@ let mainHALsync = {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func startSync
-	 * @desc 同期処理, トリガー：APIKey設定時、同期ボタン押下、定時処理
-	 * @async
-	 * @throw error
+	 * 成績データ(Garmin含む)双方向同期。今日のレコードをアップ→最新をダウンロード→ローカル更新。
+	 * @returns {Promise<void>}
 	 */
 	startSync: async function () {
 		mainHALsync.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.startSync().') : 0;
@@ -296,12 +314,8 @@ let mainHALsync = {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func garminDownload
-	 * @desc garminDownload
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * Garmin関連データをHALから取得し各テーブルにfindOrCreate格納しUIへ反映。
+	 * @returns {Promise<void>}
 	 */
 	garminDownload: async function () {
 		mainHALsync.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.garminDownload().') : 0;
@@ -693,13 +707,10 @@ let mainHALsync = {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func httpGetRequest
-	 * @desc httpGetRequest
-	 * @async
+	 * HALへGETリクエスト。成功時JSONパース、失敗時エラー。
 	 * @param {string} url
-	 * @param {string} token
-	 * @return body - string promise
-	 * @throw error
+	 * @param {string=} token オーバーライドトークン
+	 * @returns {Promise<any>}
 	 */
 	httpGetRequest: function (url, token) {
 		return new Promise((resolve, reject) => {
@@ -758,14 +769,11 @@ let mainHALsync = {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func httpPostRequest
-	 * @desc httpPostRequest
-	 * @async
+	 * HALへPOST。200応答ならJSON返却。エラー時詳細含む例外。
 	 * @param {string} url
-	 * @param {string} data
-	 * @param {string} token
-	 * @return body - string promise
-	 * @throw error
+	 * @param {any} data POSTボディ
+	 * @param {string=} token オーバーライドトークン
+	 * @returns {Promise<any>}
 	 */
 	httpPostRequest: function (url, data, token) {
 		if (!token) {
@@ -828,11 +836,9 @@ let mainHALsync = {
 
 	//----------------------------------
 	/**
-	 * @func setHalApiTokenRequest
-	 * @desc HAL API トークン設定
-	 * APIトークンをセットして、実際にプロファイルを受信できたら設定値として保存
-	 * @async
+	 * HAL APIトークンを検証し保存。成功時プロフィール返す。
 	 * @param {string} _token
+	 * @returns {Promise<void>}
 	 */
 	setHalApiTokenRequest: async function (_token) {
 		let arg = {};
@@ -849,9 +855,8 @@ let mainHALsync = {
 
 	//----------------------------------
 	/**
-	 * @func deleteHalApiToken
-	 * @desc HAL API トークン設定削除
-	 * @async
+	 * HAL APIトークン削除しプロフィール初期化。
+	 * @returns {Promise<void>}
 	 */
 	deleteHalApiToken: async function () {
 		try {
@@ -867,9 +872,8 @@ let mainHALsync = {
 
 	//----------------------------------
 	/**
-	 * @func getHalUserProfileRequest
-	 * @desc HAL ユーザープロファイル取得
-	 * @async
+	 * HALプロフィール取得しpersist更新/UI送信。
+	 * @returns {Promise<void>}
 	 */
 	getHalUserProfileRequest: async function () {
 		let arg = {};
@@ -886,10 +890,8 @@ let mainHALsync = {
 
 	//----------------------------------------------------------------------------------------------
 	/**
-	 * @func startUploadEldata
-	 * @desc 家電操作ログのアップロードを開始、定期的実行
-	 * @async
-	 * @throw error
+	 * 家電操作ログの分割アップロードループ。トークン無/件数無なら再スケジュール。
+	 * @returns {Promise<void>}
 	 */
 	startUploadEldata: async function () {
 		// HAL API トークンが登録されていなければ次回起動のタイマーをセットして終了
@@ -979,21 +981,15 @@ let mainHALsync = {
 	},
 
 	//----------------------------------------------------------------------------------------------
-	/**
-	 * @func ConfigSave
-	 * @desc ConfigSave
-	 * @throw error
-	 */
+	/** 設定をそのままStoreへ保存。 */
 	ConfigSave: function () {
 		store.set('config.HAL', config);
 	},
 
 	/**
-	 * @func setConfig
-	 * @desc setConfig
-	 * @async
-	 * @param {Object} _config
-	 * @throw error
+	 * 設定をディープマージし保存しUIへ反映。
+	 * @param {Partial<HALSyncConfig>=} _config
+	 * @returns {Promise<void>}
 	 */
 	setConfig: async function (_config) {
 		if (_config) {
@@ -1004,30 +1000,21 @@ let mainHALsync = {
 		sendIPCMessage("configSaved", 'HAL');  // 保存したので画面に通知
 	},
 
-	/**
-	 * @func getConfig
-	 * @desc 設定取得
-	 * @async
-	 * @return config
-	 */
+	/** 現在設定を返す。
+	 * @returns {HALSyncConfig} */
 	getConfig: function () {
 		return config;
 	},
 
-	/**
-	 * @func getPersist
-	 * @desc 現在のデータを取得する
-	 * @async
-	 * @return persist
-	 */
+	/** 現在の保持データを返す。
+	 * @returns {HALSyncPersist} */
 	getPersist: function () {
 		return persist;
 	},
 
 	/**
-	 * @func stop
-	 * @desc 開放して連携終了、設定や現在の数値を永続化する
-	 * @async
+	 * 同期停止。タスク停止後設定/保持データ保存。
+	 * @returns {Promise<void>}
 	 */
 	stop: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.stop()') : 0;
@@ -1036,17 +1023,13 @@ let mainHALsync = {
 			await mainHALsync.uploadEldataTask.stop();
 			mainHALsync.uploadEldataTask = null;
 		}
-		await mainHAL.setConfig();
+		await store.set('config.HAL', config);
 		await store.set('persist.HAL', persist);
 	},
 
 
 	//----------------------------------------------------------------------------------------------
-	/**
-	 * @func renewConfigView
-	 * @desc renewConfigView
-	 * @throw error
-	 */
+	/** UIへ最新設定を再送。 */
 	renewConfigView: function () {
 		sendIPCMessage("renewHALConfigView", config);  // 現在の設定値を表示
 	}

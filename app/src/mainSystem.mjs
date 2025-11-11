@@ -21,18 +21,18 @@ let sendIPCMessage = null;
 const store = new Store();
 
 /**
- * @type {{
-*  screenMode: 'user',
-*  windowWidth: '165',
-*  windowHeight: '65',
-*  resultExpireDays: '40',
-*  ellogExpireDays: '30',
-*  IPver: 0,
-*  IPv4: '',
-*  IPv6: '',
-*  debug: false
-* }}
-*/
+ * @typedef {Object} SystemConfig
+ * @property {'window'|'user'} screenMode 表示モード
+ * @property {number} windowWidth ウィンドウ幅
+ * @property {number} windowHeight ウィンドウ高さ
+ * @property {number} resultExpireDays 結果保持日数
+ * @property {number} ellogExpireDays ログ保持日数
+ * @property {0|4|6} IPver IPバージョン指定（0=auto）
+ * @property {string} IPv4 IPv4アドレス
+ * @property {string} IPv6 IPv6アドレス
+ * @property {boolean} debug デバッグログ
+ */
+/** @type {SystemConfig} */
 let config = {  // config.system
 	screenMode: 'window',
 	windowWidth: 1024,
@@ -51,10 +51,9 @@ let config = {  // config.system
 let mainSystem = {
 
 	/**
-	 * @async
-	 * @function start
-	 * @callback {sendIPCMessage} sendIPCMessage
-	 * @return {void}
+	* 設定をstoreから読み込み、起動する。
+	* @param {(channel:string, ...args:any[])=>void} _sendIPCMessage IPC送信用関数
+	* @returns {Promise<void>}
 	*/
 	start: async function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
@@ -73,10 +72,8 @@ let mainSystem = {
 	},
 
 	/**
-	 * @async
-	 * @function stop
-	 * @param {void}
-	 * @return {void}
+	 * 現在の設定を保存して停止する。
+	 * @returns {Promise<void>}
 	*/
 	stop: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSystem.stop()') : 0;
@@ -84,10 +81,9 @@ let mainSystem = {
 	},
 
 	/**
-	 * @async
-	 * @function setConfig
-	 * @param {config} [config]
-	 * @return {config}
+	 * 設定をディープマージして保存、UIを更新する。
+	 * @param {Partial<SystemConfig>=} _config 変更したい設定
+	 * @returns {Promise<void>}
 	*/
 	setConfig: async function (_config) {
 		if (_config) {
@@ -99,9 +95,8 @@ let mainSystem = {
 	},
 
 	/**
-	 * @function getConfig
-	 * @param {void}
-	 * @return {config}
+	 * 現在の設定を返す。
+	 * @returns {SystemConfig}
 	*/
 	getConfig: function () {
 		return config;

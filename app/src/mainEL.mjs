@@ -32,18 +32,37 @@ const appDir = process.env.NODE_ENV === 'development' ? __dirname : __dirname;
 let sendIPCMessage = null;
 const store = new Store();
 
+/**
+ * @typedef {Object} ELConfig
+ * @property {boolean} enabled 機能有効フラグ
+ * @property {boolean} oldSearch 旧Search手法(Ver1.0系)を追加発火するか
+ * @property {boolean} debug デバッグログ出力
+ */
+/** @type {ELConfig} */
+
 let config = {
 	enabled: true,
 	oldSearch: false,
 	debug: false
 };
 
+/**
+ * @typedef {Object} NetworkConfig
+ * @property {number} IPver 0=auto,4=IPv4,6=IPv6
+ * @property {string} IPv4 IPv4アドレスまたは 'auto'
+ * @property {string} IPv6 IPv6アドレスまたは 'auto'
+ */
 let network = {
 	IPver: 0,
 	IPv4: "auto",
 	IPv6: "auto"
 };
 
+/**
+ * @typedef {Object} ELPersist
+ * @property {Record<string, any>} facilities 生RAW設備ツリー
+ * @property {Record<string, any>} parsed 解析後設備構造
+ */
 let persist = {
 	facilities: {},
 	parsed: {}
@@ -75,13 +94,11 @@ let mainEL = {
 	//////////////////////////////////////////////////////////////////////
 	// インタフェース
 	/**
-	 * @func start
-	 * @desc 初期化
-	 * @async
-	 * @param {Function} _sendIPCMessage
-	 * @param {Array} _localaddresses
-	 * @return void
-	 * @throw error
+	 * 起動処理。設定/永続値読込→ソケット初期化→探索→定期Cron開始。
+	 * 既に起動済みなら最新persistをRendererへ送りreturn。
+	 * @param {(ch:string,...args:any[])=>void} _sendIPCMessage IPC送信用関数
+	 * @param {string[]} _localaddresses ローカルインタフェースIP一覧
+	 * @returns {Promise<void>}
 	 */
 	start: async function (_sendIPCMessage, _localaddresses) {
 		sendIPCMessage = _sendIPCMessage;
@@ -126,12 +143,8 @@ let mainEL = {
 
 
 	/**
-	 * @func stop
-	 * @desc ELの機能を停止する。
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 観測/ソケットを解放し設定とpersist保存して停止する。
+	 * @returns {Promise<void>}
 	 */
 	stop: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.stop()') : 0;
@@ -144,12 +157,8 @@ let mainEL = {
 	},
 
 	/**
-	 * @func stopWithoutSave
-	 * @desc stopWithoutSave
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 保存せず停止（観測とソケットのみ解放）。
+	 * @returns {Promise<void>}
 	 */
 	stopWithoutSave: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.stopWithoutSave()') : 0;
@@ -159,12 +168,9 @@ let mainEL = {
 	},
 
 	/**
-	 * @func setConfig
-	 * @desc setConfig
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 設定をマージし永続化＋UI更新。_configが無ければ現状保存のみ。
+	 * @param {Partial<ELConfig>=} _config
+	 * @returns {Promise<void>}
 	 */
 	setConfig: async function (_config) {
 		config.debug ?? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.setConfig() _config:', _config);
@@ -180,24 +186,16 @@ let mainEL = {
 	},
 
 	/**
-	 * @func getConfig
-	 * @desc getConfig
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 現在の設定を返す。
+	 * @returns {ELConfig}
 	 */
 	getConfig: function () {
 		return config;
 	},
 
 	/**
-	 * @func getPersist
-	 * @desc getPersist
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 現在保持している設備情報を返す。
+	 * @returns {ELPersist}
 	 */
 	getPersist: function () {
 		return persist;
@@ -206,12 +204,11 @@ let mainEL = {
 	//////////////////////////////////////////////////////////////////////
 	// 内部
 	/**
-	 * @func received
-	 * @desc EL受け取った後の処理
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 受信ハンドラ。コントローラEPC応答/DB保存/解析。
+	 * @param {{address:string}} rinfo 送信元情報
+	 * @param {any} els 解析前EL構造
+	 * @param {Error=} error エラー（解析失敗など）
+	 * @returns {void}
 	 */
 	received: function (rinfo, els, error) {
 		if (error) {
@@ -272,12 +269,9 @@ let mainEL = {
 	},
 
 	/**
-	 * @func sendMsg
-	 * @desc sendMsg
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 文字列ELフレーム送信（自分側ログも保存）。
+	 * @param {string} _ip 宛先IP
+	 * @param {string} _msg ELフレーム文字列
 	 */
 	sendMsg: function (_ip, _msg) {
 		// 送信は自分のログも残しておく
@@ -294,24 +288,20 @@ let mainEL = {
 	},
 
 	/**
-	 * @func sendOPC1
-	 * @desc sendOPC1
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * OPC1送信ヘルパ。
+	 * @param {string} _ip 宛先IP
+	 * @param {number[]} _seoj SEOJ
+	 * @param {number[]} _deoj DEOJ
+	 * @param {number} _esv ESV
+	 * @param {number[]} _epc EPC
+	 * @param {number[]} _edt EDT
 	 */
 	sendOPC1: function (_ip, _seoj, _deoj, _esv, _epc, _edt) {
 		EL.sendOPC1(_ip, _seoj, _deoj, _esv, _epc, _edt);
 	},
 
 	/**
-	 * @func search
-	 * @desc search
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * ネットワーク上のEL機器探索（oldSearch有効時は追加マルチキャスト）。
 	 */
 	search: function () {
 		EL.search();
@@ -323,12 +313,8 @@ let mainEL = {
 
 
 	/**
-	 * @func sendTodayEnergy
-	 * @desc sendTodayEnergy
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 当日のサブメータ電力集計を取得しRendererへ送る。
+	 * @returns {Promise<void>}
 	 */
 	sendTodayEnergy: async function () {
 		let arg = {};
@@ -346,12 +332,7 @@ let mainEL = {
 
 
 	/**
-	 * @func setCron
-	 * @desc 3分毎にチェックする
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 監視Cron（1分毎）開始。設備変化検出とサブメータ集計保存。
 	 */
 	setCron: function () {
 		// cron.schedule('*/3 * * * *', async () => {
@@ -461,12 +442,8 @@ let mainEL = {
 
 	//////////////////////////////////////////////////////////////////////
 	/**
-	 * @func init
-	 * @desc ELの処理開始
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * ELライブラリ辞書初期化とsocket生成＋設備監視cron2種開始。
+	 * @returns {Promise<void>}
 	 */
 	init: async function () {
 
@@ -527,12 +504,8 @@ let mainEL = {
 
 	//////////////////////////////////////////////////////////////////////
 	/**
-	 * @func getStatic
-	 * @desc 基礎的なデバイスの情報取得
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * サブメータ静的EPC群を一括取得。
+	 * @returns {Promise<void>}
 	 */
 	getStatic: async function () {
 		await EL.sendString(EL.Multi, "1081000405ff01028d016206E100E300E700E800D300D400");  // サブメータ
@@ -544,12 +517,8 @@ let mainEL = {
 	// 定期的なデバイスの監視、監視はIPアドレスが変更される可能性があることに注意すべし
 
 	/**
-	 * @func observation
-	 * @desc 監視シーケンス
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 観測シーケンス：主要センサ群へGET、サブメータ定時プロパティ取得。
+	 * @returns {Promise<void>}
 	 */
 	observation: async function () {
 		// config.debug ? console.log('mainEL.observation() network:', network):0;
@@ -586,12 +555,8 @@ let mainEL = {
 
 
 	/**
-	 * @func stopObservation
-	 * @desc 監視行動をやめて，タイマーも解放する
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 観測/変化検出cron停止。
+	 * @returns {Promise<void>}
 	 */
 	stopObservation: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.stopObservation()') : 0;
@@ -608,24 +573,17 @@ let mainEL = {
 	},
 
 	/**
-	 * @func sleep
-	 * @desc Wait必要な時
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * ms待機Promise。
+	 * @param {number} ms ミリ秒
+	 * @returns {Promise<void>}
 	 */
 	sleep: function (ms) {
 		return new Promise(resolve => setTimeout(resolve, ms));
 	},
 
 	/**
-	 * @func getTodayElectricEnergy_submeter
-	 * @desc 定時処理用, 電力（サブメータ）
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 当日のサブメータ電力を3分刻み平均に整形して配列返す。
+	 * @returns {Promise<Array<{id:number,time:string,srcType:string,commulativeAmountNormal:number|null,commulativeAmountReverse:number|null,instantaneousPower:number|null,instantaneousCurrentsR:number|null,instantaneousCurrentsT:number|null,commulativeAmountsFixedTimeNormalPower:number|null,commulativeAmountsFixedTimeRiversePower:number|null}>>}
 	 */
 	getTodayElectricEnergy_submeter: async function () {
 		// 画面に今日のデータを送信するためのデータ作る

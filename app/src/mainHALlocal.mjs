@@ -17,7 +17,20 @@ const store = new Store();
 
 //////////////////////////////////////////////////////////////////////
 // config
-let config = {  // デフォルト値
+/**
+ * HAL Local モジュール設定
+ * @typedef {Object} HALLocalConfig
+ * @property {boolean} enabled HAL連携有効/無効
+ * @property {string} halApiToken HAL APIトークン(未使用: local専用処理用の名残)
+ * @property {number} startUploadEldata 家電ログアップロード開始遅延(ms)
+ * @property {number} resultExpireDays 成績データ保持日数
+ * @property {number} ellogExpireDays 家電操作ログ保持日数
+ * @property {number} UPLOAD_UNIT_NUM 分割アップロード件数
+ * @property {number} UPLOAD_UNIT_INTERVAL 分割アップロード間隔(ms)
+ * @property {number} UPLOAD_START_INTERVAL 周期起動間隔(ms)
+ * @property {boolean} debug デバッグログ出力
+ */
+let config = /** @type {HALLocalConfig} */ ({  // デフォルト値
 	enabled: false,
 	halApiToken: '',
 	startUploadEldata: 300000,
@@ -27,19 +40,17 @@ let config = {  // デフォルト値
 	UPLOAD_UNIT_INTERVAL: 1000, // 分割アップロードの間隔 (ミリ秒)
 	UPLOAD_START_INTERVAL: 300000, // アップロード処理の起動間隔 (ミリ秒)
 	debug: false // mainHALsyncのdebug
-};
+});
 
 
 //////////////////////////////////////////////////////////////////////
+/** @typedef {{[key:string]: any}} HALLocalPersist */
 let mainHALlocal = {
 
 	/**
-	 * @func initialize
-	 * @desc HAL, Home-life Assessment Listの処理
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 初期化: ストアから設定をロード。
+	 * 既存値が無ければデフォルトを維持。
+	 * @returns {Promise<void>}
 	 */
 	initialize: async function () {
 		config = await store.get('config.HAL', config);
@@ -48,12 +59,12 @@ let mainHALlocal = {
 
 	//////////////////////////////////////////////////////////////////////
 	/**
-	 * @func submitQuestionnaire
-	 * @desc アンケート回答したので処理
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * アンケート回答受理処理: 回答を検証し Major / Minor / Answers をUpsert。
+	 * 既存レコード assessmentSource=PLIS の場合は null のみ埋める方針を維持。
+	 * @param {Record<string,any>} arg フロントからの回答マップ(q_i_j)
+	 * @param {Function} succeessFunc 成功コールバック
+	 * @param {Function} errorFunc 失敗コールバック
+	 * @returns {Promise<void>}
 	 */
 	submitQuestionnaire: async function (arg, succeessFunc, errorFunc) {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALlocal.submitQuestionnaire()') : 0;
@@ -212,12 +223,9 @@ let mainHALlocal = {
 	},
 
 	/**
-	 * @func calcMajorResults
-	 * @desc アンケート回答から Major 成績データを計算する
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * Major 成績算出: 分野別平均値→ポイント/生スコア/総合ランク算出。
+	 * @param {Record<string, number|null>} q_data 設問回答
+	 * @returns {Object} major結果レコード(INSERT/UPDATE用)
 	 */
 	calcMajorResults: function (q_data) {
 		// console.log( '-- calcMajorResults()' );
@@ -316,12 +324,8 @@ let mainHALlocal = {
 
 
 	/**
-	 * @func getLastData
-	 * @desc HALの最新データを取得
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * 最新 Major / Minor / MinorkeyMeans を取得。存在しないものはスキップ。
+	 * @returns {Promise<{MajorResults:any,MinorResults:any,MinorkeyMeans:any[]}>}
 	 */
 	getLastData: async function () {
 		let halData = {};
@@ -382,13 +386,9 @@ let mainHALlocal = {
 
 
 	/**
-	 * @func truncatelogs
-	 * @desc SQLite のデータベースのレコードの削除処理
-	 * データがたまりすぎるので古いものを定期的に消す
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	 * ログ/成績テーブルの期限切れレコードを削除。
+	 * 削除件数はデバッグ時のみログ。
+	 * @returns {Promise<void>}
 	 */
 	truncatelogs: async function () {
 
