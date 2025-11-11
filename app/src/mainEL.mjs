@@ -90,6 +90,7 @@ let mainEL = {
 	observationTask: null,  // cronオブジェクト
 	changeTask: null,  // facilities監視するcron
 	isRun: false,  // 実行中か？
+	disableIPv6: false, // 利用可能なIPv6インタフェースが無い/不安定なときにv6送信を抑止
 
 	//////////////////////////////////////////////////////////////////////
 	// インタフェース
@@ -460,6 +461,15 @@ let mainEL = {
 
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.start() config:\x1b[32m', config, '\x1b[0m') : 0;
 
+		// IPv6の利用可否を事前判定（awdl0等のダウンでENETDOWNが出る回避）
+		if (network.IPver === 0 || network.IPver === '0' || network.IPver === 6 || network.IPver === '6') {
+			const usable = mainEL.hasUsableIPv6();
+			mainEL.disableIPv6 = !usable;
+			if (!usable) {
+				config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.init(): IPv6 disabled (no usable interface)') : 0;
+			}
+		}
+
 		// ECHONET Lite socket
 		mainEL.elsocket = EL.initialize(mainEL.objList, mainEL.received, network.IPver,
 			{
@@ -476,8 +486,18 @@ let mainEL = {
 		// 未取得EPCの補完も3分毎に確認
 		mainEL.observationTask = cron.schedule('*/3 * * * *', async () => {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.cron.schedule() observationTask') : 0;
-			EL.complementFacilities();
-			await mainEL.observation();
+			try {
+				// ライブラリ補完前に最低限のサニタイズ
+				mainEL.sanitizeFacilities();
+				EL.complementFacilities();
+			} catch (e) {
+				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.observationTask complementFacilities error:', e);
+			}
+			try {
+				await mainEL.observation();
+			} catch (e) {
+				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.observationTask observation error:', e);
+			}
 		});
 
 		// facilitiesの変化を監視して、変化があったらcallbackする、1分毎
@@ -498,6 +518,29 @@ let mainEL = {
 
 			oldVal = newVal;
 		});
+	},
+
+
+	/**
+	 * EL.facilities の最低限の健全性を確保する簡易サニタイズ。
+	 * 不正なエントリや非オブジェクト/未定義を削除し、EOJs配列を文字列のみに制限。
+	 */
+	sanitizeFacilities: function () {
+		try {
+			if (!EL.facilities || typeof EL.facilities !== 'object') return;
+			for (const ip of Object.keys(EL.facilities)) {
+				const fac = EL.facilities[ip];
+				if (!fac || typeof fac !== 'object') {
+					delete EL.facilities[ip];
+					continue;
+				}
+				if (Array.isArray(fac.EOJs)) {
+					fac.EOJs = fac.EOJs.filter((x) => typeof x === 'string');
+				}
+			}
+		} catch (e) {
+			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.sanitizeFacilities error:', e);
+		}
 	},
 
 
@@ -537,8 +580,8 @@ let mainEL = {
 			await EL.sendString(EL.Multi, "1081000505ff01028d016202EA00EB00");
 		}
 
-		// ipv6, or 0 and 6
-		if (network.IPver == '0' || network.IPver == '6' || network.IPver == 0 || network.IPver == 6) {
+		// ipv6, or 0 and 6 (かつ利用可能なインタフェースがあるときのみ)
+		if (!mainEL.disableIPv6 && (network.IPver == '0' || network.IPver == '6' || network.IPver == 0 || network.IPver == 6)) {
 			// console.log('mainEL.observation() ipv6');
 			await EL.sendOPC1(EL.Multi6, [0x0e, 0xf0, 0x01], [0x00, 0x22, 0x00], EL.GET, [0xe0], [0x00]);  // 電力センサ
 			await EL.sendOPC1(EL.Multi6, [0x0e, 0xf0, 0x01], [0x02, 0x81, 0x00], EL.GET, [0xe0], [0x00]);  // 水道量メータ
@@ -551,6 +594,30 @@ let mainEL = {
 			await mainEL.sleep(5000);
 			await EL.sendString(EL.Multi6, "1081000505ff01028d016202EA00EB00");
 		}
+	},
+
+	/**
+	 * 利用可能なIPv6インタフェースがあるかざっくり判定する。
+	 * awdl/utun/llw/p2p/lo は除外。
+	 * @returns {boolean}
+	 */
+	hasUsableIPv6: function () {
+		try {
+			const ifaces = os.networkInterfaces();
+			const exclude = ['awdl', 'llw', 'utun', 'p2p', 'lo'];
+			for (const [name, addrs] of Object.entries(ifaces)) {
+				if (!addrs) continue;
+				if (exclude.some(prefix => name.startsWith(prefix))) continue;
+				for (const addr of addrs) {
+					if (addr && addr.family === 'IPv6' && addr.internal === false) {
+						return true;
+					}
+				}
+			}
+		} catch (e) {
+			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.hasUsableIPv6 error:', e);
+		}
+		return false;
 	},
 
 
