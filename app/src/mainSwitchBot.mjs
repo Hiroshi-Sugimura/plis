@@ -20,9 +20,28 @@ import * as dateUtils from 'date-utils';
 import { Sequelize, Op, switchBotRawModel, switchBotDataModel } from './models/localDBModels.cjs';   //
 import { objectSort, isObjEmpty, mergeDeeply, getToday } from './mainSubmodule.cjs';
 
+/**
+ * @typedef {Object} SwitchBotConfig
+ * @property {boolean} enabled 機能有効
+ * @property {string} token APIトークン
+ * @property {string} secret APIシークレット
+ * @property {boolean} debug デバッグログ
+ */
+/**
+ * @typedef {Object.<string, any>} SwitchBotPersist
+ * @property {number} [count] API呼び出し回数
+ * @property {string} [countDay] カウント対象日 (YYYY-MM-DD)
+ */
+/**
+ * @callback SendIPCMessage
+ * @param {string} channel
+ * @param {any} payload
+ */
+
 const store = new Store();
 
 /** mainSwitchBotのconfig */
+/** @type {SwitchBotConfig} */
 let config = {
 	enabled: false,
 	token: '',
@@ -31,6 +50,7 @@ let config = {
 };
 
 /** mainSwitchBotのpersist */
+/** @type {SwitchBotPersist} */
 let persist = {};
 
 /** mainSwitchBotからIPCMessageを呼ぶためのcallback */
@@ -48,7 +68,7 @@ let mainSwitchBot = {
 	client: null,
 	/** @member observationJob
 	 *  @desc 定期的にSwitchBotの状態を取得するタイマー
-	 *  @default null
+	 *  @type {cron.ScheduledTask|null}
 	 */
 	observationJob: null,
 	/** @member callback
@@ -67,8 +87,8 @@ let mainSwitchBot = {
 	 */
 	count: 0,
 	/** @member countResetJob
-	 *  @desc switch bot との通信カウンターを日替わりでリセットする
-	 *  @default null
+	 *  @desc APIカウンターを日替わりでリセット
+	 *  @type {cron.ScheduledTask|null}
 	 */
 	countResetJob: null,
 
@@ -81,10 +101,9 @@ let mainSwitchBot = {
 	 */
 
 	/**
-	 * @function start
-	 * @param {sendIPCMessage} _sendIPCMessage - IPC通信関数
-	 * @desc エントリーポイント
-	*/
+	 * エントリーポイント。重複起動時はpersist/configをUIへ再送。
+	 * @param {SendIPCMessage} _sendIPCMessage
+	 */
 	start: function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
 
@@ -150,11 +169,9 @@ let mainSwitchBot = {
 		}
 	},
 
-	/**
-	 * @async
-	 * @function stop
-	 * @desc configやpersistを保存して、終了する
-	*/
+	/** 保存して停止。
+	 * @returns {Promise<void>}
+	 */
 	stop: async function () {
 		mainSwitchBot.isRun = false;
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.stop()') : 0;
@@ -164,11 +181,9 @@ let mainSwitchBot = {
 		await store.set('persist.SwitchBot', persist);
 	},
 
-	/**
-	 * @async
-	 * @function stopWithoutSave
-	 * @desc configやpersistを保存せずに、終了する
-	*/
+	/** 保存せず停止。
+	 * @returns {Promise<void>}
+	 */
 	stopWithoutSave: async function () {
 		mainSwitchBot.isRun = false;
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.stopWithoutSave()') : 0;
@@ -177,12 +192,9 @@ let mainSwitchBot = {
 	},
 
 
-	/**
-	 * @async
-	 * @function setConfig
-	 * @param {Object} [_config=undefined] - 設定
-	 * @desc 設定変更し、設定を保存する。_configを指定しなければ保存だけする
-	*/
+	/** 設定をマージ保存しUI通知。
+	 * @param {Partial<SwitchBotConfig>} [_config]
+	 */
 	setConfig: async function (_config) {
 		if (_config) {
 			config = mergeDeeply(config, _config);
@@ -194,33 +206,28 @@ let mainSwitchBot = {
 		sendIPCMessage("renewSwitchBotConfigView", config);  // 保存したので画面に通知
 	},
 
-	/**
-	 * @function getConfig
-	 * @return {Object} 現在保持している設定
-	 * @desc 現在の設定を返す
-	*/
+	/** 現在設定取得。
+	 * @returns {SwitchBotConfig}
+	 */
 	getConfig: function () {
 		return config;
 	},
 
 
-	/**
-	 * @function getPersist
-	 * @return {Object} persist 現在保持している通信データ
-	 * @desc 現在の通信データを返す
-	*/
+	/** 現在persist取得。
+	 * @returns {SwitchBotPersist}
+	 */
 	getPersist: function () {
 		return persist;
 	},
 
 
 	/**
-	 * @function control
-	 * @param {string} id デバイスID
-	 * @param {string} command デバイスへのコマンド
-	 * @param {string} param デバイスへのコマンド詳細
-	 * @desc デバイスタイプごとに制御
-	*/
+	 * デバイス制御要求。成功時は次回renewFacilitiesでpersist更新。
+	 * @param {string} id
+	 * @param {string} command
+	 * @param {string} param
+	 */
 	control: function (id, command, param) {
 		// mainSwitchBot.client
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.control() id:', id, ', command:', command, ', param:', param) : 0;
@@ -247,11 +254,10 @@ let mainSwitchBot = {
 	//////////////////////////////////////////////////////////////////////
 	// inner functions
 	/**
-	 * @function renewFacilities
-	 * @param {Object} [_client]
-	 * @param {function} [callback(devStatusList)]
-	 * @desc SwitchBotと通信してデータ取得したら呼ばれる。その後処理してからcallback関数を呼ぶ
-	*/
+	 * SwitchBot APIからデバイス/ステータス一覧を取得し整形してcallback。
+	 * @param {SwitchBotHandler} _client
+	 * @param {(devStatusList:Object)=>void} callback
+	 */
 	renewFacilities: function (_client, callback) {
 		let ret = {};
 		try {
@@ -316,10 +322,9 @@ let mainSwitchBot = {
 	//////////////////////////////////////////////////////////////////////
 	// 定時処理のインタフェース
 	/**
-	 * @function startCore
-	 * @callback function [_callback]
-	 * @desc 内部関数：監視開始
-	*/
+	 * 内部：初期取得とcron登録。
+	 * @param {(facilities:Object)=>void} _callback
+	 */
 	startCore: function (_callback) {
 		if (config.token == '' || config.secret == '') {
 			throw new Error('mainSwitchBot.startCore() config.token or config.secret is empty.');
@@ -360,10 +365,7 @@ let mainSwitchBot = {
 		}
 	},
 
-	/**
-	 * @function stopObservation
-	 * @desc 内部関数：監視をやめる
-	*/
+	/** 内部：cron停止。 */
 	stopObservation: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.stopObservation().') : 0;
 
@@ -386,12 +388,7 @@ let mainSwitchBot = {
 	},
 
 
-	/**
-	 * @async
-	 * @function storeData
-	 * @param Object facilities
-	 * @desc 内部関数：デバイスタイプごとにステータスの読見方を変えてDBにためる
-	*/
+	/** デバイスごとに意味のあるプロパティを抽出しDB保存。 */
 	storeData: async function (facilities) {
 		for (let d of facilities.deviceList) {
 			let det = facilities[d.deviceId];
@@ -630,13 +627,10 @@ let mainSwitchBot = {
 		when createdAt >= "2023-01-06 23:54" and createdAt < "2023-01-06 23:57" then "23:57"
 		else "24:00"
 	*/
-	/**
-	 * @async
-	 * @function getCases
-	 * @param {string} date "yyyy-mm-dd"
-	 * @return {string} when-clause
-	 * @desc 1日分のデータを一気取得するためのwhen式を生成する
-	*/
+	/** 1日分の3分粒度データ抽出用CASE式生成。
+	 * @param {string} date
+	 * @returns {string}
+	 */
 	getCases: function (date) {
 		let T1 = new Date(date);
 		let T2 = new Date(date);
@@ -663,14 +657,11 @@ let mainSwitchBot = {
 		return ret + 'ELSE "24:00"';
 	},
 
-	/**
-	 * @async
-	 * @function getMeterList
+	/** 温湿度計(Meter/MeterPlus)の当日記録があるデバイス名一覧取得。
 	 * @param {Date} theDayBegin
 	 * @param {Date} theDayEnd
-	 * @return {rows}
-	 * @desc 温湿度計リストを取得する。MeterとMeterPlusを区別せずに取得する。動的に変わるので、当日の通信状況でデバイスリストを作成する。
-	*/
+	 * @returns {Promise<string[]>}
+	 */
 	getMeterList: async function (theDayBegin, theDayEnd) {
 		let meterList = [];
 		try {
@@ -693,14 +684,11 @@ let mainSwitchBot = {
 		}
 	},
 
-	/**
-	 * @async
-	 * @function plugMiniList
+	/** プラグミニ(電力取得可能)当日記録があるデバイス名一覧取得。
 	 * @param {Date} theDayBegin
 	 * @param {Date} theDayEnd
-	 * @return {rows}
-	 * @desc プラグミニリストを取得する。JPとUSを区別せずに取得するが、Plugは電力をとれないので取得しない。動的に変わるので、当日の通信状況でデバイスリストを作成する。
-	*/
+	 * @returns {Promise<string[]>}
+	 */
 	getPlugMiniList: async function (theDayBegin, theDayEnd) {
 		let list = [];
 		try {
@@ -724,16 +712,12 @@ let mainSwitchBot = {
 	},
 
 
-	/**
-	 * @async
-	 * @function getTempratureRows
+	/** 指定Meterの温度3分毎平均行取得。
 	 * @param {Date} theDayBegin
 	 * @param {Date} theDayEnd
-	 * @param {meter} meter
-	 * @param {subQuery} subQuery
-	 * @return {rows}
-	 * @desc 3分毎のtemperature
-	*/
+	 * @param {string} meter
+	 * @param {string} subQuery CASE式
+	 */
 	getTempratureRows: async function (theDayBegin, theDayEnd, meter, subQuery) {
 		try {
 			// 3分毎データ tempreture
@@ -759,16 +743,12 @@ let mainSwitchBot = {
 	},
 
 
-	/**
-	 * @async
-	 * @function getHumidityRows
+	/** 指定Meterの湿度3分毎平均行取得。
 	 * @param {Date} theDayBegin
 	 * @param {Date} theDayEnd
-	 * @param {meter} meter
-	 * @param {subQuery} subQuery
-	 * @return {rows}
-	 * @desc 3分毎のhumidity
-	*/
+	 * @param {string} meter
+	 * @param {string} subQuery
+	 */
 	getHumidityRows: async function (theDayBegin, theDayEnd, meter, subQuery) {
 		let ret = [];
 		try {
@@ -795,16 +775,7 @@ let mainSwitchBot = {
 	},
 
 
-	/**
-	 * @async
-	 * @function getVoltageRows
-	 * @param {Date} theDayBegin
-	 * @param {Date} theDayEnd
-	 * @param {plug} plug
-	 * @param {subQuery} subQuery
-	 * @return {rows}
-	 * @desc 3分毎のvoltage
-	*/
+	/** 指定PlugMiniの電圧3分毎平均行取得。 */
 	getVoltageRows: async function (theDayBegin, theDayEnd, plug, subQuery) {
 		try {
 			// 3分毎データ tempreture
@@ -829,16 +800,7 @@ let mainSwitchBot = {
 		}
 	},
 
-	/**
-	 * @async
-	 * @function getWeightRows
-	 * @param {Date} theDayBegin
-	 * @param {Date} theDayEnd
-	 * @param {plug} plug
-	 * @param {subQuery} subQuery
-	 * @return {rows}
-	 * @desc 3分毎のwatt
-	*/
+	/** 指定PlugMiniの電力(W)3分毎平均行取得。 */
 	getWeightRows: async function (theDayBegin, theDayEnd, plug, subQuery) {
 		let ret = [];
 		try {
@@ -865,16 +827,7 @@ let mainSwitchBot = {
 	},
 
 
-	/**
-	 * @async
-	 * @function getCurrentRows
-	 * @param {Date} theDayBegin
-	 * @param {Date} theDayEnd
-	 * @param {plug} plug
-	 * @param {subQuery} subQuery
-	 * @return {rows}
-	 * @desc 3分毎のampere
-	*/
+	/** 指定PlugMiniの電流(A)3分毎平均行取得。 */
 	getCurrentRows: async function (theDayBegin, theDayEnd, plug, subQuery) {
 		let ret = [];
 		try {
@@ -901,12 +854,7 @@ let mainSwitchBot = {
 	},
 
 
-	/**
-	 * @async
-	 * @function getTodayRoomEnvSwitchBot
-	 * @return {object} 3分毎データ配列を格納したJSON
-	 * @desc DBからすべてセンサの３分毎データを取得してオブジェクトとする
-	*/
+	/** 全Meter/PlugMiniの本日3分毎データをまとめた構造を生成。 */
 	getTodayRoomEnvSwitchBot: async function () {
 		// 画面に今日のデータを送信するためのデータ作る
 		let ret = { srcType: 'switchBot', meterList: [], plugList: [] }; // 戻り値  // { meterList:[], meter1:[], meter2[], .... }
@@ -1038,11 +986,7 @@ let mainSwitchBot = {
 		}
 	},
 
-	/**
-	 * @async
-	 * @function sendTodayRoomEnv
-	 * @desc 本日の（３分毎）データをRendererに送る
-	*/
+	/** 本日のデータをRendererへ送信。 */
 	sendTodayRoomEnv: async function () {
 		let arg = {};
 

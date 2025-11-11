@@ -14,13 +14,32 @@ import cron from 'node-cron';
 import * as dateUtils from 'date-utils';
 import { Sequelize, sqlite3, arpModel } from './models/localDBModels.cjs';   // DBデータと連携
 
+/**
+ * @typedef {Object} ArpConfig
+ * @property {boolean} enabled 機能有効
+ * @property {boolean} debug デバッグログ
+ */
+/**
+ * @typedef {Array<{ip:string, mac:string}>} ArpTable
+ */
+/**
+ * @typedef {ArpTable} ArpPersist
+ */
+/**
+ * @callback SendIPCMessage
+ * @param {string} channel
+ * @param {any} payload
+ */
+
 
 const store = new Store();
+/** @type {ArpConfig} */
 let config = {
 	enabled: true,  // 機能の有効化
 	debug: false
 };
 
+/** @type {ArpPersist} */
 let persist = {};
 
 
@@ -29,19 +48,19 @@ let sendIPCMessage = null;
 //////////////////////////////////////////////////////////////////////
 let mainArp = {
 	isRun: false,  // 機能が利用可能になったか？
+	/** @type {ArpTable|null} */
 	table: null,
+	/** @type {cron.ScheduledTask|null} */
 	observationJob: null,
 
 	//////////////////////////////////////////////////////////////////////
 	// 内部
 
 	/**
-	 * @func toMAC
-	 * @desc IP address to MAC address
-	 * @async
-	 * @throw error
+	 * IPからMACアドレスへ変換（現在保持するARPテーブル使用）。
+	 * @param {string} IP IPv4/IPv6
+	 * @returns {string} MAC or 'unknown'
 	 */
-	// arpテーブル検索，IPからMACアドレスに変換
 	toMAC: function (IP) {  //  IP = '192.168.2.192'
 		if (IP == '224.0.23.0' || IP == 'FF02::1') {
 			return 'Multicast(EL)';
@@ -69,10 +88,8 @@ let mainArp = {
 	//////////////////////////////////////////////////////////////////////
 	// interfaces
 	/**
-	 * @func start
-	 * @desc 定時処理のインタフェース、監視開始
-	 * @async
-	 * @throw error
+	 * ARP取得開始。重複起動時は何もしない。
+	 * @param {SendIPCMessage} _sendIPCMessage
 	 */
 	start: async function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
@@ -113,12 +130,7 @@ let mainArp = {
 
 
 	// interfaces
-	/**
-	 * @func stop
-	 * @desc 停止
-	 * @async
-	 * @throw error
-	 */
+	/** 停止しcron解除（保存あり）。 */
 	stop: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainArp.stop()') : 0;
 		mainArp.isRun = false;
@@ -127,12 +139,7 @@ let mainArp = {
 		await mainArp.stopObservation();
 	},
 
-	/**
-	 * @func stopWithoutSave
-	 * @desc stopWithoutSave
-	 * @async
-	 * @throw error
-	 */
+	/** 保存せず停止。 */
 	stopWithoutSave: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainArp.stopWithoutSave()') : 0;
 		mainArp.isRun = false;
@@ -141,12 +148,7 @@ let mainArp = {
 		await mainArp.stopObservation();
 	},
 
-	/**
-	 * @func stopObservation
-	 * @desc 監視をやめる
-	 * @async
-	 * @throw error
-	 */
+	/** 監視cron停止。 */
 	stopObservation: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainArp.stopObserve() observation.') : 0;
 
@@ -158,32 +160,21 @@ let mainArp = {
 
 
 	// interfaces
-	/**
-	 * @func setConfig
-	 * @desc 設定保存
-	 * @async
-	 * @throw error
-	 */
+	/** 設定/持続データ保存。 */
 	setConfig: async function () {
 		await store.set('config.Arp', config);
 		await store.set('persist.Arp', persist);
 	},
 
-	/**
-	 * @func getConfig
-	 * @desc 設定参照
-	 * @async
-	 * @throw error
+	/** 現在設定取得。
+	 * @returns {ArpConfig}
 	 */
 	getConfig: function () {
 		return config;
 	},
 
-	/**
-	 * @func getPersist
-	 * @desc getPersist
-	 * @async
-	 * @throw error
+	/** 現在persist取得。
+	 * @returns {ArpPersist}
 	 */
 	getPersist: function () {
 		return persist;

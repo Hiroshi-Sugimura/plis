@@ -14,10 +14,29 @@ import cron from 'node-cron';
 import { ikeaRawModel, ikeaDataModel } from './models/localDBModels.cjs';   // DBデータと連携
 import { isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 
+/**
+ * @typedef {Object} IkeaConfig
+ * @property {boolean} enabled 機能が有効か
+ * @property {string} securityCode Gatewayのセキュリティコード
+ * @property {string} identity Tradfri認証で払い出されるidentity
+ * @property {string} psk Tradfri認証で払い出されるpsk
+ * @property {boolean} debug デバッグログ出力フラグ
+ */
+/**
+ * @typedef {Object.<string, any>} IkeaPersist
+ * @description TF.facilitiesをほぼそのまま保持する。deviceIdをキーにした状態オブジェクト。
+ */
+/**
+ * @callback SendIPCMessage
+ * @param {string} channel IPCチャネル名
+ * @param {any} payload 送信データ
+ */
+
 let sendIPCMessage = null;
 
 const store = new Store();
 
+/** @type {IkeaConfig} */
 let config = {
 	enabled: false,
 	securityCode: "",
@@ -26,28 +45,27 @@ let config = {
 	debug: false
 };
 
+/** @type {IkeaPersist} */
 let persist = {};
 
 
 //////////////////////////////////////////////////////////////////////
 // config
 let mainIkea = {
-	/** 監視ジョブ */
+	/** @type {cron.ScheduledTask|null} 監視ジョブ（状態変化監視）*/
 	observationJob: null,
-	/** 監視ジョブ */
+	/** @type {cron.ScheduledTask|null} 保存ジョブ（定期DB記録）*/
 	storeJob: null,
-	/** 多重起動抑制 */
+	/** @type {boolean} 多重起動抑制 */
 	isRun: false,
-	/** 受信処理抑制 */
+	/** @type {boolean} 受信処理抑制（制御要求後一度だけ受信を評価）*/
 	isRequested: false,
 
 	//////////////////////////////////////////////////////////////////////
 	/**
-	 * @func start
-	 * @desc start
-	 * @async
-	 * @param {Function} _sendIPCMessage
-	 * @throw error
+	 * Ikea機能を開始するエントリーポイント。重複起動時は現在persist/configをUIへ再送する。
+	 * @param {SendIPCMessage} _sendIPCMessage IPC送信関数
+	 * @returns {Promise<void>}
 	 */
 	start: async function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
@@ -101,10 +119,8 @@ let mainIkea = {
 
 
 	/**
-	 * @func stop
-	 * @desc 保存して機能終了
-	 * @async
-	 * @throw error
+	 * 保存して機能終了。
+	 * @returns {Promise<void>}
 	 */
 	stop: async function () {
 		mainIkea.isRun = false;
@@ -118,10 +134,8 @@ let mainIkea = {
 	},
 
 	/**
-	 * @func stopWithoutSave
-	 * @desc 保存しないで機能終了
-	 * @async
-	 * @throw error
+	 * 保存せずに機能終了。
+	 * @returns {Promise<void>}
 	 */
 	stopWithoutSave: async function () {
 		mainIkea.isRun = false;
@@ -133,11 +147,9 @@ let mainIkea = {
 
 
 	/**
-	 * @func setConfig
-	 * @desc configの変更と保存
-	 * @async
-	 * @param {object} _config - nullable
-	 * @throw error
+	 * 設定をマージして保存。UIへ更新通知。
+	 * @param {Partial<IkeaConfig>} [_config]
+	 * @returns {Promise<void>}
 	 */
 	setConfig: async function (_config) {
 		if (_config) {
@@ -150,18 +162,16 @@ let mainIkea = {
 	},
 
 	/**
-	 * @func getConfig
-	 * @desc Config取得
-	 * @return {Object} config
+	 * 現在の設定取得。
+	 * @returns {IkeaConfig}
 	 */
 	getConfig: function () {
 		return config;
 	},
 
 	/**
-	 * @func getPersist
-	 * @desc Persist取得
-	 * @return {Object} persist
+	 * 現在のpersist取得。
+	 * @returns {IkeaPersist}
 	 */
 	getPersist: function () {
 		return persist;
@@ -169,11 +179,10 @@ let mainIkea = {
 
 
 	/**
-	 * @func control
-	 * @desc デバイスの制御
-	 * @param {string} key
-	 * @param {string} type
-	 * @param {object} command
+	 * デバイス制御要求。成功時は次回callback受信でpersist更新。
+	 * @param {string} key deviceId
+	 * @param {string} type accessory type
+	 * @param {Object} command state command
 	 */
 	control: function (key, type, command) {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.control() key:', key, ', type:', type, ', command:', command) : 0;
@@ -185,12 +194,10 @@ let mainIkea = {
 	//////////////////////////////////////////////////////////////////////
 
 	/**
-	 * @func received
-	 * @desc 内部関数、受信データ処理、callbackで呼ばれる
-	 * @param {string} rIP
-	 * @param {Object} device
-	 * @param {Error} error
-	 * @throw error
+	 * Tradfriハンドラからの受信コールバック。制御要求後一度だけpersist更新を反映。
+	 * @param {string} rIP 送信元IP
+	 * @param {Object} device 受信デバイス情報
+	 * @param {Error} error エラー
 	 */
 	received: function (rIP, device, error) {
 		if (error) {
@@ -213,9 +220,7 @@ let mainIkea = {
 
 
 	/**
-	 * @func startObserve
-	 * @desc Ikeaを監視開始
-	 * @throw error
+	 * facilitiesの変化監視開始。変化検出時persistをUIとDBへ反映。
 	 */
 	startObserve: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.startObserve() start.') : 0;
@@ -249,10 +254,9 @@ let mainIkea = {
 	},
 
 	/**
-	 * @async
-	 * @function storeData
-	 * @desc 内部関数：デバイスタイプごとにステータスの読見方を変えてDBにためる
-	*/
+	 * デバイスタイプごとに意味のある形へ抜粋しDBへ保存。
+	 * @returns {Promise<void>}
+	 */
 	storeData: async function () {
 		// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.storeData() persist:', persist) : 0;
 		for (let d in persist) {
@@ -334,10 +338,8 @@ let mainIkea = {
 
 
 	/**
-	 * @func stop
-	 * @desc 監視をやめる、リリースする
-	 * @async
-	 * @throw error
+	 * 内部：監視ジョブ停止とTradfri接続リリース。
+	 * @returns {Promise<void>}
 	 */
 	stop: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.stop().') : 0;

@@ -78,7 +78,7 @@ let mainNetatmo = {
 	config.debug = store.get('config.Netatmo.debug', false);
 	// 旧バージョンのaccessToken永続値は読まない＆削除して整理
 	try { store.delete('config.Netatmo.accessToken'); } catch (_) {}
-		console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() config loaded from store:\x1b[32m', config, '\x1b[0m');
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() config loaded from store:\x1b[32m', config, '\x1b[0m') : 0;
 		sendIPCMessage("renewNetatmoConfigView", config);
 
 		persist = store.get('persist.Netatmo', {});
@@ -91,7 +91,7 @@ let mainNetatmo = {
 
 		// リフレッシュトークンがあれば、起動時にアクセストークンを取得
 		if (config.refreshToken && config.clientId && config.clientSecret) {
-			console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() リフレッシュトークンからアクセストークンを取得します');
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() リフレッシュトークンからアクセストークンを取得します') : 0;
 			try {
 				await mainNetatmo.refreshAccessToken();
 			} catch (e) {
@@ -205,7 +205,7 @@ let mainNetatmo = {
 			mainNetatmo.tokenExpires = Date.now() + (res.data.expires_in * 1000);
 			await store.set('config.Netatmo.refreshToken', config.refreshToken);
 
-			console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.refreshAccessToken() トークン更新成功');
+			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.refreshAccessToken() トークン更新成功') : 0;
 			return true;
 		} catch (error) {
 			const detail = error.response ? error.response.data : error;
@@ -251,7 +251,7 @@ let mainNetatmo = {
 		} catch (error) {
 			// 403エラー（トークン期限切れ）の場合はリフレッシュして再試行
 			if (error.response && error.response.status === 403 && !isRetry && config.refreshToken) {
-				console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.fetchStationsData() トークン期限切れ検出、リフレッシュします');
+				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.fetchStationsData() トークン期限切れ検出、リフレッシュします') : 0;
 				try {
 					await mainNetatmo.refreshAccessToken();
 					// リフレッシュ成功したら再試行（無限ループ防止でisRetry=true）
@@ -304,8 +304,8 @@ let mainNetatmo = {
 	 * @returns {Promise<void>}
 	 */
 	setConfig: async function (_config) {
-		console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.setConfig() _config:\x1b[33m', _config, '\x1b[0m');
-		console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.setConfig() before merge config:\x1b[33m', config, '\x1b[0m');
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.setConfig() _config:\x1b[33m', _config, '\x1b[0m') : 0;
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.setConfig() before merge config:\x1b[33m', config, '\x1b[0m') : 0;
 		if (_config) {
 			// accessTokenは無視してマージ
 			if ('accessToken' in _config) {
@@ -313,7 +313,7 @@ let mainNetatmo = {
 			}
 			config = mergeDeeply(config, _config);
 		}
-		console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.setConfig() after merge config:\x1b[32m', config, '\x1b[0m');
+		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.setConfig() after merge config:\x1b[32m', config, '\x1b[0m') : 0;
 		await store.set('config.Netatmo', config);
 		sendIPCMessage("renewNetatmoConfigView", config);
 		sendIPCMessage("configSaved", 'Netatmo');// 保存したので画面に通知

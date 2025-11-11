@@ -1,119 +1,101 @@
 //////////////////////////////////////////////////////////////////////
-//	Copyright (C) Hiroshi SUGIMURA 2022.09.06
+// Copyright (C) Hiroshi SUGIMURA 2022.09.06
 //////////////////////////////////////////////////////////////////////
 /**
  * @module mainSubmodule
+ * @summary 共通ユーティリティ関数。キーソート / 日付取得 / ディープマージ / 丸め / 値域クランプなど。
  */
-
-//////////////////////////////////////////////////////////////////////
-// 基本ライブラリ
-
 
 //////////////////////////////////////////////////////////////////////
 /**
- *  @func objectSort
- *  @desc キーでソートしてからJSONにする
- *  @param {Object} [obj]
- *  @return {map}
+ * オブジェクトのキーを昇順に並べ替えた浅いコピーを返す。
+ * @param {Record<string, any>} obj 対象オブジェクト
+ * @returns {Record<string, any>} 並べ替え済み新規オブジェクト
  */
-// キーでソートしてからJSONにする
-// 単純にJSONで比較するとオブジェクトの格納順序の違いだけで比較結果がイコールにならない
-let objectSort = function (obj) {
-	let keys = Object.keys(obj).sort();
-	let map = {};
-	keys.forEach(function (key) {
-		map[key] = obj[key];
-	});
-
+function objectSort(obj) {
+	const keys = Object.keys(obj).sort();
+	const map = {};
+	for (const k of keys) map[k] = obj[k];
 	return map;
-};
+}
 
 /**
- *  @func getNow
- *  @desc 現在時刻 ("YYYY-MM-DD hh:mm:ss")
- *  @param {void}
- *  @return {String} time
+ * 現在時刻を "YYYY-MM-DD hh:mm:ss" 文字列で返す。
+ * @returns {string}
  */
-let getNow = function () {
-	let now = new Date();
-
-	// 日付
-	let date = [
+function getNow() {
+	const now = new Date();
+	const date = [
 		now.getFullYear().toString(),
 		('0' + (now.getMonth() + 1)).slice(-2),
 		('0' + now.getDate()).slice(-2)
 	].join('-');
-
-	// 時刻
-	let time = [
+	const time = [
 		('0' + now.getHours()).slice(-2),
 		('0' + now.getMinutes()).slice(-2),
 		('0' + now.getSeconds()).slice(-2)
 	].join(':');
-
 	return date + ' ' + time;
 }
 
 /**
- *  @func getToday
- *  @desc 今日の日付 ("YYYY-MM-DD")
- *  @param {void}
- *  @return {String} time
+ * 今日の日付を文字列で返す。
+ * フォーマット: "YYYY-MM-DD"
+ * 注意: Date.today() は外部拡張（date-utils 等）に依存するよ。
+ * @returns {string}
  */
-let getToday = function () {
-	return Date.today().toFormat("YYYY-MM-DD");
-};
+function getToday() {
+	return Date.today().toFormat('YYYY-MM-DD');
+}
 
 /**
- *  @func getYesterday
- *  @desc 昨日の日付 ("YYYY-MM-DD")
- *  @param {void}
- *  @return {String} time
+ * 昨日の日付を文字列で返す。
+ * フォーマット: "YYYY-MM-DD"
+ * 注意: Date.yesterday() は外部拡張（date-utils 等）に依存するよ。
+ * @returns {string}
  */
-let getYesterday = function () {
-	return Date.yesterday().toFormat("YYYY-MM-DD");
-};
-
-
+function getYesterday() {
+	return Date.yesterday().toFormat('YYYY-MM-DD');
+}
 /**
- *  @func isObjEmpty
- *  @desc Object型が空{}かどうかチェックする。Object型は == {} ではチェックできない。
- *  @param {Object} obj
- *  @return {Object} obj
+ * オブジェクトが空かどうかをチェックする。
+ * Object 型は == {} では比較できないのでキー数で判定するよ。
+ * @param {Record<string, any>} obj
+ * @returns {boolean} 空なら true
  */
-let isObjEmpty = function (obj) {
+function isObjEmpty(obj) {
 	return Object.keys(obj).length === 0;
 }
 
 
 /**
- *  @func mergeDeeply
- *  @param {target} target
- *  @param {source} source
- *  @param {opts} opts
- *  @return {Object} obj
- *  @desc 深いマージを実現する。
- *  target: マージ対象かつマージ先
- *  source: マージ対象
- *  opts: 配列の取り扱い
- *  配列の要素（中身）は結合(concat)したい場合、以下のようにして、さっきの関数を呼び出してやればOK
- *  opts = {concatArray: true}
+ * @typedef {Object} MergeOptions
+ * @property {boolean} [concatArray=false] 同じキーの配列は結合(concat)するか。false の場合は置換。
  */
-let mergeDeeply = function (target, source, opts) {
-	const isObject = obj => obj && typeof obj === 'object' && !Array.isArray(obj);
-	const isConcatArray = opts && opts.concatArray;
-	let result = Object.assign({}, target);
+
+/**
+ * 深いマージを実現する（入力は不変、結果は新しいオブジェクト）。
+ * - オブジェクト同士は再帰的にマージ
+ * - 配列は既定では置換、opts.concatArray=true で連結
+ * - プリミティブ値は後勝ち
+ * @param {Record<string, any>} target マージ対象かつベース
+ * @param {Record<string, any>} source マージ元
+ * @param {MergeOptions} [opts] 配列の扱い等のオプション
+ * @returns {Record<string, any>} マージ結果
+ */
+function mergeDeeply(target, source, opts) {
+	const isObject = o => o && typeof o === 'object' && !Array.isArray(o);
+	const concat = opts && opts.concatArray;
+	let result = { ...target };
 	if (isObject(target) && isObject(source)) {
-		for (const [sourceKey, sourceValue] of Object.entries(source)) {
-			const targetValue = target[sourceKey];
-			if (isConcatArray && Array.isArray(sourceValue) && Array.isArray(targetValue)) {
-				result[sourceKey] = targetValue.concat(...sourceValue);
-			}
-			else if (isObject(sourceValue) && target.hasOwnProperty(sourceKey)) {
-				result[sourceKey] = mergeDeeply(targetValue, sourceValue, opts);
-			}
-			else {
-				Object.assign(result, { [sourceKey]: sourceValue });
+		for (const [k, v] of Object.entries(source)) {
+			const tv = target[k];
+			if (concat && Array.isArray(v) && Array.isArray(tv)) {
+				result[k] = tv.concat(...v);
+			} else if (isObject(v) && Object.prototype.hasOwnProperty.call(target, k)) {
+				result[k] = mergeDeeply(tv, v, opts);
+			} else {
+				result[k] = v;
 			}
 		}
 	}
@@ -122,33 +104,28 @@ let mergeDeeply = function (target, source, opts) {
 
 
 /**
- *  @func roundFloat
- *  @param {integer} n 丸める対象
- *  @param {integer} _digit 桁数、指定なければ２
- *  @return {float} 丸めた数値
- *  @desc 数値を丸める。
+ * 浮動小数を指定桁で丸める（四捨五入）。
+ * @param {number} n 丸める対象
+ * @param {number} [_digit=2] 桁数（既定: 2）
+ * @returns {number} 丸め後の数値
  */
-let roundFloat = function (n, _digit) {
-	if (!_digit) {
-		_digit = 2
-	}
-	return parseFloat(n.toFixed(_digit));
+function roundFloat(n, digit = 2) {
+	return parseFloat(n.toFixed(digit));
 }
 
 
 /**
- *  @func checkValue
- *  @param {number} val チェック対象
- *  @param {number} min 最小値
- *  @param {number} max 最大値
- *  @return {number} チェックした後の数値
- *  @desc 数値を値域に合わせる
+ * 数値を[min, max]の範囲にクランプする。
+ * @param {number} val チェック対象
+ * @param {number} min 最小値
+ * @param {number} max 最大値
+ * @returns {number} 範囲に収めた数値
  */
-let checkValue = function (val, min, max) {
+function checkValue(val, min, max) {
 	if (val < min) { val = min; }
 	if (val > max) { val = max; }
 	return val;
-};
+}
 
 
 

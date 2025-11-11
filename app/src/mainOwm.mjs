@@ -20,7 +20,16 @@ const store = new Store();
 /** mainOwmからIPCMessageを呼ぶためのcallback */
 let sendIPCMessage = null;
 
+/**
+ * @typedef {Object} OwmConfig
+ * @property {boolean} enabled 機能有効
+ * @property {string} APIKey OpenWeatherMap APIキー
+ * @property {string} zipcode 郵便番号（JP）
+ * @property {boolean} debug デバッグログ
+ */
+
 /** mainOwmのconfig */
+/** @type {OwmConfig} */
 let config = {
 	enabled: false,
 	APIKey: '',
@@ -29,6 +38,7 @@ let config = {
 };
 
 /** mainOwmのpersist */
+/** @type {Object.<string, any>} */
 let persist = {};
 
 
@@ -37,14 +47,13 @@ let persist = {};
 let mainOwm = {
 	isRun: false,
 	url: '',
+	/** @type {cron.ScheduledTask|null} */
 	observationJob: null,
 	callback: null,
 
-	/** @func start
-	 *  @desc startする
-	 *  @async
-	 *  @param {sendIPCMessage} _sendIPCMessage
-	 *  @return {void}
+	/**
+	 * OpenWeatherMap 取得処理の開始。重複起動時はpersist/configをUIへ再送。
+	 * @param {(ch:string,p:any)=>void} _sendIPCMessage
 	 */
 	start: async function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
@@ -93,11 +102,8 @@ let mainOwm = {
 		if (!isObjEmpty(persist)) { sendIPCMessage("renewOwm", persist); }  // もし前回データがあれば送る
 	},
 
-	/** @func stop
-	 *  @desc stopする
-	 *  @async
-	 *  @param {void}
-	 *  @return {void}
+	/** 保存して停止。
+	 * @returns {Promise<void>}
 	 */
 	stop: async function () {
 		mainOwm.isRun = false;
@@ -108,11 +114,8 @@ let mainOwm = {
 		await mainOwm.stopObservation();
 	},
 
-	/** @func stopWithoutSave
-	 *  @desc stopWithoutSave
-	 *  @async
-	 *  @param {void}
-	 *  @return {void}
+	/** 保存せず停止。
+	 * @returns {Promise<void>}
 	 */
 	stopWithoutSave: async function () {
 		mainOwm.isRun = false;
@@ -123,12 +126,10 @@ let mainOwm = {
 
 
 	//////////////////////////////////////////////////////////////////////
-	/** @func startCore
-	 *  @desc Opwn Weather Mapの処理
-	 *  @async
-	 *  @param {option} option
-	 *  @param {startCore-callback} callback _callback
-	 *  @return {void}
+	/**
+	 * OpenWeatherMapのURL組み立てとcron開始、起動時1回取得。
+	 * @param {{APIKey:string, zipcode:string}} option
+	 * @param {(body:string)=>void} _callback
 	 */
 	startCore: function (option, _callback) {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.startCore(), option:\x1b[32m', option, '\x1b[0m') : 0;
@@ -168,11 +169,8 @@ let mainOwm = {
 	 * @param {body} body
 	 */
 
-	/** @func setObserve
-	 *  @desc Opwn Weather Mapの監視する
-	 *  @async
-	 *  @param {void}
-	 *  @return {void}
+	/**
+	 * 監視cron登録（1時間毎）。
 	 */
 	setObserve: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.setObserve() start.') : 0;
@@ -206,10 +204,8 @@ let mainOwm = {
 		mainOwm.observationJob.start();
 	},
 
-	/** @func stopObservation
-	 *  @desc 監視をやめる
-	 *  @param {void}
-	 *  @return {void}
+	/**
+	 * 監視停止。
 	 */
 	stopObservation: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.stop() observation.') : 0;
@@ -220,10 +216,7 @@ let mainOwm = {
 		}
 	},
 
-	/**
-	 * @func storeData
-	 * @desc persistをDBに保存する
-	 */
+	/** persistをDBへ保存。 */
 	storeData: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.storeData().') : 0;
 
@@ -243,11 +236,8 @@ let mainOwm = {
 		}
 	},
 
-	/** @func setConfig
-	 *  @desc 設定の保存
-	 *  @async
-	 *  @param {config} [_config]
-	 *  @return {void}
+	/** 設定をマージ保存。UIへ通知。
+	 * @param {Partial<OwmConfig>} [_config]
 	 */
 	setConfig: async function (_config) {
 		if (_config) {
@@ -259,19 +249,15 @@ let mainOwm = {
 		sendIPCMessage("configSaved", 'OWM');  // 保存したので画面に通知
 	},
 
-	/** @func getConfig
-	 *  @desc 設定を別で参照
-	 *  @param {void}
-	 *  @return {void}
+	/** 現在設定の取得。
+	 * @returns {OwmConfig}
 	 */
 	getConfig: function () {
 		return config;
 	},
 
-	/** @func getPersist
-	 *  @desc 受信データの保存
-	 *  @param {void}
-	 *  @return {void}
+	/** 現在persistの取得。
+	 * @returns {Object}
 	 */
 	getPersist: function () {
 		return persist;

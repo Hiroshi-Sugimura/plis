@@ -443,12 +443,22 @@ let mainEL = {
 
 	//////////////////////////////////////////////////////////////////////
 	/**
-	 * ELライブラリ辞書初期化とsocket生成＋設備監視cron2種開始。
-	 * @returns {Promise<void>}
+	 * 初期化シーケンス。
+	 * 1. 変換ライブラリ辞書(JSON)を同期読込して ELconv を再初期化。
+	 * 2. 永続化されている facilities を EL.facilities に復元。
+	 * 3. IPv6 利用判定: 利用可能なインタフェース(awdl/llw/utun/p2p/lo を除外)が無い場合 disableIPv6 を true にし、IPv6 マルチキャスト送信を抑止。
+	 * 4. EL.initialize によりソケット生成（autoGetProperties 有効）。
+	 * 5. 監視 cron を2種開始:
+	 *    observationTask(3分毎): sanitizeFacilities() → complementFacilities() → observation() の順で呼び、
+	 *      過去に complementFacilities() 内部で undefined.match が発生した問題を "sanitizeFacilities" で未定義/非オブジェクト/不正 EOJs を除去することで防御。
+	 *    changeTask(1分毎): facilities の構造変化検出し parsed を再生成、Rendererへ通知。
+	 *
+	 * エラーは各 try/catch でローカルログ出力し連鎖停止を防ぐ。致命的例外が発生した場合のみ isRun を外部側で再起動判断する想定。
+	 * @returns {Promise<void>} 完了時に resolve。
 	 */
 	init: async function () {
 
-		// 辞書の読み込みをオーバーライド
+		// (1) 辞書の読み込みをオーバーライド
 		ELconv.initialize = function () {
 			ELconv.m_dictNod = JSON.parse(fs.readFileSync(path.join(appDir, 'nodeProfile.json'), 'utf8'));
 			ELconv.m_dictSup = JSON.parse(fs.readFileSync(path.join(appDir, 'superClass_I.json'), 'utf8'));
@@ -457,11 +467,12 @@ let mainEL = {
 		};
 		ELconv.initialize();
 
+		// (2) facilities 復元
 		EL.facilities = persist.facilities;
 
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.start() config:\x1b[32m', config, '\x1b[0m') : 0;
 
-		// IPv6の利用可否を事前判定（awdl0等のダウンでENETDOWNが出る回避）
+		// (3) IPv6 の利用可否判定（awdl0 など不安定 NIC の ENETDOWN 回避）。
 		if (network.IPver === 0 || network.IPver === '0' || network.IPver === 6 || network.IPver === '6') {
 			const usable = mainEL.hasUsableIPv6();
 			mainEL.disableIPv6 = !usable;
@@ -470,7 +481,7 @@ let mainEL = {
 			}
 		}
 
-		// ECHONET Lite socket
+		// (4) ECHONET Lite socket 生成
 		mainEL.elsocket = EL.initialize(mainEL.objList, mainEL.received, network.IPver,
 			{
 				v4: network.IPv4 == 'auto' ? '' : network.IPv4,
@@ -482,12 +493,11 @@ let mainEL = {
 			});
 
 
-		// 監視対象機器は、定期的にEPCを取得する。cronで実施、3分毎
-		// 未取得EPCの補完も3分毎に確認
+		// (5a) 未取得EPC補完 + 定期観測（3分毎）
 		mainEL.observationTask = cron.schedule('*/3 * * * *', async () => {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.cron.schedule() observationTask') : 0;
 			try {
-				// ライブラリ補完前に最低限のサニタイズ
+				// complementFacilities() 前に最低限のサニタイズで undefined.match 例外を防止
 				mainEL.sanitizeFacilities();
 				EL.complementFacilities();
 			} catch (e) {
@@ -500,14 +510,14 @@ let mainEL = {
 			}
 		});
 
-		// facilitiesの変化を監視して、変化があったらcallbackする、1分毎
+		// (5b) facilities 構造変化検出（1分毎）
 		let oldVal = JSON.stringify(EL.objectSort(EL.facilities));
 		mainEL.changeTask = cron.schedule('*/1 * * * *', async () => {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.cron.schedule() changeTask') : 0;
 			const newVal = JSON.stringify(EL.objectSort(EL.facilities));
 			if (oldVal == newVal) return;
 
-			// 変化があったのでmainに通知、全体監視して変更があったときに全体データとして呼ばれる
+			// 変化通知: parsed 再生成し Renderer へ push
 			persist.facilities = objectSort(EL.facilities);
 			ELconv.refer(persist.facilities, function (devs) {
 				persist.parsed = objectSort(devs);
@@ -524,18 +534,31 @@ let mainEL = {
 	/**
 	 * EL.facilities の最低限の健全性を確保する簡易サニタイズ。
 	 * 不正なエントリや非オブジェクト/未定義を削除し、EOJs配列を文字列のみに制限。
+	 * 各EOJキー配下の不正データ（非オブジェクト/配列）も除去する。
 	 */
 	sanitizeFacilities: function () {
 		try {
 			if (!EL.facilities || typeof EL.facilities !== 'object') return;
 			for (const ip of Object.keys(EL.facilities)) {
 				const fac = EL.facilities[ip];
-				if (!fac || typeof fac !== 'object') {
+				if (!fac || typeof fac !== 'object' || Array.isArray(fac)) {
 					delete EL.facilities[ip];
 					continue;
 				}
+				// EOJs配列を文字列のみにフィルタ
 				if (Array.isArray(fac.EOJs)) {
-					fac.EOJs = fac.EOJs.filter((x) => typeof x === 'string');
+					fac.EOJs = fac.EOJs.filter((x) => typeof x === 'string' && x.length === 6);
+				} else {
+					fac.EOJs = [];
+				}
+				// 各EOJキー（例: "028801"）配下が不正なら削除
+				for (const key of Object.keys(fac)) {
+					if (key === 'EOJs') continue;
+					const val = fac[key];
+					// complementFacilities内部でval[epc].matchを呼ぶ想定なので、オブジェクトでない場合削除
+					if (!val || typeof val !== 'object' || Array.isArray(val)) {
+						delete fac[key];
+					}
 				}
 			}
 		} catch (e) {
@@ -560,7 +583,13 @@ let mainEL = {
 	// 定期的なデバイスの監視、監視はIPアドレスが変更される可能性があることに注意すべし
 
 	/**
-	 * 観測シーケンス：主要センサ群へGET、サブメータ定時プロパティ取得。
+	 * 観測シーケンス：主要センサ群へ GET を投げる。IPv6 は init() で disableIPv6=true と判断された場合は送信抑止。
+	 * エラーは上位(observationTask)で捕捉されるため、この関数内では throw をそのまま伝播して OK。
+	 *
+	 * 注意:
+	 * - IPv6 側で ENETDOWN が発生しやすい awdl/utun/llw/p2p/lo は hasUsableIPv6() にて事前に除外。
+	 * - サブメータの連続2フレーム(GET 定義群 → 定時計測値要求)間には 5 秒のインターバルを確保。
+	 * - マルチキャスト送信先は v4: EL.Multi, v6: EL.Multi6。
 	 * @returns {Promise<void>}
 	 */
 	observation: async function () {

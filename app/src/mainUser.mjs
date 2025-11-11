@@ -21,16 +21,16 @@ let sendIPCMessage = null;
 const store = new Store();
 
 /**
- * @type {{
- *  nickname: 'user',
- *  height: '165',
- *  weight: '65',
- *  age: '40',
- *  ampere: '30',
- *  debug: false
- * }}
+ * @typedef {Object} UserConfig
+ * @property {string} nickname ニックネーム
+ * @property {string} height 身長(cm)
+ * @property {string} weight 体重(kg)
+ * @property {string} age 年齢
+ * @property {string} ampere 契約アンペア
+ * @property {boolean} debug デバッグログ
  */
 
+/** @type {UserConfig} */
 let config = {  // config.user
 	nickname: 'user',
 	height: '165',
@@ -48,10 +48,9 @@ let config = {  // config.user
 let mainUser = {
 
 	/**
-	 * @async
-	 * @function start
-	 * @param {Function} _sendIPCMessage - sendIPCMessage
-	 * @return {Promise<void>}
+	 * ユーザー設定の読み込み。UIへ反映は別途。
+	 * @param {(ch:string,p:any)=>void} _sendIPCMessage
+	 * @returns {Promise<void>}
 	 */
 	start: async function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
@@ -67,21 +66,16 @@ let mainUser = {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainUser.start()') : 0;
 	},
 
-	/**
-	 * @async
-	 * @function stop
-	 * @return {Promise<void>}
+	/** 保存して停止。
+	 * @returns {Promise<void>}
 	 */
 	stop: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainUser.stop()') : 0;
 		await mainUser.setConfig(config);
 	},
 
-	/**
-	 * @async
-	 * @function setConfig
-	 * @param {Object} _config
-	 * @return {Promise<void>}
+	/** 設定をマージ保存。UIへ通知。
+	 * @param {Partial<UserConfig>} _config
 	 */
 	setConfig: async function (_config) {
 		if (_config) {
@@ -93,10 +87,8 @@ let mainUser = {
 		sendIPCMessage("configSaved", "User");
 	},
 
-	/**
-	 * @async
-	 * @function getConfig
-	 * @return {config} config
+	/** 現在設定取得。
+	 * @returns {UserConfig}
 	 */
 	getConfig: function () {
 		return config;

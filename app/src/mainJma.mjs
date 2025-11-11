@@ -15,16 +15,36 @@ import * as dateUtils from 'date-utils';
 import { jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel } from './models/localDBModels.cjs';   // DBデータと連携
 import { isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 
+/**
+ * @typedef {Object} JmaConfig
+ * @property {boolean} enabled 機能有効フラグ
+ * @property {string} area UI表示用エリア名
+ * @property {string} code 気象庁API用エリアコード
+ * @property {boolean} debug デバッグログ
+ */
+/**
+ * @typedef {Object} JmaPersist
+ * @property {Object} abst 概要情報
+ * @property {Object} detail 詳細情報（weather/pops/temperature 配列含む）
+ */
+/**
+ * @callback SendIPCMessage
+ * @param {string} channel
+ * @param {any} payload
+ */
+
 
 let sendIPCMessage = null;
 const store = new Store();
 
+/** @type {JmaConfig} */
 let config = {
 	enabled: true,
 	area: '東京都',
 	code: '130000',
 	debug: false
 };
+/** @type {JmaPersist} */
 let persist = {};
 
 
@@ -32,17 +52,17 @@ let persist = {};
 // config
 
 let mainJma = {
-	/** 多重起動防止 */
+	/** @type {boolean} 多重起動防止 */
 	isRun: false,
 	/** 天気概要の取得URL、固定値 */
 	abstURL: "https://www.jma.go.jp/bosai/forecast/data/overview_forecast/",
-	/** 適期詳細の取得URL、固定値 */
+	/** 詳細予報取得URL、固定値 */
 	detailURL: "https://www.jma.go.jp/bosai/forecast/data/forecast/",
-	/** 監視ジョブ */
+	/** @type {cron.ScheduledTask|null} 監視ジョブ */
 	observationJob: null,
-	/** 画面更新先 */
+	/** @type {Function|null} 画面更新先 */
 	callback: null,
-	/** エリアコード、固定値 */
+	/** エリアコード、固定値（UIから選択可） */
 	areaCodes: {
 		"群馬県": "100000",
 		"埼玉県": "110000",
@@ -98,11 +118,8 @@ let mainJma = {
 
 	//////////////////////////////////////////////////////////////////////
 	/**
-	 * @func start
-	 * @desc 気象庁天気取得の処理、重複起動は防いでいる
-	 * @param {function} _sendIPCMessage
-	 * @return void
-	 * @throw error
+	 * 気象庁予報取得開始。重複起動時は現在persist/configをUIへ再送する。
+	 * @param {SendIPCMessage} _sendIPCMessage
 	 */
 	start: function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
@@ -246,9 +263,7 @@ let mainJma = {
 
 	// ---------------------------------------------------------------
 	/**
-	 * @func gets
-	 * @desc 内部関数、天気情報を取得してcallbackする
-	 * @throw error
+	 * 内部：天気概要/詳細を取得し callback に渡す。
 	 */
 	gets: function () {
 		request({ url: mainJma.abstURL + config.code + ".json", method: 'GET', json: true }, function (error, response, body) {
@@ -269,13 +284,10 @@ let mainJma = {
 	},
 
 	/**
-	 * @func parseAbstRaw
-	 * @desc 内部関数、取得した概要情報を使いやすくする
-	 * @param {Object} body
-	 * @return {Object} body
-	 * @throw error
+	 * 取得した概要JSONをそのままraw保存形式へ変換。
+	 * @param {any} body APIレスポンス
+	 * @returns {{type:string,publishingOffice:string,reportDatetime:string,requestAreaCode:string,json:string}}
 	 */
-	// getしたbodyを使い物になる形に変える
 	parseAbstRaw: function (body) {
 		return {
 			type: 'abst',
@@ -287,11 +299,9 @@ let mainJma = {
 	},
 
 	/**
-	 * @func parseAbst
-	 * @desc 内部関数、取得した概要を使いやすくする
-	 * @param {Object} body
-	 * @return {Object} body
-	 * @throw error
+	 * 概要JSONをUI/DB向け構造へ変換。
+	 * @param {any} body APIレスポンス
+	 * @returns {{reportDatetime:string,publishingOffice:string,requestAreaCode:string,headlineText:string,text:string}}
 	 */
 	parseAbst: function (body) {
 		return {
@@ -304,11 +314,9 @@ let mainJma = {
 	},
 
 	/**
-	 * @func parseDetailRaw
-	 * @desc 取得した詳細を使いやすくする
-	 * @param {Object} body
-	 * @return {Object} body
-	 * @throw error
+	 * 詳細予報JSON配列をraw保存形式へ変換。
+	 * @param {any[]} body APIレスポンス
+	 * @returns {{type:string,publishingOffice:string,reportDatetime:string,requestAreaCode:string,json:string}}
 	 */
 	parseDetailRaw: function (body) {
 		let w = body[0];  // json[1]はちょっとよくわからんので
@@ -325,11 +333,9 @@ let mainJma = {
 	},
 
 	/**
-	 * @func parseDetail
-	 * @desc 内部関数、取得した詳細を使いやすくする
-	 * @param {Object} body
-	 * @return {Object} body
-	 * @throw error
+	 * 詳細予報を weather/pops/temperature の配列へ正規化。
+	 * @param {any[]} body APIレスポンス
+	 * @returns {{weather:Array,pops:Array,temperature:Array}}
 	 */
 	parseDetail: function (body) {
 		// console.log( body );
@@ -388,9 +394,7 @@ let mainJma = {
 
 
 	/**
-	 * @func setObserve
-	 * @desc 監視開始する
-	 * @throw error
+	 * cronスケジュール登録 (3時間毎)。
 	 */
 	setObserve: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.setObserve() start.') : 0;
@@ -409,9 +413,7 @@ let mainJma = {
 	},
 
 	/**
-	 * @func stopObservation
-	 * @desc 監視をやめる
-	 * @throw error
+	 * 監視停止。
 	 */
 	stopObservation: function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.stopObservation() observation.') : 0;
@@ -423,10 +425,8 @@ let mainJma = {
 	},
 
 	/**
-	 * @func stop
-	 * @desc mainJmaの機能を（保存して）停止する
-	 * @async
-	 * @throw error
+	 * 設定/persist保存して停止。
+	 * @returns {Promise<void>}
 	 */
 	stop: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.stop()') : 0;
@@ -437,10 +437,8 @@ let mainJma = {
 	},
 
 	/**
-	 * @func stopWithoutSave
-	 * @desc mainJmaの機能を（保存しないで）停止する
-	 * @async
-	 * @throw error
+	 * 保存せず停止。
+	 * @returns {Promise<void>}
 	 */
 	stopWithoutSave: async function () {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainJma.stopWithoutSave()') : 0;
@@ -448,11 +446,8 @@ let mainJma = {
 	},
 
 	/**
-	 * @func setConfig
-	 * @desc 設定更新、保存
-	 * @async
-	 * @param {Object} _config - nullable
-	 * @throw error
+	 * 設定をマージ保存。UIへ通知。
+	 * @param {Partial<JmaConfig>} [_config]
 	 */
 	setConfig: async function (_config) {
 		if (_config) {
@@ -463,20 +458,16 @@ let mainJma = {
 	},
 
 	/**
-	 * @func getConfig
-	 * @desc 設定取得
-	 * @return {Object} config
-	 * @throw error
+	 * 現在設定の取得。
+	 * @returns {JmaConfig}
 	 */
 	getConfig: function () {
 		return config;
 	},
 
 	/**
-	 * @func getPersist
-	 * @desc 情報取得
-	 * @return {Object} persist
-	 * @throw error
+	 * 現在persistの取得。
+	 * @returns {JmaPersist}
 	 */
 	getPersist: function () {
 		return persist;

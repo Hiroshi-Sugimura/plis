@@ -14,31 +14,58 @@ import * as dateUtils from 'date-utils';
 import { Sequelize, Op, roomEnvModel } from './models/localDBModels.cjs';   // DBデータと連携
 import { mergeDeeply } from './mainSubmodule.cjs';
 
+/**
+ * @typedef {Object} OmronConfig
+ * @property {boolean} enabled 機能有効
+ * @property {boolean} debug デバッグログ
+ * @property {string} place 記録先の場所名
+ */
+/**
+ * @typedef {Object.<string, any>} OmronPersist
+ * @property {string} [time]
+ * @property {number} [temperature]
+ * @property {number} [humidity]
+ * @property {number} [anbient_light]
+ * @property {number} [pressure]
+ * @property {number} [noise]
+ * @property {number} [etvoc]
+ * @property {number} [eco2]
+ * @property {number} [discomfort_index]
+ * @property {number} [heat_stroke]
+ */
+/**
+ * @callback SendIPCMessage
+ * @param {string} channel
+ * @param {any} payload
+ */
+
 let sendIPCMessage = null;
 const store = new Store();
 
+/** @type {OmronConfig} */
 let config = {
 	enabled: false,
 	debug: false,
 	place: 'Room'
 };
 
+/** @type {OmronPersist} */
 let persist = {};
 
 //////////////////////////////////////////////////////////////////////
 // mainOmron
 let mainOmron = {
 	isRun: false,
+	/** @type {cron.ScheduledTask|null} */
 	observationJob: null,
+	/** @type {cron.ScheduledTask|null} */
 	storeJob: null,
 
 	//////////////////////////////////////////////////////////////////////
 	//
 	/**
-	 * @func start
-	 * @desc Omronセンサの処理開始
-	 * @param {Function} _sendIPCMessage
-	 * @throw error
+	 * Omronセンサの処理開始。重複起動時はpersist/configをUIへ再送。
+	 * @param {SendIPCMessage} _sendIPCMessage
 	 */
 	start: function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
@@ -147,10 +174,8 @@ let mainOmron = {
 	},
 
 	/**
-	 * @func stop
-	 * @desc stop
-	 * @async
-	 * @throw error
+	 * 設定/persist保存して停止。
+	 * @returns {Promise<void>}
 	 */
 	stop: async function () {
 		mainOmron.isRun = false;
@@ -172,10 +197,8 @@ let mainOmron = {
 	},
 
 	/**
-	 * @func stopWithoutSave
-	 * @desc stopWithoutSave
-	 * @async
-	 * @throw error
+	 * 保存せず停止。
+	 * @returns {Promise<void>}
 	 */
 	stopWithoutSave: async function () {
 		mainOmron.isRun = false;
@@ -195,11 +218,8 @@ let mainOmron = {
 	},
 
 	/**
-	 * @func setConfig
-	 * @desc setConfig
-	 * @async
-	 * @param {Object} _config - nullable
-	 * @throw error
+	 * 設定をマージ保存しUIへ通知。
+	 * @param {Partial<OmronConfig>} [_config]
 	 */
 	setConfig: async function (_config) {
 		if (_config) {
@@ -212,22 +232,16 @@ let mainOmron = {
 	},
 
 	/**
-	 * @func getConfig
-	 * @desc getConfig
-	 * @async
-	 * @return {Object} config
-	 * @throw error
+	 * 現在設定の取得。
+	 * @returns {OmronConfig}
 	 */
 	getConfig: function () {
 		return config;
 	},
 
 	/**
-	 * @func getPersist
-	 * @desc getPersist
-	 * @async
-	 * @return {Object} persist
-	 * @throw error
+	 * 現在persistの取得。
+	 * @returns {OmronPersist}
 	 */
 	getPersist: function () {
 		return persist;

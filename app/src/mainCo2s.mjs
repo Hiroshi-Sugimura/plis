@@ -15,32 +15,52 @@ import * as dateUtils from 'date-utils';
 import { Sequelize, Op, roomEnvModel } from './models/localDBModels.cjs';   //
 import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 
+/**
+ * @typedef {Object} Co2sConfig
+ * @property {boolean} enabled 機能有効
+ * @property {boolean} debug デバッグログ
+ * @property {string} place 記録場所
+ */
+/**
+ * @typedef {Object} Co2sPersist
+ * @property {string} [time]
+ * @property {number} [temperature]
+ * @property {number} [humidity]
+ * @property {number} [co2]
+ */
+/**
+ * @callback SendIPCMessage
+ * @param {string} channel
+ * @param {any} payload
+ */
+
 let sendIPCMessage = null;
 const store = new Store();
 
+/** @type {Co2sConfig} */
 let config = {
 	enabled: false,
 	debug: false,
 	place: 'Room'
 };
 
+/** @type {Co2sPersist} */
 let persist = {};
 
 //////////////////////////////////////////////////////////////////////
 // mainCo2s
 let mainCo2s = {
 	isRun: false,
+	/** @type {cron.ScheduledTask|null} */
 	observationJob: null,
+	/** @type {cron.ScheduledTask|null} */
 	storeJob: null,
 
 	//////////////////////////////////////////////////////////////////////
 	//
 	/**
-	 * @func start
-	 * @desc Co2sセンサの処理開始
-	 * @param {Object} _sendIPCMessage
-	 * @return void
-	 * @throw error
+	 * Co2sセンサ開始。重複起動時はpersist/config再送。
+	 * @param {SendIPCMessage} _sendIPCMessage
 	 */
 	start: function (_sendIPCMessage) {
 		sendIPCMessage = _sendIPCMessage;
@@ -128,13 +148,8 @@ let mainCo2s = {
 		mainCo2s.storeJob.start();
 	},
 
-	/**
-	 * @func stop
-	 * @desc stop
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	/** 保存して停止。
+	 * @returns {Promise<void>}
 	 */
 	stop: async function () {
 		mainCo2s.isRun = false;
@@ -150,13 +165,8 @@ let mainCo2s = {
 		await co2s.stop();
 	},
 
-	/**
-	 * @func stopWithoutSave
-	 * @desc stopWithoutSave
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	/** 保存せず停止。
+	 * @returns {Promise<void>}
 	 */
 	stopWithoutSave: async function () {
 		mainCo2s.isRun = false;
@@ -169,13 +179,8 @@ let mainCo2s = {
 		await co2s.stop();
 	},
 
-	/**
-	 * @func setConfig
-	 * @desc setConfig
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	/** 設定マージ保存、UI通知。
+	 * @param {Partial<Co2sConfig>} [_config]
 	 */
 	setConfig: async function (_config) {
 		if (_config) {
@@ -187,25 +192,15 @@ let mainCo2s = {
 		sendIPCMessage("configSaved", 'Co2s');// 保存したので画面に通知
 	},
 
-	/**
-	 * @func getConfig
-	 * @desc getConfig
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	/** 現在設定取得。
+	 * @returns {Co2sConfig}
 	 */
 	getConfig: function () {
 		return config;
 	},
 
-	/**
-	 * @func getPersist
-	 * @desc getPersist
-	 * @async
-	 * @param {void}
-	 * @return void
-	 * @throw error
+	/** 現在persist取得。
+	 * @returns {Co2sPersist}
 	 */
 	getPersist: function () {
 		return persist;

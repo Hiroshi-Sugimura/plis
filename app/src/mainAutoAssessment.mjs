@@ -23,10 +23,17 @@ let sendIPCMessage = null;
 //////////////////////////////////////////////////////////////////////
 // config
 
+/**
+ * @typedef {Object} AutoAssessmentConfig
+ * @property {boolean} debug デバッグログ
+ */
+
+/** @type {AutoAssessmentConfig} */
 let config = {
 	debug: false
 }
 
+/** @typedef {Object} MinorResults */
 const minorSchema = {
 	date: "",
 	assessmentSource: "PLIS",
@@ -122,6 +129,7 @@ const minorSchema = {
 	r_6_15: null
 };
 
+/** @typedef {Object} MajorResults */
 const majorSchema = {
 	date: "",
 	assessmentSource: "HAL",
@@ -149,14 +157,14 @@ const majorSchema = {
 
 let mainAutoAssessment = {
 	isRun: false,  // 機能が利用可能になったか？
+	/** @type {cron.ScheduledTask|null} */
 	observationJob: null,
 
 	/**
-	 * @func lastMR2mr
-	 * @desc 以前のMinorResultsからMinorResults（1日経過処理）
-	 * @param {Object} mrRow
-	 * @param {Object} mr
-	 * @return {Object}
+	 * 前日のMinorResultsを-1してnullのみ補完。
+	 * @param {Record<string, any>} mrRow 直近の記録
+	 * @param {Record<string, any>} mr 本日作成中
+	 * @returns {Record<string, any>}
 	 */
 	lastMR2mr: function (mrRow, mr) {
 		// console.log('mr:', mr, 'mrRow:', mrRow)
@@ -175,10 +183,9 @@ let mainAutoAssessment = {
 
 
 	/**
-	 * @func calcMajorResults
-	 * @desc MinorResultsから MajorResultsを計算する
-	 * @async
-	 * @param {Object} mr
+	 * MinorResultsからMajorResultsを計算。
+	 * @param {Record<string, number|null>} mr
+	 * @returns {Record<string, any>}
 	 */
 	calcMajorResults: function (mr) {
 		let clothing_sum = 0;
@@ -286,11 +293,9 @@ let mainAutoAssessment = {
 
 
 	/**
-	 * @func assessment
-	 * @async
-	 * @desc 評価シーケンス全体
-	 * @param {string} today - "YYYY-MM-DD"
-	 * @param {string} yesterday - "YYYY-MM-DD"
+	 * アセスメント一連処理（Minor→Major計算とDB保存）。
+	 * @param {string} today YYYY-MM-DD
+	 * @param {string} yesterday YYYY-MM-DD
 	 */
 	assessment: async function (today, yesterday) {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment - today:', today, ' yesterday:', yesterday) : 0;
@@ -462,9 +467,8 @@ let mainAutoAssessment = {
 
 	//////////////////////////////////////////////////////////////////////
 	/**
-	 * @func start
-	 * @desc 自動評価システムの開始処理（定時実行、EntryPoint）
-	 * @async
+	 * 自動評価スケジューラ開始（本番:毎日9:00）。
+	 * @param {(ch:string,p:any)=>void} _sendIPCMessage
 	 */
 	start: function (_sendIPCMessage) {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.start()') : 0;
@@ -493,11 +497,7 @@ let mainAutoAssessment = {
 	},
 
 
-	/**
-	 * @func stop
-	 * @desc 停止
-	 * @async
-	 */
+	/** 停止。 */
 	stop: async function () {
 		await mainAutoAssessment.observationJob.stop();
 		mainAutoAssessment.observationJob = null;
@@ -505,11 +505,8 @@ let mainAutoAssessment = {
 	},
 
 
-	/**
-	 * @async
-	 * @func setConfig
-	 * @desc 設定を変更して保存。_config=nullなら設定保存のみ
-	 * @param {Object} _config
+	/** 設定をマージ保存しUI通知。
+	 * @param {Partial<AutoAssessmentConfig>} _config
 	 */
 	setConfig: async function (_config) {
 		if (_config) {
@@ -520,10 +517,8 @@ let mainAutoAssessment = {
 		sendIPCMessage("configSaved", 'AutoAssessment');  // 保存したので画面に通知
 	},
 
-	/**
-	 * @func getConfig
-	 * @return {Object} config
-	 * @desc 現在の設定値を返す
+	/** 現在設定取得。
+	 * @returns {AutoAssessmentConfig}
 	 */
 	getConfig: function () {
 		return config;
@@ -531,10 +526,10 @@ let mainAutoAssessment = {
 
 
 	/**
-	 * 湿度の点数を入れる
-	 * @param {Object} iotRows
-	 * @param {Object} minorResults
-	 * @return {Object}
+	 * 湿度の点数付与（暫定処理）。
+	 * @param {any[]} iotRows
+	 * @param {Record<string, any>} minorResults
+	 * @returns {number}
 	 */
 	humidityPoint: function (iotRows, minorResults) {
 		minorResults.r_3_8 = 100;
