@@ -497,8 +497,8 @@ let mainEL = {
 		mainEL.observationTask = cron.schedule('*/3 * * * *', async () => {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.cron.schedule() observationTask') : 0;
 			try {
-				// echonet-lite v2.17.2でバグ修正されたため、sanitizeFacilities()は一旦コメントアウト
-				// mainEL.sanitizeFacilities();
+				// EL.facilitiesのデータ品質維持のため、sanitizeFacilitiesで不正データを除去
+				mainEL.sanitizeFacilities();
 				EL.complementFacilities();
 			} catch (e) {
 				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.observationTask complementFacilities error:', e);
@@ -538,14 +538,16 @@ let mainEL = {
 	 * complementFacilities_sub内部でprops[epc].matchを呼ぶ前提なので、EPCキーの値が文字列でないものも削除。
 	 */
 	/**
-	 * EL.facilitiesデータを正規化して依存ライブラリのバグを回避
-	 *
-	 * 依存ライブラリ echonet-lite (npm) v2.17.2時点のバグ:
-	 * - node_modules/echonet-lite/index.js:1492 `let getMap = epcs.filter(...)` で配列が返る
-	 * - 同1499行目 `props[getMap].match()` で配列をキーとして使用→undefined.match()エラー
-	 * - 同1492行目 `v.substr(0.4)` がタイポ (正: `v.substr(0,4)`)
-	 *
-	 * 暫定対策: EPCプロパティ値を文字列型に制限し、.match()呼び出し時のエラーを防ぐ
+	 * EL.facilitiesデータを正規化してデータ品質を維持
+	 * 
+	 * 主な処理:
+	 * - EOJs配列を6桁文字列のみに制限（不正なEOJを除外）
+	 * - 無効なファシリティ（非オブジェクト、配列）を削除
+	 * - 無効なEOJキー（非オブジェクト、配列）を削除
+	 * - 無効なEPC値（文字列/null/''以外）を削除
+	 * 
+	 * 注: echonet-lite v2.17.2以降でライブラリ側のバグは修正されたが、
+	 * データ品質維持のため本関数は継続使用
 	 *
 	 * @private
 	 */
