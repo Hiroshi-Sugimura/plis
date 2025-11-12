@@ -261,30 +261,7 @@ window.addEventListener('DOMContentLoaded', function () {
             return;
         }
 
-        // 【重要】HTMLテーブル表示は divGarmin の中の別要素に表示
-        let garminTableDiv = document.getElementById('garminTableData');
-        if (!garminTableDiv) {
-            // テーブル表示用のdivを作成（canvas要素より前に配置）
-            garminTableDiv = document.createElement('div');
-            garminTableDiv.id = 'garminTableData';
-            divGarmin.insertBefore(garminTableDiv, divGarmin.firstChild);
-        }
-
-        // テーブルデータのHTML作成（既存のコード）
-        let doc = '';
-        doc += getActivitiesHtml(arg.Activities);
-        doc += getActivityDetailsHtml(arg.ActivityDetails);
-        doc += getBodyCompsHtml(arg.BodyComps);
-        doc += getDailiesHtml(arg.Dailies);
-        doc += getEpochsHtml(arg.Epochs);
-        doc += getMoveIQActivitiesHtml(arg.MoveIQActivities);
-        doc += getPulseoxHtml(arg.Pulseox);
-        doc += getSleepsHtml(arg.Sleeps);
-        doc += getStressDetailsHtml(arg.StressDetails);
-        doc += getUserMetricsHtml(arg.UserMetrics);
-
-        // 【修正】テーブル用のdivにのみHTMLを書き込む（canvas要素は保護される）
-        garminTableDiv.innerHTML = doc;
+        
 
         // Chart.jsの利用可能性チェック
         if (typeof Chart === 'undefined') {

@@ -13,6 +13,29 @@
 // ElectronのcontextBridgeとipcRendererを読み込み
 const { contextBridge, ipcRenderer } = require('electron');
 
+// Three.js モジュールをブリッジ（コメントアウト）
+// const THREE = require('three');
+// const { OrbitControls } = require('three/examples/jsm/controls/OrbitControls.js');
+// const { GLTFLoader } = require('three/examples/jsm/loaders/GLTFLoader.js');
+// const { VRMLoaderPlugin } = require('@pixiv/three-vrm');
+
+// contextBridge.exposeInMainWorld('ThreeModules', {
+//     THREE: THREE,
+//     OrbitControls: OrbitControls,
+//     GLTFLoader: GLTFLoader,
+//     VRMLoaderPlugin: VRMLoaderPlugin,
+// });
+
+// Electron API をブリッジ
+contextBridge.exposeInMainWorld('electronAPI', {
+    showWearableTab: () => ipcRenderer.invoke('showWearableTab'),
+    hideWearableTab: () => ipcRenderer.invoke('hideWearableTab'),
+    // 他のAPIが必要なら追加（例: configSave, URLopen など）
+    configSave: (arg) => ipcRenderer.invoke('configSave', arg),
+    URLopen: (arg) => ipcRenderer.invoke('URLopen', arg),
+    // ... 必要に応じて追加
+});
+
 // レンダラープロセスから利用可能なIPCメソッドをwindow.ipcオブジェクトとして公開
 contextBridge.exposeInMainWorld('ipc', {
     

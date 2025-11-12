@@ -64,3 +64,8 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+// DOMContentLoadedで初期化（修正）
+document.addEventListener('DOMContentLoaded', () => {
+    setupWearableTabListener();
+});

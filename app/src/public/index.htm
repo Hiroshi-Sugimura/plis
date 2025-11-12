@@ -656,6 +656,8 @@
                                 
                                 <!-- 3Dビューポート -->
                                 <div id="avatarViewportWearable" class="avatar-viewport-wearable">
+                                    <canvas id="avatarCanvasWearable"></canvas>
+                                    
                                     <div class="loading-indicator none" id="avatarLoadingWearable">
                                         <i class="fa-solid fa-spinner fa-spin"></i>
                                         <p>読み込み中...</p>
@@ -680,7 +682,6 @@
                                 </div>
                             </div>
                         </div>
-                        
                     </div>
                     
                     <!-- Garminデータが未設定の場合の案内 -->
@@ -2138,36 +2139,24 @@
 </body>
 
 <!-- Three.js は preload.js で読み込み済み -->
+
+<!-- Viteビルド版のmain.jsをimport -->
+<script type="module" src="./js/3d/main.js" defer></script>
+
+
+<!-- ウェアラブルタブ切り替え時に3Dシーンを表示/非表示 -->
 <script>
-    console.log('🔍 Waiting for ThreeModules from preload...');
-    
-    // ❌ この部分を削除またはコメントアウト
-    /*
-    setTimeout(() => {
-        if (typeof window.ThreeModules !== 'undefined') {
-            console.log('✅ ThreeModules found');
-            
-            // グローバル変数として展開
-            window.THREE = window.ThreeModules.THREE;
-            window.OrbitControls = window.ThreeModules.OrbitControls;
-            window.GLTFLoader = window.ThreeModules.GLTFLoader;
-            window.VRMLoaderPlugin = window.ThreeModules.VRMLoaderPlugin;
-            
-            console.log('✅ THREE:', window.THREE.REVISION);
-            console.log('✅ OrbitControls:', typeof window.OrbitControls);
-            console.log('✅ GLTFLoader:', typeof window.GLTFLoader);
-            console.log('✅ VRMLoaderPlugin:', typeof window.VRMLoaderPlugin);
-            console.log('🎉 SUCCESS: All modules ready from preload!');
+    document.getElementById('wearable').addEventListener('change', () => {
+        if (document.getElementById('wearable').checked) {
+            if (window.vroidApp) {
+                window.vroidApp.show();
+            }
         } else {
-            console.error('❌ ThreeModules not found in window');
-            console.error('Available window properties:', Object.keys(window).filter(k => k.includes('Three') || k.includes('VRM')));
+            if (window.vroidApp) {
+                window.vroidApp.hide();
+            }
         }
-    }, 100);
-    */
-    
-    // ✅ subAvatar.js で直接 window.ThreeModules を使うので、
-    // ここでは何もしない
-    console.log('✅ ThreeModules will be used by subAvatar.js');
+    });
 </script>
 
 <!-- 3rd party's module -->
@@ -2201,7 +2190,6 @@
 <script src="./js/subQuestionnaire.js"></script>
 <script src="./js/subGarmin.js"></script>
 <script src="./js/subGarminAdvice.js"></script>
-<script src="./js/subAvatar.js" type="module"></script>
 <script src="./js/subAutoAssessment.js"></script>
 <script src="./js/subHAL.js"></script>
 <script src="./js/index.js"></script>

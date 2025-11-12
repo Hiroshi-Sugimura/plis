@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Avatar</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; }
+    #avatarViewportWearable { width: 100vw; height: 100vh; position: relative; }
+    canvas { display: block; width: 100%; height: 100%; }
+    button { position: absolute; z-index: 1000; background: white; border: 1px solid black; padding: 5px; }
+    #btnLoadAvatarWearable { top: 10px; left: 10px; }
+    #btnResetCameraWearable { top: 10px; left: 100px; }
+    #btnToggleAutoExpressionWearable { top: 10px; left: 200px; }
+  </style>
+</head>
+<body>
+  <!-- 必要なタブ要素を追加 -->
+  <input id="wearable" type="radio" name="tab_item" checked>
+  <div id="avatarViewportWearable" class="avatar-viewport-wearable"></div>
+  <button id="btnLoadAvatarWearable" class="btn-advice f_right">Load Avatar</button>
+  <input type="file" id="fileAvatarInputWearable" accept=".vrm" style="display: none;">
+  <button id="btnResetCameraWearable" class="btn-avatar-control">Reset Camera</button>
+  <button id="btnToggleAutoExpressionWearable" class="btn-avatar-control">Toggle Expression</button>
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
