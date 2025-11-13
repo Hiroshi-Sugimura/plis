@@ -539,13 +539,13 @@ let mainEL = {
 	 */
 	/**
 	 * EL.facilitiesデータを正規化してデータ品質を維持
-	 * 
+	 *
 	 * 主な処理:
 	 * - EOJs配列を6桁文字列のみに制限（不正なEOJを除外）
 	 * - 無効なファシリティ（非オブジェクト、配列）を削除
 	 * - 無効なEOJキー（非オブジェクト、配列）を削除
 	 * - 無効なEPC値（文字列/null/''以外）を削除
-	 * 
+	 *
 	 * 注: echonet-lite v2.17.2以降でライブラリ側のバグは修正されたが、
 	 * データ品質維持のため本関数は継続使用
 	 *
@@ -564,11 +564,57 @@ let mainEL = {
 					continue;
 				}
 
-				// EOJs配列を文字列(6桁)のみに正規化
+				// 既存EOJsの異常値を収集（後で再構築するのでここでは削除しない）
+				let invalidEOJs = [];
 				if (Array.isArray(fac.EOJs)) {
-					fac.EOJs = fac.EOJs.filter((x) => typeof x === 'string' && x.length === 6);
-				} else {
-					fac.EOJs = [];
+					for (const e of fac.EOJs) {
+						if (typeof e !== 'string' || e.length !== 6 || !/^[0-9a-fA-F]{6}$/.test(e)) {
+							invalidEOJs.push(e);
+						}
+					}
+				} else if (fac.EOJs !== undefined) {
+					// EOJsが配列以外の型だった
+					invalidEOJs.push('(non-array)');
+				}
+
+				// 不正なEOJキーを施設オブジェクト内から削除しつつ、正しいEOJ候補を再構築
+				let rebuilt = [];
+				for (const maybeEOJ of Object.keys(fac)) {
+					if (maybeEOJ === 'EOJs') continue;
+					const props = fac[maybeEOJ];
+					// EOJの基本条件: 6桁16進文字列 & 値はオブジェクト(プロパティマップ)
+					if (/^[0-9a-fA-F]{6}$/.test(maybeEOJ) && props && typeof props === 'object' && !Array.isArray(props)) {
+						// ライブラリのcomplementFacilities_subが props['9f'].match() を呼ぶため、
+						// '9f'がundefinedのEOJキーはfacオブジェクト自体から削除（ライブラリがObject.keys(node)で直接取得するため）
+						if (props['9f'] === undefined) {
+							if (config && config.debug) {
+								console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), `| mainEL.sanitizeFacilities ip=${ip} deleting EOJ=${maybeEOJ} (no '9f' property)`);
+							}
+							delete fac[maybeEOJ];
+						} else {
+							rebuilt.push(maybeEOJ);
+						}
+					} else {
+						// EOJ形式でないキーは全て削除（'EOJs'や'EOJS'なども含む。後で配列として上書きするため）
+						if (config && config.debug) {
+							console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), `| mainEL.sanitizeFacilities ip=${ip} deleting invalid key=${maybeEOJ}`);
+						}
+						delete fac[maybeEOJ];
+					}
+				}
+				// ソートして安定化し、配列として上書き（オブジェクトではなく純粋な配列にする）
+				fac.EOJs = rebuilt.sort();
+
+				// デバッグログ（差分を確認）
+				if (config && config.debug) {
+					if (invalidEOJs.length > 0) {
+						console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), `| mainEL.sanitizeFacilities ip=${ip} invalidEOJs=`, invalidEOJs);
+					}
+					// 施設に存在するキーなのにEOJsに含まれなかったもの（形が悪いor値型不正）
+					const missingListed = Object.keys(fac).filter(k => k !== 'EOJs' && /^[0-9a-fA-F]{6}$/.test(k) && !fac.EOJs.includes(k));
+					if (missingListed.length > 0) {
+						console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), `| mainEL.sanitizeFacilities ip=${ip} excludedEOJs=`, missingListed);
+					}
 				}
 
 				// 各EOJキー(例: "028801")配下のEPCプロパティを検証

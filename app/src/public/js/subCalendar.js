@@ -198,7 +198,22 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	function isHoliday(year, month, day) {
 		let checkDate = year + '/' + (month + 1) + '/' + day;
-		console.log(holiday);
+		// holidayデータのログは1回だけ出す（初回のみ）
+		if (!window._holidayLogged) {
+			window._holidayLogged = true;
+			let dateList = holiday.split('\n').slice(1).map(row => {
+				let cols = row.split(',');
+				if (!cols[0] || !cols[1]) return null;
+				let name = cols[1];
+				try {
+					name = decodeURIComponent(escape(name));
+				} catch (e) {
+					// 変換失敗時はそのまま
+				}
+				return { date: cols[0], name };
+			}).filter(x => x);
+			console.table(dateList);
+		}
 		let dateList = holiday.split('\n');
 		// 1行目はヘッダーのため、初期値1で開始
 		for (let i = 1; i < dateList.length; i++) {

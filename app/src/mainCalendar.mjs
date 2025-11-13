@@ -165,12 +165,12 @@ let mainCalendar = {
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.getHolidays()') : 0;
 
 		axios.get(mainCalendar.holidaysURL).then((res) => {
-			fs.writeFile(path.join(databaseDir, "syukujitsu.csv"), res.data, (err, data) => {
+			const csv = res.data;
 				if (err) {
 					console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.getHolidays() syukujitsu.csv is NOT saved. error:', err);
 					return;
 				}
-				sendIPCMessage('renewCalendar', res.data);
+				sendIPCMessage('renewCalendar', csv);
 			});
 		});
 	}
