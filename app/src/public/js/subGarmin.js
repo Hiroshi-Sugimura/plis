@@ -11,7 +11,7 @@
  * @namespace subGarmin
  */
 window.addEventListener('DOMContentLoaded', function () {
-	console.dir('## DOMContentLoaded subGarmin.js');
+	console.log('## DOMContentLoaded subGarmin.js');
 
 	//----------------------------------------------------------------------------------------------
 	// デバイス情報のrenew
