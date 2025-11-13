@@ -497,7 +497,7 @@ let mainEL = {
 		mainEL.observationTask = cron.schedule('*/3 * * * *', async () => {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.cron.schedule() observationTask') : 0;
 			try {
-				// EL.facilitiesのデータ品質維持のため、sanitizeFacilitiesで不正データを除去
+				// complementFacilities() 前に最低限のサニタイズで undefined.match 例外を防止
 				mainEL.sanitizeFacilities();
 				EL.complementFacilities();
 			} catch (e) {
@@ -537,104 +537,34 @@ let mainEL = {
 	 * 各EOJキー配下の不正データ（非オブジェクト/配列）も除去する。
 	 * complementFacilities_sub内部でprops[epc].matchを呼ぶ前提なので、EPCキーの値が文字列でないものも削除。
 	 */
-	/**
-	 * EL.facilitiesデータを正規化してデータ品質を維持
-	 *
-	 * 主な処理:
-	 * - EOJs配列を6桁文字列のみに制限（不正なEOJを除外）
-	 * - 無効なファシリティ（非オブジェクト、配列）を削除
-	 * - 無効なEOJキー（非オブジェクト、配列）を削除
-	 * - 無効なEPC値（文字列/null/''以外）を削除
-	 *
-	 * 注: echonet-lite v2.17.2以降でライブラリ側のバグは修正されたが、
-	 * データ品質維持のため本関数は継続使用
-	 *
-	 * @private
-	 */
 	sanitizeFacilities: function () {
 		try {
 			if (!EL.facilities || typeof EL.facilities !== 'object') return;
-
 			for (const ip of Object.keys(EL.facilities)) {
 				const fac = EL.facilities[ip];
-
-				// ファシリティが無効なら削除
 				if (!fac || typeof fac !== 'object' || Array.isArray(fac)) {
 					delete EL.facilities[ip];
 					continue;
 				}
-
-				// 既存EOJsの異常値を収集（後で再構築するのでここでは削除しない）
-				let invalidEOJs = [];
+				// EOJs配列を文字列のみにフィルタ
 				if (Array.isArray(fac.EOJs)) {
-					for (const e of fac.EOJs) {
-						if (typeof e !== 'string' || e.length !== 6 || !/^[0-9a-fA-F]{6}$/.test(e)) {
-							invalidEOJs.push(e);
-						}
-					}
-				} else if (fac.EOJs !== undefined) {
-					// EOJsが配列以外の型だった
-					invalidEOJs.push('(non-array)');
+					fac.EOJs = fac.EOJs.filter((x) => typeof x === 'string' && x.length === 6);
+				} else {
+					fac.EOJs = [];
 				}
-
-				// 不正なEOJキーを施設オブジェクト内から削除しつつ、正しいEOJ候補を再構築
-				let rebuilt = [];
-				for (const maybeEOJ of Object.keys(fac)) {
-					if (maybeEOJ === 'EOJs') continue;
-					const props = fac[maybeEOJ];
-					// EOJの基本条件: 6桁16進文字列 & 値はオブジェクト(プロパティマップ)
-					if (/^[0-9a-fA-F]{6}$/.test(maybeEOJ) && props && typeof props === 'object' && !Array.isArray(props)) {
-						// ライブラリのcomplementFacilities_subが props['9f'].match() を呼ぶため、
-						// '9f'がundefinedのEOJキーはfacオブジェクト自体から削除（ライブラリがObject.keys(node)で直接取得するため）
-						if (props['9f'] === undefined) {
-							if (config && config.debug) {
-								console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), `| mainEL.sanitizeFacilities ip=${ip} deleting EOJ=${maybeEOJ} (no '9f' property)`);
-							}
-							delete fac[maybeEOJ];
-						} else {
-							rebuilt.push(maybeEOJ);
-						}
-					} else {
-						// EOJ形式でないキーは全て削除（'EOJs'や'EOJS'なども含む。後で配列として上書きするため）
-						if (config && config.debug) {
-							console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), `| mainEL.sanitizeFacilities ip=${ip} deleting invalid key=${maybeEOJ}`);
-						}
-						delete fac[maybeEOJ];
-					}
-				}
-				// ソートして安定化し、配列として上書き（オブジェクトではなく純粋な配列にする）
-				fac.EOJs = rebuilt.sort();
-
-				// デバッグログ（差分を確認）
-				if (config && config.debug) {
-					if (invalidEOJs.length > 0) {
-						console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), `| mainEL.sanitizeFacilities ip=${ip} invalidEOJs=`, invalidEOJs);
-					}
-					// 施設に存在するキーなのにEOJsに含まれなかったもの（形が悪いor値型不正）
-					const missingListed = Object.keys(fac).filter(k => k !== 'EOJs' && /^[0-9a-fA-F]{6}$/.test(k) && !fac.EOJs.includes(k));
-					if (missingListed.length > 0) {
-						console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), `| mainEL.sanitizeFacilities ip=${ip} excludedEOJs=`, missingListed);
-					}
-				}
-
-				// 各EOJキー(例: "028801")配下のEPCプロパティを検証
-				for (const eojKey of Object.keys(fac)) {
-					if (eojKey === 'EOJs') continue;
-
-					const epcMap = fac[eojKey];
-
-					// EPCマップがオブジェクトでなければ削除
-					if (!epcMap || typeof epcMap !== 'object' || Array.isArray(epcMap)) {
-						delete fac[eojKey];
+				// 各EOJキー（例: "028801"）配下のプロパティマップをサニタイズ
+				for (const key of Object.keys(fac)) {
+					if (key === 'EOJs') continue;
+					const val = fac[key];
+					// complementFacilities内部でval[epc].matchを呼ぶ想定なので、オブジェクトでない場合削除
+					if (!val || typeof val !== 'object' || Array.isArray(val)) {
+						delete fac[key];
 						continue;
 					}
-
-					// 各EPCキー(例: "9f")の値を検証し、文字列以外は削除
-					// ライブラリが props[epc].match(/.{2}/g) を呼ぶため、文字列型必須
-					for (const epcKey of Object.keys(epcMap)) {
-						const epcValue = epcMap[epcKey];
-						if (epcValue !== null && epcValue !== '' && typeof epcValue !== 'string') {
-							delete epcMap[epcKey];
+					// EOJキー配下の各EPCキー（例: "9f"）の値が文字列でないなら削除（.match呼び出しエラー回避）
+					for (const epcKey of Object.keys(val)) {
+						if (val[epcKey] !== null && val[epcKey] !== '' && typeof val[epcKey] !== 'string') {
+							delete val[epcKey];
 						}
 					}
 				}

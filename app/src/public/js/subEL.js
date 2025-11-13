@@ -52,7 +52,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-	/** 
+	/**
 	 * @func
 	 * @memberof window
 	 * @desc EL デバイス情報のrenew、mainからの情報で，EL関係のhtmlを変更する
@@ -100,7 +100,7 @@ window.addEventListener('DOMContentLoaded', function () {
 				} catch (error) {
 					console.error('Error: subEL.window.renewFacilitiesEL() control tab, error:', error);
 					console.error('ip:', ip, 'eoj:', eoj);
-					detailDoc += '</dl></td></tr>';
+					// detailDocはまだ定義されていないため、エラーログのみ出力
 				}
 			});
 		});
@@ -153,7 +153,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	}
 
 	//----------------------------------------------------------------------------------------------
-	/** 
+	/**
 	 * @func window.btnELConfigSet_Click
 	 * @desc ECHONET Lite Config
 	 * @param {void}
@@ -183,7 +183,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
+	/**
 	 * @func window.ELConfigSaved
 	 * @desc 設定完了通知
 	 * @param {void}
@@ -196,7 +196,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast('Info', 'EL 設定を保存しました。');
 	};
 
-	/** 
+	/**
 	 * @func window.renewELConfigView
 	 * @desc mainプロセスから設定値をもらったので画面を更新
 	 * @param {void}
@@ -223,7 +223,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-	/** 
+	/**
 	 * @type {HTMLElement}
 	 * @listens multicastSearch#click
 	 * @event multicastSearch#click
@@ -237,7 +237,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	//----------------------------------------------------------------------------------------------
 	// サブメータ関連
 
-	/** 
+	/**
 	 * @func convRT
 	 * @desc R相、T相を数値に
 	 * @memberof subEL
@@ -250,7 +250,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
+	/**
 	 * @fires window.renewSubESM
 	 * @desc window.renewSubESM
 	 * @param {void}
@@ -436,7 +436,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//////////////////////////////////////////////////////////////////
-	/** 
+	/**
 	 * @func window.renewEnergySubmeter
 	 * @desc データをもらって画面更新
 	 * @param {void}
