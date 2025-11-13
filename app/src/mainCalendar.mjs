@@ -166,6 +166,7 @@ let mainCalendar = {
 
 		axios.get(mainCalendar.holidaysURL).then((res) => {
 			const csv = res.data;
+			fs.writeFile(path.join(databaseDir, "syukujitsu.csv"), csv, (err) => {
 				if (err) {
 					console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.getHolidays() syukujitsu.csv is NOT saved. error:', err);
 					return;
