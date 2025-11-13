@@ -489,10 +489,158 @@
 				<div class="tab_content" id="divWearable_tab"> <!-- Wearableタブ開始 -->
 					<h2 id="H2Garmin">
 						Garmin
+						<span class="f_right">
+							<a href="#" onClick="document.getElementById('configTab').checked=true; location.hash='HALConfig'; document.getElementById('HALConfigDetail').open=true;">
+								<i class="fa-solid fa-gear right"></i>
+							</a>
+						</span>
 					</h2>
-					<div id="divGarmin"></div>
-				</div> <!-- Wearableタブ終了 -->
 
+					<!-- Garminデータ表示エリア -->
+					<div id="divGarmin" class="p">
+
+						<!-- 睡眠グラフ -->
+						<div class="chart-container">
+							<h3><i class="fa-solid fa-bed"></i> 睡眠データ</h3>
+							<div class="LinearLayoutParent_split">
+								<div class="LinearLayoutChild_left">
+									<div id="sleepInfo" class="chart-info">
+										<p>総睡眠時間: <span id="totalSleep">--</span></p>
+										<p>深い睡眠: <span id="deepSleep">--</span></p>
+										<p>浅い睡眠: <span id="lightSleep">--</span></p>
+										<p>REM睡眠: <span id="remSleep">--</span></p>
+										<p>覚醒時間: <span id="awakeTime">--</span></p>
+									</div>
+								</div>
+								<div class="LinearLayoutChild_right">
+									<canvas id="sleepChart" class="canGarminChart"></canvas>
+								</div>
+							</div>
+						</div>
+
+						<!-- ストレス・ボディバッテリーグラフ -->
+						<div class="chart-container">
+							<h3><i class="fa-solid fa-heart-pulse"></i> ストレス・ボディバッテリー</h3>
+							<div class="LinearLayoutParent_split">
+								<div class="LinearLayoutChild_left">
+									<div id="stressInfo" class="chart-info">
+										<p>平均ストレス: <span id="avgStress">--</span></p>
+										<p>最大ストレス: <span id="maxStress">--</span></p>
+										<p>現在ボディバッテリー: <span id="currentBodyBattery">--</span></p>
+									</div>
+								</div>
+								<div class="LinearLayoutChild_right">
+									<canvas id="stressChart" class="canGarminChart"></canvas>
+								</div>
+							</div>
+						</div>
+
+						<!-- 心拍数グラフ -->
+						<div class="chart-container">
+							<h3><i class="fa-solid fa-heartbeat"></i> 心拍数データ</h3>
+							<div class="LinearLayoutParent_split">
+								<div class="LinearLayoutChild_left">
+									<div id="heartRateInfo" class="chart-info">
+										<p>安静時心拍数: <span id="restingHeartRate">--</span> bpm</p>
+										<p>平均心拍数: <span id="avgHeartRate">--</span> bpm</p>
+										<p>最大心拍数: <span id="maxHeartRate">--</span> bpm</p>
+									</div>
+								</div>
+								<div class="LinearLayoutChild_right">
+									<canvas id="heartRateChart" class="canGarminChart"></canvas>
+								</div>
+							</div>
+						</div>
+
+						<!-- アクティビティデータ -->
+						<div class="chart-container">
+							<h3><i class="fa-solid fa-running"></i> アクティビティ</h3>
+							<div class="LinearLayoutParent_split">
+								<div class="LinearLayoutChild_left">
+									<div id="activityInfo" class="chart-info">
+										<p>歩数: <span id="steps">--</span></p>
+										<p>距離: <span id="distance">--</span></p>
+										<p>消費カロリー: <span id="calories">--</span></p>
+										<p>活動時間: <span id="activeTime">--</span></p>
+									</div>
+								</div>
+								<div class="LinearLayoutChild_right">
+									<canvas id="activityChart" class="canGarminChart"></canvas>
+								</div>
+							</div>
+						</div>
+
+						<!-- 血中酸素濃度グラフ -->
+						<div class="chart-container">
+							<h3><i class="fa-solid fa-lungs"></i> 血中酸素濃度 (SpO2)</h3>
+							<div class="LinearLayoutParent_split">
+								<div class="LinearLayoutChild_left">
+									<div id="pulseoxInfo" class="chart-info">
+										<p>平均SpO2: <span id="avgSpO2">--</span></p>
+										<p>最小SpO2: <span id="minSpO2">--</span></p>
+										<p>最大SpO2: <span id="maxSpO2">--</span></p>
+									</div>
+								</div>
+								<div class="LinearLayoutChild_right">
+									<canvas id="pulseoxChart" class="canGarminChart"></canvas>
+								</div>
+							</div>
+						</div>
+
+						<!-- フィットネス指標グラフ -->
+						<div class="chart-container">
+							<h3><i class="fa-solid fa-dumbbell"></i> フィットネス指標</h3>
+							<div class="LinearLayoutParent_split">
+								<div class="LinearLayoutChild_left">
+									<div id="userMetricsInfo" class="chart-info">
+										<p>VO2Max: <span id="vo2MaxValue">--</span></p>
+										<p>フィットネス年齢: <span id="fitnessAgeValue">--</span></p>
+									</div>
+								</div>
+								<div class="LinearLayoutChild_right">
+									<canvas id="userMetricsChart" class="canGarminChart"></canvas>
+								</div>
+							</div>
+						</div>
+
+						<!-- 自動検出アクティビティグラフ -->
+						<div class="chart-container">
+							<h3><i class="fa-solid fa-person-walking"></i> 自動検出アクティビティ (MoveIQ)</h3>
+							<div class="LinearLayoutParent_split">
+								<div class="LinearLayoutChild_left">
+									<div id="moveIQInfo" class="chart-info">
+										<p>アクティビティタイプ: <span id="moveIQActivityType">--</span></p>
+										<p>継続時間: <span id="moveIQDuration">--</span></p>
+									</div>
+								</div>
+								<div class="LinearLayoutChild_right">
+									<canvas id="moveIQChart" class="canGarminChart"></canvas>
+								</div>
+							</div>
+						</div>
+
+
+
+
+
+
+
+					</div>
+
+					<!-- Garminデータが未設定の場合の案内 -->
+					<div id="divGarminSuggest" class="none">
+						<h3><i class="fa-solid fa-watch"></i> Garminデータ</h3>
+						<div class='LinearLayoutParent'>
+							<div class='LinearLayoutChild'>
+								<section>
+									<strong>HAL CloudでGarmin連携を設定すると表示されます。</strong><br>
+									<button onclick="document.getElementById('configTab').checked=true; location.hash='HALConfig'; document.getElementById('HALConfigDetail').open=true;">設定はこちら</button>
+								</section>
+							</div>
+						</div>
+					</div>
+
+				</div> <!-- Wearableタブ終了 -->
 
 				<!-- HAL タブ開始 -->
 				<div class="haltab_content" id="divHal_tab">
