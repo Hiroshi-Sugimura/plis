@@ -1154,6 +1154,67 @@ td.holiday {
 }
 
 
+/* Garminグラフ用スタイル */
+.chart-container {
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.chart-container h3 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    color: #333;
+    font-size: 1.2em;
+    border-bottom: 2px solid #9e2f3a;
+    padding-bottom: 8px;
+}
+
+.canGarminChart {
+    max-height: 300px;
+    width: 100%;
+}
+
+.chart-info {
+    padding: 10px;
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.chart-info p {
+    margin: 8px 0;
+    font-size: 0.95em;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.chart-info span {
+    font-weight: bold;
+    color: #007bff;
+    font-size: 1.1em;
+}
+
+
+@media screen and (max-width: 768px) {
+    .LinearLayoutParent_split {
+        flex-direction: column;
+    }
+
+    .LinearLayoutChild_left,
+    .LinearLayoutChild_right {
+        width: 100%;
+    }
+
+    .canGarminChart {
+        max-height: 250px;
+    }
+}
+
 /*********************************************************************
 	EOF
  *********************************************************************/
