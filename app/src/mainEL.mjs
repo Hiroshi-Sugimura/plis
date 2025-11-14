@@ -533,9 +533,12 @@ let mainEL = {
 
 	/**
 	 * EL.facilities の最低限の健全性を確保する簡易サニタイズ。
-	 * 不正なエントリや非オブジェクト/未定義を削除し、EOJs配列を文字列のみに制限。
+	 * 不正なエントリや非オブジェクト/未定義を削除し、6桁hexではないEOJキーを除去。
 	 * 各EOJキー配下の不正データ（非オブジェクト/配列）も除去する。
 	 * complementFacilities_sub内部でprops[epc].matchを呼ぶ前提なので、EPCキーの値が文字列でないものも削除。
+	 *
+	 * 注意: raw EL.facilities[ip] 直下には EOJ (6桁hex) のみを配置し、
+	 * 管理用キー（EOJs等）は置かない（ELconv.refer の前提に合わせる）。
 	 */
 	sanitizeFacilities: function () {
 		try {
@@ -546,15 +549,13 @@ let mainEL = {
 					delete EL.facilities[ip];
 					continue;
 				}
-				// EOJs配列を文字列のみにフィルタ
-				if (Array.isArray(fac.EOJs)) {
-					fac.EOJs = fac.EOJs.filter((x) => typeof x === 'string' && x.length === 6);
-				} else {
-					fac.EOJs = [];
-				}
-				// 各EOJキー（例: "028801"）配下のプロパティマップをサニタイズ
+				// 各EOJキー（6桁hexのみ有効）配下のプロパティマップをサニタイズ
 				for (const key of Object.keys(fac)) {
-					if (key === 'EOJs') continue;
+					// 6桁hexでないキーは削除（管理用キー "EOJs" など、refer の前提外なので除去）
+					if (!/^[0-9a-fA-F]{6}$/.test(key)) {
+						delete fac[key];
+						continue;
+					}
 					const val = fac[key];
 					// complementFacilities内部でval[epc].matchを呼ぶ想定なので、オブジェクトでない場合削除
 					if (!val || typeof val !== 'object' || Array.isArray(val)) {

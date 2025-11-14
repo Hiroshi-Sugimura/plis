@@ -87,6 +87,10 @@ window.addEventListener('DOMContentLoaded', function () {
 
 			let EOJs = facilitiesEL[ip].EOJs;
 			EOJs.forEach((eoj) => {
+				// ガード: 不正なEOJ要素はスキップ（null/型不正/括弧内6桁なし）
+				if (!eoj || typeof eoj !== 'string' || !/\([0-9a-fA-F]{6}\)/.test(eoj)) {
+					return;
+				}
 				// console.log('-- IP', ip, 'EOJ', eoj);
 				try {
 					let obj = eoj.split(/\(|\)/);  // マルかっこで分割
@@ -117,6 +121,10 @@ window.addEventListener('DOMContentLoaded', function () {
 
 			let EOJs = facilitiesEL[ip].EOJs;
 			EOJs.forEach((eoj) => {
+				// ガード: 不正なEOJ要素はスキップ
+				if (!eoj || typeof eoj !== 'string' || !/\([0-9a-fA-F]{6}\)/.test(eoj)) {
+					return;
+				}
 				try {
 					let obj = eoj.split(/\(|\)/);  // (と)で分割
 
@@ -125,6 +133,9 @@ window.addEventListener('DOMContentLoaded', function () {
 					detailDoc += '<td class="edt">\n<dl>';
 
 					// EDT
+					if (!facilitiesEL[ip] || !facilitiesEL[ip][eoj] || !Array.isArray(facilitiesEL[ip][eoj].EPCs)) {
+						return;
+					}
 					let EPCs = facilitiesEL[ip][eoj].EPCs;
 
 					EPCs.forEach((epc) => {
