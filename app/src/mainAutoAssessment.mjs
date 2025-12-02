@@ -10,7 +10,6 @@
 // 基本ライブラリ
 import Store from 'electron-store';
 import cron from 'node-cron';
-import * as dateUtils from 'date-utils';
 import moment from 'moment';
 import { sqlite3, Op, IOT_MajorResultsModel, IOT_MinorResultsModel, switchBotDataModel, IOT_QuestionnaireAnswersModel } from './models/localDBModels.cjs';   // DBデータと連携
 import { mergeDeeply, getToday, getYesterday, roundFloat, checkValue } from './mainSubmodule.cjs';

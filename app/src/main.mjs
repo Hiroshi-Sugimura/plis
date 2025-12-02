@@ -18,7 +18,6 @@ const __dirname = path.dirname(__filename);
 import os from 'os';
 import fs from 'fs';
 import { exec } from 'child_process';
-import * as dateUtils from 'date-utils';
 
 
 //////////////////////////////////////////////////////////////////////

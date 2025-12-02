@@ -10,7 +10,6 @@
 import Store from 'electron-store';
 import http from 'http';
 import cron from 'node-cron';
-import * as dateUtils from 'date-utils';
 import { owmModel, weatherModel } from './models/localDBModels.cjs';   // DBデータと連携
 import { isObjEmpty, mergeDeeply, getNow } from './mainSubmodule.cjs';
 

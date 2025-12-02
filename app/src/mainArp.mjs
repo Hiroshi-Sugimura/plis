@@ -11,7 +11,6 @@
 import Store from 'electron-store';
 import arp from '@network-utils/arp-lookup';
 import cron from 'node-cron';
-import * as dateUtils from 'date-utils';
 import { Sequelize, sqlite3, arpModel } from './models/localDBModels.cjs';   // DBデータと連携
 
 /**

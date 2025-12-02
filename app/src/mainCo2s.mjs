@@ -11,7 +11,6 @@
 import Store from 'electron-store';
 import co2s from 'usb-ud-co2s';
 import cron from 'node-cron';
-import * as dateUtils from 'date-utils';
 import { Sequelize, Op, roomEnvModel } from './models/localDBModels.cjs';   //
 import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 

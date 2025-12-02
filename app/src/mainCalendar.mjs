@@ -11,7 +11,6 @@ import fs from 'fs';
 import axios from 'axios';
 import Store from 'electron-store';
 import cron from 'node-cron';
-import * as dateUtils from 'date-utils';
 import { mergeDeeply } from './mainSubmodule.cjs';
 
 

@@ -16,7 +16,6 @@
 import Store from 'electron-store';
 import { SwitchBotHandler } from 'switchbot-handler';
 import cron from 'node-cron';
-import * as dateUtils from 'date-utils';
 import { Sequelize, Op, switchBotRawModel, switchBotDataModel } from './models/localDBModels.cjs';   //
 import { objectSort, isObjEmpty, mergeDeeply, getToday } from './mainSubmodule.cjs';
 
