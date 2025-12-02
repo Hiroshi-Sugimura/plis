@@ -11,7 +11,8 @@
 import Store from 'electron-store';
 import TF from 'tradfri-handler';
 import cron from 'node-cron';
-import { ikeaRawModel, ikeaDataModel } from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.cjs';   // DBデータと連携
+const { ikeaRawModel, ikeaDataModel } = localDB;
 import { isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 
 /**

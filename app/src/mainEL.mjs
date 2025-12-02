@@ -19,7 +19,8 @@ import EL from 'echonet-lite';
 import ELconv from 'echonet-lite-conv';
 import { mainArp } from './mainArp.mjs';     // arpの管理
 import { mainSystem } from './mainSystem.mjs';     // systemの管理(network部分を利用)
-import { Sequelize, Op, elrawModel, eldataModel, electricEnergyModel } from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.cjs';   // DBデータと連携
+const { Sequelize, Op, elrawModel, eldataModel, electricEnergyModel } = localDB;
 import { objectSort, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 
 
@@ -318,14 +319,14 @@ let mainEL = {
 	 * @returns {Promise<void>}
 	 */
 	sendTodayEnergy: async function () {
-		let arg = {};
+		let arg = [];
 
 		// Ether等でつながるスマート電力量サブメータ
 		if (config.enabled && persist.parsed) {
 			arg = await mainEL.getTodayElectricEnergy_submeter();
 			// config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.getTodayElectricEnergy_submeter() arg:\x1b[32m', arg, '\x1b[0m' ):0;
 
-			if (arg.filter((d) => { return d.instantaneousPower != null }).length) {  // 何もないと [] が来るので、lengthで判定してNodataならフロントに送らない
+			if (Array.isArray(arg) && arg.filter((d) => { return d.instantaneousPower != null }).length) {  // 何もないと [] が来るので、lengthで判定してNodataならフロントに送らない
 				sendIPCMessage('renewTodayElectricEnergy_submeter', JSON.stringify(arg));
 			}
 		}
@@ -723,7 +724,17 @@ let mainEL = {
 					}
 				});
 
-				rows.push({ t: end.toISOString(), v: r[0].dataValues });
+				const v = (Array.isArray(r) && r.length > 0 && r[0] && r[0].dataValues) ? r[0].dataValues : {
+					id: i,
+					avgCommulativeAmountNormal: null,
+					avgCommulativeAmountReverse: null,
+					avgInstantaneousPower: null,
+					avgInstantaneousCurrentsR: null,
+					avgInstantaneousCurrentsT: null,
+					avgCommulativeAmountsFixedTimeNormalPower: null,
+					avgCommulativeAmountsFixedTimeRiversePower: null
+				};
+				rows.push({ t: end.toISOString(), v });
 
 				begin.setMinutes(begin.getMinutes() + 3); // begin + 3min
 				end.setMinutes(begin.getMinutes() + 3); // begin + 3min

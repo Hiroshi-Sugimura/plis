@@ -28,7 +28,8 @@ import Store from 'electron-store';
 import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 import oaw from 'about-window';  // このアプリについて Common JSモジュール対応、デフォルトエクスポート
 const { default: openAboutWindow } = oaw;  // このアプリについて Common JSモジュール対応、オブジェクトのデストラクチャリング
-import { sqlite3 } from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.cjs';   // DBデータと連携
+const { sqlite3 } = localDB;
 import { mainSystem } from './mainSystem.mjs';  // System configの管理
 import { mainAutoAssessment } from './mainAutoAssessment.mjs';  // 成績付け
 import { mainUser } from './mainUser.mjs';     // User configの管理

@@ -11,7 +11,8 @@
 import Store from 'electron-store';
 import cron from 'node-cron';
 import moment from 'moment';
-import { sqlite3, Op, IOT_MajorResultsModel, IOT_MinorResultsModel, switchBotDataModel, IOT_QuestionnaireAnswersModel } from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.cjs';   // DBデータと連携
+const { sqlite3, Op, IOT_MajorResultsModel, IOT_MinorResultsModel, switchBotDataModel, IOT_QuestionnaireAnswersModel } = localDB;
 import { mergeDeeply, getToday, getYesterday, roundFloat, checkValue } from './mainSubmodule.cjs';
 import { mainHALlocal } from './mainHALlocal.mjs';
 

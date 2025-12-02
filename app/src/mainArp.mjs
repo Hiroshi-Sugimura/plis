@@ -11,7 +11,8 @@
 import Store from 'electron-store';
 import arp from '@network-utils/arp-lookup';
 import cron from 'node-cron';
-import { Sequelize, sqlite3, arpModel } from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.cjs';   // DBデータと連携
+const { Sequelize, sqlite3, arpModel } = localDB;
 
 /**
  * @typedef {Object} ArpConfig

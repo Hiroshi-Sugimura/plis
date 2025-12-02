@@ -11,7 +11,8 @@
 import Store from 'electron-store';
 import axios from 'axios';
 import cron from 'node-cron';
-import { Sequelize, Op, netatmoModel, roomEnvModel } from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.cjs';   // DBデータと連携
+const { Sequelize, Op, netatmoModel, roomEnvModel } = localDB;
 import { mergeDeeply } from './mainSubmodule.cjs';
 
 

@@ -8,7 +8,8 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-import { sqlite3, eldataModel, IOT_QuestionnaireAnswersModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_MinorkeyMeansModel, MinorkeyMeansValues } from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.cjs';   // DBデータと連携
+const { sqlite3, eldataModel, IOT_QuestionnaireAnswersModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_MinorkeyMeansModel, MinorkeyMeansValues } = localDB;
 import { Op } from "sequelize";
 import Store from 'electron-store';
 import { getToday, roundFloat } from './mainSubmodule.cjs';
