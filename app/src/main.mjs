@@ -21,8 +21,8 @@ import { exec } from 'child_process';
 
 
 //////////////////////////////////////////////////////////////////////
-// 追加ライブラリ
-import 'date-utils';
+// 追加ライブラリ（date-utils 互換の軽量フォーマッタ）
+import './dateformat.mjs';
 app.disableHardwareAcceleration(); // electron設定とmain window
 import Store from 'electron-store';
 import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';

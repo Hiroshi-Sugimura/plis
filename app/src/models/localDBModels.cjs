@@ -4,6 +4,13 @@
 //////////////////////////////////////////////////////////////////////
 // Require all the stuff
 const { Sequelize, Op } = require('sequelize');
+let dialectModule;
+try {
+	dialectModule = require('sequelize-better-sqlite3');
+} catch (e) {
+	// モジュール未導入の場合は後でインストールされる想定
+	dialectModule = undefined;
+}
 const env = process.env.NODE_ENV || "development";
 
 const path = require('path');
@@ -15,9 +22,11 @@ const configDir = path.join(userHome, appname);
 // Setup sequelize db connection
 const sqlite3 = new Sequelize(
 	'database', '', '', {
-	"dialect": "sqlite",
-	"storage": path.join(configDir, "lifelog.db"),
-	"logging": false
+	dialect: 'sqlite',
+	storage: path.join(configDir, 'lifelog.db'),
+	logging: false,
+	// better-sqlite3 をSequelizeに使わせる
+	dialectModule
 });
 
 // freezeTableNameはモデルに渡した名前を実テーブルにマッピングする際に複数形に変換してしまうのを抑制する
