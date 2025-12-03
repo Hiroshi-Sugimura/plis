@@ -2,7 +2,7 @@
   "name": "PLIS",
   "productName": "PLIS",
   "memo": "publish時にはappx/appxmanifest.xmlのバージョンも変更すること",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Platform for Life Improvement and Support",
   "type": "module",
   "main": "src/main.mjs",
@@ -38,12 +38,9 @@
     "@electron-forge/plugin-auto-unpack-natives": "^7.10.2",
     "@electron-forge/plugin-fuses": "^7.10.2",
     "@electron-forge/publisher-github": "^7.10.2",
-    "@electron/fuses": "^2.0.0",
+    "@electron/fuses": "^1.8.0",
     "electron": "^39.2.4",
     "license-checker": "^25.0.1"
-  },
-  "overrides": {
-    "@electron/fuses": "^1.8.0"
   },
   "dependencies": {
     "electron-squirrel-startup": "^1.0.1",
