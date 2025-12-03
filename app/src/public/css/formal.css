@@ -1265,11 +1265,17 @@ section.dev {
 	text-align: center;
 }
 
+/* 広い画面用のCSSファイル内で修正 */
 .LinearLayoutChild_right {
-	width: calc(100% - 300px);
-	margin: 3px;
-	padding: 1px;
-	text-align: center;
+    margin: 3px;
+    padding: 1px;
+    text-align: center;
+
+    /*キープロパティ */
+    flex: 1;           /* 残りのスペースを全て占有させる */
+    min-width: 0;      /* Flexboxによる幅潰れを防止 */
+    position: relative; /* CanvasのAbsolute配置の基準点 */
+    height: 300px;     /* グラフの高さ固定 (調整可能) */
 }
 
 /* calendar */
@@ -1467,20 +1473,52 @@ td.today {
     font-size: 1.1em;
 }
 
+/*********************************************************************
+    Garmin (Wearable タブ)
+ *********************************************************************/
+#divWearable_tab {
+    --chart-gap: 16px;
+    --chart-height: 320px;
+}
 
-@media screen and (max-width: 768px) {
-    .LinearLayoutParent_split {
-        flex-direction: column;
-    }
+#divWearable_tab .LinearLayoutParent_split {
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr) minmax(0, 2fr);
+    gap: var(--chart-gap);
+    align-items: start;
+}
 
-    .LinearLayoutChild_left,
-    .LinearLayoutChild_right {
-        width: 100%;
-    }
+#divWearable_tab .LinearLayoutChild_left,
+#divWearable_tab .LinearLayoutChild_right {
+    min-width: 0;
+}
 
-    .canGarminChart {
-        max-height: 250px;
-    }
+#divWearable_tab .chart-wrapper {
+    position: relative;
+    width: 100%;
+    height: var(--chart-height);
+}
+
+#divWearable_tab .canGarminChart {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#divWearable_tab #heartRateInfo p {
+    display: grid;
+    grid-template-columns: auto minmax(4em, auto) auto;
+    column-gap: 0.5em;
+    align-items: center;
+}
+
+#divWearable_tab #heartRateInfo span {
+    justify-self: end;
+    text-align: right;
+}
+
+#wearable:checked ~ #divWearable_tab {
+    display: block;
 }
 
 /*********************************************************************
