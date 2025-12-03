@@ -1172,11 +1172,32 @@ td.holiday {
     padding-bottom: 8px;
 }
 
-.canGarminChart {
-    max-height: 300px;
-    width: 100%;
+/* ★ Flex親要素 */
+.LinearLayoutParent_split {
+    display: flex;
 }
 
+/* 左側のFlex子要素 */
+.LinearLayoutChild_left {
+}
+
+/* 右側のFlex子要素（グラフコンテナ） */
+.LinearLayoutChild_right {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    height: 300px;
+    position: relative;
+}
+
+/* canvas 要素 */
+.canGarminChart {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+/* 情報ボックス */
 .chart-info {
     padding: 10px;
     background-color: white;
@@ -1199,20 +1220,53 @@ td.holiday {
     font-size: 1.1em;
 }
 
+/*********************************************************************
+    Garmin (Wearable タブ)
+ *********************************************************************/
+#divWearable_tab {
+    --chart-gap: 12px;
+    --chart-height: 260px;
+}
 
-@media screen and (max-width: 768px) {
-    .LinearLayoutParent_split {
-        flex-direction: column;
-    }
+#divWearable_tab .LinearLayoutParent_split {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--chart-gap);
+    align-items: start;
+}
 
-    .LinearLayoutChild_left,
-    .LinearLayoutChild_right {
-        width: 100%;
-    }
+#divWearable_tab .LinearLayoutChild_left,
+#divWearable_tab .LinearLayoutChild_right {
+    min-width: 0;
+    width: 100%;
+}
 
-    .canGarminChart {
-        max-height: 250px;
-    }
+#divWearable_tab .chart-wrapper {
+    position: relative;
+    width: 100%;
+    height: var(--chart-height);
+}
+
+#divWearable_tab .canGarminChart {
+    width: 100%;
+    height: 100%;
+    display: block;
+}
+
+#divWearable_tab #heartRateInfo p {
+    display: grid;
+    grid-template-columns: auto minmax(4em, auto) auto;
+    column-gap: 0.5em;
+    align-items: center;
+}
+
+#divWearable_tab #heartRateInfo span {
+    justify-self: end;
+    text-align: right;
+}
+
+#wearable:checked ~ #divWearable_tab {
+    display: block;
 }
 
 /*********************************************************************
