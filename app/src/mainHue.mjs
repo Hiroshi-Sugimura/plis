@@ -9,7 +9,8 @@
 // 基本ライブラリ
 import Hue from 'hue-handler';
 import Store from 'electron-store';
-import { Sequelize, sqlite3, huerawModel } from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.cjs';   // DBデータと連携
+const { Sequelize, sqlite3, huerawModel } = localDB;
 import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 import cron from 'node-cron';
 

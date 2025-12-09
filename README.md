@@ -59,6 +59,7 @@ PLISでは多種多様なIoT商品のAPI及びプロトコルを利用してい�
 
 # Logs
 
+- 2.1.0 sqlite3整理
 - 2.0.1 パッケージバージョンアップ、EL検索を同期処理にした
 - 2.0.0 Electronのバージョンアップ対応、ESModulesに対応、electron-forge V6対応
 - 1.1.6 SwitchBotのバッテリー1/4のアイコン修正、内部パッケージ更新、CO2のボタンが効くようにした、CO2のToast修正、CO2のWin update対応、電力スマメのDisable時を設定が消えるbug fix、auto assessmentのbug fix、HAL有効時のMinorkeyMeansValues初期化bug fix

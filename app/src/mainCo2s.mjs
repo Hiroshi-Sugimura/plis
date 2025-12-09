@@ -11,8 +11,8 @@
 import Store from 'electron-store';
 import co2s from 'usb-ud-co2s';
 import cron from 'node-cron';
-import * as dateUtils from 'date-utils';
-import { Sequelize, Op, roomEnvModel } from './models/localDBModels.cjs';   //
+import localDB from './models/localDBModels.cjs';   // DBデータと連携
+const { Sequelize, Op, roomEnvModel } = localDB;
 import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 
 /**
@@ -66,8 +66,12 @@ let mainCo2s = {
 		sendIPCMessage = _sendIPCMessage;
 
 		if (mainCo2s.isRun) {  // 重複起動対策
-			sendIPCMessage("renewCo2sConfigView", config);
-			sendIPCMessage("renewCo2s", persist);
+			if (typeof sendIPCMessage === 'function') {
+				sendIPCMessage("renewCo2sConfigView", config);
+				sendIPCMessage("renewCo2s", persist);
+			} else {
+				config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.start() duplicate-start, sendIPCMessage not initialized') : 0;
+			}
 			mainCo2s.sendTodayRoomEnv();		// 現在のデータを送っておく
 			return;
 		}
@@ -76,7 +80,11 @@ let mainCo2s = {
 		config.place = store.get('config.Co2s.place', config.place);
 		config.debug = store.get('config.Co2s.debug', config.debug);
 		persist = store.get('persist.Co2s', persist);
-		sendIPCMessage("renewCo2sConfigView", config);
+		if (typeof sendIPCMessage === 'function') {
+			sendIPCMessage("renewCo2sConfigView", config);
+		} else {
+			config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.start() sendIPCMessage not initialized') : 0;
+		}
 
 		if (config.enabled == false) {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.start() usb-ud-co2s is disabled.') : 0;
@@ -105,7 +113,11 @@ let mainCo2s = {
 						persist.temperature = sensorData.TMP;
 						persist.humidity = sensorData.HUM;
 						persist.co2 = sensorData.CO2;
-						sendIPCMessage("renewCo2s", persist);
+						if (typeof sendIPCMessage === 'function') {
+							sendIPCMessage("renewCo2s", persist);
+						} else {
+							config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.co2s.start() sendIPCMessage not initialized') : 0;
+						}
 						break;
 				}
 			});
@@ -143,7 +155,11 @@ let mainCo2s = {
 			}
 		});
 
-		sendIPCMessage("renewCo2s", persist);
+		if (typeof sendIPCMessage === 'function') {
+			sendIPCMessage("renewCo2s", persist);
+		} else {
+			config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.start() tail sendIPCMessage not initialized') : 0;
+		}
 		mainCo2s.sendTodayRoomEnv();		// 現在のデータを送っておく
 		mainCo2s.storeJob.start();
 	},
@@ -188,8 +204,12 @@ let mainCo2s = {
 		}
 		await store.set('config.Co2s', config);
 
-		sendIPCMessage("renewCo2sConfigView", config);
-		sendIPCMessage("configSaved", 'Co2s');// 保存したので画面に通知
+		if (typeof sendIPCMessage === 'function') {
+			sendIPCMessage("renewCo2sConfigView", config);
+			sendIPCMessage("configSaved", 'Co2s');
+		} else {
+			config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.setConfig() sendIPCMessage not initialized') : 0;
+		}
 	},
 
 	/** 現在設定取得。
@@ -360,7 +380,11 @@ let mainCo2s = {
 
 		if (config.enabled) {
 			arg = await mainCo2s.getTodayRoomEnv();
-			sendIPCMessage('renewRoomEnvCo2s', JSON.stringify(arg));
+			if (typeof sendIPCMessage === 'function') {
+				sendIPCMessage('renewRoomEnvCo2s', JSON.stringify(arg));
+			} else {
+				config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.sendTodayRoomEnv() sendIPCMessage not initialized') : 0;
+			}
 		} else {
 			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.sendTodayRoomEnv() config.enabled:', config.enabled);
 		}

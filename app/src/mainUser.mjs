@@ -83,8 +83,13 @@ let mainUser = {
 		}
 		await store.set('config.user', config);
 
-		sendIPCMessage("renewUserConfigView", config);
-		sendIPCMessage("configSaved", "User");
+		// sendIPCMessage が未初期化のケース（起動途中/異常終了時）に備えてガード
+		if (typeof sendIPCMessage === 'function') {
+			sendIPCMessage("renewUserConfigView", config);
+			sendIPCMessage("configSaved", "User");
+		} else {
+			config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainUser.setConfig() sendIPCMessage not initialized') : 0;
+		}
 	},
 
 	/** 現在設定取得。

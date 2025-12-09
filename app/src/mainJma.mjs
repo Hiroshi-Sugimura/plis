@@ -11,8 +11,8 @@
 import Store from 'electron-store';
 import request from 'request';
 import cron from 'node-cron';
-import * as dateUtils from 'date-utils';
-import { jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel } from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.cjs';   // DBデータと連携
+const { jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel } = localDB;
 import { isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 
 /**

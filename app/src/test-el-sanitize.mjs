@@ -1,5 +1,5 @@
 // Lightweight runtime check for EL sanitize -> complementFacilities (pure node, no electron-store)
-import 'date-utils';
+import './dateformat.mjs';
 import EL from 'echonet-lite';
 
 // Standalone sanitize function mirror

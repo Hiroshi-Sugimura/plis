@@ -35,10 +35,13 @@ window.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * @Func Window.renewCalendar
 	 * @Desc カレンダー日替わり処理などで更新する
-	 * @Param {Void}
+	 * @Param {String} _cal 祝日データ(省略時は既存データを使用)
 	 * @Return {Void}
 	 */
-	window.renewCalendar = function () {
+	window.renewCalendar = function (_cal) {
+		if (_cal) {
+			holiday = _cal;
+		}
 		let today = new Date();
 		showDate = new Date(today.getFullYear(), today.getMonth(), 1);  // 現在表示位置
 		showProcess(today);

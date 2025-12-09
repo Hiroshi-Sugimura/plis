@@ -10,8 +10,8 @@
 import Store from 'electron-store';
 import omron from 'usb-2jcie-bu';
 import cron from 'node-cron';
-import * as dateUtils from 'date-utils';
-import { Sequelize, Op, roomEnvModel } from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.cjs';   // DBデータと連携
+const { Sequelize, Op, roomEnvModel } = localDB;
 import { mergeDeeply } from './mainSubmodule.cjs';
 
 /**

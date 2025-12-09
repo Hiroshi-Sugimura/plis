@@ -11,7 +11,6 @@ import fs from 'fs';
 import axios from 'axios';
 import Store from 'electron-store';
 import cron from 'node-cron';
-import * as dateUtils from 'date-utils';
 import { mergeDeeply } from './mainSubmodule.cjs';
 
 
@@ -166,6 +165,10 @@ let mainCalendar = {
 
 		axios.get(mainCalendar.holidaysURL).then((res) => {
 			const csv = res.data;
+			// ディレクトリが存在しない場合は作成
+			if (!fs.existsSync(databaseDir)) {
+				fs.mkdirSync(databaseDir, { recursive: true });
+			}
 			fs.writeFile(path.join(databaseDir, "syukujitsu.csv"), csv, (err) => {
 				if (err) {
 					console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.getHolidays() syukujitsu.csv is NOT saved. error:', err);

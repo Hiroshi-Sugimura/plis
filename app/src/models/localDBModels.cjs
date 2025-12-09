@@ -3,7 +3,23 @@
 //  Last updated: 2021.09.24
 //////////////////////////////////////////////////////////////////////
 // Require all the stuff
-const { Sequelize, Op } = require('sequelize');
+let Sequelize, Op;
+try {
+  ({ Sequelize, Op } = require('sequelize'));
+} catch (e) {
+  Sequelize = null;
+  Op = {};
+}
+// Windows ARM や sqlite3未導入環境ではSequelizeのsqlite方言が使えないため、
+// ここで安全にスタブへフォールバックする
+let canUseSequelizeSqlite = !!Sequelize;
+
+// Sequelizeが使えない場合の軽量シム（fn, literal, col）
+const SequelizeShim = {
+	fn: function (name, arg) { return { type: 'fn', name, arg }; },
+	literal: function (val) { return { type: 'literal', val }; },
+	col: function (name) { return { type: 'col', name }; },
+};
 const env = process.env.NODE_ENV || "development";
 
 const path = require('path');
@@ -12,20 +28,49 @@ const appname = 'PLIS';
 const userHome = process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"];
 const configDir = path.join(userHome, appname);
 
-// Setup sequelize db connection
-const sqlite3 = new Sequelize(
-	'database', '', '', {
-	"dialect": "sqlite",
-	"storage": path.join(configDir, "lifelog.db"),
-	"logging": false
-});
+// Setup sequelize db connection (fallback to stub when sqlite3 is unavailable)
+let sqlite3;
+if (canUseSequelizeSqlite) {
+	try {
+		sqlite3 = new Sequelize('database', '', '', {
+			dialect: 'sqlite',
+			storage: path.join(configDir, 'lifelog.db'),
+			logging: false
+		});
+	} catch (e) {
+		console.warn(new Date().toISOString(), '| localDBModels: Sequelize sqlite init failed, fallback to stub:', e.message);
+		canUseSequelizeSqlite = false;
+	}
+}
+
+function makeStubModel(name) {
+	const stub = {
+		create: async function () { return {}; },
+		findAll: async function () { return []; },
+		findOne: async function () { return null; },
+		update: async function () { return [0]; },
+		destroy: async function () { return 0; },
+		bulkCreate: async function () { return []; },
+		sync: async function () { return true; },
+		define: function () { return this; }
+	};
+	return stub;
+}
+
+// When Sequelize sqlite is unavailable, provide a sqlite3 stub with sync()
+if (!canUseSequelizeSqlite) {
+	sqlite3 = {
+		async sync() { return true; },
+		async transaction() { return { commit: async () => {}, rollback: async () => {} }; }
+	};
+}
 
 // freezeTableNameはモデルに渡した名前を実テーブルにマッピングする際に複数形に変換してしまうのを抑制する
 // timestamps: falseを入れておくと，createdAt, updatedAtが勝手に追加されない
 
 //////////////////////////////////////////////////////////////////////
 // eldata
-const eldataModel = sqlite3.define('eldata', {
+const eldataModel = canUseSequelizeSqlite ? sqlite3.define('eldata', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -56,12 +101,12 @@ const eldataModel = sqlite3.define('eldata', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('eldata');
 
 
 //////////////////////////////////////////////////////////////////////
 // elraw
-const elrawModel = sqlite3.define('elraw', {
+const elrawModel = canUseSequelizeSqlite ? sqlite3.define('elraw', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -101,13 +146,13 @@ const elrawModel = sqlite3.define('elraw', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('elraw');
 
 
 
 //////////////////////////////////////////////////////////////////////
 // esm data (電力スマートメータ 解析後データ)
-const esmdataModel = sqlite3.define('esmdata', {
+const esmdataModel = canUseSequelizeSqlite ? sqlite3.define('esmdata', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -135,12 +180,12 @@ const esmdataModel = sqlite3.define('esmdata', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('esmdata');
 
 
 //////////////////////////////////////////////////////////////////////
 // esm raw (電力スマートメータ 通信生データ)
-const esmrawModel = sqlite3.define('esmraw', {
+const esmrawModel = canUseSequelizeSqlite ? sqlite3.define('esmraw', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -171,12 +216,12 @@ const esmrawModel = sqlite3.define('esmraw', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('esmraw');
 
 //////////////////////////////////////////////////////////////////////
 // Electric Energy
 // 基本はスマートメータのデータ、他にはスマート分電盤や他のIoT機器による分電盤計測値等
-const electricEnergyModel = sqlite3.define('ElectricEnergy', {
+const electricEnergyModel = canUseSequelizeSqlite ? sqlite3.define('ElectricEnergy', {
 	id: {
 		type: Sequelize.BIGINT,
 		autoIncrement: true,
@@ -225,13 +270,13 @@ const electricEnergyModel = sqlite3.define('ElectricEnergy', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('ElectricEnergy');
 
 
 
 //////////////////////////////////////////////////////////////////////
 // hueraw
-const huerawModel = sqlite3.define('huerawModel', {
+const huerawModel = canUseSequelizeSqlite ? sqlite3.define('huerawModel', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -244,13 +289,13 @@ const huerawModel = sqlite3.define('huerawModel', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('huerawModel');
 
 
 
 //////////////////////////////////////////////////////////////////////
 // arpTable
-const arpModel = sqlite3.define('arpTable', {
+const arpModel = canUseSequelizeSqlite ? sqlite3.define('arpTable', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -263,11 +308,11 @@ const arpModel = sqlite3.define('arpTable', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('arpTable');
 
 //////////////////////////////////////////////////////////////////////
 // open weather map
-const owmModel = sqlite3.define('owmTable', {
+const owmModel = canUseSequelizeSqlite ? sqlite3.define('owmTable', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -280,12 +325,12 @@ const owmModel = sqlite3.define('owmTable', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('owmTable');
 
 
 //////////////////////////////////////////////////////////////////////
 // netatmo
-const netatmoModel = sqlite3.define('netatmoTable', {
+const netatmoModel = canUseSequelizeSqlite ? sqlite3.define('netatmoTable', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -298,12 +343,12 @@ const netatmoModel = sqlite3.define('netatmoTable', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('netatmoTable');
 
 
 //////////////////////////////////////////////////////////////////////
 // switchBot
-const switchBotRawModel = sqlite3.define('switchBotRawTable', {
+const switchBotRawModel = canUseSequelizeSqlite ? sqlite3.define('switchBotRawTable', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -316,9 +361,9 @@ const switchBotRawModel = sqlite3.define('switchBotRawTable', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('switchBotRawTable');
 
-const switchBotDataModel = sqlite3.define('switchBotDataTable', {
+const switchBotDataModel = canUseSequelizeSqlite ? sqlite3.define('switchBotDataTable', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -345,13 +390,13 @@ const switchBotDataModel = sqlite3.define('switchBotDataTable', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('switchBotDataTable');
 
 
 
 //////////////////////////////////////////////////////////////////////
 // IKEA
-const ikeaRawModel = sqlite3.define('ikeaRawTable', {
+const ikeaRawModel = canUseSequelizeSqlite ? sqlite3.define('ikeaRawTable', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -374,10 +419,10 @@ const ikeaRawModel = sqlite3.define('ikeaRawTable', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('ikeaRawTable');
 
 
-const ikeaDataModel = sqlite3.define('ikeaDataTable', {
+const ikeaDataModel = canUseSequelizeSqlite ? sqlite3.define('ikeaDataTable', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -420,14 +465,14 @@ const ikeaDataModel = sqlite3.define('ikeaDataTable', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('ikeaDataTable');
 
 
 
 
 //////////////////////////////////////////////////////////////////////
 // IOT_QuestionnaireAnswersModel
-const IOT_QuestionnaireAnswersModel = sqlite3.define('IOT_QuestionnaireAnswers', {
+const IOT_QuestionnaireAnswersModel = canUseSequelizeSqlite ? sqlite3.define('IOT_QuestionnaireAnswers', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -676,12 +721,12 @@ const IOT_QuestionnaireAnswersModel = sqlite3.define('IOT_QuestionnaireAnswers',
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('IOT_QuestionnaireAnswers');
 
 
 //////////////////////////////////////////////////////////////////////
 // IOT_MajorResultsModel
-const IOT_MajorResultsModel = sqlite3.define('IOT_MajorResults', {
+const IOT_MajorResultsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MajorResults', {
 	idIOT_MajorResults: {
 		type: Sequelize.BIGINT,
 		autoIncrement: true,
@@ -746,12 +791,12 @@ const IOT_MajorResultsModel = sqlite3.define('IOT_MajorResults', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('IOT_MajorResults');
 
 
 //////////////////////////////////////////////////////////////////////
 // IOT_MinorResultsModel
-const IOT_MinorResultsModel = sqlite3.define('IOT_MinorResults', {
+const IOT_MinorResultsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MinorResults', {
 	idIOT_MinorResults: {
 		type: Sequelize.BIGINT,
 		autoIncrement: true,
@@ -1002,11 +1047,11 @@ const IOT_MinorResultsModel = sqlite3.define('IOT_MinorResults', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('IOT_MinorResults');
 
 //////////////////////////////////////////////////////////////////////
 // IOT_MinorKeyMeansModel
-const IOT_MinorkeyMeansModel = sqlite3.define('IOT_MinorkeyMeans', {
+const IOT_MinorkeyMeansModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MinorkeyMeans', {
 	idIOT_MinorkeyMeans: {
 		type: Sequelize.BIGINT,
 		autoIncrement: true,
@@ -1027,7 +1072,7 @@ const IOT_MinorkeyMeansModel = sqlite3.define('IOT_MinorkeyMeans', {
 }, {
 	freezeTableName: true,
 	timestamps: false
-});
+}) : makeStubModel('IOT_MinorkeyMeans');
 
 
 // MinorKeyMeansModelの格納データ, HAL ver.1
@@ -1091,7 +1136,7 @@ const MinorkeyMeansValues = [
 
 //////////////////////////////////////////////////////////////////////
 // Room Environment data
-const roomEnvModel = sqlite3.define('roomEnv', {
+const roomEnvModel = canUseSequelizeSqlite ? sqlite3.define('roomEnv', {
 	id: {
 		type: Sequelize.BIGINT,
 		autoIncrement: true,
@@ -1140,10 +1185,10 @@ const roomEnvModel = sqlite3.define('roomEnv', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('roomEnv');
 
 // Weather
-const weatherModel = sqlite3.define('weather', {
+const weatherModel = canUseSequelizeSqlite ? sqlite3.define('weather', {
 	id: {
 		type: Sequelize.BIGINT,
 		autoIncrement: true,
@@ -1201,12 +1246,12 @@ const weatherModel = sqlite3.define('weather', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('weather');
 
 
 //////////////////////////////////////////////////////////////////////
 // jma data (気象庁天気予報データ、受信データそのまま)
-const jmaRawModel = sqlite3.define('jmaRaw', {
+const jmaRawModel = canUseSequelizeSqlite ? sqlite3.define('jmaRaw', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1231,13 +1276,13 @@ const jmaRawModel = sqlite3.define('jmaRaw', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('jmaRaw');
 
 
 
 //////////////////////////////////////////////////////////////////////
 // jma data (気象庁天気予報データ、概要）
-const jmaAbstModel = sqlite3.define('jmaAbst', {
+const jmaAbstModel = canUseSequelizeSqlite ? sqlite3.define('jmaAbst', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1265,11 +1310,11 @@ const jmaAbstModel = sqlite3.define('jmaAbst', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('jmaAbst');
 
 
 // jma data (気象庁天気予報データ、詳細：天気)
-const weatherForecastModel = sqlite3.define('jmaWeatherForecast', {
+const weatherForecastModel = canUseSequelizeSqlite ? sqlite3.define('jmaWeatherForecast', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1306,11 +1351,11 @@ const weatherForecastModel = sqlite3.define('jmaWeatherForecast', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('jmaWeatherForecast');
 
 
 // jma data (気象庁天気予報データ、詳細：降水確率)
-const popsForecastModel = sqlite3.define('jmaPopsForecast', {
+const popsForecastModel = canUseSequelizeSqlite ? sqlite3.define('jmaPopsForecast', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1338,10 +1383,10 @@ const popsForecastModel = sqlite3.define('jmaPopsForecast', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('jmaPopsForecast');
 
 // jma data (気象庁天気予報データ、詳細：気温)
-const tempForecastModel = sqlite3.define('jmaTempForecast', {
+const tempForecastModel = canUseSequelizeSqlite ? sqlite3.define('jmaTempForecast', {
 	id: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1369,14 +1414,14 @@ const tempForecastModel = sqlite3.define('jmaTempForecast', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('jmaTempForecast');
 
 
 //////////////////////////////////////////////////////////////////////
 // Garmin
 
 // garmin healsh api
-const IOT_GarminDailiesModel = sqlite3.define('IOT_GarminDailies', {
+const IOT_GarminDailiesModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminDailies', {
 	idIOT_GarminDailies: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1421,9 +1466,9 @@ const IOT_GarminDailiesModel = sqlite3.define('IOT_GarminDailies', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('IOT_GarminDailies');
 
-const IOT_GarminStressDetailsModel = sqlite3.define('IOT_GarminStressDetails', {
+const IOT_GarminStressDetailsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminStressDetails', {
 	idIOT_GarminStressDetails: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1442,10 +1487,10 @@ const IOT_GarminStressDetailsModel = sqlite3.define('IOT_GarminStressDetails', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('IOT_GarminStressDetails');
 
 
-const IOT_GarminEpochsModel = sqlite3.define('IOT_GarminEpochs', {
+const IOT_GarminEpochsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminEpochs', {
 	idIOT_GarminEpochs: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1470,10 +1515,10 @@ const IOT_GarminEpochsModel = sqlite3.define('IOT_GarminEpochs', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('IOT_GarminEpochs');
 
 
-const IOT_GarminSleepsModel = sqlite3.define('IOT_GarminSleeps', {
+const IOT_GarminSleepsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminSleeps', {
 	idIOT_GarminSleeps: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1501,10 +1546,10 @@ const IOT_GarminSleepsModel = sqlite3.define('IOT_GarminSleeps', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('IOT_GarminSleeps');
 
 
-const IOT_GarminUserMetricsModel = sqlite3.define('IOT_GarminUserMetrics', {
+const IOT_GarminUserMetricsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminUserMetrics', {
 	idIOT_GarminUserMetrics: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1520,11 +1565,11 @@ const IOT_GarminUserMetricsModel = sqlite3.define('IOT_GarminUserMetrics', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('IOT_GarminUserMetrics');
 
 
 // garmin activity api
-const IOT_GarminActivitiesModel = sqlite3.define('IOT_GarminActivities', {
+const IOT_GarminActivitiesModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminActivities', {
 	idIOT_GarminActivities: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1554,10 +1599,10 @@ const IOT_GarminActivitiesModel = sqlite3.define('IOT_GarminActivities', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('IOT_GarminActivities');
 
 
-const IOT_GarminActivityDetailsModel = sqlite3.define('IOT_GarminActivityDetails', {
+const IOT_GarminActivityDetailsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminActivityDetails', {
 	idIOT_GarminActivityDetails: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1574,11 +1619,11 @@ const IOT_GarminActivityDetailsModel = sqlite3.define('IOT_GarminActivityDetails
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('IOT_GarminActivityDetails');
 
 
 
-const IOT_GarminMoveIQActivitiesModel = sqlite3.define('IOT_GarminMoveIQActivities', {
+const IOT_GarminMoveIQActivitiesModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminMoveIQActivities', {
 	idIOT_GarminMoveIQActivities: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1597,11 +1642,11 @@ const IOT_GarminMoveIQActivitiesModel = sqlite3.define('IOT_GarminMoveIQActiviti
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('IOT_GarminMoveIQActivities');
 
 
 // 謎API
-const IOT_GarminAllDayRespirationModel = sqlite3.define('IOT_GarminAllDayRespiration', {
+const IOT_GarminAllDayRespirationModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminAllDayRespiration', {
 	idIOT_GarminAllDayRespiration: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1618,10 +1663,10 @@ const IOT_GarminAllDayRespirationModel = sqlite3.define('IOT_GarminAllDayRespira
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('IOT_GarminAllDayRespiration');
 
 
-const IOT_GarminPulseoxModel = sqlite3.define('IOT_GarminPulseox', {
+const IOT_GarminPulseoxModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminPulseox', {
 	idIOT_GarminPulseox: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1640,11 +1685,11 @@ const IOT_GarminPulseoxModel = sqlite3.define('IOT_GarminPulseox', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('IOT_GarminPulseox');
 
 
 // 体重計
-const IOT_GarminBodyCompsModel = sqlite3.define('IOT_GarminBodyComps', {
+const IOT_GarminBodyCompsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminBodyComps', {
 	idIOT_GarminBodyComps: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1665,11 +1710,11 @@ const IOT_GarminBodyCompsModel = sqlite3.define('IOT_GarminBodyComps', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('IOT_GarminBodyComps');
 
 
 // アクティビティファイル
-const IOT_GarminActivityFilesModel = sqlite3.define('IOT_GarminActivityFiles', {
+const IOT_GarminActivityFilesModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminActivityFiles', {
 	idIOT_GarminActivityFiles: {
 		type: Sequelize.INTEGER,
 		autoIncrement: true,
@@ -1688,11 +1733,11 @@ const IOT_GarminActivityFilesModel = sqlite3.define('IOT_GarminActivityFiles', {
 }, {
 	freezeTableName: true,
 	timestamps: true
-});
+}) : makeStubModel('IOT_GarminActivityFiles');
 
 
 // export
-module.exports = { Sequelize, Op, sqlite3, elrawModel, eldataModel, esmdataModel, esmrawModel, electricEnergyModel, huerawModel, arpModel, owmModel, netatmoModel, ikeaRawModel, ikeaDataModel, IOT_QuestionnaireAnswersModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_MinorkeyMeansModel, MinorkeyMeansValues, roomEnvModel, jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel, weatherModel, switchBotRawModel, switchBotDataModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel, IOT_GarminActivityFilesModel };
+module.exports = { Sequelize: Sequelize || SequelizeShim, Op, sqlite3, elrawModel, eldataModel, esmdataModel, esmrawModel, electricEnergyModel, huerawModel, arpModel, owmModel, netatmoModel, ikeaRawModel, ikeaDataModel, IOT_QuestionnaireAnswersModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_MinorkeyMeansModel, MinorkeyMeansValues, roomEnvModel, jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel, weatherModel, switchBotRawModel, switchBotDataModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel, IOT_GarminActivityFilesModel };
 
 //////////////////////////////////////////////////////////////////////
 // EOF
