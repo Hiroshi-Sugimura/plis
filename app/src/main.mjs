@@ -23,7 +23,9 @@ import { exec } from 'child_process';
 //////////////////////////////////////////////////////////////////////
 // 追加ライブラリ（date-utils 互換の軽量フォーマッタ）
 import './dateformat.mjs';
-app.disableHardwareAcceleration(); // electron設定とmain window
+app.commandLine.appendSwitch('ignore-gpu-blocklist');
+app.commandLine.appendSwitch('enable-gpu-rasterization');
+app.commandLine.appendSwitch('enable-zero-copy');
 import Store from 'electron-store';
 import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 import oaw from 'about-window';  // このアプリについて Common JSモジュール対応、デフォルトエクスポート

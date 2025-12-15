@@ -300,7 +300,14 @@ window.addEventListener('DOMContentLoaded', function () {
 			createUserMetricsChart(arg.UserMetrics);
 			createMoveIQChart(arg.MoveIQActivities);
 		}, 100);
-	};
+
+    // ★★★ 追加: 新しいアバターコントローラーに全データを渡す ★★★
+        if (window.avatarController) {
+            window.avatarController.handleGarminData(arg);
+        }
+
+
+    };
 
 	// === グラフ作成関数群 ===
 

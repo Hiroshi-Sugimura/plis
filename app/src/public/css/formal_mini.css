@@ -526,7 +526,7 @@ h4 {
 	background-color: var(--inner-bg);
 	font-size: 100%;
 	border-left: solid 0.1em var(--sub-text);
-	border-bottom: 2px dashed;
+	border-bottom: solid 2px dashed;
 	padding-right: 1em;
 	padding-left: 0.5em;
 	margin-top: 0.5em;
@@ -542,7 +542,7 @@ h5 {
 	background-color: var(--inner-bg);
 	font-size: 100%;
 	border-left: solid 0.1em var(--sub-text);
-	border-bottom: 2px dashed;
+	border-bottom: solid 2px dashed;
 	padding-right: 1em;
 	padding-left: 0.5em;
 	margin-left: 1.3em;
@@ -1172,6 +1172,7 @@ td.holiday {
     padding-bottom: 8px;
 }
 
+
 /* ★ Flex親要素 */
 .LinearLayoutParent_split {
     display: flex;
@@ -1269,6 +1270,86 @@ td.holiday {
     display: block;
 }
 
+
+
+/* =========================================================================
+   Wearable: アバター表示専用スタイル（モバイル）
+   ========================================================================= */
+#divWearable_tab .avatar-section {
+    grid-column: 1 / -1;
+    margin: 20px 0;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#divWearable_tab .avatar-section__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+#btnLoadAvatarWearable {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+#divWearable_tab .avatar-section__wrapper {
+    height: 260px;
+    min-height: 260px;
+    background: #ffffff;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+}
+
+#divWearable_tab .avatar-section__canvas {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#avatarViewportWearable {
+    position: absolute;
+    inset: 0;
+    background-color: #f7f9fd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+#avatarViewportWearable > canvas,
+#avatarViewportWearable > .loading-indicator,
+#avatarViewportWearable > .avatar-placeholder-wearable {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.loading-indicator {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    color: #667eea;
+}
+
+.avatar-placeholder-wearable {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    color: #4a5568;
+    background: #f7f9fd;
+    text-align: center;
+}
 /*********************************************************************
 	EOF
  *********************************************************************/

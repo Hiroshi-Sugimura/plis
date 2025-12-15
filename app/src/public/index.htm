@@ -9,7 +9,12 @@
 
 <head>
 	<meta charset="utf-8">
-	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline';script-src 'self' 'unsafe-inline';img-src 'self' http://openweathermap.org/  https://www.jma.go.jp/ data: base64" />
+	<meta http-equiv="Content-Security-Policy"
+      content="default-src 'self';
+               style-src 'self' 'unsafe-inline';
+               script-src 'self' 'unsafe-inline';
+               img-src 'self' http://openweathermap.org/ https://www.jma.go.jp/ data: base64;
+               connect-src 'self' blob:;" />
 
 	<title>PLIS</title>
 	<link rel="stylesheet" type="text/css" media="screen" href="./css/style.css" />
@@ -525,24 +530,6 @@
 							</div>
 						</div>
 
-						<!-- ストレス・ボディバッテリーグラフ -->
-						<div class="chart-container">
-							<h3><i class="fa-solid fa-heart-pulse"></i> ストレス・ボディバッテリー</h3>
-							<div class="LinearLayoutParent_split">
-								<div class="LinearLayoutChild_left">
-									<div id="stressInfo" class="chart-info">
-										<p>平均ストレス: <span id="avgStress">--</span></p>
-										<p>最大ストレス: <span id="maxStress">--</span></p>
-										<p>現在ボディバッテリー: <span id="currentBodyBattery">--</span></p>
-									</div>
-								</div>
-								<div class="LinearLayoutChild_right">
-									<div class="chart-wrapper">
-									<canvas id="stressChart" class="canGarminChart"></canvas>
-									</div>
-								</div>
-							</div>
-						</div>
 
 						<!-- 心拍数グラフ -->
 						<div class="chart-container">
@@ -640,8 +627,31 @@
 
 
 
-
-
+          <!-- ストレス -->
+						<section class="avatar-section">
+                            <header class="avatar-section__header">
+                                <h3><i class="fa-solid fa-heart-pulse"></i> ストレス</h3>
+                                <button id="btnLoadAvatarWearable" class="btn-advice">
+                                    <i class="fa-solid fa-upload"></i> VRM読み込み
+                                </button>
+                                <input type="file" id="fileAvatarInputWearable" accept=".vrm" class="none">
+                            </header>
+                            <div id="avatarWrapper" class="avatar-section__wrapper">
+                                <div id="avatarContainer" class="avatar-section__canvas">
+                                    <div id="avatarViewportWearable">
+                                        <canvas id="avatarCanvasWearable"></canvas>
+                                        <div class="loading-indicator none" id="avatarLoadingWearable">
+                                            <i class="fa-solid fa-spinner fa-spin"></i>
+                                            <p>読み込み中...</p>
+                                        </div>
+                                        <div class="avatar-placeholder-wearable" id="avatarPlaceholderWearable">
+                                            <i class="fa-solid fa-person"></i>
+                                            <p>VRMファイルを読み込んでください</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </section>
 
 
 					</div>
@@ -758,6 +768,11 @@
 								</tr>
 								<tr>
 									<td class="hal"><i class="fa-solid fa-house"></i> <span class="omitable">住居</span>
+									</td>
+									<td class="hal">
+										<div id="divHousing" class="inline, right"></div>
+									</td>
+									<td>
 									</td>
 									<td class="hal">
 										<div id="divHousing" class="inline, right"></div>
@@ -2008,6 +2023,7 @@
 	delete window.module;
 </script>
 
+<script type="module" src="./js/3d/main.js"></script>
 <!-- 3rd party's module -->
 <script src="./js/@fortawesome/fontawesome-free/js/all.js"></script>
 <script src="./js/footerFixed.js"></script>
@@ -2021,6 +2037,7 @@
 <script src="./js/subCalendar.js"></script>
 
 <!-- our module -->
+<script src="./js/avatarController.js"></script>
 <script src="./js/subLog.js"></script>
 <script src="./js/subToast.js"></script>
 <script src="./js/subSystem.js"></script>

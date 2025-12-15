@@ -1521,6 +1521,88 @@ td.today {
     display: block;
 }
 
+
+
+/* ========================================================================= */
+/* Wearable: アバター表示専用スタイル - 高さ修正版 (450px)
+   ========================================================================= */
+
+#divWearable_tab .avatar-section {
+ grid-column: 1 / -1;
+ margin: 20px 0;
+ padding: 20px;
+ background: #f9f9f9;
+ border-radius: 8px;
+ box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+#divWearable_tab .avatar-section__header {
+ display: flex;
+ align-items: center;
+ justify-content: space-between;
+ gap: 12px;
+ margin-bottom: 12px;
+}
+
+#btnLoadAvatarWearable {
+ display: inline-flex;
+ align-items: center;
+ gap: 6px;
+}
+
+/* ★★★ 修正箇所: 高さを 350px から 450px へ変更 ★★★ */
+#divWearable_tab .avatar-section__wrapper {
+ height: 600px; /* 足元まで見えるように拡大 */
+ min-height: 600px; /* 最小高さも合わせる */
+ background: #ffffff;
+ border-radius: 6px;
+ position: relative;
+ overflow: hidden;
+}
+
+#divWearable_tab .avatar-section__canvas {
+ position: relative;
+ width: 100%;
+ height: 100%;
+}
+
+#avatarViewportWearable {
+ position: absolute;
+ inset: 0;
+ background-color: #f7f9fd;
+ border-radius: 8px;
+ overflow: hidden;
+}
+
+#avatarViewportWearable > canvas,
+#avatarViewportWearable > .loading-indicator,
+#avatarViewportWearable > .avatar-placeholder-wearable {
+ position: absolute;
+ inset: 0;
+ width: 100%;
+ height: 100%;
+}
+
+.loading-indicator {
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ gap: 8px;
+ color: #667eea;
+}
+
+.avatar-placeholder-wearable {
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ gap: 8px;
+ color: #4a5568;
+ background: #f7f9fd;
+ text-align: center;
+}
+
 /*********************************************************************
 	EOF
  *********************************************************************/
