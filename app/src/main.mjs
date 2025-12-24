@@ -238,6 +238,16 @@ ipcMain.handle('SystemSetConfig', (event, arg) => {
 	config.IPv4 = arg.IPv4;
 	config.IPv6 = arg.IPv6;
 	config.backgroundMode = arg.backgroundMode;
+	config.autoLaunch = arg.autoLaunch;
+	config.autoLaunchHidden = arg.autoLaunchHidden;
+
+	// 自動起動設定
+	app.setLoginItemSettings({
+		openAtLogin: config.autoLaunch,
+		openAsHidden: config.autoLaunchHidden,
+		path: process.execPath,
+		args: config.autoLaunchHidden ? ['--hidden'] : []
+	});
 
 	switch (config.screenMode) {
 		case 'fullscreen':
@@ -601,6 +611,7 @@ ipcMain.handle('SwitchBotControl', async (event, arg) => {
 async function createWindow() {
 	try {
 		mainWindow = new BrowserWindow({
+			show: false,
 			fullscreen: config ? config.screenMode == 'fullscreen' : false,
 			width: config.windowWidth,
 			height: config.windowHeight,
@@ -750,6 +761,19 @@ app.on('ready', async () => {
 	});		// 起動時DBの準備，SQLite の初期化の完了を待つ
 
 	createWindow();
+	// 起動オプション判定
+	// MacのopenAtLoginでopenAsHidden: trueの場合、自動的に非表示で起動するはずだが、念のためチェック
+	const loginItemSettings = app.getLoginItemSettings();
+	const wasOpenedAtLogin = loginItemSettings.wasOpenedAtLogin;
+	const isHiddenStart = process.argv.includes('--hidden') || (wasOpenedAtLogin && config.autoLaunchHidden);
+
+	if (mainWindow) {
+		if (isHiddenStart) {
+			console.log('Start as Hidden');
+		} else {
+			mainWindow.show();
+		}
+	}
 });
 
 function createTray() {
@@ -816,6 +840,7 @@ app.on("activate", () => {
 	// メインウィンドウが消えている場合は再度メインウィンドウを作成する
 	if (mainWindow === null) {
 		createWindow();
+		mainWindow.show();
 	} else {
 		mainWindow.show();
 	}

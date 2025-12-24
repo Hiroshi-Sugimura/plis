@@ -32,6 +32,8 @@ const store = new Store();
  * @property {string} IPv6 IPv6アドレス
  * @property {boolean} debug デバッグログ
  * @property {boolean} backgroundMode 背景モード（閉じるボタンで隠す）
+ * @property {boolean} autoLaunch 自動起動
+ * @property {boolean} autoLaunchHidden 自動起動時にウィンドウを隠す（macOS only）
  */
 /** @type {SystemConfig} */
 let config = {  // config.system
@@ -44,7 +46,9 @@ let config = {  // config.system
 	IPv4: '',
 	IPv6: '',
 	debug: false,
-	backgroundMode: false
+	backgroundMode: false,
+	autoLaunch: false,
+	autoLaunchHidden: false
 };
 
 
@@ -70,6 +74,8 @@ let mainSystem = {
 		config.IPv6 = await store.get('config.system.IPv6', config.IPv6);
 		config.debug = await store.get('config.system.debug', config.debug);
 		config.backgroundMode = await store.get('config.system.backgroundMode', config.backgroundMode);
+		config.autoLaunch = await store.get('config.system.autoLaunch', config.autoLaunch);
+		config.autoLaunchHidden = await store.get('config.system.autoLaunchHidden', config.autoLaunchHidden);
 
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSystem.start()') : 0;
 	},

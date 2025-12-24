@@ -16,6 +16,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	// config
 	let inScreenMode = document.getElementById('inScreenMode');  // スクリーンモード
 	let inBackgroundMode = document.getElementById('inBackgroundMode');  // バックグラウンドモード
+	let inAutoLaunch = document.getElementById('inAutoLaunch');  // 自動起動
+	let inAutoLaunchHidden = document.getElementById('inAutoLaunchHidden');  // 自動起動時隠す
 	let inDebugMode = document.getElementById('inDebugMode');  // デバッグモード
 
 	let inEllogExpireDays = document.getElementById('inEllogExpireDays');  // 家電操作ログの記録日数
@@ -26,6 +28,26 @@ window.addEventListener('DOMContentLoaded', function () {
 	let inIPv4 = document.getElementById('inIPv4');  // IPv4のマルチキャストアドレス
 	let inIPv6 = document.getElementById('inIPv6');  // IPv46のマルチキャストアドレス
 	let btnNetworkConfigSet = document.getElementById('btnNetworkConfigSet'); // 設定ボタン（場所が違うだけで、systemと同じ動作）
+
+	// UI制御関数
+	function updateUIState() {
+		if (!inBackgroundMode.checked) {
+			inAutoLaunch.checked = false;
+			inAutoLaunch.disabled = true;
+		} else {
+			inAutoLaunch.disabled = false;
+		}
+
+		if (!inAutoLaunch.checked) {
+			inAutoLaunchHidden.checked = false;
+			inAutoLaunchHidden.disabled = true;
+		} else {
+			inAutoLaunchHidden.disabled = false;
+		}
+	}
+
+	inBackgroundMode.addEventListener('change', updateUIState);
+	inAutoLaunch.addEventListener('change', updateUIState);
 
 
 	//----------------------------------------------------------------------------------------------
@@ -72,7 +94,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			return;
 		}
 
-		window.ipc.SystemSetConfig(inScreenMode.value, inDebugMode.value == 'true' ? true : false, inEllogExpireDays.value, inResultExpireDays.value, parseInt(inIPver.value), inIPv4.value, inIPv6.value, inBackgroundMode.checked);  // system configの保存
+		window.ipc.SystemSetConfig(inScreenMode.value, inDebugMode.value == 'true' ? true : false, inEllogExpireDays.value, inResultExpireDays.value, parseInt(inIPver.value), inIPv4.value, inIPv6.value, inBackgroundMode.checked, inAutoLaunch.checked, inAutoLaunchHidden.checked);  // system configの保存
 	};
 
 	/** 
@@ -109,7 +131,11 @@ window.addEventListener('DOMContentLoaded', function () {
 
 		inScreenMode.value = arg.screenMode;
 		inBackgroundMode.checked = arg.backgroundMode;
+		inAutoLaunch.checked = arg.autoLaunch;
+		inAutoLaunchHidden.checked = arg.autoLaunchHidden;
 		inDebugMode.value = arg.debug;
+
+		updateUIState();
 		inEllogExpireDays.value = arg.ellogExpireDays;
 		inResultExpireDays.value = arg.resultExpireDays;
 		inIPver.value = arg.IPver;

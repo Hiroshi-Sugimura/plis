@@ -89,8 +89,8 @@ contextBridge.exposeInMainWorld('ipc', {
 	 * @param {void}
 	 * @return void
 	 */
-	SystemSetConfig: (_screenMode, _debug, _elLogExpireDays, _resultExpireDays, _IPver, _IPv4, _IPv6, _backgroundMode) => {
-		ipcRenderer.invoke('SystemSetConfig', { screenMode: _screenMode, debug: _debug, ellogExpireDays: _elLogExpireDays, resultExpireDays: _resultExpireDays, IPver: _IPver, IPv4: _IPv4, IPv6: _IPv6, backgroundMode: _backgroundMode });
+	SystemSetConfig: (_screenMode, _debug, _elLogExpireDays, _resultExpireDays, _IPver, _IPv4, _IPv6, _backgroundMode, _autoLaunch, _autoLaunchHidden) => {
+		ipcRenderer.invoke('SystemSetConfig', { screenMode: _screenMode, debug: _debug, ellogExpireDays: _elLogExpireDays, resultExpireDays: _resultExpireDays, IPver: _IPver, IPv4: _IPv4, IPv6: _IPv6, backgroundMode: _backgroundMode, autoLaunch: _autoLaunch, autoLaunchHidden: _autoLaunchHidden });
 	},
 
 	/**
