@@ -229,15 +229,11 @@ let mainHue = {
 			config.key = await Hue.initialize(config.key, mainHue.received, { debugMode: config.debug });
 			if (config.key == '') {
 				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.start(), cancel or no key.') : 0;
+			} else {
+				mainHue.startObserve();
 			}
 			linked_cb(config.key);
 
-		} catch (e) {
-			console.dir(e);
-		}
-
-		try {
-			mainHue.startObserve();
 		} catch (e) {
 			console.dir(e);
 		}
