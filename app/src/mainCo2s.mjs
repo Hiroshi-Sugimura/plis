@@ -9,6 +9,9 @@
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
 import Store from 'electron-store';
+import fs from 'fs';
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
 import co2s from 'usb-ud-co2s';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.cjs';   // DBデータと連携
@@ -35,6 +38,7 @@ import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSub
  */
 
 let sendIPCMessage = null;
+let lastSendTime = 0;
 const store = new Store();
 
 /** @type {Co2sConfig} */
@@ -63,6 +67,7 @@ let mainCo2s = {
 	 * @param {SendIPCMessage} _sendIPCMessage
 	 */
 	start: function (_sendIPCMessage) {
+		try { fs.appendFileSync('/tmp/plis_debug.log', 'mainCo2s.start() CALLED. isRun:' + mainCo2s.isRun + '\n'); } catch (e) { }
 		sendIPCMessage = _sendIPCMessage;
 
 		if (mainCo2s.isRun) {  // 重複起動対策
@@ -80,6 +85,7 @@ let mainCo2s = {
 		config.place = store.get('config.Co2s.place', config.place);
 		config.debug = store.get('config.Co2s.debug', config.debug);
 		persist = store.get('persist.Co2s', persist);
+		try { fs.appendFileSync('/tmp/plis_debug.log', 'mainCo2s config.enabled: ' + config.enabled + '\n'); } catch (e) { }
 		if (typeof sendIPCMessage === 'function') {
 			sendIPCMessage("renewCo2sConfigView", config);
 		} else {
@@ -94,6 +100,9 @@ let mainCo2s = {
 		mainCo2s.isRun = true;
 
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.start()') : 0;
+		try { fs.appendFileSync('/tmp/plis_debug.log', 'mainCo2s.start() co2s object keys: ' + Object.keys(co2s) + '\n'); } catch (e) { }
+		try { fs.appendFileSync('/tmp/plis_debug.log', 'RESOLVED usb-ud-co2s: ' + require.resolve('usb-ud-co2s') + '\n'); } catch (e) { }
+		try { fs.appendFileSync('/tmp/plis_debug.log', 'co2s.start code: ' + co2s.start.toString() + '\n'); } catch (e) { }
 
 		try {
 			co2s.start((sensorData, error) => {
@@ -114,7 +123,11 @@ let mainCo2s = {
 						persist.humidity = sensorData.HUM;
 						persist.co2 = sensorData.CO2;
 						if (typeof sendIPCMessage === 'function') {
-							sendIPCMessage("renewCo2s", persist);
+							let now = Date.now();
+							if (now - lastSendTime > 1000) { // 1000ms limit
+								sendIPCMessage("renewCo2s", persist);
+								lastSendTime = now;
+							}
 						} else {
 							config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.co2s.start() sendIPCMessage not initialized') : 0;
 						}

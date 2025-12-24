@@ -49,7 +49,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			return;
 		}
 
-		console.log(facilitiesCo2s);
+		// console.log(facilitiesCo2s);
 
 		spanCo2sPlace.innerHTML = inCo2sPlace.value;
 		spanCo2sTime.innerHTML = facilitiesCo2s.time;
