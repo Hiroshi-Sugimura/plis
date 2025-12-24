@@ -71,13 +71,13 @@ let mainNetatmo = {
 			return;
 		}
 
-	config.enabled = store.get('config.Netatmo.enabled', false);
-	config.clientId = store.get('config.Netatmo.clientId', '');
-	config.clientSecret = store.get('config.Netatmo.clientSecret', '');
-	config.refreshToken = store.get('config.Netatmo.refreshToken', '');
-	config.debug = store.get('config.Netatmo.debug', false);
-	// 旧バージョンのaccessToken永続値は読まない＆削除して整理
-	try { store.delete('config.Netatmo.accessToken'); } catch (_) {}
+		config.enabled = store.get('config.Netatmo.enabled', false);
+		config.clientId = store.get('config.Netatmo.clientId', '');
+		config.clientSecret = store.get('config.Netatmo.clientSecret', '');
+		config.refreshToken = store.get('config.Netatmo.refreshToken', '');
+		config.debug = store.get('config.Netatmo.debug', false);
+		// 旧バージョンのaccessToken永続値は読まない＆削除して整理
+		try { store.delete('config.Netatmo.accessToken'); } catch (_) { }
 		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() config loaded from store:\x1b[32m', config, '\x1b[0m') : 0;
 		sendIPCMessage("renewNetatmoConfigView", config);
 
@@ -215,7 +215,7 @@ let mainNetatmo = {
 				config.refreshToken = '';
 				mainNetatmo.accessToken = null;
 				mainNetatmo.tokenExpires = null;
-				try { await store.set('config.Netatmo.refreshToken', ''); } catch (_) {}
+				try { await store.set('config.Netatmo.refreshToken', ''); } catch (_) { }
 				if (sendIPCMessage) {
 					sendIPCMessage('NetatmoAuthError', 'Refresh Tokenが無効です。Netatmo開発者ポータルで新しいRefresh Tokenを生成して設定してね');
 					sendIPCMessage('renewNetatmoConfigView', config);
@@ -236,9 +236,9 @@ let mainNetatmo = {
 	fetchStationsData: async function (isRetry = false) {
 		if (!mainNetatmo.accessToken) {
 			// accessTokenが無いならリフレッシュ実行
-			await mainNetatmo.refreshAccessToken();
+			// await mainNetatmo.refreshAccessToken();
 		}
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.fetchStationsData() using accessToken (masked)') : 0;
+		// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.fetchStationsData() using accessToken (masked)') : 0;
 		try {
 			const res = await axios.get('https://api.netatmo.com/api/getstationsdata', {
 				headers: {
@@ -491,7 +491,7 @@ let mainNetatmo = {
 		// 監視はcronで実施、1分毎
 		mainNetatmo.observationJob = cron.schedule('*/1 * * * *', async () => {
 			try {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.cron.schedule() every 1min') : 0;
+				// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.cron.schedule() every 1min') : 0;
 
 				// トークンが無い/期限切れなら再取得
 				if (!mainNetatmo.accessToken || (mainNetatmo.tokenExpires && Date.now() > mainNetatmo.tokenExpires - 60000)) {
