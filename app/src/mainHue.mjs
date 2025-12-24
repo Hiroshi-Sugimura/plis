@@ -259,7 +259,11 @@ let mainHue = {
 
 		// Hue.facilitiesの定期的監視，変化があればUIに送る
 		mainHue.task = cron.schedule('0 */1 * * * *', async () => {  // １分毎
-			await Hue.getState();
+			try {
+				await Hue.getState();
+			} catch (e) {
+				if (config.debug) console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.task cron error:', e);
+			}
 		});
 
 		mainHue.task.start();

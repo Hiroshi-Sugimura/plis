@@ -806,7 +806,7 @@ function createTray() {
 		{
 			label: '表示/非表示',
 			click: () => {
-				if (mainWindow) {
+				if (mainWindow && !mainWindow.isDestroyed()) {
 					if (mainWindow.isVisible()) {
 						mainWindow.hide();
 					} else {
@@ -828,7 +828,7 @@ function createTray() {
 
 	tray.setContextMenu(contextMenu);
 	tray.on('double-click', () => {
-		if (mainWindow) {
+		if (mainWindow && !mainWindow.isDestroyed()) {
 			mainWindow.show();
 		}
 	});
