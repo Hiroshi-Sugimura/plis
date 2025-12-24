@@ -9,7 +9,7 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-import { app, BrowserView, BrowserWindow, Menu, ipcMain, shell, clipboard } from 'electron';
+import { app, BrowserView, BrowserWindow, Menu, Tray, ipcMain, nativeImage, shell, clipboard } from 'electron';
 
 import { fileURLToPath } from "node:url";
 import path from 'node:path';
@@ -62,6 +62,8 @@ const databaseDir = path.join(userHome, appname);  // SQLite3ファイルの置�
 
 /** electronのmain window */
 let mainWindow = null;
+let tray = null;
+let isQuitting = false;
 
 /** NICリスト */
 let localaddresses = [];
@@ -235,6 +237,7 @@ ipcMain.handle('SystemSetConfig', (event, arg) => {
 	config.IPver = arg.IPver;
 	config.IPv4 = arg.IPv4;
 	config.IPv6 = arg.IPv6;
+	config.backgroundMode = arg.backgroundMode;
 
 	switch (config.screenMode) {
 		case 'fullscreen':
@@ -627,8 +630,13 @@ async function createWindow() {
 		});
 
 		// 閉じるときに呼ばれる
-		mainWindow.on('close', async () => {
+		mainWindow.on('close', async (event) => {
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.close') : 0;
+			if (!isQuitting && config.backgroundMode) {
+				event.preventDefault();
+				mainWindow.hide();
+				return;
+			}
 			config.windowWidth = mainWindow.getSize()[0];
 			config.windowHeight = mainWindow.getSize()[1];
 
@@ -640,6 +648,8 @@ async function createWindow() {
 			console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.closed');
 			mainWindow = null;
 		});
+
+		createTray();
 
 		// SQLite のデータベースのレコードの削除処理
 		await mainHALlocal.truncatelogs();
@@ -742,12 +752,72 @@ app.on('ready', async () => {
 	createWindow();
 });
 
+function createTray() {
+	if (tray) return;
+
+	let icon;
+	if (isMac) {
+		const icon16 = path.join(__dirname, 'icons', 'plis_16x16.png');
+		const icon32 = path.join(__dirname, 'icons', 'plis_32x32@2x.png');
+		icon = nativeImage.createFromPath(icon16);
+		try {
+			const icon2x = nativeImage.createFromPath(icon32);
+			if (!icon2x.isEmpty()) {
+				icon.addRepresentation({
+					scaleFactor: 2.0,
+					buffer: icon2x.toPNG()
+				});
+			}
+		} catch (e) {
+			console.error('Tray icon 2x load error:', e);
+		}
+	} else {
+		icon = path.join(__dirname, 'icons', 'plis_linux_icon.png');
+	}
+
+	tray = new Tray(icon);
+	tray.setToolTip(appname);
+
+	const contextMenu = Menu.buildFromTemplate([
+		{
+			label: '表示/非表示',
+			click: () => {
+				if (mainWindow) {
+					if (mainWindow.isVisible()) {
+						mainWindow.hide();
+					} else {
+						mainWindow.show();
+					}
+				} else {
+					createWindow();
+				}
+			}
+		},
+		{
+			label: '終了',
+			click: () => {
+				isQuitting = true;
+				app.quit();
+			}
+		}
+	]);
+
+	tray.setContextMenu(contextMenu);
+	tray.on('double-click', () => {
+		if (mainWindow) {
+			mainWindow.show();
+		}
+	});
+}
+
 // アプリケーションがアクティブになった時の処理（Mac only）
 app.on("activate", () => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.activate') : 0;
 	// メインウィンドウが消えている場合は再度メインウィンドウを作成する
 	if (mainWindow === null) {
 		createWindow();
+	} else {
+		mainWindow.show();
 	}
 });
 
@@ -761,12 +831,14 @@ app.on("activate", () => {
 // windowが全部閉じられた、SIGTERM, SIGINTの場合はbefore-quitがこれより先に動く
 app.on('window-all-closed', () => {
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.window-all-closed') : 0;
+	if (config.backgroundMode) return;
 	app.quit();	// macだろうとプロセスはkillしちゃう
 });
 
 
 // アプリを終了する直前、app.quitが呼ばれたときに動く
 app.once('before-quit', async () => {
+	isQuitting = true;
 	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.before-quit') : 0;
 	await saveConfig();
 	await savePersist();

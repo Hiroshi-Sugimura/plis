@@ -195,13 +195,6 @@
     "licenses": "MIT",
     "repository": "https://github.com/electron/notarize",
     "publisher": "Samuel Attard",
-    "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron/packager/node_modules/@electron/notarize",
-    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron/packager/node_modules/@electron/notarize/LICENSE"
-  },
-  "@electron/notarize@3.1.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/electron/notarize",
-    "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron/notarize",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron/notarize/LICENSE"
   },
@@ -1646,7 +1639,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/electron-winstaller",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron-winstaller/LICENSE"
   },
-  "electron@39.2.6": {
+  "electron@39.2.4": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/electron",
     "publisher": "Electron Community",
@@ -1986,8 +1979,8 @@
     "repository": "https://github.com/jprichardson/node-fs-extra",
     "publisher": "JP Richardson",
     "email": "jprichardson@gmail.com",
-    "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron/packager/node_modules/@electron/notarize/node_modules/fs-extra",
-    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron/packager/node_modules/@electron/notarize/node_modules/fs-extra/LICENSE"
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron/notarize/node_modules/fs-extra",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron/notarize/node_modules/fs-extra/LICENSE"
   },
   "fs-minipass@2.1.0": {
     "licenses": "ISC",

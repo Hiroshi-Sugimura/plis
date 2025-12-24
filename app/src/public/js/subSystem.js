@@ -15,6 +15,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	// config
 	let inScreenMode = document.getElementById('inScreenMode');  // スクリーンモード
+	let inBackgroundMode = document.getElementById('inBackgroundMode');  // バックグラウンドモード
 	let inDebugMode = document.getElementById('inDebugMode');  // デバッグモード
 
 	let inEllogExpireDays = document.getElementById('inEllogExpireDays');  // 家電操作ログの記録日数
@@ -71,7 +72,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			return;
 		}
 
-		window.ipc.SystemSetConfig(inScreenMode.value, inDebugMode.value == 'true' ? true : false, inEllogExpireDays.value, inResultExpireDays.value, parseInt(inIPver.value), inIPv4.value, inIPv6.value);  // system configの保存
+		window.ipc.SystemSetConfig(inScreenMode.value, inDebugMode.value == 'true' ? true : false, inEllogExpireDays.value, inResultExpireDays.value, parseInt(inIPver.value), inIPv4.value, inIPv6.value, inBackgroundMode.checked);  // system configの保存
 	};
 
 	/** 
@@ -107,6 +108,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		btnSystemConfigSet.textContent = '設定';
 
 		inScreenMode.value = arg.screenMode;
+		inBackgroundMode.checked = arg.backgroundMode;
 		inDebugMode.value = arg.debug;
 		inEllogExpireDays.value = arg.ellogExpireDays;
 		inResultExpireDays.value = arg.resultExpireDays;
