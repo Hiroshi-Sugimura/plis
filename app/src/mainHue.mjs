@@ -258,12 +258,22 @@ let mainHue = {
 			return;
 		}
 
+		// Hue.bridge.ipaddress が解決できないと axios が http://undefined/... へ飛んで ENOTFOUND になるため防御
+		if (!Hue?.bridge?.ipaddress) {
+			logger.error('mainHue', 'startObserve() skipped: bridge ipaddress is undefined. Link the bridge first.');
+			return;
+		}
+
 		// Hue.facilitiesの定期的監視，変化があればUIに送る
 		mainHue.task = cron.schedule('0 */1 * * * *', async () => {  // １分毎
 			try {
 				await Hue.getState();
 			} catch (e) {
 				logger.error('mainHue', 'task cron error:', e);
+				// ブリッジ未解決時はこれ以上リトライせず停止する
+				if (e?.code === 'ENOTFOUND' || e?.hostname === 'undefined') {
+					mainHue.stopObserve();
+				}
 			}
 		});
 

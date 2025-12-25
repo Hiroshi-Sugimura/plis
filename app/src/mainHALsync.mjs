@@ -318,6 +318,33 @@ let mainHALsync = {
 			return;
 		}
 
+		// Garmin用モデルが未定義の環境（sqlite未導入など）では処理をスキップする
+		const garminModels = {
+			Activities: IOT_GarminActivitiesModel,
+			ActivityDetails: IOT_GarminActivityDetailsModel,
+			AllDayRespiration: IOT_GarminAllDayRespirationModel,
+			BodyComps: IOT_GarminBodyCompsModel,
+			Dailies: IOT_GarminDailiesModel,
+			Epochs: IOT_GarminEpochsModel,
+			MoveIQActivities: IOT_GarminMoveIQActivitiesModel,
+			Pulseox: IOT_GarminPulseoxModel,
+			Sleeps: IOT_GarminSleepsModel,
+			StressDetails: IOT_GarminStressDetailsModel,
+			UserMetrics: IOT_GarminUserMetricsModel,
+		};
+
+		const missingModels = Object.entries(garminModels)
+			.filter(([, model]) => !model)
+			.map(([name]) => name);
+		if (missingModels.length) {
+			logger.error(
+				'mainHALsync',
+				config.debug,
+				`garminDownload(): Skip because DB models missing: ${missingModels.join(', ')}`
+			);
+			return;
+		}
+
 		const hal_garmin_download_url = HAL_API_BASE_URL + '/garminDownload';
 
 		try {
