@@ -180,21 +180,52 @@ const DEFAULT_PORT = 3610;
 const MAX_RETRY_COUNT = 5;
 const DATABASE_DIR = path.join(userHome, appname);
 const HAL_API_BASE_URL = 'https://hal.sugi-lab.net/api';
+const SOCKET_TIMEOUT_MS = 5000;
+const UPLOAD_UNIT_NUM = 100;
+const appname = 'PLIS';
 ```
+
+**定数の分類**:
+
+| パターン | 説明 | 例 |
+|---------|------|-----|
+| `URL_*` | Web API エンドポイント | `HAL_API_BASE_URL`, `WEATHER_API_ENDPOINT` |
+| `*_MS` / `*_SEC` | 時間単位定数 | `SOCKET_TIMEOUT_MS`, `RETRY_INTERVAL_SEC` |
+| `MAX_*` / `MIN_*` | 上限・下限 | `MAX_RETRY_COUNT`, `MIN_PORT` |
+| `DEFAULT_*` | デフォルト値 | `DEFAULT_PORT`, `DEFAULT_LANGUAGE` |
 
 ### 4.2 変数・関数
 
 `camelCase` を使用してください：
 
 ```javascript
-let sendIPCMessage = null;
+// スカラー値・プリミティブ
+let isRun = false;
 let config = {};
 let persist = {};
+let sendIPCMessage = null;
 
+// 関数
 function objectSort(obj) { /* ... */ }
 function getNow() { /* ... */ }
 function mergeDeeply(target, source) { /* ... */ }
+function isObjEmpty(obj) { /* ... */ }
 ```
+
+**変数命名の規約**:
+
+| パターン | 説明 | 例 |
+|---------|------|-----|
+| `is*` / `has*` | ブール値 | `isRun`, `isEnabled`, `hasError`, `isDone` |
+| `get*` | ゲッター関数（値を取得） | `getNow()`, `getConfig()`, `getToday()` |
+| `set*` | セッター関数（値を設定） | `setConfig()`, `setTimeout()` |
+| `on*` | イベントハンドラ | `onReceived()`, `onConnected()`, `onChange()` |
+| `handle*` | 処理関数 | `handleError()`, `handleMessage()` |
+| `send*` | 送信関数 | `sendIPCMessage()`, `sendData()` |
+| `*List` | 配列・リスト | `objList`, `deviceList`, `errorList` |
+| `*Map` / `*Dict` | マップ・辞書 | `facilityMap`, `configDict` |
+| `*Data` | データオブジェクト | `roomEnvData`, `eldataModel` |
+| `*Job` / `*Task` | スケジュール・タスク | `observationJob`, `uploadTask` |
 
 ### 4.3 クラス・型定義
 
@@ -202,32 +233,63 @@ function mergeDeeply(target, source) { /* ... */ }
 
 ```javascript
 class EchonetDevice { /* ... */ }
+class HueBridge { /* ... */ }
 
 /**
  * @typedef {Object} HueConfig
  * @property {boolean} enabled
  * @property {string} key
  */
+
+/**
+ * @typedef {Object} NetworkSettings
+ * @property {string} ipAddress
+ * @property {number} port
+ */
 ```
 
 ### 4.4 モジュール・オブジェクト
 
-`camelCase` を使用してください：
+`camelCase` を使用してください。モジュール名は `main*` で始まる：
 
 ```javascript
 let mainHue = {
+  // 状態管理メンバー
   isRun: false,
+  client: null,
+  observationJob: null,
+
+  // 設定・永続データ
   config: null,
+  persist: {},
+
+  // パブリックメソッド
   start: async function (_sendIPCMessage) { /* ... */ },
-  stop: function () { /* ... */ }
+  stop: function () { /* ... */ },
+  setConfig: async function (_config) { /* ... */ },
+
+  // 内部メソッド
+  _initialize: function () { /* ... */ },
+  _processData: function (data) { /* ... */ }
 };
 
 let mainEL = {
-  objList: ['05ff01'],
-  localaddresses: null,
-  elsocket: null
+  objList: ['05ff01'],      // ELオブジェクトリスト
+  localaddresses: null,     // ローカルアドレス
+  elsocket: null,           // ソケット参照
+  isRun: false,             // 実行中フラグ
+  disableIPv6: false        // IPv6無効フラグ
 };
 ```
+
+**モジュールメンバーの命名順序**:
+
+1. **状態メンバー**: `isRun`, `connected`, `initialized`
+2. **リソース参照**: `client`, `socket`, `connection`, `job`, `task`
+3. **設定・データ**: `config`, `persist`, `data`
+4. **コールバック**: `callback`, `listener`, `handler`
+5. **パブリックメソッド**: `start()`, `stop()`, `setConfig()`
+6. **プライベートメソッド**: `_initialize()`, `_process*()`, `_validate*()`
 
 ### 4.5 プライベートメンバー
 
@@ -235,10 +297,102 @@ let mainEL = {
 
 ```javascript
 let mainModule = {
-  _internalState: {},  // プライベート
-  _processData: function () { /* ... */ },  // プライベート
-  publicMethod: function () { /* ... */ }   // パブリック
+  // パブリック
+  isRun: false,
+  start: function () { /* ... */ },
+  stop: function () { /* ... */ },
+
+  // プライベート（内部使用のみ）
+  _internalState: {},
+  _processData: function () { /* ... */ },
+  _validateInput: function (input) { /* ... */ },
+  _formatOutput: function (data) { /* ... */ }
 };
+```
+
+### 4.6 IPC チャネル名の命名規則
+
+IPC通信で使用するチャネル名は **`camelCase`** で統一してください：
+
+```javascript
+// 設定関連
+'renewXxxConfigView'      // UI更新：設定画面を最新状態で表示
+'configSaved'             // 完了通知：設定が保存された
+
+// データ更新関連
+'renewXxx'                // UI更新：デバイスデータを更新
+'fclXxx'                  // UI更新：ファシリティ（機器状態）を更新
+
+// イベント通知
+'xxxConnected'            // 接続完了
+'xxxDisconnected'         // 接続断
+'xxxError'                // エラー発生
+
+// リクエスト・レスポンス
+'queryXxxStatus'          // クエリ送信
+'responseXxxStatus'       // クエリ応答
+```
+
+**詳細パターン**:
+
+| チャネル形式 | 用途 | 具体例 |
+|----------|------|--------|
+| `renew<Module><Subject>` | UI に<Subject>の最新値を反映 | `renewELConfigView`, `renewHueState`, `renewNetatmoData` |
+| `fcl<Module>` | ファシリティ（機器状態）更新 | `fclEL`, `fclHue`, `fclIkea` |
+| `<module>Connected` | 接続・リンク完了 | `HueLinked`, `NetatmoConnected`, `esmConnected` |
+| `<module>Disconnected` | 接続断・リンク解除 | `HueUnlinked`, `NetatmoDisconnected` |
+| `<module>Error` | エラー発生通知 | `NetatmoAuthError`, `ElSearchError`, `HueConnectionError` |
+| `configSaved` | 設定保存完了（通常、引数でモジュール名を指定） | `configSaved` (arg: 'EL') |
+| `createXxx` | UI要素生成 | `createCalendar`, `createMenu` |
+| `renewXxx` | UI要素更新 | `renewCalendar`, `renewSystemInfo` |
+| `show<Data>` | データ表示 | `showGarmin`, `showWeather` |
+
+**NG パターン**:
+
+```javascript
+// ❌ 避けるべき命名
+'updateEL'                // 曖昧。何の更新？
+'EL_update'               // snake_caseは使用しない
+'update-el'               // ケバブケースは使用しない
+'UpdateEL'                // PascalCaseは使用しない
+'EL-connected'            // ケバブケースは使用しない
+'el:connected'            // コロン区切りは使用しない
+```
+
+**具体例（実装済みの規約例）**:
+
+```javascript
+// 良い例
+sendIPCMessage('renewELConfigView', config);     // 設定画面更新
+sendIPCMessage('fclEL', persist);                // ELデータ更新
+sendIPCMessage('HueLinked', newKey);             // Hue接続完了
+sendIPCMessage('renewNetatmoConfigView', config);// Netatmo設定更新
+sendIPCMessage('NetatmoAuthError', errorMsg);    // Netatmoエラー通知
+sendIPCMessage('configSaved', 'EL');             // 設定保存完了（モジュール名付き）
+sendIPCMessage('renewCalendar', holidayData);    // カレンダー更新
+sendIPCMessage('createCalendar', data);          // カレンダー生成
+sendIPCMessage('showGarmin', garminData);        // Garminデータ表示
+```
+
+### 4.7 ファイル名
+
+**メインプロセスモジュール**: `main<FeatureName>.mjs`
+
+```
+mainEL.mjs              # ECHONET Lite
+mainHue.mjs             # Philips Hue
+mainNetatmo.mjs         # Netatmo Weather Station
+mainArp.mjs             # ARP（Address Resolution Protocol）
+mainSubmodule.cjs       # Shared Utilities
+mainAutoAssessment.mjs  # Auto Assessment Logic
+```
+
+**レンダラープロセス**: `<function>.js` または `sub<FeatureName>.js`
+
+```
+renderMain.js           # メインレンダラー
+subEL.js                # EL関連レンダラー
+subHue.js               # Hue関連レンダラー
 ```
 
 ---
@@ -566,69 +720,272 @@ try {
 
 ## 9. IPC通信（Electron）
 
-### 9.1 メインプロセス → レンダラープロセス
+IPC（Inter-Process Communication）は Electron でメインプロセスとレンダラープロセス間の通信に使われます。
+チャネル名・メッセージ形式を統一して、保守性を高めてください。
+
+### 9.1 チャネル命名規則（詳細版）
+
+**基本ルール**:
+
+- **形式**: `camelCase` （先頭は小文字）
+- **接頭辞**: モジュール名またはアクション種別
+- **言語**: 日本語混在禁止（英数のみ）
+
+**チャネル接頭辞の分類**:
+
+| 接頭辞 | 意味 | 使用元 | 例 |
+|--------|------|--------|-----|
+| `renew*` | UI画面を最新状態で表示/更新 | Main→Renderer | `renewELConfigView`, `renewHueState` |
+| `fcl*` | ファシリティ（機器状態）を更新 | Main→Renderer | `fclEL`, `fclHue`, `fclIkea` |
+| `create*` | UI要素を新規生成 | Main→Renderer | `createCalendar`, `createMenu` |
+| `show*` | データを表示 | Main→Renderer | `showGarmin`, `showWeather` |
+| `*Connected` | デバイス接続/リンク完了 | Main→Renderer | `HueLinked`, `NetatmoConnected` |
+| `*Disconnected` | デバイス接続断/リンク解除 | Main→Renderer | `HueUnlinked`, `NetatmoDisconnected` |
+| `*Error` | エラー発生を通知 | Main→Renderer | `NetatmoAuthError`, `ElSearchError` |
+| `*Request` / `query*` | 情報をリクエスト | Renderer→Main | `querySystemStatus`, `getDeviceList` |
+| `config*` | 設定関連の統一チャネル | Bidirectional | `configSaved` (引数で詳細指定) |
+
+**具体的なチャネル名リファレンス**:
+
+```javascript
+// 設定関連
+'renewELConfigView'         // EL設定画面を更新
+'renewHueConfigView'        // Hue設定画面を更新
+'renewNetatmoConfigView'    // Netatmo設定画面を更新
+'renewSystemConfigView'     // システム設定画面を更新
+'configSaved'               // 設定保存完了通知（引数："EL", "Hue", etc.）
+
+// データ更新（ファシリティ = 機器状態）
+'fclEL'                     // EL機器状態を更新
+'fclHue'                    // Hue照明状態を更新
+'fclIkea'                   // IKEA照明状態を更新
+'renewNetatmo'              // Netatmo環境データを更新
+'renewOmron'                // Omronセンサデータを更新
+'renewCo2s'                 // CO2センサデータを更新
+
+// イベント・接続状態
+'HueLinked'                 // Hueブリッジをリンク完了
+'HueUnlinked'               // Hueブリッジをアンリンク
+'NetatmoConnected'          // Netatmoに接続完了
+'NetatmoAuthError'          // Netatmo認証エラー
+'ElSearchError'             // EL探索エラー
+'omronDisconnected'         // Omronセンサ接続断
+
+// UI要素操作
+'createCalendar'            // カレンダーUIを生成
+'renewCalendar'             // カレンダーUIを更新
+'showGarmin'                // Garminデータを表示
+
+// その他
+'URLopen'                   // URLをブラウザで開く
+'PageInSearch'              // ページ内検索を実行
+'already'                   // Renderer準備完了通知
+```
+
+### 9.2 チャネル引数の規約
+
+**形式**:
+
+```javascript
+// 単一の値の場合
+sendIPCMessage('renewELConfigView', config);
+
+// 複数の値の場合（オブジェクトで渡す）
+sendIPCMessage('fclEL', {
+  facilities: facilityData,
+  parsed: parsedData,
+  timestamp: Date.now()
+});
+
+// 通知系（引数なし、またはモジュール名のみ）
+sendIPCMessage('configSaved', 'EL');  // モジュール名を指定
+sendIPCMessage('HueLinked', newKey);
+```
+
+**引数の型規約**:
+
+| チャネル種別 | 推奨引数型 | 例 |
+|-----------|-----------|-----|
+| `renew*ConfigView` | Object | `{ ...config }` |
+| `fcl*` | Object | `{ facilities, parsed, lastUpdate }` |
+| `*Connected` | string \| Object | `newKey` または `{ token, expiresAt }` |
+| `*Error` | string \| Object | `"Error message"` または `{ module, message, code }` |
+| `configSaved` | string | `"EL"` （モジュール名） |
+| `show*` | Object \| Array | データオブジェクト |
+
+### 9.3 メインプロセス内での IPC 送信
+
+メインプロセスのモジュールでは、IPC送信関数をコールバック経由で受け取る：
 
 ```javascript
 /**
- * レンダラーへ設定変更を通知。
- * @param {string} channel IPC チャネル名（camelCase）
- * @param {any} data 送信データ
+ * @callback SendIPCMessage
+ * @param {string} channel チャネル名（camelCase）
+ * @param {any} [payload] 送信ペイロード
+ * @returns {void}
  */
-function sendIPCMessage(channel, data) {
-  if (typeof sendIPCMessage !== 'function') {
-    console.warn('IPC not initialized');
+let sendIPCMessage = null;
+
+/**
+ * モジュール初期化とリスナー登録。
+ * @async
+ * @param {SendIPCMessage} _sendIPCMessage IPC送信関数
+ * @returns {Promise<void>}
+ */
+start: async function (_sendIPCMessage) {
+  sendIPCMessage = _sendIPCMessage;  // コールバック登録
+
+  // 重複起動対策
+  if (mainModule.isRun) {
+    sendIPCMessage('renewModuleConfigView', config);
+    sendIPCMessage('fclModule', persist);
     return;
   }
-  // メインプロセス内で _sendIPCMessage が登録される
-  sendIPCMessage(channel, data);
+
+  // 初期化処理...
+  mainModule.isRun = true;
+  sendIPCMessage('configSaved', 'Module');
 }
 
-// 使用例
-sendIPCMessage('renewELConfigView', config);
-sendIPCMessage('fclEL', persist);
-sendIPCMessage('configSaved', 'EL');
+/**
+ * IPC送信のガード付き実行。
+ * @param {string} channel
+ * @param {any} data
+ * @returns {void}
+ */
+function _emitIPC(channel, data) {
+  if (typeof sendIPCMessage === 'function') {
+    sendIPCMessage(channel, data);
+  } else {
+    config.debug ? console.warn('IPC not initialized:', channel) : 0;
+  }
+}
 ```
 
-### 9.2 プリロードスクリプトでのIPC公開
+### 9.4 プリロードスクリプトでの IPC 公開
+
+プリロードスクリプトで、Renderer から呼び出し可能なIPC関数を公開：
 
 ```javascript
 const { contextBridge, ipcRenderer } = require('electron');
 
+/**
+ * Renderer 向けIPC公開API
+ * @namespace ipc
+ */
 contextBridge.exposeInMainWorld('ipc', {
+  // 初期化・準備関連
   /**
+   * Rendererが準備完了をMain に通知
    * @function
-   * @desc レンダラーが準備完了をメインプロセスへ通知
    */
   notifyReady: () => {
     ipcRenderer.invoke('already', '');
   },
 
+  // URL操作
   /**
+   * URLをブラウザで開く
    * @function
-   * @desc URLを既定ブラウザで開く
    * @param {string} url
    */
   openURL: (url) => {
     ipcRenderer.invoke('URLopen', url);
   },
 
-  // その他のチャネル...
+  // ページ内検索
+  /**
+   * ページ内検索を実行
+   * @function
+   * @param {string} text 検索テキスト
+   */
+  search: (text) => {
+    ipcRenderer.invoke('PageInSearch', text);
+  },
+
+  /**
+   * 次を検索
+   * @function
+   * @param {string} text 検索テキスト
+   */
+  searchNext: (text) => {
+    ipcRenderer.invoke('PageInSearchNext', text);
+  },
+
+  /**
+   * 前を検索
+   * @function
+   * @param {string} text 検索テキスト
+   */
+  searchPrev: (text) => {
+    ipcRenderer.invoke('PageInSearchPrev', text);
+  },
+
+  /**
+   * 検索を停止
+   * @function
+   */
+  searchStop: () => {
+    ipcRenderer.invoke('PageInSearchStop');
+  },
+
+  // リスナー登録
+  /**
+   * Main からのメッセージをリッスン
+   * @function
+   * @param {string} channel チャネル名
+   * @param {(event, data) => void} callback コールバック
+   */
+  on: (channel, callback) => {
+    ipcRenderer.on(channel, (event, data) => callback(data));
+  },
+
+  /**
+   * One-time リスナー登録
+   * @function
+   * @param {string} channel チャネル名
+   * @param {(event, data) => void} callback コールバック
+   */
+  once: (channel, callback) => {
+    ipcRenderer.once(channel, (event, data) => callback(data));
+  }
 });
 ```
 
-### 9.3 チャネル命名規則
+**Renderer での使用例**:
 
-- **camelCase** を使用
-- 送受信元を示す接頭辞は不要（文脈から明白）
-- 操作を表す動詞から開始：`renew*`, `fcl*`, `config*` など
+```javascript
+// チャネルをリッスン
+window.ipc.on('renewELConfigView', (config) => {
+  updateConfigUI(config);
+});
 
+window.ipc.on('fclEL', (data) => {
+  updateELDevices(data);
+});
+
+window.ipc.on('configSaved', (moduleName) => {
+  showNotification(`${moduleName} settings saved`);
+});
+
+// Main にリクエスト送信
+window.ipc.openURL('https://example.com');
+window.ipc.search('keyword');
 ```
-// よい例
-renew<ModuleName>ConfigView    # 設定画面更新
-renew<ModuleName>              # データ更新
-fcl<ModuleName>                # ファシリティ（機器状態）更新
-configSaved                     # 設定保存完了通知
-<ModulePrefix>Error             # エラー通知
+
+### 9.5 NG チャネル命名パターン
+
+以下は避けてください：
+
+```javascript
+// ❌ 避けるべき
+'updateEL'                  // 曖昧。何の更新？
+'EL_update'                 // snake_caseは使用しない
+'update-el'                 // ケバブケースは使用しない
+'UpdateEL'                  // PascalCaseは使用しない
+'EL:connected'              // コロン区切りは使用しない
+'el message'                // スペース含むのは使用しない
+'renewElConfigView'         // モジュール名は大文字で始める
 ```
 
 ---
