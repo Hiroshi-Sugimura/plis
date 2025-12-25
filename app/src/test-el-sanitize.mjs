@@ -1,9 +1,29 @@
+//////////////////////////////////////////////////////////////////////
+/**
+ * @file test-el-sanitize.mjs
+ * @module test-el-sanitize
+ * @description Runtime test for EL sanitize function.
+ * Tests sanitizeFacilities() to ensure it handles malformed data correctly
+ * before passing to complementFacilities() in echonet-lite library.
+ *
+ * This test verifies:
+ * - Undefined facility entries are removed
+ * - Invalid EOJ entries (non-strings) are filtered
+ * - Complementary facility processing doesn't throw errors
+ */
+
 // Lightweight runtime check for EL sanitize -> complementFacilities (pure node, no electron-store)
 import './dateformat.mjs';
 import EL from 'echonet-lite';
 
 // Standalone sanitize function mirror
 function sanitizeFacilities() {
+  /**
+   * Sanitize EL facilities object to remove malformed entries.
+   * Removes undefined entries and filters invalid EOJ strings from arrays.
+   * @inner
+   * @returns {void}
+   */
   try {
     if (!EL.facilities || typeof EL.facilities !== 'object') return;
     for (const ip of Object.keys(EL.facilities)) {
@@ -29,6 +49,10 @@ EL.facilities = {
   '192.168.0.13': { EOJs: ['02f001'], Means: {} }
 };
 
+/**
+ * Execute the test: sanitize malformed facilities and verify complementFacilities works.
+ * @returns {void}
+ */
 try {
   sanitizeFacilities();
   // After sanitize, running library complement should not throw

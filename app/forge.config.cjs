@@ -1,9 +1,26 @@
+//////////////////////////////////////////////////////////////////////
+/**
+ * @file forge.config.cjs
+ * @module forge.config
+ * @description Electron Forge configuration for PLIS application.
+ * Configures build targets, packaging, signing, notarization, and security settings
+ * for Windows (Squirrel, APPX), macOS (DMG, ZIP), and Linux (DEB, RPM) platforms.
+ * Includes Electron Fuses configuration for enhanced security.
+ */
+//////////////////////////////////////////////////////////////////////
+
 const { FusesPlugin } = require('@electron-forge/plugin-fuses');
 const { FuseV1Options, FuseVersion } = require('@electron/fuses');
 const path = require('path');
 const fs = require('fs');
 
 module.exports = {
+  /**
+   * Packager configuration for application distribution.
+   * Enables code signing and notarization for macOS,
+   * and sets up app icons for all platforms.
+   * @type {Object}
+   */
   packagerConfig: {
     asar: true,
     icon: './src/icons/plis',
@@ -20,7 +37,17 @@ module.exports = {
       appleApiIssuer: process.env.APPLE_API_ISSUER
     }
   },
+  /**
+   * Rebuild configuration for native modules.
+   * @type {Object}
+   */
   rebuildConfig: {},
+  /**
+   * Makers configuration array for packaging application binaries.
+   * Supports multiple platforms: Windows (Squirrel, APPX),
+   * macOS (ZIP, DMG), and Linux (DEB, RPM).
+   * @type {Array<Object>}
+   */
   makers: [
     {
       name: '@electron-forge/maker-squirrel',
@@ -74,6 +101,11 @@ module.exports = {
       },
     },
   ],
+  /**
+   * Publishers configuration array for distributing releases.
+   * Currently configured for GitHub releases publishing.
+   * @type {Array<Object>}
+   */
   publishers: [
     {
       name: '@electron-forge/publisher-github',
@@ -87,6 +119,11 @@ module.exports = {
       }
     }
   ],
+  /**
+   * Plugins configuration array for Electron Forge.
+   * Includes auto-unpack natives and Electron Fuses for security.
+   * @type {Array<Object>}
+   */
   plugins: [
     {
       name: '@electron-forge/plugin-auto-unpack-natives',

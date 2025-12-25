@@ -1,7 +1,24 @@
-// Minimal Date formatting polyfill to replace date-utils usage
-// Provides: Date.prototype.toFormat, Date.today(), Date.yesterday()
+//////////////////////////////////////////////////////////////////////
+/**
+ * @module dateformat
+ * @description Minimal Date formatting polyfill to replace date-utils usage.
+ * Provides: Date.prototype.toFormat, Date.today(), Date.yesterday()
+ * This module extends the Date prototype with date formatting capabilities
+ * compatible with the date-utils library.
+ */
+//////////////////////////////////////////////////////////////////////
 
 if (!Date.prototype.toFormat) {
+  /**
+   * Format date using the specified format string.
+   * Supported placeholders: YYYY (year), MM (month), DD (day),
+   * HH24 (hour), MI (minute), SS (second).
+   * @param {string} fmt - Format string (e.g., "YYYY-MM-DD HH24:MI:SS")
+   * @returns {string} Formatted date string
+   * @example
+   * const now = new Date();
+   * now.toFormat("YYYY-MM-DD"); // "2025-12-25"
+   */
   Object.defineProperty(Date.prototype, 'toFormat', {
     value: function toFormat(fmt) {
       const pad = (n, w = 2) => String(n).padStart(w, '0');
@@ -25,6 +42,14 @@ if (!Date.prototype.toFormat) {
 }
 
 if (!Object.prototype.hasOwnProperty.call(Date, 'today')) {
+  /**
+   * Get today's date at 00:00:00.
+   * @static
+   * @returns {Date} Today's date with time set to midnight
+   * @example
+   * const today = Date.today();
+   * console.log(today.toFormat("YYYY-MM-DD")); // e.g., "2025-12-25"
+   */
   Object.defineProperty(Date, 'today', {
     value: function today() {
       const d = new Date();
@@ -37,6 +62,14 @@ if (!Object.prototype.hasOwnProperty.call(Date, 'today')) {
 }
 
 if (!Object.prototype.hasOwnProperty.call(Date, 'yesterday')) {
+  /**
+   * Get yesterday's date at 00:00:00.
+   * @static
+   * @returns {Date} Yesterday's date with time set to midnight
+   * @example
+   * const yesterday = Date.yesterday();
+   * console.log(yesterday.toFormat("YYYY-MM-DD")); // e.g., "2025-12-24"
+   */
   Object.defineProperty(Date, 'yesterday', {
     value: function yesterday() {
       const d = new Date();
