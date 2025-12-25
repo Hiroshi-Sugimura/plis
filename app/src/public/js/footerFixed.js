@@ -12,16 +12,16 @@
 new function(){
 
 	var footerId = "footer";
-	//ƒƒCƒ“
+	//ãƒ¡ã‚¤ãƒ³
 	function footerFixed(){
-		//ƒhƒLƒ…ƒƒ“ƒg‚Ì‚‚³
+		//ãƒ‰ã‚­ãƒ¥ãƒ¡ãƒ³ãƒˆã®é«˜ã•
 		var dh = document.getElementsByTagName("body")[0].clientHeight;
-		//ƒtƒbƒ^[‚Ìtop‚©‚ç‚ÌˆÊ’u
+		//ãƒ•ãƒƒã‚¿ãƒ¼ã®topã‹ã‚‰ã®ä½ç½®
 		document.getElementById(footerId).style.top = "0px";
 		var ft = document.getElementById(footerId).offsetTop;
-		//ƒtƒbƒ^[‚Ì‚‚³
+		//ãƒ•ãƒƒã‚¿ãƒ¼ã®é«˜ã•
 		var fh = document.getElementById(footerId).offsetHeight;
-		//ƒEƒBƒ“ƒhƒE‚Ì‚‚³
+		//ã‚¦ã‚£ãƒ³ãƒ‰ã‚¦ã®é«˜ã•
 		if (window.innerHeight){
 			var wh = window.innerHeight;
 		}else if(document.documentElement && document.documentElement.clientHeight != 0){
@@ -33,10 +33,10 @@ new function(){
 		}
 	}
 
-	//•¶ŽšƒTƒCƒY
+	//æ–‡å­—ã‚µã‚¤ã‚º
 	function checkFontSize(func){
 
-		//”»’è—v‘f‚Ì’Ç‰Á
+		//åˆ¤å®šè¦ç´ ã®è¿½åŠ 
 		var e = document.createElement("div");
 		var s = document.createTextNode("S");
 		e.appendChild(s);
@@ -46,7 +46,7 @@ new function(){
 		document.body.appendChild(e);
 		var defHeight = e.offsetHeight;
 
-		//”»’èŠÖ”
+		//åˆ¤å®šé–¢æ•°
 		function checkBoxSize(){
 			if(defHeight != e.offsetHeight){
 				func();
@@ -56,7 +56,7 @@ new function(){
 		setInterval(checkBoxSize,1000)
 	}
 
-	//ƒCƒxƒ“ƒgƒŠƒXƒi[
+	//ã‚¤ãƒ™ãƒ³ãƒˆãƒªã‚¹ãƒŠãƒ¼
 	function addEvent(elm,listener,fn){
 		try{
 			elm.addEventListener(listener,fn,false);
