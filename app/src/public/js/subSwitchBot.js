@@ -355,7 +355,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.SwitchBotConfigSaved = function () {
 		btnSwitchBotConfigSet.disabled = false;
-		btnSwitchBotConfigSet.textContent = '設定';
+		btnSwitchBotConfigSet.textContent = '適用と保存';
 
 		window.addToast('Info', 'SwitchBot 設定を保存しました。');
 	};
@@ -374,7 +374,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		inSwitchBotSecret.value = arg.secret;
 		selSwitchBotDebugMode.value = arg.debug;
 		btnSwitchBotConfigSet.disabled = false;
-		btnSwitchBotConfigSet.textContent = '設定';
+		btnSwitchBotConfigSet.textContent = '適用と保存';
 
 		if (arg.enabled) {  // 利用する場合
 			H2ControlSwitchBot.style.display = 'block';

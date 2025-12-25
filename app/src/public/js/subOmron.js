@@ -39,8 +39,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	let spanOmronHeat_stroke_desc = document.getElementById('spanOmronHeat_stroke_desc');
 
 	//----------------------------------------------------------------------------------------------
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc Omron デバイス情報のrenew
 	 * @param {void}
 	 * @return {void}
@@ -85,8 +85,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc Omron USBと切断
 	 * @param {void}
 	 * @return {void}
@@ -98,8 +98,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		inOmronUse.checked = false;
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 左のボタンからグラフ制御
 	 * @param {void}
 	 * @return {void}
@@ -122,8 +122,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	//----------------------------------------------------------------------------------------------
 	// Omron config
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 設定ボタン
 	 * @param {void}
 	 * @return {void}
@@ -140,21 +140,21 @@ window.addEventListener('DOMContentLoaded', function () {
 			selOmronDebugMode.value == 'true' ? true : false);
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 設定完了通知
 	 * @param {void}
 	 * @return {void}
 	 */
 	window.OmronConfigSaved = function () {
 		btnOmronConfigSet.disabled = false;
-		btnOmronConfigSet.textContent = '設定';
+		btnOmronConfigSet.textContent = '適用と保存';
 
 		window.addToast('Info', 'Omron 設定を保存しました。');
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc mainプロセスから設定値をもらったので画面を更新
 	 * @param {void}
 	 * @return {void}
@@ -178,7 +178,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
+	/**
 	 * @func window.OmronDebugLog
 	 * @desc Owmモジュールがデバッグなら出力する
 	 * @param {any} ...values
@@ -212,8 +212,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		'18:00', '18:15', '18:30', '18:45', '19:00', '19:15', '19:30', '19:45', '20:00', '20:15', '20:30', '20:45',
 		'21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45', '23:00', '23:15', '23:30', '23:45', '24:00']; */
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc newLegendClickHandler
 	 * @memberof subOmron
 	 * @param {void}
@@ -409,8 +409,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	// 表示データ（動的）
 	let datasetsOmron = [];
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc renewCanvasOmron
 	 * @memberof subOmron
 	 * @param {void}
@@ -438,8 +438,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//////////////////////////////////////////////////////////////////
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc データをもらって画面更新
 	 * @param {void}
 	 * @return {void}

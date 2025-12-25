@@ -9,6 +9,7 @@
 // 基本ライブラリ
 import { store } from './storeSingleton.mjs';
 import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
 
 import { fileURLToPath } from "node:url";
 import path from 'node:path';

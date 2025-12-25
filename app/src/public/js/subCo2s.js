@@ -122,7 +122,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.Co2sConfigSaved = function () {
 		btnCo2sConfigSet.disabled = false;
-		btnCo2sConfigSet.textContent = '設定';
+		btnCo2sConfigSet.textContent = '適用と保存';
 
 		window.addToast('Info', 'Co2s 設定を保存しました。');
 	};

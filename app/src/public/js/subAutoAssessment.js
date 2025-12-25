@@ -38,7 +38,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.autoAssessmentConfigSaved = function () {
 		btnAutoAssessmentConfigSet.disabled = false;
-		btnAutoAssessmentConfigSet.textContent = '設定';
+		btnAutoAssessmentConfigSet.textContent = '適用と保存';
 
 		window.addToast('Info', 'AutoAssessment 設定を保存しました。');
 	};

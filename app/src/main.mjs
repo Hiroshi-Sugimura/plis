@@ -682,7 +682,6 @@ app.on('window-all-closed', () => {
 app.once('before-quit', async () => {
 	isQuitting = true;
 	logger.debug('main', config.debug, 'app.on.before-quit');
-	await saveConfig();
 	await savePersist();
 
 	await mainArp.stopWithoutSave();

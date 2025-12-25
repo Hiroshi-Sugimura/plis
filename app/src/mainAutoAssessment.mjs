@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
 import { store } from './storeSingleton.mjs';
+import { logger } from './logger.mjs';
 import cron from 'node-cron';
 import moment from 'moment';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携

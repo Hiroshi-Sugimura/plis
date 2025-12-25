@@ -31,8 +31,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc OpenWeatherMap デバイス情報のrenew
 	 * @param {object} arg - config
 	 * @return {void}
@@ -86,8 +86,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 設定ボタン
 	 * @param {void}
 	 * @return {void}
@@ -115,28 +115,28 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 設定完了
 	 * @param {void}
 	 * @return {void}
 	 */
 	window.OwmConfigSaved = function () {
 		btnOwmConfigSet.disabled = false;
-		btnOwmConfigSet.textContent = '設定';
+		btnOwmConfigSet.textContent = '適用と保存';
 
 		window.addToast('Info', 'OWM 設定を保存しました。');
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc mainプロセスから設定値をもらったので画面を更新
 	 * @param {void}
 	 * @return {void}
 	 */
 	window.renewOwmConfigView = function (arg) {
 		btnOwmConfigSet.disabled = false;
-		btnOwmConfigSet.textContent = '設定';
+		btnOwmConfigSet.textContent = '適用と保存';
 		inOwmUse.checked = arg.enabled;
 		inOwmAPIKey.value = arg.APIKey;
 		inOwmZipCode.value = arg.zipcode;
@@ -152,7 +152,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
+	/**
 	 * @func window.OwmDebugLog
 	 * @desc Owmモジュールがデバッグなら出力する
 	 * @param {...} values

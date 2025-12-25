@@ -33,7 +33,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	let dlgHuePush = document.getElementById('dlgHuePush');  // 設定サポートダイアログ
 
 
-	/** 
+	/**
 	 * @func window.renewFacilitiesHue
 	 * @desc mainからの情報で，hue関係のhtmlを変更する
 	 * @param {void}
@@ -96,7 +96,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		divControlHue.innerHTML = doc;
 	};
 
-	/** 
+	/**
 	 * @func window.renewHueLog
 	 * @desc configタブのデバッグログ
 	 * @param {void}
@@ -106,7 +106,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		txtHueLog.value = text;
 	};
 
-	/** 
+	/**
 	 * @func window.hueLinked
 	 * @desc hueとリンクしたのでGUI表示する
 	 * @param {void}
@@ -119,7 +119,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	//----------------------------------------------------------------------------------------------
-	/** 
+	/**
 	 * @func window.btnHueConfigSet_Click
 	 * @desc Hue link unlink
 	 */
@@ -148,7 +148,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
-	/** 
+	/**
 	 * @func windo.btnHueUseCancel_Click
 	 * @desc キャンセルボタンを押したとき
 	 */
@@ -160,7 +160,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		dlgHuePush.close();
 	};
 
-	/** 
+	/**
 	 * @func dlgHuePush_oncancel
 	 * @memberof subHue
 	 * @desc エスケープキーでキャンセルしたとき
@@ -173,18 +173,18 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
+	/**
 	 * @func window.HueConfigSaved
 	 * @desc 設定完了通知で、設定ボタンの復活（連打防止）
 	 */
 	window.HueConfigSaved = function () {
 		btnHueConfigSet.disabled = false;
-		btnHueConfigSet.textContent = '設定';
+		btnHueConfigSet.textContent = '適用と保存';
 
 		window.addToast('Info', 'Hue 設定を保存しました。');
 	};
 
-	/** 
+	/**
 	 * @func window.renewHueConfigView
 	 * @desc mainプロセスから設定値をもらったので画面を更新
 	 * @param {Object} arg
@@ -194,7 +194,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		inHueKey.value = arg.key;
 		selHueDebugMode.value = arg.debug;
 		btnHueConfigSet.disabled = false;
-		btnHueConfigSet.textContent = '設定';
+		btnHueConfigSet.textContent = '適用と保存';
 
 		if (arg.enabled) {  // 利用する場合
 			H2ControlHue.style.display = 'block';
@@ -208,7 +208,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
+	/**
 	 * @func window.HueDebugPrint
 	 * @desc Hueモジュールがデバッグなら出力する
 	 * @param {...} values
@@ -220,7 +220,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	// -----------------------------------------------------
 	// Hue control
-	/** 
+	/**
 	 * @func window.HuePowButton
 	 * @desc HuePowButton
 	 * @param {Button} btn
@@ -244,7 +244,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
+	/**
 	 * @func window.openHueRenameDlg
 	 * @desc hue rename dlgを開く
 	 * openHueRenameDlg
@@ -260,13 +260,13 @@ window.addEventListener('DOMContentLoaded', function () {
 		dlgHueRenameDialog.showModal();
 	};
 
-	/** 
+	/**
 	 * @func window.HueRename
 	 * @desc Hue control
 	 * @param {void}
 	 * @return {void}
 	 */
-	// 
+	//
 	window.HueRename = function (id) {
 		let newName = document.getElementById('hueNewName').value;
 

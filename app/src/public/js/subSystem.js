@@ -51,8 +51,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc Systemの設定ボタンクリック
 	 * @param {void}
 	 * @return {void}
@@ -97,8 +97,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.ipc.SystemSetConfig(inScreenMode.value, inDebugMode.value == 'true' ? true : false, inEllogExpireDays.value, inResultExpireDays.value, parseInt(inIPver.value), inIPv4.value, inIPv6.value, inBackgroundMode.checked, inAutoLaunch.checked, inAutoLaunchHidden.checked);  // system configの保存
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc Networkの設定ボタンクリック
 	 * @param {void}
 	 * @return {void}
@@ -108,8 +108,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.ipc.SystemSetConfig(inScreenMode.value, inDebugMode.value == 'true' ? true : false, inEllogExpireDays.value, inResultExpireDays.value, parseInt(inIPver.value), inIPv4.value, inIPv6.value);  // system configの保存
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 保存通知
 	 * @param {void}
 	 * @return {void}
@@ -118,8 +118,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.addToast('Info', 'System 設定を保存しました。');
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc renewSystemConfigView
 	 * @param {void}
 	 * @return {void}
@@ -127,7 +127,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	window.renewSystemConfigView = async function (arg) {
 		// console.log( 'window.renewSystemConfigView(): arg:', arg );
 		btnSystemConfigSet.disabled = false;
-		btnSystemConfigSet.textContent = '設定';
+		btnSystemConfigSet.textContent = '適用と保存';
 
 		inScreenMode.value = arg.screenMode;
 		inBackgroundMode.checked = arg.backgroundMode;
@@ -143,8 +143,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		inIPv6.value = arg.IPv4;
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc URLを外部ブラウザで開く
 	 * @param {void}
 	 * @return {void}

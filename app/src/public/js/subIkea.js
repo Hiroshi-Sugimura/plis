@@ -30,7 +30,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	let selIkeaDebugMode = document.getElementById('selIkeaDebugMode');
 	let btnIkeaConfigSet = document.getElementById('btnIkeaConfigSet');
 
-	/** 
+	/**
 	 * @func window.renewFacilitiesIkea
 	 * @desc mainからの情報で，ikea関係のhtmlを変更する
 	 * @param {Object} arg
@@ -186,7 +186,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	//----------------------------------------------------------------------------------------------
 	// IKEA デバイス制御
 
-	/** 
+	/**
 	 * @func window.btnIkeaBulbOnOff_Click
 	 * @desc Ikea 照明のON/OFF
 	 * @param key - device id
@@ -204,7 +204,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
+	/**
 	 * @func window.inIkeaBlindApertureRange_Change
 	 * @desc Ikea ブラインドの開け閉めステップ
 	 * @param key - device id
@@ -217,7 +217,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.ipc.IkeaSend(key, 'blind', { "position": value });
 	};
 
-	/** 
+	/**
 	 * @func window.inIkeaBlindApertureNumber_Change
 	 * @desc Ikea ブラインドの開け閉めステップ
 	 * @param key - device id
@@ -269,7 +269,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						*/
 	window.IkeaConfigSaved = function () {
 		btnIkeaConfigSet.disabled = false;
-		btnIkeaConfigSet.textContent = '設定';
+		btnIkeaConfigSet.textContent = '適用と保存';
 
 		window.addToast('Info', 'IKEA 設定を保存しました。');
 	};
@@ -287,7 +287,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		inIkeaPsk.value = arg.psk;
 		selIkeaDebugMode.value = arg.debug;
 		btnIkeaConfigSet.disabled = false;
-		btnIkeaConfigSet.textContent = '設定';
+		btnIkeaConfigSet.textContent = '適用と保存';
 
 		if (arg.enabled) {  // 利用する場合
 			H2ControlIkea.style.display = 'block';
@@ -302,7 +302,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 
-	/** 
+	/**
 	 * @func window.IkeaDebugPrint
 	 * @desc Ikeaモジュールがデバッグなら出力する
 	 * @param {...} values

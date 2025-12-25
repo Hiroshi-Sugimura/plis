@@ -14,6 +14,7 @@ import path from 'node:path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 import { store } from './storeSingleton.mjs';
+import { logger } from './logger.mjs';
 import eSM from 'e-smartmeter-echonet-lite';
 import cron from 'node-cron';
 import EL from 'echonet-lite';

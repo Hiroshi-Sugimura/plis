@@ -175,7 +175,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.ESMConfigSaved = function () {
 		btnESMConfigSet.disabled = false;
-		btnESMConfigSet.textContent = '設定';
+		btnESMConfigSet.textContent = '適用と保存';
 
 		window.addToast('Info', 'ESM 設定を保存しました。');
 	};

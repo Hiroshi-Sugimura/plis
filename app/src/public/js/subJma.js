@@ -914,8 +914,8 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	//----------------------------------------------------------------------------------------------
-	// 
-	/** 
+	//
+	/**
 	 * @func window.renewJmaAbst
 	 * @desc JMA 表示更新
 	 * @param {void}
@@ -931,7 +931,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		window.renewJma();
 	};
 
-	/** 
+	/**
 	 * @func window.renewJmaDetail
 	 * @desc JMA 詳細表示
 	 * @param {void}
@@ -1053,8 +1053,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 天気予報の更新、全体(上記renewJmaDetailのEntry)
 	 * @param {void}
 	 * @return {void}
@@ -1070,8 +1070,8 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 	//----------------------------------------------------------------------------------------------
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc jma config
 	 * @param {void}
 	 * @return {void}
@@ -1086,21 +1086,21 @@ window.addEventListener('DOMContentLoaded', function () {
 			selJmaDebugMode.value == 'true' ? true : false);
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc 設定完了
 	 * @param {void}
 	 * @return {void}
 	 */
 	window.JmaConfigSaved = function () {
 		btnJmaConfigSet.disabled = false;
-		btnJmaConfigSet.textContent = '設定';
+		btnJmaConfigSet.textContent = '適用と保存';
 
 		window.addToast('Info', 'JMA 設定を保存しました。');
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc mainプロセスから設定値をもらったので画面を更新
 	 * @param {void}
 	 * @return {void}
@@ -1111,8 +1111,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		divJmaCode.innerHTML = selJmaArea.value;
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc セレクトボックスの変更
 	 * @param {void}
 	 * @return {void}
@@ -1121,8 +1121,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		divJmaCode.innerHTML = selJmaArea.value;
 	};
 
-	/** 
-	 * @func 
+	/**
+	 * @func
 	 * @desc make jma selector
 	 * @param {void}
 	 * @return {void}
@@ -1135,7 +1135,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	};
 
 
-	/** 
+	/**
 	 * @func window.JmaDebugLog
 	 * @desc JMAモジュールがデバッグなら出力する
 	 * @param {...} values

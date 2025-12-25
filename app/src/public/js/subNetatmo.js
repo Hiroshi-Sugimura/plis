@@ -132,7 +132,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.NetatmoConfigSaved = function () {
 		btnNetatmoConfigSet.disabled = false;
-		btnNetatmoConfigSet.textContent = '設定';
+		btnNetatmoConfigSet.textContent = '適用と保存';
 
 		window.addToast('Info', 'Netatmo 設定を保存しました。');
 	};

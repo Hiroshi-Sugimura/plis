@@ -173,7 +173,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	window.btnELConfigSet_Click = function () {
 		console.log('window.btnELConfigSet_Click() inELUse:', inELUse.checked);
 		btnELConfigSet.disabled = false;
-		btnELConfigSet.textContent = '設定';
+		btnELConfigSet.textContent = '適用と保存';
 
 		// EL use or not
 		if (inELUse.checked == false) {
@@ -202,7 +202,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	 */
 	window.ELConfigSaved = function () {
 		btnELConfigSet.disabled = false;
-		btnELConfigSet.textContent = '設定';
+		btnELConfigSet.textContent = '適用と保存';
 
 		window.addToast('Info', 'EL 設定を保存しました。');
 	};
@@ -218,7 +218,7 @@ window.addEventListener('DOMContentLoaded', function () {
 		inELUseOldSearch.checked = arg.oldSearch;
 
 		btnELConfigSet.disabled = false;
-		btnELConfigSet.textContent = '設定';
+		btnELConfigSet.textContent = '適用と保存';
 
 		if (arg.enabled) {  // 利用する場合
 			H2ControlEL.style.display = 'block';
