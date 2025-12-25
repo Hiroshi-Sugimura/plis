@@ -18,7 +18,8 @@ import { SwitchBotHandler } from 'switchbot-handler';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, Op, switchBotRawModel, switchBotDataModel } = localDB;
-import { objectSort, isObjEmpty, mergeDeeply, getToday } from './mainSubmodule.mjs';
+import { objectSort, isObjEmpty, mergeDeeply, getToday, formatDate } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
 
 /**
  * @typedef {Object} SwitchBotConfig
@@ -125,47 +126,51 @@ let mainSwitchBot = {
 		sendIPCMessage("renewSwitchBotConfigView", config);
 
 		if (!config.enabled) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot is disabled.') : 0;
+			logger.debug('mainSwitchBot', config.debug, 'start(): mainSwitchBot is disabled.');
 			mainSwitchBot.isRun = false;
 			return;
 		}
 		mainSwitchBot.isRun = true;
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.start()') : 0;
+		logger.debug('mainSwitchBot', config.debug, 'start()');
 
 		if (config.token == '') {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.start() token is empty.') : 0;
+			logger.debug('mainSwitchBot', config.debug, 'start() token is empty.');
 			mainSwitchBot.isRun = false;
 			return;
 		}
 
 		if (config.secret == '') {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.start() secret is empty.') : 0;
+			logger.debug('mainSwitchBot', config.debug, 'start() secret is empty.');
 			mainSwitchBot.isRun = false;
 			return;
 		}
 
 		if (persist?.countDay == getToday()) {  // カウンタが今日でなければ、persistあっても0リセット
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.count is continued.') : 0;
+			logger.debug('mainSwitchBot', config.debug, 'count is continued.');
 			mainSwitchBot.count = persist.count;
 		} else {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.count is reset.') : 0;
+			logger.debug('mainSwitchBot', config.debug, 'count is reset.');
 			persist.count = 0;
 			persist.countDay = getToday();
 		}
 
 		try {
-			mainSwitchBot.startCore((facilities) => {
-				persist = facilities;
-				persist.count = mainSwitchBot.count;
-				persist.countDay = getToday();
-				sendIPCMessage("fclSwitchBot", persist);
-				switchBotRawModel.create({ detail: JSON.stringify(persist) });  // store raw data
-				mainSwitchBot.storeData(facilities);  // store meaningfull data
-				mainSwitchBot.sendTodayRoomEnv();		// 現在のデータを送っておく
+			mainSwitchBot.startCore(async (facilities) => {
+				try {
+					persist = facilities;
+					persist.count = mainSwitchBot.count;
+					persist.countDay = getToday();
+					sendIPCMessage("fclSwitchBot", persist);
+					await switchBotRawModel.create({ detail: JSON.stringify(persist) });  // store raw data
+					await mainSwitchBot.storeData(facilities);  // store meaningfull data
+					await mainSwitchBot.sendTodayRoomEnv();		// 現在のデータを送っておく
+				} catch (innerError) {
+					logger.error('mainSwitchBot', 'start callback error:', innerError);
+				}
 			});
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.start() error:\x1b[32m', error, '\x1b[0m');
+			logger.error('mainSwitchBot', 'start() error:', error);
 		}
 	},
 
@@ -174,7 +179,7 @@ let mainSwitchBot = {
 	 */
 	stop: async function () {
 		mainSwitchBot.isRun = false;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.stop()') : 0;
+		logger.debug('mainSwitchBot', config.debug, 'stop()');
 
 		await mainSwitchBot.stopObservation();
 		await store.set('config.SwitchBot', config);
@@ -186,7 +191,7 @@ let mainSwitchBot = {
 	 */
 	stopWithoutSave: async function () {
 		mainSwitchBot.isRun = false;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.stopWithoutSave()') : 0;
+		logger.debug('mainSwitchBot', config.debug, 'stopWithoutSave()');
 
 		await mainSwitchBot.stopObservation();
 	},
@@ -230,11 +235,11 @@ let mainSwitchBot = {
 	 */
 	control: function (id, command, param) {
 		// mainSwitchBot.client
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.control() id:', id, ', command:', command, ', param:', param) : 0;
+		logger.debug('mainSwitchBot', config.debug, `control() id:${id}, command:${command}, param:${param}`);
 
 		mainSwitchBot.client.setDeviceStatus(id, command, param, (ret) => {
 			if (isObjEmpty(ret)) {
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.control() ret:', ret);
+				logger.error('mainSwitchBot', 'control() ret is empty:', ret);
 			} else {
 				for (let i of ret.items) {
 					// console.log(JSON.stringify(i));
@@ -264,7 +269,7 @@ let mainSwitchBot = {
 			_client.getDevices(async (devlist) => {
 				mainSwitchBot.countUp();
 				if (!devlist || !devlist.deviceList) {
-					console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.renewFacilities() devlist is undefined or null.');
+					logger.warn('mainSwitchBot', 'renewFacilities() devlist is undefined or null.');
 					return;
 				}
 				ret.deviceList = devlist.deviceList;
@@ -282,8 +287,12 @@ let mainSwitchBot = {
 						case 'Contact Sensor':
 						case 'Color Bulb':
 						case 'Bot':
-							ret[d.deviceId] = await _client.getDeviceStatusSync(d.deviceId);
-							mainSwitchBot.countUp();
+							try {
+								ret[d.deviceId] = await _client.getDeviceStatusSync(d.deviceId);
+								mainSwitchBot.countUp();
+							} catch (e) {
+								logger.error('mainSwitchBot', `getDeviceStatusSync error for ${d.deviceId}:`, e);
+							}
 							break;
 						case 'Hub Mini': // APIの回数を抑えるために、詳細を取りに行かないデバイスを設定
 						case 'Indoor Cam':
@@ -294,27 +303,20 @@ let mainSwitchBot = {
 				}
 				callback(objectSort(ret));
 			});
-			// mainSwitchBot.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.renewFacilities() devlist:\x1b[32m', devlist, '\x1b[0m' ):0;
 		} catch (error) {
-			switch (error) {
-				case 'Error: Http 401 Error. User permission is denied due to invalid token.':
-					console.log(JSON.stringify(_client));
-					sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainSwitchBot.renewFacilities()', stackLog: `Http 401 Error. User permission is denied due to invalid token.\n${error}` });
-					break;
+			if (error.toString().includes('Http 401 Error')) {
+				sendIPCMessage('Error', { datetime: formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), moduleName: 'mainSwitchBot.renewFacilities()', stackLog: `Http 401 Error. User permission is denied due to invalid token.\n${error}` });
 			}
 
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.renewFacilities() error:\x1b[32m', error, '\x1b[0m');
-			console.log(ret.deviceList);
-
+			logger.error('mainSwitchBot', 'renewFacilities() error:', error);
 			throw error;
 		}
 	},
 
-
 	countUp: function () {
 		mainSwitchBot.count += 1;
 		if (mainSwitchBot.count == 10000) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.count reaches the API limits (10000 calls)');
+			logger.error('mainSwitchBot', 'count reaches the API limits (10000 calls)');
 		}
 	},
 
@@ -331,7 +333,7 @@ let mainSwitchBot = {
 		}
 
 		mainSwitchBot.callback = _callback;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.startCore() config:\x1b[32m', config, '\x1b[0m') : 0;
+		logger.debug('mainSwitchBot', config.debug, 'startCore() config:\x1b[32m', config, '\x1b[0m');
 
 		try {
 			mainSwitchBot.client = new SwitchBotHandler(config.token, config.secret);
@@ -344,7 +346,7 @@ let mainSwitchBot = {
 			// 監視はcronで実施、DBへのクエリ方法をもっと高速になるように考えたほうが良い
 			// 1分に1回実施だと一日10000回のAPI制限に引っかかるので通信時間考えて毎2分30秒で実施、3分に1回という感じ
 			mainSwitchBot.observationJob = cron.schedule('30 */2 * * * *', async () => {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.cron.observationJob()') : 0;
+				logger.debug('mainSwitchBot', config.debug, 'cron.observationJob()');
 
 				mainSwitchBot.renewFacilities(mainSwitchBot.client, (devStatusList) => {  // 現在のデータ取得
 					mainSwitchBot.facilities = devStatusList;
@@ -355,34 +357,34 @@ let mainSwitchBot = {
 
 			// カウントリセットジョブ
 			mainSwitchBot.countResetJob = cron.schedule('0 0 * * *', () => {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.cron.countResetJob() count:', mainSwitchBot.count) : 0;
+				logger.debug('mainSwitchBot', config.debug, `cron.countResetJob() count: ${mainSwitchBot.count}`);
 				mainSwitchBot.count = 0;
 			});
 			mainSwitchBot.countResetJob.start();
 
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.startCore() error:\x1b[32m', error, '\x1b[0m');
+			logger.error('mainSwitchBot', 'startCore() error:\x1b[32m', error, '\x1b[0m');
 		}
 	},
 
 	/** 内部：cron停止。 */
 	stopObservation: function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.stopObservation().') : 0;
+		logger.debug('mainSwitchBot', config.debug, 'stopObservation()');
 
 		if (mainSwitchBot.observationJob) {
 			mainSwitchBot.observationJob.stop();
 			mainSwitchBot.observationJob = null;
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.observationJob is stopped.') : 0;
+			logger.debug('mainSwitchBot', config.debug, 'observationJob is stopped.');
 		} else {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.observationJob has already stopped.') : 0;
+			logger.debug('mainSwitchBot', config.debug, 'observationJob has already stopped.');
 		}
 
 		if (mainSwitchBot.countResetJob) {
 			mainSwitchBot.countResetJob.stop();
 			mainSwitchBot.countResetJob = null;
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.countResetJob is stopped.') : 0;
+			logger.debug('mainSwitchBot', config.debug, 'countResetJob is stopped.');
 		} else {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.countResetJob has already stopped.') : 0;
+			logger.debug('mainSwitchBot', config.debug, 'countResetJob has already stopped.');
 		}
 
 	},
@@ -605,8 +607,8 @@ let mainSwitchBot = {
 						break;
 				}
 			} catch (error) {
-				sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainSwitchBot', stackLog: `${error.message}, d:${d}, det:${det}` });
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.storeData() error:\x1b[32m', error, 'SwitchBot:dev:', d, ' detail:', det, '\x1b[0m');
+				sendIPCMessage('Error', { datetime: formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), moduleName: 'mainSwitchBot', stackLog: `${error.message}, d:${JSON.stringify(d)}, det:${JSON.stringify(det)}` });
+				logger.error('mainSwitchBot', 'storeData() error:', error, 'SwitchBot:dev:', d, ' detail:', det);
 				throw error;
 			}
 		}
@@ -645,9 +647,8 @@ let mainSwitchBot = {
 
 		let ret = "";
 		for (let t = 0; t < 480; t += 1) {  // 24h * 20 times (= 60min / 3min)
-			// console.log( T1.toISOString(), ':', T1.toFormat('YYYY-MM-DD HH24:MI'), ', ', T4.toFormat('HH24:MI') );
 
-			ret += `WHEN "createdAt" LIKE "${T1.toFormat('YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${T2.toFormat('YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${T3.toFormat('YYYY-MM-DD HH24:MI')}%" THEN "${T4.toFormat('HH24:MI')}" \n`;
+			ret += `WHEN "createdAt" LIKE "${formatDate(T1, 'YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${formatDate(T2, 'YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${formatDate(T3, 'YYYY-MM-DD HH24:MI')}%" THEN "${formatDate(T4, 'HH24:MI')}" \n`;
 
 			T1.setMinutes(T1.getMinutes() + 3); // + 3 min
 			T2.setMinutes(T2.getMinutes() + 3); // + 3 min
@@ -680,7 +681,7 @@ let mainSwitchBot = {
 			}
 			return meterList;
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.getMeterList()', error);
+			logger.error('mainSwitchBot', 'getMeterList() error:', error);
 		}
 	},
 
@@ -707,7 +708,7 @@ let mainSwitchBot = {
 			}
 			return list;
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.getPlugMiniList()', error);
+			logger.error('mainSwitchBot', 'getPlugMiniList() error:', error);
 		}
 	},
 
@@ -738,7 +739,7 @@ let mainSwitchBot = {
 
 			return rows;
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.getTempratureRows()', error);
+			logger.error('mainSwitchBot', 'getTempratureRows() error:', error);
 		}
 	},
 
@@ -770,7 +771,7 @@ let mainSwitchBot = {
 
 			return rows;
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.getHumidityRows()', error);
+			logger.error('mainSwitchBot', 'getHumidityRows() error:', error);
 		}
 	},
 
@@ -796,7 +797,7 @@ let mainSwitchBot = {
 
 			return rows;
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.getVoltageRows()', error);
+			logger.error('mainSwitchBot', 'getVoltageRows() error:', error);
 		}
 	},
 
@@ -822,7 +823,7 @@ let mainSwitchBot = {
 
 			return rows;
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.getWeightRows()', error);
+			logger.error('mainSwitchBot', 'getWeightRows()', error);
 		}
 	},
 
@@ -849,7 +850,7 @@ let mainSwitchBot = {
 
 			return rows;
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.getCurrentRows()', error);
+			logger.error('mainSwitchBot', 'getCurrentRows()', error);
 		}
 	},
 
@@ -892,7 +893,7 @@ let mainSwitchBot = {
 
 					// temperature
 					if (rowsT) {
-						let row = rowsT.find((row) => row.dataValues.timeunit == T1.toFormat('HH24:MI'));
+						let row = rowsT.find((row) => row.dataValues.timeunit == formatDate(T1, 'HH24:MI'));
 
 						if (row) {
 							pushRow.temperature = row.dataValues.avgTemperature;
@@ -903,7 +904,7 @@ let mainSwitchBot = {
 
 					// humidity
 					if (rowsH) {
-						let row = rowsH.find((row) => row.dataValues.timeunit == T1.toFormat('HH24:MI'));
+						let row = rowsH.find((row) => row.dataValues.timeunit == formatDate(T1, 'HH24:MI'));
 
 						if (row) {
 							pushRow.humidity = row.dataValues.avgHumidity;
@@ -942,7 +943,7 @@ let mainSwitchBot = {
 
 					// volt
 					if (rowsV) {
-						let row = rowsV.find((row) => row.dataValues.timeunit == T1.toFormat('HH24:MI'));
+						let row = rowsV.find((row) => row.dataValues.timeunit == formatDate(T1, 'HH24:MI'));
 
 						if (row) {
 							pushRow.voltage = row.dataValues.avgVoltage;
@@ -953,7 +954,7 @@ let mainSwitchBot = {
 
 					// watt
 					if (rowsW) {
-						let row = rowsW.find((row) => row.dataValues.timeunit == T1.toFormat('HH24:MI'));
+						let row = rowsW.find((row) => row.dataValues.timeunit == formatDate(T1, 'HH24:MI'));
 
 						if (row) {
 							pushRow.watt = row.dataValues.avgWatt;
@@ -964,7 +965,7 @@ let mainSwitchBot = {
 
 					// ampere
 					if (rowsC) {
-						let row = rowsC.find((row) => row.dataValues.timeunit == T1.toFormat('HH24:MI'));
+						let row = rowsC.find((row) => row.dataValues.timeunit == formatDate(T1, 'HH24:MI'));
 
 						if (row) {
 							pushRow.ampere = row.dataValues.avgAmpere;
@@ -982,7 +983,7 @@ let mainSwitchBot = {
 
 			return ret;
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.getTodayRoomEnvSwitchBot()', error);
+			logger.error('mainSwitchBot', 'getTodayRoomEnvSwitchBot() error:', error);
 		}
 	},
 
@@ -994,7 +995,7 @@ let mainSwitchBot = {
 			arg = await mainSwitchBot.getTodayRoomEnvSwitchBot();
 			sendIPCMessage('renewRoomEnvSwitchBot', JSON.stringify(arg));
 		} else {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSwitchBot.sendTodayRoomEnv() config.enabled:', config.enabled);
+			logger.error('mainSwitchBot', 'sendTodayRoomEnv() config.enabled:', config.enabled);
 		}
 	}
 

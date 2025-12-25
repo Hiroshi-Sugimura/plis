@@ -16,7 +16,8 @@ import co2s from 'usb-ud-co2s';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, Op, roomEnvModel } = localDB;
-import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
+import { objectSort, getNow, formatDate, getTodayDate, getYesterdayDate, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
 
 /**
  * @typedef {Object} Co2sConfig
@@ -67,7 +68,6 @@ let mainCo2s = {
 	 * @param {SendIPCMessage} _sendIPCMessage
 	 */
 	start: function (_sendIPCMessage) {
-		try { fs.appendFileSync('/tmp/plis_debug.log', 'mainCo2s.start() CALLED. isRun:' + mainCo2s.isRun + '\n'); } catch (e) { }
 		sendIPCMessage = _sendIPCMessage;
 
 		if (mainCo2s.isRun) {  // 重複起動対策
@@ -75,7 +75,7 @@ let mainCo2s = {
 				sendIPCMessage("renewCo2sConfigView", config);
 				sendIPCMessage("renewCo2s", persist);
 			} else {
-				config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.start() duplicate-start, sendIPCMessage not initialized') : 0;
+				logger.warn('mainCo2s', config.debug, 'start() duplicate-start, sendIPCMessage not initialized');
 			}
 			mainCo2s.sendTodayRoomEnv();		// 現在のデータを送っておく
 			return;
@@ -85,40 +85,37 @@ let mainCo2s = {
 		config.place = store.get('config.Co2s.place', config.place);
 		config.debug = store.get('config.Co2s.debug', config.debug);
 		persist = store.get('persist.Co2s', persist);
-		try { fs.appendFileSync('/tmp/plis_debug.log', 'mainCo2s config.enabled: ' + config.enabled + '\n'); } catch (e) { }
+
 		if (typeof sendIPCMessage === 'function') {
 			sendIPCMessage("renewCo2sConfigView", config);
 		} else {
-			config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.start() sendIPCMessage not initialized') : 0;
+			logger.warn('mainCo2s', config.debug, 'start() sendIPCMessage not initialized');
 		}
 
 		if (config.enabled == false) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.start() usb-ud-co2s is disabled.') : 0;
+			logger.debug('mainCo2s', config.debug, 'start() usb-ud-co2s is disabled.');
 			mainCo2s.isRun = false;
 			return;
 		}
 		mainCo2s.isRun = true;
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.start()') : 0;
-		try { fs.appendFileSync('/tmp/plis_debug.log', 'mainCo2s.start() co2s object keys: ' + Object.keys(co2s) + '\n'); } catch (e) { }
-		try { fs.appendFileSync('/tmp/plis_debug.log', 'RESOLVED usb-ud-co2s: ' + require.resolve('usb-ud-co2s') + '\n'); } catch (e) { }
-		try { fs.appendFileSync('/tmp/plis_debug.log', 'co2s.start code: ' + co2s.start.toString() + '\n'); } catch (e) { }
+		logger.debug('mainCo2s', config.debug, 'start()');
 
 		try {
 			co2s.start((sensorData, error) => {
 				if (error) {
 					// それ以外のエラーは良く知らないのでエラーとして出す
-					console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.co2s.start()', error);
+					logger.error('mainCo2s', 'co2s.start() error:', error);
 					return;
 				}
 
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.start() sensorData:', '\x1b[32m', sensorData, '\x1b[0m') : 0;
+				logger.debug('mainCo2s', config.debug, 'start() sensorData:', sensorData);
 
 				switch (sensorData.state) {
 					case 'OK':
 						break;
 					case 'connected':
-						persist.time = new Date().toFormat("YYYY-MM-DD HH24:MI:SS");
+						persist.time = getNow();
 						persist.temperature = sensorData.TMP;
 						persist.humidity = sensorData.HUM;
 						persist.co2 = sensorData.CO2;
@@ -129,27 +126,27 @@ let mainCo2s = {
 								lastSendTime = now;
 							}
 						} else {
-							config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.co2s.start() sendIPCMessage not initialized') : 0;
+							logger.warn('mainCo2s', config.debug, 'co2s.start() callback sendIPCMessage not initialized');
 						}
 						break;
 				}
 			});
 		} catch (e) {
+			logger.error('mainCo2s', 'co2s.start() outer error:', e);
 		}
 
 		mainCo2s.storeJob = cron.schedule('*/1 * * * *', async () => {
 			try {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.cron.schedule() every 1min') : 0;
+				logger.debug('mainCo2s', config.debug, 'cron.schedule() every 1min');
 
 				let dt = new Date();
 
 				//------------------------------------------------------------
 				// 部屋の環境を記録、Co2s
-				if (config.enabled && persist.length != 0) {
-					// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.cron.schedule() Store Co2s'):0;
+				if (config.enabled && !isObjEmpty(persist)) {
 					let n = persist;
 					if (n) {
-						roomEnvModel.create({
+						await roomEnvModel.create({
 							dateTime: dt,
 							srcType: 'Co2s',
 							place: config.place ? config.place : 'Room',
@@ -159,19 +156,19 @@ let mainCo2s = {
 						});
 					}
 				} else {
-					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.cron.schedule() persist:', persist) : 0;
+					logger.debug('mainCo2s', config.debug, 'cron.schedule() persist is empty or disabled:', persist);
 				}
 
 				mainCo2s.sendTodayRoomEnv(); 		// 本日のデータの定期的送信
 			} catch (error) {
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.cron.schedule() each 1min, error:', error);
+				logger.error('mainCo2s', 'cron.schedule() each 1min, error:', error);
 			}
 		});
 
 		if (typeof sendIPCMessage === 'function') {
 			sendIPCMessage("renewCo2s", persist);
 		} else {
-			config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.start() tail sendIPCMessage not initialized') : 0;
+			logger.warn('mainCo2s', config.debug, 'start() tail sendIPCMessage not initialized');
 		}
 		mainCo2s.sendTodayRoomEnv();		// 現在のデータを送っておく
 		mainCo2s.storeJob.start();
@@ -182,11 +179,11 @@ let mainCo2s = {
 	 */
 	stop: async function () {
 		mainCo2s.isRun = false;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.stop()') : 0;
+		logger.debug('mainCo2s', config.debug, 'stop()');
 
 		if (mainCo2s.observationJob) {
 			await mainCo2s.observationJob.stop();
-			mainCo2s.observationJob = null;
+			mainArp.observationJob = null;
 		}
 
 		await mainCo2s.setConfig(config);
@@ -199,7 +196,7 @@ let mainCo2s = {
 	 */
 	stopWithoutSave: async function () {
 		mainCo2s.isRun = false;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.stopWithoutSave()') : 0;
+		logger.debug('mainCo2s', config.debug, 'stopWithoutSave()');
 
 		if (mainCo2s.observationJob) {
 			await mainCo2s.observationJob.stop();
@@ -221,7 +218,7 @@ let mainCo2s = {
 			sendIPCMessage("renewCo2sConfigView", config);
 			sendIPCMessage("configSaved", 'Co2s');
 		} else {
-			config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.setConfig() sendIPCMessage not initialized') : 0;
+			logger.warn('mainCo2s', config.debug, 'setConfig() sendIPCMessage not initialized');
 		}
 	},
 
@@ -278,9 +275,7 @@ let mainCo2s = {
 
 		let ret = "";
 		for (let t = 0; t < 480; t += 1) {  // 24h * 20 times (= 60min / 3min)
-			// console.log( T1.toISOString(), ':', T1.toFormat('YYYY-MM-DD HH24:MI'), ', ', T4.toFormat('HH24:MI') );
-
-			ret += `WHEN "createdAt" LIKE "${T1.toFormat('YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${T2.toFormat('YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${T3.toFormat('YYYY-MM-DD HH24:MI')}%" THEN "${T4.toFormat('HH24:MI')}" \n`;
+			ret += `WHEN "createdAt" LIKE "${formatDate(T1, 'YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${formatDate(T2, 'YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${formatDate(T3, 'YYYY-MM-DD HH24:MI')}%" THEN "${formatDate(T4, 'HH24:MI')}" \n`;
 
 			T1.setMinutes(T1.getMinutes() + 3); // + 3 min
 			T2.setMinutes(T2.getMinutes() + 3); // + 3 min
@@ -328,7 +323,7 @@ let mainCo2s = {
 
 			return rows;
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.getTodayRoomEnvCo2s()', error);
+			logger.error('mainCo2s', 'getRows()', error);
 		}
 	},
 
@@ -349,7 +344,7 @@ let mainCo2s = {
 			T1.setHours(0, 0, 0);
 			let array = [];
 			for (let t = 0; t < 480; t += 1) {
-				let row = rows.find((row) => row.dataValues.timeunit == T1.toFormat('HH24:MI'));
+				let row = rows.find((row) => row.dataValues.timeunit == formatDate(T1, 'HH24:MI'));
 
 				if (row) {
 					array.push({
@@ -376,7 +371,7 @@ let mainCo2s = {
 
 			return array;
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.getTodayRoomEnvCo2s()', error);
+			logger.error('mainCo2s', 'getTodayRoomEnv()', error);
 		}
 	},
 
@@ -396,10 +391,10 @@ let mainCo2s = {
 			if (typeof sendIPCMessage === 'function') {
 				sendIPCMessage('renewRoomEnvCo2s', JSON.stringify(arg));
 			} else {
-				config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.sendTodayRoomEnv() sendIPCMessage not initialized') : 0;
+				logger.warn('mainCo2s', config.debug, 'sendTodayRoomEnv() sendIPCMessage not initialized');
 			}
 		} else {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCo2s.sendTodayRoomEnv() config.enabled:', config.enabled);
+			logger.debug('mainCo2s', config.debug, 'sendTodayRoomEnv() config.enabled is false');
 		}
 	}
 };

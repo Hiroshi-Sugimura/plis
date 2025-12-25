@@ -21,11 +21,10 @@ import { exec } from 'child_process';
 
 
 //////////////////////////////////////////////////////////////////////
-// 追加ライブラリ（date-utils 互換の軽量フォーマッタ）
-import './dateformat.mjs';
 app.disableHardwareAcceleration(); // electron設定とmain window
 import { store } from './storeSingleton.mjs';
-import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
+import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply, formatDate } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
 import oaw from 'about-window';  // このアプリについて Common JSモジュール対応、デフォルトエクスポート
 const { default: openAboutWindow } = oaw;  // このアプリについて Common JSモジュール対応、オブジェクトのデストラクチャリング
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
@@ -99,137 +98,94 @@ let sendIPCMessage = function (cmdStr, argStr) {
 			mainWindow.webContents != null &&
 			!mainWindow.webContents.isDestroyed?.()
 		) {
-			// 構造化複製でそのまま送る（JSON.stringifyはしない）
 			mainWindow.webContents.send('to-renderer', { cmd: cmdStr, arg: argStr });
 		}
 	} catch (error) {
-		console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.sendIPCMessage() error:\x1b[32m', error, '\x1b[0m');
-		// 自動リロードは白画面化の一因になるため禁止。ログのみに留める。
+		logger.error('main', 'sendIPCMessage() error:', error);
 	}
 };
 
-//////////////////////////////////////////////////////////////////////
-// Communication for Electron's Renderer process
-//////////////////////////////////////////////////////////////////////
-// ============================================================================
-// IPC ハンドラ群
-// 各機能(mainEL, mainArp, mainHue, etc.)への起動/停止/設定更新要求を受け取り、
-// 必要に応じて setConfig/start/stop を呼び出す。応答は sendIPCMessage 経由で
-// レンダラーへ通知する。基本的に handle は Promise を返し、UI側は invoke で待機。
-// ============================================================================
-// PLIS全体 初期化通知 / 画面更新系
+//----------------------------------------------------------------------
+// IPC通信 (Renderer -> Main)
+//----------------------------------------------------------------------
 
-// Renderer準備完了
-/**
- * レンダラー初期化完了時に呼ばれる。各サブモジュールの start を順次呼び出し、
- * 最新設定/ライセンス/環境データをレンダラーへ送信する。
- * @event ipcMain.handle('already')
- */
+// 起動時に一回だけ呼ばれる。
 ipcMain.handle('already', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- already') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- already');
 
-	// 起動したので機能スタート
 	sendIPCMessage("renewSystemConfigView", config);
 	sendIPCMessage("renewUserConfigView", mainUser.getConfig());
 	sendIPCMessage("renewLicenses", licenses);
 
-	mainEL.start(sendIPCMessage, localaddresses);
-	mainArp.start(sendIPCMessage);
-	mainHue.start(sendIPCMessage);
-	mainOwm.start(sendIPCMessage);
-	mainJma.start(sendIPCMessage);
-	mainNetatmo.start(sendIPCMessage);
-	mainIkea.start(sendIPCMessage);
-	mainESM.start(sendIPCMessage);
-	mainOmron.start(sendIPCMessage);
-	mainCo2s.start(sendIPCMessage);
-	mainSwitchBot.start(sendIPCMessage);
-	mainCalendar.start(sendIPCMessage);
-	mainHALsync.start(sendIPCMessage);
-	mainAutoAssessment.start(sendIPCMessage);
+	await Promise.all([
+		mainEL.start(sendIPCMessage, localaddresses),
+		mainArp.start(sendIPCMessage),
+		mainHue.start(sendIPCMessage),
+		mainOwm.start(sendIPCMessage),
+		mainJma.start(sendIPCMessage),
+		mainNetatmo.start(sendIPCMessage),
+		mainIkea.start(sendIPCMessage),
+		mainESM.start(sendIPCMessage),
+		mainOmron.start(sendIPCMessage),
+		mainCo2s.start(sendIPCMessage),
+		mainSwitchBot.start(sendIPCMessage),
+		mainCalendar.start(sendIPCMessage),
+		mainHALsync.start(sendIPCMessage),
+		mainAutoAssessment.start(sendIPCMessage)
+	]);
 
 	persist.HAL = await mainHALlocal.getLastData();
 	sendIPCMessage("HALRenewResponse", persist.HAL);
 });
 
-
 // 設定保存
-/**
- * 全設定の保存要求。
- * @event ipcMain.handle('configSave')
- */
 ipcMain.handle('configSave', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- configSave, arg:\x1b[32m', arg, '\x1b[0m') : 0;
-	// await HALConfigSave(  );  // ここまだ
+	logger.debug('main', config.debug, 'ipcMain <- configSave, arg:', arg);
 	await saveConfig();
-	sendIPCMessage("configSaved", 'All');  // 保存したので画面に通知
+	sendIPCMessage("configSaved", 'All');
 });
 
-// URLを外部ブラウザで開く
-/**
- * 外部URLをデフォルトブラウザで開く。
- * @event ipcMain.handle('URLopen')
- * @param {string} arg - URL文字列
- */
+// URLを開く
 ipcMain.handle('URLopen', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- URLopen, arg:', arg) : 0;
+	logger.debug('main', config.debug, 'ipcMain <- URLopen, arg:', arg);
 	shell.openExternal(arg);
 });
 
-
 // ページ内検索
-/** ページ内検索開始 */
-ipcMain.handle('PageInSearch', (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearch, arg:', arg) : 0;
+ipcMain.handle('PageInSearch', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- PageInSearch, arg:', arg);
 	try {
-		const requestId = mainWindow.webContents.findInPage(arg, {
+		mainWindow.webContents.findInPage(arg, {
 			forward: true,
 			findNext: false,
 			matchCase: false
 		});
 	} catch (error) {
-		sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'main.PageInSearch', stackLog: error.message });
+		sendIPCMessage('Error', { datetime: formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), moduleName: 'main.PageInSearch', stackLog: error.message });
 	}
 });
 
-/** ページ内検索 次へ */
-ipcMain.handle('PageInSearchNext', (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearchNext, arg:', arg) : 0;
-	const requestId = mainWindow.webContents.findInPage(arg, {
-		forward: true,
-		findNext: true,
-		matchCase: false
-	});
+ipcMain.handle('PageInSearchNext', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- PageInSearchNext, arg:', arg);
+	mainWindow.webContents.findInPage(arg, { forward: true, findNext: true });
 });
 
-/** ページ内検索 前へ */
-ipcMain.handle('PageInSearchPrev', (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearchPrev, arg:', arg) : 0;
-	const requestId = mainWindow.webContents.findInPage(arg, {
-		forward: false,
-		findNext: true,
-		matchCase: false
-	});
+ipcMain.handle('PageInSearchPrev', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- PageInSearchPrev, arg:', arg);
+	mainWindow.webContents.findInPage(arg, { forward: false, findNext: true });
 });
 
-/** ページ内検索終了 */
-ipcMain.handle('PageInSearchStop', (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- PageInSearchStop') : 0;
+ipcMain.handle('PageInSearchStop', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- PageInSearchStop');
 	mainWindow.webContents.stopFindInPage('clearSelection');
 });
 
-
-// System / Calendar 祝日再取得
-/** 祝日データ再取得 */
 ipcMain.handle('CalendarRenewHolidays', async (event, arg) => {
 	mainCalendar.getHolidays();
 });
 
-
-// System設定関連
-/** システム設定を反映（画面モード等） */
-ipcMain.handle('SystemSetConfig', (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- SystemSetConfig, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+ipcMain.handle('SystemSetConfig', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- SystemSetConfig, arg:', arg);
 	config.screenMode = arg.screenMode;
 	config.debug = arg.debug;
 	config.ellogExpireDays = arg.ellogExpireDays;
@@ -241,7 +197,6 @@ ipcMain.handle('SystemSetConfig', (event, arg) => {
 	config.autoLaunch = arg.autoLaunch;
 	config.autoLaunchHidden = arg.autoLaunchHidden;
 
-	// 自動起動設定
 	app.setLoginItemSettings({
 		openAtLogin: config.autoLaunch,
 		openAsHidden: config.autoLaunchHidden,
@@ -253,7 +208,6 @@ ipcMain.handle('SystemSetConfig', (event, arg) => {
 		case 'fullscreen':
 			mainWindow.setFullScreen(true);
 			break;
-
 		case 'window':
 		default:
 			mainWindow.setFullScreen(false);
@@ -266,348 +220,255 @@ ipcMain.handle('SystemSetConfig', (event, arg) => {
 	mainSystem.setConfig(arg);
 });
 
-// screen modeだけの変更
-/** 画面モードのみ変更 */
-ipcMain.handle('ScreenMode', (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ScreenMode, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+ipcMain.handle('ScreenMode', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- ScreenMode, arg:', arg);
 	config.screenMode = arg.screenMode;
 	switch (config.screenMode) {
 		case 'fullscreen':
 			mainWindow.setFullScreen(true);
 			break;
-
 		case 'window':
 		default:
 			mainWindow.setFullScreen(false);
 			break;
 	}
-
 	config.windowWidth = mainWindow.getSize()[0];
 	config.windowHeight = mainWindow.getSize()[1];
-
 	mainSystem.setConfig(config);
 });
 
-
-//----------------------------------
-// Profile関連
-/** ユーザープロファイル保存 */
-ipcMain.handle('userProfileSave', (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- userProfileSave, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+ipcMain.handle('userProfileSave', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- userProfileSave, arg:', arg);
 	mainUser.setConfig(arg);
 });
 
-//----------------------------------
-// HAL関連
-// HAL API トークン設定：APIトークンをセットして、実際にプロファイルを受信できたら設定値として保存
-/** HAL APIトークン設定要求 */
 ipcMain.handle('HALsetApiTokenRequest', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALsetApiTokenRequest.') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- HALsetApiTokenRequest.');
 	mainHALsync.setHalApiTokenRequest(arg);
 });
 
-// ローカルの HAL API トークン取得
-/** HAL APIトークン取得要求 */
 ipcMain.handle('HALgetApiTokenRequest', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALgetApiTokenRequest token:\x1b[32m', mainHALsync.config.halApiToken, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- HALgetApiTokenRequest token:', mainHALsync.config.halApiToken);
 	sendIPCMessage("HALgetApiTokenResponse", mainHALsync.config.halApiToken);
 });
 
-// HAL API トークン設定削除
-/** HAL APIトークン削除要求 */
 ipcMain.handle('HALdeleteApiToken', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALdeleteApiToken.') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- HALdeleteApiToken.');
 	mainHALsync.deleteHalApiToken();
 });
 
-// HAL同期ボタンとその応答
-/** HAL 同期開始要求 */
-ipcMain.handle('HALSyncRequeset', (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALSyncRequeset.') : 0;
+ipcMain.handle('HALSyncRequeset', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- HALSyncRequeset.');
 	mainHALsync.startSync();
 });
 
-// HAL cloud ユーザープロファイル取得
-/** HAL クラウドユーザープロファイル取得要求 */
-ipcMain.handle('HALgetUserProfileRequest', (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALgetUserProfileRequest.') : 0;
+ipcMain.handle('HALgetUserProfileRequest', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- HALgetUserProfileRequest.');
 	mainHALsync.getHalUserProfileRequest();
 });
 
-// HAL local更新
-/** HAL ローカル最新データ再送要求 */
 ipcMain.handle('HALrenew', async (event, arg) => {
 	persist.HAL = await mainHALlocal.getLastData();
-	// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALrenew, halData:', persist.HAL) : 0;
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALrenew, halData: <skip>') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- HALrenew, halData: <skip>');
 	sendIPCMessage("HALRenewResponse", persist.HAL);
 });
 
-// HAL local アンケート保存
-/** HAL ローカルアンケート保存 */
 ipcMain.handle('HALsubmitQuestionnaire', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HALsubmitQuestionnaire, arg:', arg) : 0;
+	logger.debug('main', config.debug, 'ipcMain <- HALsubmitQuestionnaire, arg:', arg);
 	mainHALlocal.submitQuestionnaire(arg,
 		() => { sendIPCMessage('Info', 'アンケートを保存しました。'); },
-		() => { sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'main', stackLog: error.message }); });
+		(err) => { sendIPCMessage('Error', { datetime: formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), moduleName: 'main', stackLog: err.message }); });
 });
 
-//----------------------------------
-// AutoAssessment関連
-/** 自動評価設定保存 */
-ipcMain.handle('AutoAssessmentConfig', (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- AutoAssessmentConfig, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+ipcMain.handle('AutoAssessmentConfig', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- AutoAssessmentConfig, arg:', arg);
 	mainAutoAssessment.setConfig(arg);
 });
 
-//----------------------------------
-// EL関連
-/** ECHONET Lite 利用開始 */
 ipcMain.handle('ELUse', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ELUse, arg:', arg) : 0;
-	await mainEL.setConfig({ enabled: true });  // arg = undef
+	logger.debug('main', config.debug, 'ipcMain <- ELUse, arg:', arg);
+	await mainEL.setConfig({ enabled: true });
 	mainEL.start(sendIPCMessage, localaddresses);
 });
 
-/** ECHONET Lite 利用停止 */
 ipcMain.handle('ELStop', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ELStop, arg', arg) : 0;
-	await mainEL.setConfig({ enabled: false });  // arg = undef
+	logger.debug('main', config.debug, 'ipcMain <- ELStop, arg:', arg);
+	await mainEL.setConfig({ enabled: false });
 	mainEL.stop();
 });
 
-/** 旧探索アルゴリズム利用 */
-ipcMain.handle('ELUseOldSearch', (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ELUseOldSearch, arg:', arg) : 0;
-	mainEL.setConfig({ oldSearch: true });  // arg = undef
+ipcMain.handle('ELUseOldSearch', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- ELUseOldSearch, arg:', arg);
+	mainEL.setConfig({ oldSearch: true });
 });
 
-/** 旧探索アルゴリズム停止 */
-ipcMain.handle('ELStopOldSearch', (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ELStopOldSearch, arg', arg) : 0;
-	mainEL.setConfig({ oldSearch: false });  // arg = undef
+ipcMain.handle('ELStopOldSearch', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- ELStopOldSearch, arg:', arg);
+	mainEL.setConfig({ oldSearch: false });
 });
 
-/** 任意ELメッセージ送信 */
 ipcMain.handle('Elsend', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- Elsend, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- Elsend, arg:', arg);
 	mainEL.sendMsg(arg.ip, arg.msg);
-})
+});
 
-// arg = {ip, seoj, deoj, esv, epc, edt}
-/** OPC1 形式ELメッセージ送信 */
 ipcMain.handle('ElsendOPC1', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ElsendOPC1, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- ElsendOPC1, arg:', arg);
 	mainEL.sendOPC1(arg.ip, arg.seoj, arg.deoj, arg.esv, arg.epc, arg.edt);
-})
+});
 
-/** EL機器探索 */
 ipcMain.handle('ELSearch', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ELSearch.') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- ELSearch.');
 	mainEL.search();
-})
+});
 
-
-//----------------------------------
-// ESM関連
-// スマートメータ利用開始
-/** スマートメータ利用開始 */
 ipcMain.handle('ESMUse', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ESMUse, arg:\x1b[32m', arg, '\x1b[0m') : 0;
-	// 他の設定もあるので config.ESM = c.arg への置き換えは不可
+	logger.debug('main', config.debug, 'ipcMain <- ESMUse, arg:', arg);
 	arg.enabled = true;
-	arg.connected = false;  // 再設定のために，接続経験なしにする
-	arg.EPANDESC = {};  // 再設定のために，接続経験なしにする
+	arg.connected = false;
+	arg.EPANDESC = {};
 	await mainESM.setConfig(arg);
 	mainESM.start(sendIPCMessage);
 });
 
-// スマートメータ利用停止
-/** スマートメータ利用停止 */
 ipcMain.handle('ESMnotUse', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- ESMnotUse, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- ESMnotUse, arg:', arg);
 	arg.enabled = false;
 	await mainESM.setConfig(arg);
 	await mainESM.stop();
 });
 
-//----------------------------------
-// Hue関連
-// Hue利用開始
-/** Hue 利用開始 */
 ipcMain.handle('HueUse', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HueUse, key:\x1b[32m', arg.key, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- HueUse, key:', arg.key);
 	arg.enabled = true;
 	await mainHue.setConfig(arg);
 	mainHue.start(sendIPCMessage);
 });
 
-/** Hue 利用キャンセル（停止） */
 ipcMain.handle('HueUseCancel', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HueUseCancel, key:\x1b[32m', arg.key, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- HueUseCancel, key:', arg.key);
 	arg.enabled = false;
 	await mainHue.setConfig(arg);
 	await mainHue.stop();
 });
 
-/** Hue 利用停止 */
 ipcMain.handle('HueUseStop', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HueUseStop, key:\x1b[32m', arg.key, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- HueUseStop, key:', arg.key);
 	arg.enabled = false;
 	await mainHue.setConfig(arg);
 	await mainHue.stop();
 });
 
-// Hue関係のコントロール
-/** Hue コントロール操作 */
 ipcMain.handle('HueControl', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- HueControl, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- HueControl, arg:', arg);
 	mainHue.control(arg.url, JSON.stringify(arg.json));
-})
+});
 
-//----------------------------------
-// Ikea 関連
-// Ikea 利用開始
-/** Ikea 利用開始 */
 ipcMain.handle('IkeaUse', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- IkeaUse, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- IkeaUse, arg:', arg);
 	arg.enabled = true;
 	await mainIkea.setConfig(arg);
 	mainIkea.start(sendIPCMessage);
 });
 
-/** Ikea 利用停止 */
 ipcMain.handle('IkeaUseStop', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- IkeaUseStop, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- IkeaUseStop, arg:', arg);
 	arg.enabled = false;
 	await mainIkea.setConfig(arg);
 	await mainIkea.stop();
 });
 
-// Ikea関係のコントロール
-/** Ikea デバイス制御送信 */
 ipcMain.handle('IkeaSend', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- IkeaSend, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- IkeaSend, arg:', arg);
 	mainIkea.control(arg.key, arg.type, arg.command);
-})
+});
 
-//----------------------------------
-// Open Weather Map関連
-/** OpenWeatherMap 利用開始 */
 ipcMain.handle('OwmUse', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- OwmUse, key:\x1b[32m', arg.APIKey, '\x1b[0mzipCode:\x1b[32m', arg.zipcode, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- OwmUse, key:', arg.APIKey, 'zipCode:', arg.zipcode);
 	arg.enabled = true;
 	await mainOwm.setConfig(arg);
 	mainOwm.start(sendIPCMessage);
 });
 
-/** OpenWeatherMap 利用停止 */
 ipcMain.handle('OwmStop', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- OwmStop, key:\x1b[32m', arg.APIKey, '\x1b[0mzipCode:\x1b[32m', arg.zipcode, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- OwmStop, key:', arg.APIKey, 'zipCode:', arg.zipcode);
 	arg.enabled = false;
 	await mainOwm.setConfig(arg);
 	mainOwm.stop();
 });
 
-
-//----------------------------------
-// JMA関連
-/** 気象庁(JMA) 設定保存 */
 ipcMain.handle('JmaConfigSave', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- JmaConfigSave, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- JmaConfigSave, arg:', arg);
 	await mainJma.setConfig(arg);
-	mainJma.gets();  // エリアが変わったかもしれないので一回getする
+	mainJma.gets();
 });
 
-
-//----------------------------------
-// Netatmo関連
-/** Netatmo 利用開始 */
 ipcMain.handle('NetatmoUse', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- NetatmoUse, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- NetatmoUse, arg:', arg);
 	arg.enabled = true;
 	await mainNetatmo.setConfig(arg);
 	mainNetatmo.start(sendIPCMessage);
 });
 
-/** Netatmo 利用停止 */
 ipcMain.handle('NetatmoStop', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- NetatmoStop, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- NetatmoStop, arg:', arg);
 	arg.enabled = false;
 	await mainNetatmo.setConfig(arg);
 	mainNetatmo.stop();
 });
 
-//----------------------------------
-// Omron関連
-/** Omron センサ利用開始 */
 ipcMain.handle('OmronUse', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- OmronUse, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- OmronUse, arg:', arg);
 	arg.enabled = true;
-	await mainOmron.setConfig(arg); // Omron
+	await mainOmron.setConfig(arg);
 	mainOmron.start(sendIPCMessage);
 });
 
-/** Omron センサ利用停止 */
 ipcMain.handle('OmronStop', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- OmronStop, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- OmronStop, arg:', arg);
 	arg.enabled = false;
-	await mainOmron.setConfig(arg); // Omron
+	await mainOmron.setConfig(arg);
 	mainOmron.stop();
 });
 
-//----------------------------------
-// I/O DATA CO2S関連
-/** IO DATA CO2S 利用開始 */
 ipcMain.handle('Co2sUse', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- Co2sUse, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- Co2sUse, arg:', arg);
 	arg.enabled = true;
-	await mainCo2s.setConfig(arg); // Omron
+	await mainCo2s.setConfig(arg);
 	mainCo2s.start(sendIPCMessage);
 });
 
-/** IO DATA CO2S 利用停止 */
 ipcMain.handle('Co2sStop', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- Co2sStop, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- Co2sStop, arg:', arg);
 	arg.enabled = false;
-	await mainCo2s.setConfig(arg); // Co2s
+	await mainCo2s.setConfig(arg);
 	mainCo2s.stop();
 });
 
-//----------------------------------
-// SwitchBot関連
-/** SwitchBot 利用開始 */
 ipcMain.handle('SwitchBotUse', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- SwitchBotUse, token:\x1b[32m', arg.token, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- SwitchBotUse, token:', arg.token);
 	arg.enabled = true;
 	await mainSwitchBot.setConfig(arg);
 	mainSwitchBot.start(sendIPCMessage);
 });
 
-/** SwitchBot 利用停止 */
 ipcMain.handle('SwitchBotStop', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- SwitchBotStop, token:\x1b[32m', arg.token, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- SwitchBotStop, token:', arg.token);
 	arg.enabled = false;
 	await mainSwitchBot.setConfig(arg);
 	await mainSwitchBot.stop();
 });
 
-/** SwitchBot デバイス制御 */
 ipcMain.handle('SwitchBotControl', async (event, arg) => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.ipcMain <- SwitchBotControl, arg:\x1b[32m', arg, '\x1b[0m') : 0;
+	logger.debug('main', config.debug, 'ipcMain <- SwitchBotControl, arg:', arg);
 	mainSwitchBot.control(arg.id, arg.command, arg.param);
 });
 
 
-//////////////////////////////////////////////////////////////////////
-// foreground
-// ここがEntrypointと考えても良い
-/**
- * @func createWindow
- * @desc メインBrowserWindowを生成し、イベントハンドラ・DevTools・検索・クラッシュ検出等を初期化する。UI初期HTMLをロードする。
- * @returns {Promise<void>} 非同期初期化完了後void
- * @throws 初期化中の例外はログ出力される（再スローなし）
- */
+//----------------------------------------------------------------------
+// Life Cycle Events
+//----------------------------------------------------------------------
+
 async function createWindow() {
 	try {
 		mainWindow = new BrowserWindow({
@@ -616,33 +477,29 @@ async function createWindow() {
 			width: config.windowWidth,
 			height: config.windowHeight,
 			webPreferences: {
-				nodeIntegration: false, // default:false
-				contextIsolation: true, // default:true
+				nodeIntegration: false,
+				contextIsolation: true,
 				worldSafeExecuteJavaScript: true,
 				preload: path.join(__dirname, 'preload.js')
 			},
 			icon: path.join(__dirname, "assets/icon.png")
 		});
 		menuInitialize();
-		// mainWindow.loadURL(path.join(__dirname, 'public', 'index.htm'));  // MacだとloadURL聞かない
 		mainWindow.loadFile(path.join(__dirname, 'public', 'index.htm'));
 
-		if (config.debug) { // debugモード:true ならDebugGUIひらく
+		if (config.debug) {
 			mainWindow.webContents.openDevTools();
 		}
 
-		// PageInSearchして発見したときに呼ばれる
 		mainWindow.webContents.on('found-in-page', (event, result) => {
-			// console.log('event:', event, 'result:', result);
 			if (result.finalUpdate) {
 				mainWindow.webContents.stopFindInPage('keepSelection');
 				sendIPCMessage('foundResultShow', result);
 			}
 		});
 
-		// 閉じるときに呼ばれる
 		mainWindow.on('close', async (event) => {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.close') : 0;
+			logger.debug('main', config.debug, 'mainWindow.on.close');
 			if (!isQuitting && config.backgroundMode) {
 				event.preventDefault();
 				mainWindow.hide();
@@ -650,96 +507,73 @@ async function createWindow() {
 			}
 			config.windowWidth = mainWindow.getSize()[0];
 			config.windowHeight = mainWindow.getSize()[1];
-
 			await mainSystem.setConfig(config);
 		});
 
-		// 閉じた後でよばれる
 		mainWindow.on('closed', () => {
-			console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.closed');
+			logger.debug('main', config.debug, 'mainWindow.on.closed');
 			mainWindow = null;
 		});
 
 		createTray();
 
-		// SQLite のデータベースのレコードの削除処理
 		await mainHALlocal.truncatelogs();
 
-		//=============================
-		// レンダラ/ GPU クラッシュ検出
-		//=============================
 		mainWindow.webContents.on('render-process-gone', (event, details) => {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.render-process-gone:', details?.reason, details);
+			logger.error('main', 'render-process-gone:', details?.reason, details);
 			safeRecreateWindow();
 		});
+
 		mainWindow.on('unresponsive', () => {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.window unresponsive');
+			logger.error('main', 'window unresponsive');
 		});
+
 		mainWindow.webContents.on('gpu-process-crashed', (event, killed) => {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.gpu-process-crashed. killed:', killed);
+			logger.error('main', 'gpu-process-crashed. killed:', killed);
 		});
 
 	} catch (error) {
-		console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.createWindow() error:\x1b[32m', error, '\x1b[0m');
+		logger.error('main', 'createWindow() error:', error);
 	}
-};
+}
 
-/**
- * @func safeRecreateWindow
- * @desc レンダラが落ちた場合に安全にウィンドウを再生成
- */
 function safeRecreateWindow() {
 	try {
 		if (mainWindow && !mainWindow.isDestroyed?.()) {
 			mainWindow.destroy();
 		}
 	} catch (e) {
-		console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.safeRecreateWindow destroy error:\x1b[32m', e, '\x1b[0m');
+		logger.error('main', 'safeRecreateWindow destroy error:', e);
 	} finally {
 		createWindow();
 	}
 }
 
-//=============================================================================
-// 起動
-// ready: Electronの初期化完了後に実行される
-// activate: Mac only, MacはWindowが無くてもプロセスを終了しないでおいておくことができ、その際の再度起動の時よばれる
-// did-become-active: Mac only
-
-// windows用デスクトップとスタートメニューにショートカットを追加する
 if (process.platform === 'win32') {
 	const { createRequire } = await import('module');
 	const require = createRequire(import.meta.url);
 	if (require('electron-squirrel-startup')) app.quit();
 }
 
-// Entry point
 app.on('ready', async () => {
-	console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '----------', appname, '----------');
+	logger.info('main', `---------- ${appname} ----------`);
 
-	// 二重起動防止
 	const lock = app.requestSingleInstanceLock();
 	if (lock) {
-		// lockが取得できたという事は1回目起動
-		app.on('second-instance', (event, args) => {  // 2回目起動を検知したら、1回目起動しておいたウィンドウを全面にだす
+		app.on('second-instance', (event, args) => {
 			if (mainWindow === null) return;
 			if (mainWindow.isMinimized()) { mainWindow.restore(); }
 			mainWindow.focus();
 		});
 	} else {
-		// 2回目起動はすぐ殺す
 		await app.quit();
 	}
 
-	// System開始、設定値読み出し
 	await mainSystem.start(sendIPCMessage);
 	config = mainSystem.getConfig();
-
 	await mainUser.start(sendIPCMessage);
-
 	persist = await store.get('persist', persist);
 
-	// NIC情報を集める
 	let interfaces = os.networkInterfaces();
 	for (let k in interfaces) {
 		for (let k2 in interfaces[k]) {
@@ -749,31 +583,22 @@ app.on('ready', async () => {
 			}
 		}
 	}
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.ready ipver:', config.IPver, 'ipv4:', config.IPv4, 'ipv6:', config.IPv6) : 0;
+	logger.debug('main', config.debug, `on.ready ipver:${config.IPver} ipv4:${config.IPv4} ipv6:${config.IPv6}`);
 
-	// 初回起動時はショートカットをデスクトップに配置、初回起動かどうかはconfigファイルの有無で判定
-	// windowsのみ
-	// electron-squirrel-startupにした
-	// if (isWin && !fs.existsSync(path.join(store.path, 'config.json'))) {
-	// console.log( '初回起動' );
-	// createShortCut();
-	// }
-
-	await mainHALlocal.initialize(); // HALのDBを準備して最終データを取得しておく
+	await mainHALlocal.initialize();
 	await sqlite3.sync().then(() => {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.ready. Local lifelog DB is ready.') : 0;
-	});		// 起動時DBの準備，SQLite の初期化の完了を待つ
+		logger.debug('main', config.debug, 'on.ready. Local lifelog DB is ready.');
+	});
 
 	createWindow();
-	// 起動オプション判定
-	// MacのopenAtLoginでopenAsHidden: trueの場合、自動的に非表示で起動するはずだが、念のためチェック
+
 	const loginItemSettings = app.getLoginItemSettings();
 	const wasOpenedAtLogin = loginItemSettings.wasOpenedAtLogin;
 	const isHiddenStart = process.argv.includes('--hidden') || (wasOpenedAtLogin && config.autoLaunchHidden);
 
 	if (mainWindow) {
 		if (isHiddenStart) {
-			console.log('Start as Hidden');
+			logger.info('main', 'Start as Hidden');
 		} else {
 			mainWindow.show();
 		}
@@ -797,7 +622,7 @@ function createTray() {
 				});
 			}
 		} catch (e) {
-			console.error('Tray icon 2x load error:', e);
+			logger.error('main', 'Tray icon 2x load error:', e);
 		}
 	} else {
 		icon = path.join(__dirname, 'icons', 'plis_linux_icon.png');
@@ -838,10 +663,8 @@ function createTray() {
 	});
 }
 
-// アプリケーションがアクティブになった時の処理（Mac only）
 app.on("activate", () => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.activate') : 0;
-	// メインウィンドウが消えている場合は再度メインウィンドウを作成する
+	logger.debug('main', config.debug, 'app.on.activate');
 	if (mainWindow === null) {
 		createWindow();
 		mainWindow.show();
@@ -850,25 +673,15 @@ app.on("activate", () => {
 	}
 });
 
-
-//=============================================================================
-// 通常終了（Windowが全て閉じられたのでアプリ終了とする場合）
-// window-all-closed -> before-quit -> will-quit -> quit -> BrowserWindow.closed
-// 強制終了、外部要因からの終了（終了命令がきたので、Windowを閉じて終了とする場合）
-// before-quit -> window-all-closed -> will-quit -> quit -> BrowserWindow.closed
-
-// windowが全部閉じられた、SIGTERM, SIGINTの場合はbefore-quitがこれより先に動く
 app.on('window-all-closed', () => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.window-all-closed') : 0;
+	logger.debug('main', config.debug, 'app.on.window-all-closed');
 	if (config.backgroundMode) return;
-	app.quit();	// macだろうとプロセスはkillしちゃう
+	app.quit();
 });
 
-
-// アプリを終了する直前、app.quitが呼ばれたときに動く
 app.once('before-quit', async () => {
 	isQuitting = true;
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.before-quit') : 0;
+	logger.debug('main', config.debug, 'app.on.before-quit');
 	await saveConfig();
 	await savePersist();
 
@@ -888,20 +701,14 @@ app.once('before-quit', async () => {
 	await mainSystem.stop();
 });
 
-
-// 終了する直前、quitの前
 app.once('will-quit', async () => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.will-quit') : 0;
+	logger.debug('main', config.debug, 'app.on.will-quit');
 });
 
-
-// 終了処理、quitのあとBrowserWindow.closedが本当の最後に呼ばれる
 app.once('quit', async () => {
-	config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.on.quit') : 0;
+	logger.debug('main', config.debug, 'app.on.quit');
 });
 
-
-// menu
 const menuItems = [
 	{
 		label: appname,
@@ -915,10 +722,8 @@ const menuItems = [
 				label: 'Preferences...',
 				accelerator: isMac ? 'Command+,' : 'Control+,',
 				click: async function () {
-					// await HALConfigSave(  );  // ここまだ
 					await saveConfig();
-					sendIPCMessage("configSaved", 'All');  // 保存したので画面に通知
-
+					sendIPCMessage("configSaved", 'All');
 					shell.showItemInFolder(store.path);
 				}
 			},
@@ -930,7 +735,7 @@ const menuItems = [
 			}]
 	}, {
 		label: 'Edit',
-		submenu: [  // 基本機能だけど、用意しておかないとMac開発時にショートカットが効かない
+		submenu: [
 			{
 				label: 'Cut',
 				accelerator: isMac ? 'Command+X' : 'Control+X',
@@ -995,7 +800,7 @@ const menuItems = [
 					if (mainWindow.webContents.getZoomFactor() >= 0.2) {
 						mainWindow.webContents.setZoomFactor(mainWindow.webContents.getZoomFactor() - 0.1);
 					} else {
-						sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'main', stackLog: 'Minimum zoom' });
+						sendIPCMessage('Error', { datetime: formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), moduleName: 'main', stackLog: 'Minimum zoom' });
 					}
 				}
 			},
@@ -1054,86 +859,51 @@ const menuItems = [
 		]
 	}];
 
-/**
- * @func menuInitialize
- * @desc menuInitialize
- * @async
- * @param {void}
- * @return void
- * @throw error
- */
 function menuInitialize() {
 	let menu = Menu.buildFromTemplate(menuItems);
 	Menu.setApplicationMenu(menu);
 	mainWindow.setMenu(menu);
-};
+}
 
-
-/**
- * @func createShortCut
- * @desc デスクトップにショートカット作成、スタートメニューに登録
- * @async
- * @param {void}
- * @return void
- * @throw error
- */
 function createShortCut() {
-	// windows用
 	if (isWin) {
-		let dist = path.join(userHome, 'Desktop', 'PLIS.lnk');		// 作成したいショートカットのパス (末尾の.lnkが必要)
-		let source = path.join(userHome, 'AppData', 'Local', 'PLIS', 'PLIS.exe'); // リンク元としたいディレクトリorファイルパス（本体）
-
-		// ショートカット作成コマンド
+		let dist = path.join(userHome, 'Desktop', 'PLIS.lnk');
+		let source = path.join(userHome, 'AppData', 'Local', 'PLIS', 'PLIS.exe');
 		let command = `$WshShell = New-Object -ComObject WScript.Shell; $ShortCut = $WshShell.CreateShortcut("${dist}"); $ShortCut.TargetPath = "${source}"; $ShortCut.Save();`;
-
-		// 第2引数でPowershellを指定して実行
 		exec(command, { "shell": "powershell.exe" }, (error, stdout, stderror) => {
 			if (error) {
-				console.error(error);
+				logger.error('main', 'createShortCut error:', error);
 			}
 		});
 	} else {
-		console.log('not Win');
+		logger.debug('main', config.debug, 'createShortCut: not Win');
 	}
-};
+}
 
-/**
- * @func saveConfig
- * @desc saveConfig
- * @async
- * @param {void}
- * @return void
- * @throw error
- */
 async function saveConfig() {
-	let _config = {};
-	_config.system = mainSystem.getConfig();  // system
-	_config.HAL = mainHALsync.getConfig();  // HAL sync
-	_config.Hue = mainHue.getConfig();  // Hue
-	_config.Ikea = mainIkea.getConfig();  // Ikea
-	_config.OWM = mainOwm.getConfig();  // Owm
-	_config.ESM = mainESM.getConfig();  // スマメ
-	_config.Netatmo = mainNetatmo.getConfig();  // netatmo
-	_config.EL = mainEL.getConfig();  // EL
-	_config.Omron = mainOmron.getConfig(); // Omron
-	_config.Co2s = mainCo2s.getConfig(); // Co2s
-	_config.JMA = mainJma.getConfig(); // JMA
-	_config.SwitchBot = mainSwitchBot.getConfig(); // SwitchBot
-	_config.Calendar = mainCalendar.getConfig(); // Calendar settings
-	_config.AutoAssessment = mainAutoAssessment.getConfig() // AutoAssessment settings
-	_config.system = mainSystem.getConfig(); // system settings
-	_config.user = mainUser.getConfig(); // user settings
-	await store.set('config', _config);
-};
+	let currentConfig = await store.get('config', {});
+	let _config = {
+		system: mainSystem.getConfig(),
+		HAL: mainHALsync.getConfig(),
+		Hue: mainHue.getConfig(),
+		Ikea: mainIkea.getConfig(),
+		OWM: mainOwm.getConfig(),
+		ESM: mainESM.getConfig(),
+		Netatmo: mainNetatmo.getConfig(),
+		EL: mainEL.getConfig(),
+		Omron: mainOmron.getConfig(),
+		Co2s: mainCo2s.getConfig(),
+		JMA: mainJma.getConfig(),
+		SwitchBot: mainSwitchBot.getConfig(),
+		Calendar: mainCalendar.getConfig(),
+		AutoAssessment: mainAutoAssessment.getConfig(),
+		user: mainUser.getConfig()
+	};
+	// 既存の設定とマージして、メモリ上の空データでディスクの設定を消さないようにする
+	let newConfig = mergeDeeply(currentConfig, _config);
+	await store.set('config', newConfig);
+}
 
-/**
- * @func savePersist
- * @desc savePersist
- * @async
- * @param {void}
- * @return void
- * @throw error
- */
 async function savePersist() {
 	persist.Arp = mainArp.getPersist();
 	persist.EL = mainEL.getPersist();
@@ -1147,13 +917,5 @@ async function savePersist() {
 	persist.Ikea = mainIkea.getPersist();
 	persist.SwitchBot = mainSwitchBot.getPersist();
 	persist.HAL = mainHALsync.getPersist();
-	// calendarはpersistなし
-	// userはpersistなし
-	// systemはpersistなし
 	await store.set('persist', persist);
-};
-
-
-//////////////////////////////////////////////////////////////////////
-// EOF
-//////////////////////////////////////////////////////////////////////
+}

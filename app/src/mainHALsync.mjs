@@ -13,7 +13,8 @@ import https from 'https';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Op, eldataModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel } = localDB;
-import { getToday, mergeDeeply } from './mainSubmodule.mjs';
+import { getToday, mergeDeeply, formatDate } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
 
 // const store = new Store();
 const HAL_API_BASE_URL = 'https://hal.sugi-lab.net/api';
@@ -67,6 +68,8 @@ let sendIPCMessage = null;
 //////////////////////////////////////////////////////////////////////
 // HAL, Home-life Assessment Listの処理
 let mainHALsync = {
+	get config() { return config; },
+	get persist() { return persist; },
 	isRun: false,
 	uploadEldataTask: null,
 
@@ -86,10 +89,12 @@ let mainHALsync = {
 		}
 		mainHALsync.isRun = true;
 
-		config = await store.get('config.HAL', config);
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.start()') : 0;
+		const storedConfig = await store.get('config.HAL', {});
+		config = mergeDeeply(config, storedConfig);
+		logger.debug('mainHALsync', config.debug, 'start()');
 
-		persist = store.get('persist.HAL', persist);
+		const storedPersist = await store.get('persist.HAL', {});
+		persist = mergeDeeply(persist, storedPersist);
 
 		// 家電操作ログのアップロード、HALのDBがきついので停止中
 		/*
@@ -115,7 +120,7 @@ let mainHALsync = {
 	 * @returns {Promise<void>}
 	 */
 	startSync: async function () {
-		mainHALsync.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.startSync().') : 0;
+		logger.debug('mainHALsync', config.debug, 'startSync().');
 
 		// HAL API トークンが登録されていなければ終了
 		if (!config.halApiToken) {
@@ -132,7 +137,7 @@ let mainHALsync = {
 			};
 
 			// ローカルの MajorResults から今日のレコードを取得
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Getting the latest record in the local MajorResults table.') : 0;
+			logger.debug('mainHALsync', config.debug, '|- Getting the latest record in the local MajorResults table.');
 			let major_data = await IOT_MajorResultsModel.findOne({
 				where: {
 					date: today
@@ -140,14 +145,13 @@ let mainHALsync = {
 			});
 			if (major_data) {
 				updata.MajorResults = major_data.dataValues;
-				// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- major_data:', JSON.stringify(major_data.dataValues, null, '  ')) : 0;
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- major_data: found in DB') : 0;
+				logger.debug('mainHALsync', config.debug, '|- major_data: found in DB');
 			} else {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- major_data: null') : 0;
+				logger.debug('mainHALsync', config.debug, '|- major_data: null');
 			}
 
 			// ローカルの MinorResults から最新のレコードを取得
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Getting the latest record in the local MinorResults table.') : 0;
+			logger.debug('mainHALsync', config.debug, '|- Getting the latest record in the local MinorResults table.');
 			let minor_data = await IOT_MinorResultsModel.findOne({
 				where: {
 					date: today
@@ -155,28 +159,25 @@ let mainHALsync = {
 			});
 			if (minor_data) {
 				updata.MinorResults = minor_data.dataValues;
-				// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- minor_data:', JSON.stringify(minor_data.dataValues, null, '  ')) : 0;
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- minor_data: found in DB') : 0;
+				logger.debug('mainHALsync', config.debug, '|- minor_data: found in DB');
 			} else {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- minor_data: null') : 0;
+				logger.debug('mainHALsync', config.debug, '|- minor_data: null');
 			}
 
 			// 成績データを HAL にアップロード
 			const hal_results_url = HAL_API_BASE_URL + '/results';
 
 			if (updata.MajorResults || updata.MinorResults) {
-				// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Uploading to HAL, updata:', JSON.stringify(updata, null, '  ')) : 0;
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Uploading to HAL') : 0;
+				logger.debug('mainHALsync', config.debug, '|- Uploading to HAL');
 				await mainHALsync.httpPostRequest(hal_results_url, updata);
 			}
 
 			// HAL から成績データをダウンロード
 			let dndata = await mainHALsync.httpGetRequest(hal_results_url);
-			// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Downloading from HAL, dndata:', JSON.stringify(dndata, null, '  ')) : 0;
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Downloading from HAL') : 0;
+			logger.debug('mainHALsync', config.debug, '|- Downloading from HAL');
 
 			// HAL からダウンロードした成績データをローカルに保存
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Saving.') : 0;
+			logger.debug('mainHALsync', config.debug, '|- Saving.');
 
 			// 今の日時 ("YYYY-MM-DD hh:mm:ss")
 			//let now = getNow();
@@ -209,7 +210,7 @@ let mainHALsync = {
 					let updated_res = await IOT_MajorResultsModel.findOne({
 						where: { idIOT_MajorResults: id }
 					});
-					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Updated the latest record in the IOT_MajorResults table:') : 0;
+					logger.debug('mainHALsync', config.debug, '|- Updated the latest record in the IOT_MajorResults table:');
 					// config.debug ? console.log(JSON.stringify(updated_res.dataValues, null, '  ')) : 0;
 				} else {
 					// 今日のレコードがなければ、それを INSERT
@@ -219,7 +220,7 @@ let mainHALsync = {
 					// rec.createdAt = now;
 					// rec.updatedAt = now;
 					let ins_res = await IOT_MajorResultsModel.create(rec);
-					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a new record in the IOT_MajorResults table:') : 0;
+					logger.debug('mainHALsync', config.debug, '|- Inserted a new record in the IOT_MajorResults table:');
 					// config.debug ? console.log(JSON.stringify(ins_res.dataValues, null, '  ')) : 0;
 				}
 			}
@@ -236,7 +237,7 @@ let mainHALsync = {
 							rec[k] = dndata.MinorResults[k];
 						}
 					} else {
-						for (let [k, v] of Object.entries(rec)) {
+						for (let [k, v] of Object.entries(updata.MinorResults)) {
 							if (v === null && dndata.MinorResults[k] !== null) {
 								rec[k] = dndata.MinorResults[k];
 							}
@@ -250,7 +251,7 @@ let mainHALsync = {
 					let updated_res = await IOT_MinorResultsModel.findOne({
 						where: { idIOT_MinorResults: id }
 					});
-					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Updated the latest record in the IOT_MinorResults table:') : 0;
+					logger.debug('mainHALsync', config.debug, '|- Updated the latest record in the IOT_MinorResults table:');
 					// config.debug ? console.log(JSON.stringify(updated_res.dataValues, null, '  ')) : 0;
 				} else {
 					// 今日のレコードがなければ、それを INSERT
@@ -260,8 +261,7 @@ let mainHALsync = {
 					// rec.createdAt = now;
 					// rec.updatedAt = now;
 					let ins_res = await IOT_MinorResultsModel.create(rec);
-					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a new record in the IOT_MinorResults table:') : 0;
-					// config.debug ? console.log(JSON.stringify(ins_res.dataValues, null, '  ')) : 0;
+					logger.debug('mainHALsync', config.debug, '|- Inserted a new record in the IOT_MinorResults table:');
 				}
 			}
 			// MinorkeyMeans テーブルのレコードを保存
@@ -297,18 +297,12 @@ let mainHALsync = {
 			sendIPCMessage("HALSyncResponse", {});
 
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.startSync() ', error);
-			let arg = {
-				error: error.message
-			};
-
+			logger.error('mainHALsync', 'startSync()', error);
 			sendIPCMessage('Error', {
-				datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"),
+				datetime: formatDate(new Date(), "YYYY-MM-DDTHH24:MI:SS"),
 				moduleName: 'mainHALsync.startSync()',
 				stackLog: `Detail: ${error}`
 			});
-
-			// mainWindow.webContents.send('to-renderer', JSON.stringify({ cmd: "Synced", arg: arg }));
 		}
 	},
 
@@ -318,9 +312,8 @@ let mainHALsync = {
 	 * @returns {Promise<void>}
 	 */
 	garminDownload: async function () {
-		mainHALsync.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.garminDownload().') : 0;
+		logger.debug('mainHALsync', config.debug, 'garminDownload().');
 
-		// HAL API トークンが登録されていなければ終了
 		if (!config.halApiToken) {
 			return;
 		}
@@ -328,21 +321,14 @@ let mainHALsync = {
 		const hal_garmin_download_url = HAL_API_BASE_URL + '/garminDownload';
 
 		try {
-			// HAL からGarminデータをダウンロード
 			let dndata = await mainHALsync.httpGetRequest(hal_garmin_download_url);
-			// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Downloading garmin data from HAL', JSON.stringify(dndata, null, '  ')) : 0;
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Downloading garmin data from HAL') : 0;
-
-			// HAL からダウンロードしたGarminデータをローカルに保存
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Saving.') : 0;
+			logger.debug('mainHALsync', config.debug, '|- Downloading garmin data from HAL');
+			logger.debug('mainHALsync', config.debug, '|- Saving.');
 
 			// Activities
 			if (dndata.Activities) {
-				// ダウンロードしたデータをテーブルに追加
 				await IOT_GarminActivitiesModel.findOrCreate({
-					where: {
-						idIOT_GarminActivities: dndata.Activities.idIOT_GarminActivities
-					},
+					where: { idIOT_GarminActivities: dndata.Activities.idIOT_GarminActivities },
 					defaults: {
 						idIOT_GarminActivities: dndata.Activities.idIOT_GarminActivities,
 						garminId: dndata.Activities.garminId,
@@ -369,18 +355,15 @@ let mainHALsync = {
 						updatedAt: dndata.Activities.updatedAt
 					}
 				});
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminActivitiesModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- Inserted a record in the IOT_GarminActivitiesModel table.');
 			} else {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminActivitiesModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- No record in the IOT_GarminActivitiesModel table.');
 			}
 
 			// ActivityDetails
 			if (dndata.ActivityDetails) {
-				// ダウンロードしたデータをテーブルに追加
 				await IOT_GarminActivityDetailsModel.findOrCreate({
-					where: {
-						idIOT_GarminActivityDetails: dndata.ActivityDetails.idIOT_GarminActivityDetails
-					},
+					where: { idIOT_GarminActivityDetails: dndata.ActivityDetails.idIOT_GarminActivityDetails },
 					defaults: {
 						idIOT_GarminActivityDetails: dndata.ActivityDetails.idIOT_GarminActivityDetails,
 						garminId: dndata.ActivityDetails.garminId,
@@ -394,45 +377,38 @@ let mainHALsync = {
 						updatedAt: dndata.ActivityDetails.updatedAt
 					}
 				});
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminActivityDetailsModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- Inserted a record in the IOT_GarminActivityDetailsModel table.');
 			} else {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminActivityDetailsModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- No record in the IOT_GarminActivityDetailsModel table.');
 			}
 
-
-			// ActivityDetails
+			// AllDayRespiration
 			if (dndata.AllDayRespiration) {
-				// ダウンロードしたデータをテーブルに追加
 				await IOT_GarminAllDayRespirationModel.findOrCreate({
-					where: {
-						idIOT_GarminAllDayRespiration: dndata.ActivityDetails.idIOT_GarminAllDayRespiration
-					},
+					where: { idIOT_GarminAllDayRespiration: dndata.AllDayRespiration.idIOT_GarminAllDayRespiration },
 					defaults: {
-						idIOT_GarminAllDayRespiration: dndata.ActivityDetails.idIOT_GarminAllDayRespiration,
+						idIOT_GarminAllDayRespiration: dndata.AllDayRespiration.idIOT_GarminAllDayRespiration,
 						garminId: dndata.AllDayRespiration.garminId,
 						garminAccessToken: dndata.AllDayRespiration.garminAccessToken,
 						summaryId: dndata.AllDayRespiration.summaryId,
-						activityId: dndata.AllDayRespiration.startTimeInSeconds,
-						summary: dndata.AllDayRespiration.durationInSeconds,
-						samples: dndata.AllDayRespiration.startTimeOffsetInSeconds,
-						laps: dndata.AllDayRespiration.timeOffsetEpochToBreaths,
+						activityId: dndata.AllDayRespiration.activityId,
+						durationInSeconds: dndata.AllDayRespiration.durationInSeconds,
+						startTimeInSeconds: dndata.AllDayRespiration.startTimeInSeconds,
+						startTimeOffsetInSeconds: dndata.AllDayRespiration.startTimeOffsetInSeconds,
+						timeOffsetEpochToBreaths: dndata.AllDayRespiration.timeOffsetEpochToBreaths,
 						createdAt: dndata.AllDayRespiration.createdAt,
 						updatedAt: dndata.AllDayRespiration.updatedAt
 					}
 				});
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminAllDayRespirationModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- Inserted a record in the IOT_GarminAllDayRespirationModel table.');
 			} else {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminAllDayRespirationModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- No record in the IOT_GarminAllDayRespirationModel table.');
 			}
-
 
 			// BodyComps
 			if (dndata.BodyComps) {
-				// ダウンロードしたデータをテーブルに追加
 				await IOT_GarminBodyCompsModel.findOrCreate({
-					where: {
-						idIOT_GarminBodyComps: dndata.BodyComps.idIOT_GarminBodyComps
-					},
+					where: { idIOT_GarminBodyComps: dndata.BodyComps.idIOT_GarminBodyComps },
 					defaults: {
 						idIOT_GarminBodyComps: dndata.BodyComps.idIOT_GarminBodyComps,
 						garminId: dndata.BodyComps.garminId,
@@ -450,18 +426,15 @@ let mainHALsync = {
 						updatedAt: dndata.BodyComps.updatedAt
 					}
 				});
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminPulseoxModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- Inserted a record in the IOT_GarminBodyCompsModel table.');
 			} else {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminPulseoxModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- No record in the IOT_GarminBodyCompsModel table.');
 			}
 
 			// Dailies
 			if (dndata.Dailies) {
-				// ダウンロードしたデータをテーブルに追加
 				await IOT_GarminDailiesModel.findOrCreate({
-					where: {
-						idIOT_GarminDailies: dndata.Dailies.idIOT_GarminDailies
-					},
+					where: { idIOT_GarminDailies: dndata.Dailies.idIOT_GarminDailies },
 					defaults: {
 						idIOT_GarminDailies: dndata.Dailies.idIOT_GarminDailies,
 						garminId: dndata.Dailies.garminId,
@@ -502,18 +475,15 @@ let mainHALsync = {
 						updatedAt: dndata.Dailies.updatedAt
 					}
 				});
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminDailiesModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- Inserted a record in the IOT_GarminDailiesModel table.');
 			} else {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminDailiesModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- No record in the IOT_GarminDailiesModel table.');
 			}
 
 			// Epochs
 			if (dndata.Epochs) {
-				// ダウンロードしたデータをテーブルに追加
 				await IOT_GarminEpochsModel.findOrCreate({
-					where: {
-						idIOT_GarminEpochs: dndata.Epochs.idIOT_GarminEpochs
-					},
+					where: { idIOT_GarminEpochs: dndata.Epochs.idIOT_GarminEpochs },
 					defaults: {
 						idIOT_GarminEpochs: dndata.Epochs.idIOT_GarminEpochs,
 						garminId: dndata.Epochs.garminId,
@@ -535,18 +505,15 @@ let mainHALsync = {
 						updatedAt: dndata.Epochs.updatedAt
 					}
 				});
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminEpochsModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- Inserted a record in the IOT_GarminEpochsModel table.');
 			} else {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminEpochsModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- No record in the IOT_GarminEpochsModel table.');
 			}
 
 			// MoveIQActivities
 			if (dndata.MoveIQActivities) {
-				// ダウンロードしたデータをテーブルに追加
 				await IOT_GarminMoveIQActivitiesModel.findOrCreate({
-					where: {
-						idIOT_GarminMoveIQActivities: dndata.MoveIQActivities.idIOT_GarminMoveIQActivities
-					},
+					where: { idIOT_GarminMoveIQActivities: dndata.MoveIQActivities.idIOT_GarminMoveIQActivities },
 					defaults: {
 						idIOT_GarminMoveIQActivities: dndata.MoveIQActivities.idIOT_GarminMoveIQActivities,
 						garminId: dndata.MoveIQActivities.garminId,
@@ -562,18 +529,15 @@ let mainHALsync = {
 						updatedAt: dndata.MoveIQActivities.updatedAt
 					}
 				});
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminMoveIQActivitiesModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- Inserted a record in the IOT_GarminMoveIQActivitiesModel table.');
 			} else {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminMoveIQActivitiesModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- No record in the IOT_GarminMoveIQActivitiesModel table.');
 			}
 
 			// Pulseox
 			if (dndata.Pulseox) {
-				// ダウンロードしたデータをテーブルに追加
 				await IOT_GarminPulseoxModel.findOrCreate({
-					where: {
-						idIOT_GarminPulseox: dndata.Pulseox.idIOT_GarminPulseox
-					},
+					where: { idIOT_GarminPulseox: dndata.Pulseox.idIOT_GarminPulseox },
 					defaults: {
 						idIOT_GarminPulseox: dndata.Pulseox.idIOT_GarminPulseox,
 						garminId: dndata.Pulseox.garminId,
@@ -589,18 +553,15 @@ let mainHALsync = {
 						updatedAt: dndata.Pulseox.updatedAt
 					}
 				});
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminPulseoxModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- Inserted a record in the IOT_GarminPulseoxModel table.');
 			} else {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminPulseoxModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- No record in the IOT_GarminPulseoxModel table.');
 			}
 
 			// Sleeps
 			if (dndata.Sleeps) {
-				// ダウンロードしたデータをテーブルに追加
 				await IOT_GarminSleepsModel.findOrCreate({
-					where: {
-						idIOT_GarminSleeps: dndata.Sleeps.idIOT_GarminSleeps
-					},
+					where: { idIOT_GarminSleeps: dndata.Sleeps.idIOT_GarminSleeps },
 					defaults: {
 						idIOT_GarminSleeps: dndata.Sleeps.idIOT_GarminSleeps,
 						garminId: dndata.Sleeps.garminId,
@@ -619,24 +580,20 @@ let mainHALsync = {
 						validation: dndata.Sleeps.validation,
 						timeOffsetSleepRespiration: dndata.Sleeps.timeOffsetSleepRespiration,
 						timeOffsetSleepSpo2: dndata.Sleeps.timeOffsetSleepSpo2,
-						timeOffsetSleepSpo2: dndata.Sleeps.timeOffsetSleepSpo2,
 						overallSleepScore: dndata.Sleeps.overallSleepScore,
 						createdAt: dndata.Sleeps.createdAt,
 						updatedAt: dndata.Sleeps.updatedAt
 					}
 				});
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminSleepsModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- Inserted a record in the IOT_GarminSleepsModel table.');
 			} else {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminSleepsModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- No record in the IOT_GarminSleepsModel table.');
 			}
 
 			// StressDetails
 			if (dndata.StressDetails) {
-				// ダウンロードしたデータをテーブルに追加
 				await IOT_GarminStressDetailsModel.findOrCreate({
-					where: {
-						idIOT_GarminStressDetails: dndata.StressDetails.idIOT_GarminStressDetails
-					},
+					where: { idIOT_GarminStressDetails: dndata.StressDetails.idIOT_GarminStressDetails },
 					defaults: {
 						idIOT_GarminStressDetails: dndata.StressDetails.idIOT_GarminStressDetails,
 						garminId: dndata.StressDetails.garminId,
@@ -652,18 +609,15 @@ let mainHALsync = {
 						updatedAt: dndata.StressDetails.updatedAt
 					}
 				});
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminStressDetailsModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- Inserted a record in the IOT_GarminStressDetailsModel table.');
 			} else {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminStressDetailsModel teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- No record in the IOT_GarminStressDetailsModel table.');
 			}
 
 			// UserMetrics
 			if (dndata.UserMetrics) {
-				// ダウンロードしたデータをテーブルに追加
 				await IOT_GarminUserMetricsModel.findOrCreate({
-					where: {
-						idIOT_GarminUserMetrics: dndata.UserMetrics.idIOT_GarminUserMetrics
-					},
+					where: { idIOT_GarminUserMetrics: dndata.UserMetrics.idIOT_GarminUserMetrics },
 					defaults: {
 						idIOT_GarminUserMetrics: dndata.UserMetrics.idIOT_GarminUserMetrics,
 						garminId: dndata.UserMetrics.garminId,
@@ -676,9 +630,9 @@ let mainHALsync = {
 						updatedAt: dndata.UserMetrics.updatedAt
 					}
 				});
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Inserted a record in the IOT_GarminUserMetrics teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- Inserted a record in the IOT_GarminUserMetrics table.');
 			} else {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- No record in the IOT_GarminUserMetrics teble.') : 0;
+				logger.debug('mainHALsync', config.debug, '|- No record in the IOT_GarminUserMetrics table.');
 			}
 
 			// 画面表示
@@ -687,31 +641,17 @@ let mainHALsync = {
 				sendIPCMessage("showGarmin", persist.garmin);
 			}
 
-
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.garminDownload() ', error);
-			let arg = {
-				error: error.message
-			};
-
+			logger.error('mainHALsync', 'garminDownload()', error);
 			sendIPCMessage('Error', {
-				datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"),
+				datetime: formatDate(new Date(), "YYYY-MM-DDTHH24:MI:SS"),
 				moduleName: 'mainHALsync.garminDownload()',
 				stackLog: `Detail: ${error}`
 			});
-
-			// mainWindow.webContents.send('to-renderer', JSON.stringify({ cmd: "Synced", arg: arg }));
 		}
 	},
 
-
 	//----------------------------------------------------------------------------------------------
-	/**
-	 * HALへGETリクエスト。成功時JSONパース、失敗時エラー。
-	 * @param {string} url
-	 * @param {string=} token オーバーライドトークン
-	 * @returns {Promise<any>}
-	 */
 	httpGetRequest: function (url, token) {
 		return new Promise((resolve, reject) => {
 			if (!token) {
@@ -740,8 +680,8 @@ let mainHALsync = {
 						try {
 							res_data = JSON.parse(res_str);
 						} catch (error) {
-							console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.httpGetRequest', error);
-							console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| error res_str:', res_str);
+							logger.error('mainHALsync', 'httpGetRequest', error);
+							logger.error('mainHALsync', 'error res_str:', res_str);
 						}
 						resolve(res_data);
 					} else {
@@ -750,8 +690,8 @@ let mainHALsync = {
 							let res_data = JSON.parse(res_str);
 							message += res_data.error;
 						} catch (error) {
-							console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.httpGetRequest', error);
-							console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| error res_str:', res_str);
+							logger.error('mainHALsync', 'httpGetRequest', error);
+							logger.error('mainHALsync', 'error res_str:', res_str);
 						}
 						reject(new Error('Received an error response from HAL: ' + message));
 					}
@@ -767,14 +707,6 @@ let mainHALsync = {
 	},
 
 
-	//----------------------------------------------------------------------------------------------
-	/**
-	 * HALへPOST。200応答ならJSON返却。エラー時詳細含む例外。
-	 * @param {string} url
-	 * @param {any} data POSTボディ
-	 * @param {string=} token オーバーライドトークン
-	 * @returns {Promise<any>}
-	 */
 	httpPostRequest: function (url, data, token) {
 		if (!token) {
 			token = config.halApiToken;
@@ -806,8 +738,8 @@ let mainHALsync = {
 						try {
 							res_data = JSON.parse(res_str);
 						} catch (error) {
-							console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.httpPostRequest', error);
-							console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| error res_str:', res_str);
+							logger.error('mainHALsync', 'httpPostRequest', error);
+							logger.error('mainHALsync', 'error res_str:', res_str);
 						}
 						resolve(res_data);
 					} else {
@@ -816,7 +748,7 @@ let mainHALsync = {
 							let res_data = JSON.parse(res_str);
 							message += res_data.error;
 						} catch (error) {
-							console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.httpPostRequest', error);
+							logger.error('mainHALsync', 'httpPostRequest', error);
 						}
 
 						reject(new Error('Received an error response from HAL: ' + message));
@@ -834,12 +766,6 @@ let mainHALsync = {
 	},
 
 
-	//----------------------------------
-	/**
-	 * HAL APIトークンを検証し保存。成功時プロフィール返す。
-	 * @param {string} _token
-	 * @returns {Promise<void>}
-	 */
 	setHalApiTokenRequest: async function (_token) {
 		let arg = {};
 		try {
@@ -848,7 +774,7 @@ let mainHALsync = {
 			config.halApiToken = _token;
 			arg = { profile: profile };
 		} catch (error) {
-			arg.error = error.message;
+			logger.error('mainHALsync', 'setHalApiTokenRequest', error);
 		}
 		sendIPCMessage("HALsetApiTokenResponse", arg);
 	},
@@ -864,7 +790,7 @@ let mainHALsync = {
 			config.halApiToken = null;
 			persist.profile = { name: 'No Profile', UID: 'No Data', sex: 'No Data', age: 'No Data' };
 		} catch (error) {
-			arg.error = error.message;
+			logger.error('mainHALsync', 'deleteHalApiToken', error);
 		}
 
 		sendIPCMessage("HALdeleteApiTokenResponse", null);
@@ -882,7 +808,7 @@ let mainHALsync = {
 			arg.profile = profile;
 			persist.profile = profile;
 		} catch (error) {
-			arg.error = error.message;
+			logger.error('mainHALsync', 'getHalUserProfileRequest', error);
 		}
 
 		sendIPCMessage("HALgetUserProfileResponse", arg);
@@ -909,7 +835,7 @@ let mainHALsync = {
 			config.lastUploadedId = 0;
 		}
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.startUploadEldata Started to upload ELData:') : 0;
+		logger.debug('mainHALsync', config.debug, 'startUploadEldata Started to upload ELData:');
 		// console.log('- Last Uploaded time: ' + (new Date(config.lastUploadedTime)).toLocaleString());
 		// console.log('- Last Uploaded Log ID: ' + config.lastUploadedId);
 
@@ -923,7 +849,7 @@ let mainHALsync = {
 			});
 			// console.log('- Number of new logs: ' + cnt);
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.startUploadEldata', error);
+			logger.error('mainHALsync', 'startUploadEldata', error);
 			setTimeout(mainHALsync.startUploadEldata, config.UPLOAD_START_INTERVAL, config);
 			return;
 		}
@@ -957,9 +883,9 @@ let mainHALsync = {
 			await mainHALsync.httpPostRequest(HAL_API_BASE_URL + '/eldata', dlist);
 			// console.log('- Number of uploaded logs: ' + dlist.length);
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| ', error);
+			logger.error('mainHALsync', error);
 			sendIPCMessage('Error', {
-				datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"),
+				datetime: formatDate(new Date(), "YYYY-MM-DDTHH24:MI:SS"),
 				moduleName: 'mainHALsync.startUploadEldata()',
 				stackLog: `Detail: ${error}`
 			});
@@ -1017,7 +943,7 @@ let mainHALsync = {
 	 * @returns {Promise<void>}
 	 */
 	stop: async function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALsync.stop()') : 0;
+		logger.debug('mainHALsync', config.debug, 'stop()');
 
 		if (mainHALsync.uploadEldataTask) {
 			await mainHALsync.uploadEldataTask.stop();

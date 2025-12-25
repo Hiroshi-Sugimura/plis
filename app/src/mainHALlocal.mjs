@@ -12,7 +12,8 @@ import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { sqlite3, eldataModel, IOT_QuestionnaireAnswersModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_MinorkeyMeansModel, MinorkeyMeansValues } = localDB;
 import { Op } from "sequelize";
 import { store } from './storeSingleton.mjs';
-import { getToday, roundFloat } from './mainSubmodule.mjs';
+import { getToday, roundFloat, formatDate } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
 
 // const store = new Store();
 
@@ -68,7 +69,7 @@ let mainHALlocal = {
 	 * @returns {Promise<void>}
 	 */
 	submitQuestionnaire: async function (arg, succeessFunc, errorFunc) {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALlocal.submitQuestionnaire()') : 0;
+		logger.debug('mainHALlocal', config.debug, 'submitQuestionnaire()');
 		// console.dir( arg );
 
 		let today = getToday();
@@ -106,7 +107,7 @@ let mainHALlocal = {
 				}
 			}
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| questionnaire_error', error.message);
+			logger.error('mainHALlocal', 'questionnaire_error', error.message);
 			return;
 		}
 		// console.log( 'アンケート回答の値をチェック ok' );
@@ -197,14 +198,12 @@ let mainHALlocal = {
 				// minor_data.updatedAt = now;
 				minor_data.assessmentSource = 'questionnaire';
 				await IOT_MinorResultsModel.create(minor_data);
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALlocal.submitQuestionnaire() IOT_MinorResultsModel格納') : 0;
+				logger.debug('mainHALlocal', config.debug, 'submitQuestionnaire() IOT_MinorResultsModel格納');
 
 				major_data.date = today;
-				// major_data.createdAt = now;
-				// major_data.updatedAt = now;
 				major_data.assessmentSource = 'questionnaire';
 				await IOT_MajorResultsModel.create(major_data);
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALlocal.submitQuestionnaire() IOT_MajorResultsModel格納') : 0;
+				logger.debug('mainHALlocal', config.debug, 'submitQuestionnaire() IOT_MajorResultsModel格納');
 			}
 
 			// コミット
@@ -215,8 +214,8 @@ let mainHALlocal = {
 		} catch (error) {
 			// ロールバック
 			await t.rollback();
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALlocal.submitQuestionnaire() rollbacked') : 0;
-			console.error(error);
+			logger.debug('mainHALlocal', config.debug, 'submitQuestionnaire() rollbacked');
+			logger.error('mainHALlocal', error);
 
 			// HTTP レスポンス
 			errorFunc();
@@ -335,27 +334,25 @@ let mainHALlocal = {
 		let MinorkeyMeans = [];
 
 		// ローカルの MajorResults から最新のレコードを取得
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALlocal.getLastData() Getting the latest record in the local MajorResults table.') : 0;
+		logger.debug('mainHALlocal', config.debug, 'getLastData() Getting the latest record in the local MajorResults table.');
 		MajorResults = await IOT_MajorResultsModel.findOne({
 			order: [['date', 'DESC']]
 		});
 		if (MajorResults) {
 			halData.majorResults = MajorResults.dataValues;
-			// console.log(JSON.stringify(MajorResults.dataValues, null, '  '));
 		} else {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALlocal.getLastData() local MajorResults table is empty.') : 0;
+			logger.debug('mainHALlocal', config.debug, 'getLastData() local MajorResults table is empty.');
 		}
 
 		// ローカルの MinorResults から最新のレコードを取得
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALlocal.getLastData() Getting the latest record in the local MinorResults table.') : 0;
+		logger.debug('mainHALlocal', config.debug, 'getLastData() Getting the latest record in the local MinorResults table.');
 		MinorResults = await IOT_MinorResultsModel.findOne({
 			order: [['date', 'DESC']]
 		});
 		if (MinorResults) {
 			halData.minorResults = MinorResults.dataValues;
-			// console.log(JSON.stringify(MinorResults.dataValues, null, '  '));
 		} else {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALlocal.getLastData() local MinorResults table is empty.') : 0;
+			logger.debug('mainHALlocal', config.debug, 'getLastData() local MinorResults table is empty.');
 		}
 
 		// ローカルの MinorkeyMeans から最新のレコードを取得
@@ -365,19 +362,18 @@ let mainHALlocal = {
 			// console.dir( data.length );
 			if (data && data.length != 0) { // データはあって，空ではないなら
 				// データあり
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALlocal.getLastData() MinorkeyMeans data is found.') : 0;
+				logger.debug('mainHALlocal', config.debug, 'getLastData() MinorkeyMeans data is found.');
 				data.forEach((d) => {
-					// console.log(d);
 					MinorkeyMeans.push(d.dataValues);
 				});
 			} else {
 				// データなし
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALlocal.getLastData() MinorkeyMeans data is NOT found.') : 0;
+				logger.debug('mainHALlocal', config.debug, 'getLastData() MinorkeyMeans data is NOT found.');
 				IOT_MinorkeyMeansModel.bulkCreate(MinorkeyMeansValues);
 			}
 		}).catch(function (err) {
 			// DBエラーした
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALlocal.getLastData() IOT_MinorkeyMeans occurs error.', err);
+			logger.error('mainHALlocal', 'getLastData() IOT_MinorkeyMeans occurs error.', err);
 		});
 
 		halData.minorkeyMeans = MinorkeyMeans;
@@ -429,11 +425,11 @@ let mainHALlocal = {
 			}
 		});
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHALlocal.truncatelogs()') : 0;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Deleted ' + eldata_del_count + ' records from the `eldata` table.') : 0;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Deleted ' + major_del_count + ' records from the `IOT_MajorResults` table.') : 0;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Deleted ' + minor_del_count + ' records from the `IOT_MinorResults` table.') : 0;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '|- Deleted ' + questionnaire_del_count + ' records from the `IOT_QuestionnaireAnswersModel` table.') : 0;
+		logger.debug('mainHALlocal', config.debug, 'truncatelogs()');
+		logger.debug('mainHALlocal', config.debug, `|- Deleted ${eldata_del_count} records from the eldata table.`);
+		logger.debug('mainHALlocal', config.debug, `|- Deleted ${major_del_count} records from the IOT_MajorResults table.`);
+		logger.debug('mainHALlocal', config.debug, `|- Deleted ${minor_del_count} records from the IOT_MinorResults table.`);
+		logger.debug('mainHALlocal', config.debug, `|- Deleted ${questionnaire_del_count} records from the IOT_QuestionnaireAnswersModel table.`);
 	}
 
 };

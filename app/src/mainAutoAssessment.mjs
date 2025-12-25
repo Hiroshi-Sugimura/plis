@@ -298,7 +298,7 @@ let mainAutoAssessment = {
 	 * @param {string} yesterday YYYY-MM-DD
 	 */
 	assessment: async function (today, yesterday) {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment - today:', today, ' yesterday:', yesterday) : 0;
+		logger.debug('mainAutoAssessment', config.debug, `today: ${today} yesterday: ${yesterday}`);
 
 		let now = new Date();
 
@@ -317,11 +317,11 @@ let mainAutoAssessment = {
 
 			////////////////////////////////////////////////////////////////////////////////////////
 			// MinorResults
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() MinorResults') : 0;
+			logger.debug('mainAutoAssessment', config.debug, 'assessment() MinorResults');
 
 			//--------------------------------------------------------
 			// アンケートデータでまずは点数をつける
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() Assess questionnaire') : 0;
+			logger.debug('mainAutoAssessment', config.debug, 'assessment() Assess questionnaire');
 			// SELECT * FROM halexp.IOT_QuestionnaireAnswersModel
 			// where UID="U517290377a4861b16cc91c2d111f116d" and createdAt like "2022-05-11%" order by createdAt desc;
 			let qaRow = await IOT_QuestionnaireAnswersModel.findOne({
@@ -342,7 +342,7 @@ let mainAutoAssessment = {
 
 			//--------------------------------------------------------
 			// IoTデータで点数をつける
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() Assess IoT') : 0;
+			logger.debug('mainAutoAssessment', config.debug, 'assessment() Assess IoT');
 			let iotHumidityRows = await switchBotDataModel.findAll({
 				where: {
 					// createdAt: { [Op.like]: yesterday + "%" },
@@ -359,7 +359,7 @@ let mainAutoAssessment = {
 
 			//--------------------------------------------------------
 			// nullの場所だけ、前日以前の得点を利用する。各得点は-1することで放置していると0点になる
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() Assess latest MinorResults') : 0;
+			logger.debug('mainAutoAssessment', config.debug, 'assessment() Assess latest MinorResults');
 			// SELECT * FROM halexp.IOT_MinorResults
 			// where UID="U517290377a4861b16cc91c2d111f116d" order by date desc;
 			let mrRow = await IOT_MinorResultsModel.findOne({
@@ -373,7 +373,7 @@ let mainAutoAssessment = {
 			}
 
 			// それでも残るnullは0点
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() Null fix') : 0;
+			logger.debug('mainAutoAssessment', config.debug, 'assessment() Null fix');
 			Object.keys(minorResults).forEach(function (key) {
 				if (minorResults[key] == undefined || minorResults[key] == null) {
 					minorResults[key] = 0;
@@ -381,7 +381,7 @@ let mainAutoAssessment = {
 			});
 
 			// 最終的な値のチェック、min = 0, max = 100
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() checkValues') : 0;
+			logger.debug('mainAutoAssessment', config.debug, 'assessment() checkValues');
 			await Object.keys(minorResults).forEach(function (key) {
 				minorResults[key] = checkValue(minorResults[key], 0, 100);
 			});
@@ -421,7 +421,7 @@ let mainAutoAssessment = {
 
 			//--------------------------------------------------------------------------------------
 			// MajorResults
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() MajorResults') : 0;
+			logger.debug('mainAutoAssessment', config.debug, 'assessment() MajorResults');
 			majorResults = mainAutoAssessment.calcMajorResults(minorResults);  // minorからmajorを計算
 
 			// IOT_MajorResults テーブルから該当ユーザーの今日のレコードを取得
@@ -454,11 +454,11 @@ let mainAutoAssessment = {
 
 			// コミット
 			await t.commit();
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() commit') : 0;
+			logger.debug('mainAutoAssessment', config.debug, 'assessment() commit');
 		} catch (error) {
 			// ロールバック
 			await t.rollback();
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.assessment() rollback');
+			logger.error('mainAutoAssessment', 'assessment() rollback');
 			console.error(error);
 		}
 
@@ -471,7 +471,7 @@ let mainAutoAssessment = {
 	 * @param {(ch:string,p:any)=>void} _sendIPCMessage
 	 */
 	start: function (_sendIPCMessage) {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.start()') : 0;
+		logger.debug('mainAutoAssessment', config.debug, 'start()');
 
 		if (mainAutoAssessment.isRun) {
 			return; // 多重起動防止
@@ -483,7 +483,7 @@ let mainAutoAssessment = {
 
 		mainAutoAssessment.observationJob = cron.schedule('0 0 9 * * *', async () => {  // 本番用の AM9:00
 			// mainAutoAssessment.observationJob = cron.schedule('*/1 * * * *', async () => {  // debug用の1分毎
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainAutoAssessment.start().observationJob') : 0;
+			logger.debug('mainAutoAssessment', config.debug, 'start().observationJob');
 
 			let today = getToday();
 			let yesterday = getYesterday();

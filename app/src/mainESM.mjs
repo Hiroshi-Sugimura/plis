@@ -98,7 +98,7 @@ let mainESM = {
 		sendIPCMessage("renewESMConfigView", config);
 
 		if (config.enabled == false) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start() desabled.') : 0;
+			logger.debug('mainESM', config.debug, 'start(): ESM is disabled.');
 			mainESM.isRun = false;
 			return;
 		}
@@ -114,10 +114,10 @@ let mainESM = {
 		ELconv.initialize();
 
 		try {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start()') : 0;
+			logger.debug('mainESM', config.debug, 'start()');
 			mainESM.startObserve();		// 定時処理
 		} catch (error) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.start() startObserve error') : 0;
+			logger.debug('mainESM', config.debug, 'start(): startObserve error');
 			mainESM.isRun = false;
 		}
 
@@ -134,7 +134,7 @@ let mainESM = {
 	 */
 	stop: async function () {
 		mainESM.isRun = false;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.stop()') : 0;
+		logger.debug('mainESM', config.debug, 'stop()');
 
 		mainESM.connected = false;
 		await mainESM.stopObservation();
@@ -149,7 +149,7 @@ let mainESM = {
 	 */
 	stopWithoutSave: async function () {
 		mainESM.isRun = false;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.stopWithoutSave()') : 0;
+		logger.debug('mainESM', config.debug, 'stopWithoutSave()');
 
 		mainESM.connected = false;
 		await mainESM.stopObservation();
@@ -206,7 +206,7 @@ let mainESM = {
 		// 機器情報の変化を意味付けする
 		// DBにinsertする
 		mainESM.observationJob = cron.schedule('*/1 * * * *', async () => {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startObserve.cron.schedule()') : 0;
+			logger.debug('mainESM', config.debug, 'startObserve.cron.schedule()');
 
 			// 既に接続していたら機器情報の変化をみる。接続していなかったら接続する
 			// この処理はmainESM.start()でobserve serialportとして分割した。
@@ -240,7 +240,7 @@ let mainESM = {
 	 * 監視Cronを停止。
 	 */
 	stopObservation: function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.stopObserve() observation.') : 0;
+		logger.debug('mainESM', config.debug, 'stopObserve() observation.');
 
 		if (mainESM.observationJob) {
 			mainESM.observationJob.stop();
@@ -259,26 +259,26 @@ let mainESM = {
 	 */
 	insertDB: async () => {
 		try {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.insertDB() every min') : 0;
+			logger.debug('mainESM', config.debug, 'insertDB() every min');
 
 			let dt = new Date();
 
 			// Wi-SUN電力スマートメーターの状態のチェック
 			if (mainESM.connected && persist && persist.IPs && persist.IPs.length != 0) {
-				// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.insertDB() persist:\x1b[32m', persist, '\x1b[0m' ):0;
+				// logger.debug('mainESM', config.debug, `insertDB() persist: ${JSON.stringify(persist)}`);
 
 				let ip = persist.IPs[0];
 				let sm = persist[ip];
 				// 蓄積するほどデータがそろってない場合はスキップ
 				if (!sm || !sm['低圧スマート電力量メータ01(028801)']) {
-					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.insertDB.() SumartMeter persist.esmData is Null.') : 0;
+					logger.debug('mainESM', config.debug, 'insertDB(): SmartMeter persist.esmData is Null.');
 
 				} else if (!sm['低圧スマート電力量メータ01(028801)']['設置場所(81)']) {  // 基本プロパティがなければ取り直す
-					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.insertDB() SumartMeter esmData.place is Null.') : 0;
+					logger.debug('mainESM', config.debug, 'insertDB(): SmartMeter esmData.place is Null.');
 					eSM.getStatic();
 
 				} else if (isObjEmpty(sm.Means)) {
-					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.insertDB() SumartMeter sm.Means is Empty.') : 0;
+					logger.debug('mainESM', config.debug, 'insertDB(): SmartMeter sm.Means is Empty.');
 
 				} else {
 					// merge用ベース
@@ -338,14 +338,14 @@ let mainESM = {
 						commulativeAmountsFixedTimeRiversePower: mergeObj['定時積算電力量計測値逆方向']['計測値[kWh]']
 					};
 
-					// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.insertDB() ESM insert:\x1b[32m', q, '\x1b[0m' ):0;
+					// logger.debug('mainESM', config.debug, `insertDB() ESM insert: ${JSON.stringify(q)}`);
 					electricEnergyModel.create(q);
 				}
 			};
 
 			mainESM.sendTodayEnergy(); 		// 本日のデータの定期的送信 スマートメータ分
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.insertDB() each 3min, error:', error);
+			logger.error('mainESM', 'insertDB() each 3min', error);
 			throw error;
 		}
 	},
@@ -370,14 +370,14 @@ let mainESM = {
 	received: function (sm, rinfo, els, error) {
 		// わからんエラー
 		if (error) {
-			sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainESM.received()', stackLog: `${error}\nスマートメータの設定をもう一度確認し、一度アプリを再起動してください。または機器を再起動してください。` });
+			sendIPCMessage('Error', { datetime: formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), moduleName: 'mainESM.received()', stackLog: `${error}\nスマートメータの設定をもう一度確認し、一度アプリを再起動してください。または機器を再起動してください。` });
 
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.received() error:\x1b[32m', error, '\x1b[0m');
+			logger.error('mainESM', 'received() error:\x1b[32m', error, '\x1b[0m');
 			return;
 		}
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.received() sm:\x1b[32m', sm, '\x1b[0m') : 0;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.received() rinfo:\x1b[32m', rinfo, '\x1b[0m') : 0;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.received() els:\x1b[32m', els, '\x1b[0m') : 0;
+		logger.debug('mainESM', config.debug, `received() sm:\x1b[32m ${JSON.stringify(sm)} \x1b[0m`);
+		logger.debug('mainESM', config.debug, `received() rinfo:\x1b[32m ${JSON.stringify(rinfo)} \x1b[0m`);
+		logger.debug('mainESM', config.debug, `received() els:\x1b[32m ${JSON.stringify(els)} \x1b[0m`);
 
 		try {
 			// 切断された
@@ -409,7 +409,7 @@ let mainESM = {
 
 			} else {
 				// elsが入っていないときは処理しない
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.received() els is NO Data') : 0;
+				logger.debug('mainESM', config.debug, 'received() els is NO Data');
 			}
 		} catch (e) {
 			console.error(e);
@@ -448,9 +448,9 @@ let mainESM = {
 
 		let ret = "";
 		for (let t = 0; t < 480; t += 1) {  // 24h * 20 times (= 60min / 3min)
-			// console.log( T1.toISOString(), ':', T1.toFormat('YYYY-MM-DD HH24:MI'), ', ', T4.toFormat('HH24:MI') );
+			// logger.debug('mainESM', config.debug, `${T1.toISOString()} : ${formatDate(T1, 'YYYY-MM-DD HH24:MI')} , ${formatDate(T4, 'HH24:MI')}`);
 
-			ret += `WHEN "createdAt" LIKE "${T1.toFormat('YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${T2.toFormat('YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${T3.toFormat('YYYY-MM-DD HH24:MI')}%" THEN "${T4.toFormat('HH24:MI')}" \n`;
+			ret += `WHEN "createdAt" LIKE "${formatDate(T1, 'YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${formatDate(T2, 'YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${formatDate(T3, 'YYYY-MM-DD HH24:MI')}%" THEN "${formatDate(T4, 'HH24:MI')}" \n`;
 
 			T1.setMinutes(T1.getMinutes() + 3); // + 3 min
 			T2.setMinutes(T2.getMinutes() + 3); // + 3 min
@@ -496,7 +496,7 @@ let mainESM = {
 
 			return rows;
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.getRows()', error);
+			logger.error('mainESM', 'getRows()', error);
 		}
 	},
 
@@ -515,7 +515,7 @@ let mainESM = {
 
 			let array = [];
 			for (let t = 0; t < 480; t += 1) {  // 3分が480回で1440＝1日
-				let row = rows.find((row) => row.dataValues.timeunit == T1.toFormat('HH24:MI'));
+				let row = rows.find((row) => row.dataValues.timeunit == formatDate(T1, 'HH24:MI'));
 
 				if (row) {
 					array.push({
@@ -546,7 +546,7 @@ let mainESM = {
 			return array;
 
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.getTodayElectricEnergy()', error);
+			logger.error('mainESM', 'getTodayElectricEnergy()', error);
 			throw error;
 		}
 	},
@@ -561,7 +561,7 @@ let mainESM = {
 		// WI-SUNのスマートメータ
 		if (config.enabled) {
 			arg = await mainESM.getTodayElectricEnergy();
-			// config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.sendTodayEnergy() arg:\x1b[32m', arg, '\x1b[0m' ):0;
+			// logger.debug('mainESM', config.debug, `sendTodayEnergy() arg: ${JSON.stringify(arg)}`);
 			sendIPCMessage('renewTodayElectricEnergy', JSON.stringify(arg));
 		}
 	}

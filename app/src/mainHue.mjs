@@ -11,8 +11,9 @@ import Hue from 'hue-handler';
 import { store } from './storeSingleton.mjs';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, sqlite3, huerawModel } = localDB;
-import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
+import { objectSort, getNow, formatDate, getTodayDate, getYesterdayDate, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
 import cron from 'node-cron';
+import { logger } from './logger.mjs';
 
 let sendIPCMessage = null;
 
@@ -71,10 +72,10 @@ let mainHue = {
 
 		sendIPCMessage("renewHueConfigView", config);  // 設定を画面に表示する
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.start():\x1b[32m', config, '\x1b[0m') : 0;
+		logger.debug('mainHue', config.debug, 'start():\x1b[32m', config, '\x1b[0m');
 
 		if (!config.enabled) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.start() enabled is false.') : 0;
+			logger.debug('mainHue', config.debug, 'start() enabled is false.');
 			mainHue.isRun = false;
 			return;
 		}
@@ -92,13 +93,17 @@ let mainHue = {
 				await mainHue.setConfig(config);
 			}
 		},
-			(json) => {  // changed callback
-				if (json != '') {
-					persist = JSON.parse(json);
-					if (!isObjEmpty(persist)) {
-						sendIPCMessage("fclHue", persist);
-						huerawModel.create({ detail: json });
+			async (json) => {  // changed callback
+				try {
+					if (json != '') {
+						persist = JSON.parse(json);
+						if (!isObjEmpty(persist)) {
+							sendIPCMessage("fclHue", persist);
+							await huerawModel.create({ detail: json });
+						}
 					}
+				} catch (error) {
+					logger.error('mainHue', 'changed callback error:', error);
 				}
 			});
 
@@ -113,14 +118,13 @@ let mainHue = {
 	 */
 	stop: async function () {
 		mainHue.isRun = false;
+		logger.debug('mainHue', config.debug, 'stop()');
 
 		if (config.connected) {
 			await store.set('persist.Hue', persist);
 			await mainHue.stopObserve();
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.stop() stop.') : 0;
 		} else {
 			await mainHue.cancel();
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.stop() cancel') : 0;
 		}
 	},
 
@@ -130,13 +134,12 @@ let mainHue = {
 	 */
 	stopWithoutSave: async function () {
 		mainHue.isRun = false;
+		logger.debug('mainHue', config.debug, 'stopWithoutSave()');
 
 		if (config.connected) {
 			await mainHue.stopObserve();
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.stopWithoutSave() stop.') : 0;
 		} else {
 			await mainHue.cancel();
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.stopWithoutSave() cancel') : 0;
 		}
 	},
 
@@ -182,19 +185,17 @@ let mainHue = {
 	 */
 	received: function (gwIP, response, error) {
 		if (error) {
-			// console.error( gwIP );
-			// console.error( response );
-			// console.error( error );
+			logger.error('mainHue', 'received() error:', error, 'GW:', gwIP);
 			return;
 		}
 
 		switch (response) {
 			case 'Canceled':
-				console.log('Hue.initialize is canceled.');
+				logger.debug('mainHue', config.debug, 'initialize is canceled.');
 				break;
 
 			case 'Linking':
-				console.log('Please push Link button.');
+				logger.debug('mainHue', config.debug, 'Please push Link button.');
 				break;
 
 			default:
@@ -202,8 +203,8 @@ let mainHue = {
 				if (response[0] && response[0].success) {
 					Hue.getState();
 				} else {
-					mainHue.callback(JSON.stringify(Hue.facilities));
-					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.received() facilities:\x1b[32m', Hue.facilities, '\x1b[0m') : 0;
+					if (mainHue.callback) mainHue.callback(JSON.stringify(Hue.facilities));
+					logger.debug('mainHue', config.debug, 'received() facilities:\x1b[32m', Hue.facilities, '\x1b[0m');
 				}
 		}
 	},
@@ -221,21 +222,21 @@ let mainHue = {
 	 * @returns {Promise<string>} 取得済みキー
 	 */
 	startCore: async function (linked_cb, change_cb) {
-		mainHue.callback = change_cb == undefined || change_cb == '' ? dummy : change_cb;
+		mainHue.callback = change_cb || mainHue.dummy;
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.start() option:\x1b[32m', config, '\x1b[0m') : 0;
+		logger.debug('mainHue', config.debug, 'startCore() option:\x1b[32m', config, '\x1b[0m');
 
 		try {
 			config.key = await Hue.initialize(config.key, mainHue.received, { debugMode: config.debug });
 			if (config.key == '') {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.start(), cancel or no key.') : 0;
+				logger.debug('mainHue', config.debug, 'startCore(), cancel or no key.');
 			} else {
 				mainHue.startObserve();
 			}
 			linked_cb(config.key);
 
 		} catch (e) {
-			console.dir(e);
+			logger.error('mainHue', 'startCore() error:', e);
 		}
 
 		return config.key;
@@ -251,7 +252,7 @@ let mainHue = {
 	 * 1分毎に状態取得し変化を拾う監視タスク開始。
 	 */
 	startObserve: function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.startObserve().') : 0;
+		logger.debug('mainHue', config.debug, 'startObserve().');
 
 		if (config.key == undefined || config.key == '') { // 設定されてないのにobserveされないようにする
 			return;
@@ -262,7 +263,7 @@ let mainHue = {
 			try {
 				await Hue.getState();
 			} catch (e) {
-				if (config.debug) console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.task cron error:', e);
+				logger.error('mainHue', 'task cron error:', e);
 			}
 		});
 
@@ -271,7 +272,7 @@ let mainHue = {
 
 	/** 監視タスク停止。 */
 	stopObserve: async function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainHue.stopObserve().') : 0;
+		logger.debug('mainHue', config.debug, 'stopObserve().');
 
 		if (mainHue.task) {
 			mainHue.task.stop();

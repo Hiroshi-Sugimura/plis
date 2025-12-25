@@ -79,7 +79,7 @@ let mainCalendar = {
 
 		config.debug = store.get('config.Calendar.debug', false);
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendarStart()') : 0;
+		logger.debug('mainCalendar', config.debug, 'start()');
 
 		if (mainCalendar.isRun) {
 			sendIPCMessage('createCalendar', mainCalendar.holidayData);  // re-rentry
@@ -90,8 +90,7 @@ let mainCalendar = {
 		// 祝日データの確認
 		fs.readFile(path.join(databaseDir, "syukujitsu.csv"), "utf-8", (err, data) => {
 			if (err) {
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar() syukujitsu.csv is NOT found. error:', err);
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| ', err);
+				logger.error('mainCalendar', `syukujitsu.csv is NOT found. error: ${err.message}`);
 				mainCalendar.getHolidays();  // カレンダーデータ無いから取得する
 				return;
 			}
@@ -102,7 +101,7 @@ let mainCalendar = {
 
 		// 日替わりでカレンダー更新
 		mainCalendar.observationTask = cron.schedule('0 0 * * *', async () => { // 毎日0時0分
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendarStart.observationTask') : 0;
+			logger.debug('mainCalendar', config.debug, 'start() observationTask');
 			sendIPCMessage('renewCalendar');
 		});
 
@@ -114,14 +113,14 @@ let mainCalendar = {
 	 * @returns {void}
 	 */
 	stopWithoutSave: function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.stop()') : 0;
+		logger.debug('mainCalendar', config.debug, 'stop()');
 
 		if (mainCalendar.observationTask) {
 			mainCalendar.observationTask.stop();
 			mainCalendar.observationTask = null;
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.stopObserve() is stopped.') : 0;
+			logger.debug('mainCalendar', config.debug, 'stopObserve() is stopped.');
 		} else {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.stopObserve() has already stopped.') : 0;
+			logger.debug('mainCalendar', config.debug, 'stopObserve() has already stopped.');
 		}
 
 		mainCalendar.isRun = false;
@@ -167,7 +166,7 @@ let mainCalendar = {
 	 * @returns {void}
 	 */
 	getHolidays: function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.getHolidays()') : 0;
+		logger.debug('mainCalendar', config.debug, 'getHolidays()');
 
 		axios.get(mainCalendar.holidaysURL).then((res) => {
 			const csv = res.data;
@@ -177,7 +176,7 @@ let mainCalendar = {
 			}
 			fs.writeFile(path.join(databaseDir, "syukujitsu.csv"), csv, (err) => {
 				if (err) {
-					console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainCalendar.getHolidays() syukujitsu.csv is NOT saved. error:', err);
+					logger.error('mainCalendar', `getHolidays() syukujitsu.csv is NOT saved. error: ${err.message}`);
 					return;
 				}
 				sendIPCMessage('renewCalendar', csv);

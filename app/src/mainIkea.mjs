@@ -13,7 +13,8 @@ import TF from 'tradfri-handler';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { ikeaRawModel, ikeaDataModel } = localDB;
-import { objectSort, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
+import { objectSort, getNow, formatDate, getTodayDate, getYesterdayDate, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
 
 /**
  * @typedef {Object} IkeaConfig
@@ -88,25 +89,25 @@ let mainIkea = {
 		sendIPCMessage("renewIkeaConfigView", config);
 
 		if (config.enabled == false) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.start() disabled.') : 0;
+			logger.debug('mainIkea', config.debug, 'start() disabled.');
 			mainIkea.isRun = false;
 			return;
 		}
 		mainIkea.isRun = true;
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.start(), config:\x1b[32m', config, '\x1b[0m') : 0;
+		logger.debug('mainIkea', config.debug, 'start(), config:\x1b[32m', config, '\x1b[0m');
 
 		try {
 			let co = await TF.initialize(config.securityCode, mainIkea.received, { identity: config.identity, psk: config.psk, debugMode: config.debug });
 			mainIkea.startObserve();
 			config.identity = co.identity;
 			config.psk = co.psk;
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mianIkea.start() is connected. config:\x1b[32m', config, '\x1b[0m') : 0;
+			logger.debug('mainIkea', config.debug, 'start() is connected. config:\x1b[32m', config, '\x1b[0m');
 			await store.set('config.Ikea', config);
 
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.start() error:\x1b[32m', error, '\x1b[0m');
-			sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainIkea.start', stackLog: 'Can not discover and connect gateway. Please check your network connection. And restart PLIS.' });
+			logger.error('mainIkea', 'start() error:', error);
+			sendIPCMessage('Error', { datetime: getNow(), moduleName: 'mainIkea.start', stackLog: 'Can not discover and connect gateway. Please check your network connection. And restart PLIS.' });
 			config.enabled = false;
 			mainIkea.isRun = false;
 			throw error;
@@ -114,7 +115,7 @@ let mainIkea = {
 
 		if (!isObjEmpty(persist)) {
 			sendIPCMessage("fclIkea", JSON.parse(JSON.stringify(persist))); // 起動後に一回画面表示
-			mainIkea.storeData();  // 起動時に一回persistをDB記録
+			await mainIkea.storeData();  // 起動時に一回persistをDB記録
 		}
 	},
 
@@ -125,10 +126,9 @@ let mainIkea = {
 	 */
 	stop: async function () {
 		mainIkea.isRun = false;
+		logger.debug('mainIkea', config.debug, 'stop()');
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.stop()') : 0;
-
-		await mainIkea.stop();
+		await mainIkea.stopCore();
 
 		await mainIkea.setConfig();
 		await store.set('persist.Ikea', persist);
@@ -140,10 +140,9 @@ let mainIkea = {
 	 */
 	stopWithoutSave: async function () {
 		mainIkea.isRun = false;
+		logger.debug('mainIkea', config.debug, 'stopWithoutSave()');
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.stopWithoutSave()') : 0;
-
-		await mainIkea.stop();
+		await mainIkea.stopCore();
 	},
 
 
@@ -186,7 +185,7 @@ let mainIkea = {
 	 * @param {Object} command state command
 	 */
 	control: function (key, type, command) {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.control() key:', key, ', type:', type, ', command:', command) : 0;
+		logger.debug('mainIkea', config.debug, 'control() key:', key, ', type:', type, ', command:', command);
 		mainIkea.isRequested = true;
 		TF.setState(key, type, command);
 	},
@@ -202,8 +201,7 @@ let mainIkea = {
 	 */
 	received: function (rIP, device, error) {
 		if (error) {
-			console.log('-- received error');
-			console.error(error);
+			logger.error('mainIkea', 'received() error:', error);
 			return;
 		}
 
@@ -224,32 +222,40 @@ let mainIkea = {
 	 * facilitiesの変化監視開始。変化検出時persistをUIとDBへ反映。
 	 */
 	startObserve: function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.startObserve() start.') : 0;
+		logger.debug('mainIkea', config.debug, 'startObserve() start.');
 
 		if (mainIkea.observationJob) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.startObserve() already started.') : 0;
+			logger.debug('mainIkea', config.debug, 'startObserve() already started.');
 		}
 
 		// facilitiesの定期的監視、変化があれば記録
 		let oldValStr = JSON.stringify(objectSort(TF.facilities));
-		mainIkea.observationJob = cron.schedule('0 * * * * *', () => {  // 1分毎にautoget、変化があればログ表示
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.startObserve().cron() each 1min') : 0;
-			let newValStr = JSON.stringify(objectSort(TF.facilities));
-			if (oldValStr == newValStr) return;  // 変化しないので無視
-			persist = TF.facilities;
-			if (!isObjEmpty(persist)) {
-				sendIPCMessage("fclIkea", JSON.parse(JSON.stringify(persist)));
-				mainIkea.storeData();
+		mainIkea.observationJob = cron.schedule('0 * * * * *', async () => {  // 1分毎にautoget、変化があればログ表示
+			try {
+				logger.debug('mainIkea', config.debug, 'observationJob each 1min');
+				let newValStr = JSON.stringify(objectSort(TF.facilities));
+				if (oldValStr == newValStr) return;  // 変化しないので無視
+				oldValStr = newValStr;
+				persist = TF.facilities;
+				if (!isObjEmpty(persist)) {
+					sendIPCMessage("fclIkea", JSON.parse(JSON.stringify(persist)));
+					await mainIkea.storeData();
+				}
+			} catch (error) {
+				logger.error('mainIkea', 'observationJob error:', error);
 			}
-			// console.log('TF changed, new TF.facilities:', newVal);
 		});
 		mainIkea.observationJob.start();
 
 
 		// 3分毎にDB登録、変化がなくても記録
-		mainIkea.storeJob = cron.schedule('0 */3 * * * *', () => {
-			sendIPCMessage("fclIkea", JSON.parse(JSON.stringify(persist)));
-			ikeaRawModel.create({ detail: JSON.stringify(persist) });  // store raw data
+		mainIkea.storeJob = cron.schedule('0 */3 * * * *', async () => {
+			try {
+				sendIPCMessage("fclIkea", JSON.parse(JSON.stringify(persist)));
+				await ikeaRawModel.create({ detail: JSON.stringify(persist) });  // store raw data
+			} catch (error) {
+				logger.error('mainIkea', 'storeJob error:', error);
+			}
 		});
 		mainIkea.storeJob.start();
 	},
@@ -259,7 +265,7 @@ let mainIkea = {
 	 * @returns {Promise<void>}
 	 */
 	storeData: async function () {
-		// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.storeData() persist:', persist) : 0;
+		// logger.debug('mainIkea', config.debug, 'storeData() persist:', persist);
 		for (let d in persist) {
 			let det = persist[d];
 			// console.log('Ikea:dev:', d, ' detail:', det);
@@ -276,7 +282,7 @@ let mainIkea = {
 			try {
 				switch (det.type) {
 					case 0:  // remote controller
-						ikeaDataModel.create({
+						await ikeaDataModel.create({
 							deviceId: d,
 							deviceType: type,
 							deviceName: name,
@@ -288,7 +294,7 @@ let mainIkea = {
 						break;
 					case 2: // bulb
 						// console.log('subIkea.js, bulb value:', value);
-						ikeaDataModel.create({
+						await ikeaDataModel.create({
 							deviceId: d,
 							deviceType: type,
 							deviceName: name,
@@ -300,7 +306,7 @@ let mainIkea = {
 						break;
 					case 6: // signal repeater
 						// console.log('subIkea.js, signal repeater value:', value);
-						ikeaDataModel.create({
+						await ikeaDataModel.create({
 							deviceId: d,
 							deviceType: type,
 							deviceName: name,
@@ -312,7 +318,7 @@ let mainIkea = {
 						break;
 					case 7: // blind
 						// console.log('subIkea.js, bulb value:', value);
-						ikeaDataModel.create({
+						await ikeaDataModel.create({
 							deviceId: d,
 							deviceType: type,
 							deviceName: name,
@@ -324,14 +330,13 @@ let mainIkea = {
 						break;
 
 					default:
-						console.log('unknown device in SwitchBot:dev:', d, ' detail:', det);
+						logger.debug('mainIkea', config.debug, 'unknown device type in IKEA:dev:', d, ' detail:', det);
 						break;
 				}
 
 			} catch (error) {
-				sendIPCMessage('Error', { datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), moduleName: 'mainIkea', stackLog: `${error.message}, d:${d}, det:${det}` });
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.storeData() error:\x1b[32m', error, 'Ikea:dev:', d, ' detail:', det, '\x1b[0m');
-				throw error;
+				sendIPCMessage('Error', { datetime: getNow(), moduleName: 'mainIkea.storeData', stackLog: `${error.message}, d:${d}` });
+				logger.error('mainIkea', 'storeData() error:', error, 'd:', d);
 			}
 
 		}
@@ -342,8 +347,8 @@ let mainIkea = {
 	 * 内部：監視ジョブ停止とTradfri接続リリース。
 	 * @returns {Promise<void>}
 	 */
-	stop: async function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.stop().') : 0;
+	stopCore: async function () {
+		logger.debug('mainIkea', config.debug, 'stopCore().');
 
 		if (mainIkea.observationJob) {
 			await mainIkea.observationJob.stop();

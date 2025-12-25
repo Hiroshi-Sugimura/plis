@@ -12,7 +12,8 @@ import http from 'http';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { owmModel, weatherModel } = localDB;
-import { isObjEmpty, mergeDeeply, getNow } from './mainSubmodule.mjs';
+import { isObjEmpty, mergeDeeply, getNow, formatDate } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
 
 
 // const store = new Store();
@@ -64,38 +65,37 @@ let mainOwm = {
 			return;
 		}
 
-		config.enabled = store.get('config.OWM.enabled', false);
-		config.APIKey = store.get('config.OWM.APIKey', '');
-		config.debug = store.get('config.OWM.debug', false);
-		config.zipcode = store.get('config.OWM.zipcode', '');
-		persist = store.get('persist.OWM', {});
+		config.enabled = await store.get('config.OWM.enabled', false);
+		config.APIKey = await store.get('config.OWM.APIKey', '');
+		config.debug = await store.get('config.OWM.debug', false);
+		config.zipcode = await store.get('config.OWM.zipcode', '');
+		persist = await store.get('persist.OWM', {});
 		sendIPCMessage("renewOwmConfigView", config);  // 画面に通知
 
 		if (!config.enabled) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.start(): Owm is disabled.') : 0;
+			logger.debug('mainOwm', config.debug, 'start(): Owm is disabled.');
 			mainOwm.isRun = false;
 			return;
 		}
 		mainOwm.isRun = true;
 
 		if (config.APIKey == '') {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.start(): no key.') : 0;
+			logger.debug('mainOwm', config.debug, 'start(): no key.');
 			return;
 		}
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.start() config:', '\x1b[32m', config, '\x1b[0m') : 0;
+		logger.debug('mainOwm', config.debug, 'start() config:', config);
 
 		await mainOwm.startCore({ APIKey: config.APIKey, zipcode: config.zipcode }, (_body) => {
 			try {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.start() _body:', '\x1b[32m', _body, '\x1b[0m') : 0;
+				logger.debug('mainOwm', config.debug, 'start() _body:', _body);
 				persist = JSON.parse(_body);
 				if (!isObjEmpty(persist)) {
 					sendIPCMessage("renewOwm", persist);
 					owmModel.create({ detail: JSON.stringify(persist) }); // dbに入れる
 				}
 			} catch (error) {
-				// JSONじゃないbodyもくる？
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.start().start()', error);
+				logger.error('mainOwm', 'start() callback error:', error);
 			}
 		});
 
@@ -108,7 +108,7 @@ let mainOwm = {
 	stop: async function () {
 		mainOwm.isRun = false;
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.stop()') : 0;
+		logger.debug('mainOwm', config.debug, 'stop()');
 
 		await store.set('persist.OWM', persist);
 		await mainOwm.stopObservation();
@@ -120,7 +120,7 @@ let mainOwm = {
 	stopWithoutSave: async function () {
 		mainOwm.isRun = false;
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.stopWithoutSave()') : 0;
+		logger.debug('mainOwm', config.debug, 'stopWithoutSave()');
 		await mainOwm.stopObservation();
 	},
 
@@ -132,16 +132,16 @@ let mainOwm = {
 	 * @param {(body:string)=>void} _callback
 	 */
 	startCore: function (option, _callback) {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.startCore(), option:\x1b[32m', option, '\x1b[0m') : 0;
+		logger.debug('mainOwm', config.debug, 'startCore(), option:', option);
 		mainOwm.url = 'http://api.openweathermap.org/data/2.5/weather?zip=' + option.zipcode + ',jp&units=metric&appid=' + option.APIKey;
 		mainOwm.callback = _callback;
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.startCore(), url:\x1b[32m', mainOwm.url, '\x1b[0m') : 0;
+		logger.debug('mainOwm', config.debug, 'startCore(), url:', mainOwm.url);
 
 		try {
 			mainOwm.setObserve();  // 1 hour
 		} catch (e) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.start().setObserve(), error:', e);
+			logger.error('mainOwm', 'startCore() setObserve error:', e);
 		}
 
 		// 起動時に一回取得する
@@ -158,7 +158,7 @@ let mainOwm = {
 				mainOwm.callback(body);
 			});
 		}).on('error', function (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.start().get, error:', error);
+			logger.error('mainOwm', 'startCore() http.get error:', error);
 		});
 
 	},
@@ -173,32 +173,40 @@ let mainOwm = {
 	 * 監視cron登録（1時間毎）。
 	 */
 	setObserve: function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.setObserve() start.') : 0;
+		logger.debug('mainOwm', config.debug, 'setObserve() start.');
 
 		if (mainOwm.observationJob) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.setObserve() already started.') : 0;
+			logger.debug('mainOwm', config.debug, 'setObserve() already started.');
 		}
 
 		// 監視はcronで実施、１時間毎
 		mainOwm.observationJob = cron.schedule('0 */1 * * *', () => {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.observationJob.schedule()') : 0;
+			try {
+				logger.debug('mainOwm', config.debug, 'observationJob.schedule()');
 
-			// 天気を取得
-			http.get(mainOwm.url, function (res) {
-				let body = '';
-				res.setEncoding('utf8');
+				// 天気を取得
+				http.get(mainOwm.url, function (res) {
+					let body = '';
+					res.setEncoding('utf8');
 
-				res.on('data', function (chunk) {
-					body += chunk;
+					res.on('data', function (chunk) {
+						body += chunk;
+					});
+
+					res.on('end', function () {
+						try {
+							mainOwm.callback(body);		// 画面更新
+							mainOwm.storeData();		// 天気をDB記録
+						} catch (innerError) {
+							logger.error('mainOwm', 'observationJob.schedule() callback inner error:', innerError);
+						}
+					});
+				}).on('error', function (error) {
+					logger.error('mainOwm', 'observationJob.schedule() http.get error:', error);
 				});
-
-				res.on('data', function (chunk) {
-					mainOwm.callback(body);		// 画面更新
-					mainOwm.storeData();		// 天気をDB記録
-				});
-			}).on('error', function (error) {
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.setObserve.cron.get errror:', error);
-			});
+			} catch (cronError) {
+				logger.error('mainOwm', 'observationJob.schedule() error:', cronError);
+			}
 		});
 
 		mainOwm.observationJob.start();
@@ -208,7 +216,7 @@ let mainOwm = {
 	 * 監視停止。
 	 */
 	stopObservation: function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.stop() observation.') : 0;
+		logger.debug('mainOwm', config.debug, 'stopObservation().');
 
 		if (mainOwm.observationJob) {
 			mainOwm.observationJob.stop();
@@ -218,7 +226,7 @@ let mainOwm = {
 
 	/** persistをDBへ保存。 */
 	storeData: function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOwm.storeData().') : 0;
+		logger.debug('mainOwm', config.debug, 'storeData().');
 
 		if (persist) {
 			weatherModel.create({

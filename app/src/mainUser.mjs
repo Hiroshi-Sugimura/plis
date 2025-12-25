@@ -9,6 +9,7 @@
 // 基本ライブラリ
 import { store } from './storeSingleton.mjs';
 import { mergeDeeply } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
 
 import { fileURLToPath } from "node:url";
 import path from 'node:path';
@@ -63,14 +64,14 @@ let mainUser = {
 		config.ampere = await store.get('config.user.ampere', config.ampere);
 		config.debug = await store.get('config.user.debug', config.debug);
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainUser.start()') : 0;
+		config.debug ? logger.debug('mainUser', config.debug, 'start()') : 0;
 	},
 
 	/** 保存して停止。
 	 * @returns {Promise<void>}
 	 */
 	stop: async function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainUser.stop()') : 0;
+		config.debug ? logger.debug('mainUser', config.debug, 'stop()') : 0;
 		await mainUser.setConfig(config);
 	},
 
@@ -88,7 +89,7 @@ let mainUser = {
 			sendIPCMessage("renewUserConfigView", config);
 			sendIPCMessage("configSaved", "User");
 		} else {
-			config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainUser.setConfig() sendIPCMessage not initialized') : 0;
+			config.debug ? logger.warn('mainUser', 'setConfig() sendIPCMessage not initialized') : 0;
 		}
 	},
 

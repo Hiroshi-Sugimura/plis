@@ -21,7 +21,8 @@ import { mainArp } from './mainArp.mjs';     // arpの管理
 import { mainSystem } from './mainSystem.mjs';     // systemの管理(network部分を利用)
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, Op, elrawModel, eldataModel, electricEnergyModel } = localDB;
-import { objectSort, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
+import { objectSort, isObjEmpty, mergeDeeply, formatDate } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
 
 
 const __filename = fileURLToPath(import.meta.url);
@@ -119,10 +120,10 @@ let mainEL = {
 		mainEL.localaddresses = _localaddresses;
 		sendIPCMessage("renewELConfigView", config);   // 保存したので画面に通知
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.start()') : 0;
+		logger.debug('mainEL', config.debug, 'start()');
 
 		if (config.enabled == false) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.start() EL is desabled.') : 0;
+			logger.debug('mainEL', config.debug, 'start() EL is disabled.');
 			mainEL.isRun = false;
 			return;
 		}
@@ -149,7 +150,7 @@ let mainEL = {
 	 * @returns {Promise<void>}
 	 */
 	stop: async function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.stop()') : 0;
+		logger.debug('mainEL', config.debug, 'stop()');
 
 		await mainEL.stopObservation();
 		await EL.release();
@@ -163,7 +164,7 @@ let mainEL = {
 	 * @returns {Promise<void>}
 	 */
 	stopWithoutSave: async function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.stopWithoutSave()') : 0;
+		logger.debug('mainEL', config.debug, 'stopWithoutSave()');
 
 		await mainEL.stopObservation();
 		await EL.release();
@@ -175,7 +176,7 @@ let mainEL = {
 	 * @returns {Promise<void>}
 	 */
 	setConfig: async function (_config) {
-		config.debug ?? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.setConfig() _config:', _config);
+		logger.debug('mainEL', config.debug, `setConfig() _config:${_config}`);
 
 		if (_config) {
 			config = mergeDeeply(config, _config);
@@ -212,13 +213,13 @@ let mainEL = {
 	 * @param {Error=} error エラー（解析失敗など）
 	 * @returns {void}
 	 */
-	received: function (rinfo, els, error) {
+	received: async function (rinfo, els, error) {
 		if (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.received() error:', error);
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.received() rinfo:', rinfo);
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.received() els:', els);
+			logger.error('mainEL', 'received() error:', error);
+			logger.error('mainEL', 'received() rinfo:', rinfo);
+			logger.error('mainEL', 'received() els:', els);
 			sendIPCMessage('Error', {
-				datetime: new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"),
+				datetime: formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"),
 				moduleName: 'mainEL.received()',
 				stackLog: `EL packets that cannot be analyzed. From: ${rinfo.address}, Detail: ${error}`
 			});
@@ -262,12 +263,20 @@ let mainEL = {
 		// 確認
 		let rawdata = EL.getSeparatedString_ELDATA(els);
 
-		ELconv.elsAnarysis(els, function (eljson) {
-			for (const [key, value] of Object.entries(eljson.EDT)) {
-				eldataModel.create({ srcip: rinfo.address, srcmac: mainArp.toMAC(rinfo.address), seoj: eljson.SEOJ, deoj: eljson.DEOJ, esv: eljson.ESV, epc: key, edt: value });
+		ELconv.elsAnarysis(els, async (eljson) => {
+			try {
+				for (const [key, value] of Object.entries(eljson.EDT)) {
+					await eldataModel.create({ srcip: rinfo.address, srcmac: mainArp.toMAC(rinfo.address), seoj: eljson.SEOJ, deoj: eljson.DEOJ, esv: eljson.ESV, epc: key, edt: value });
+				}
+			} catch (err) {
+				logger.error('mainEL', 'received eldataModel.create error:', err);
 			}
 		});
-		elrawModel.create({ srcip: rinfo.address, srcmac: mainArp.toMAC(rinfo.address), dstip: mainEL.localaddresses[0], dstmac: mainArp.toMAC(mainEL.localaddresses[0]), rawdata: rawdata, seoj: els.SEOJ, deoj: els.DEOJ, esv: els.ESV, opc: els.OPC, detail: els.DETAIL });
+		try {
+			await elrawModel.create({ srcip: rinfo.address, srcmac: mainArp.toMAC(rinfo.address), dstip: mainEL.localaddresses[0], dstmac: mainArp.toMAC(mainEL.localaddresses[0]), rawdata: rawdata, seoj: els.SEOJ, deoj: els.DEOJ, esv: els.ESV, opc: els.OPC, detail: els.DETAIL });
+		} catch (err) {
+			logger.error('mainEL', 'received elrawModel.create error:', err);
+		}
 	},
 
 	/**
@@ -275,17 +284,25 @@ let mainEL = {
 	 * @param {string} _ip 宛先IP
 	 * @param {string} _msg ELフレーム文字列
 	 */
-	sendMsg: function (_ip, _msg) {
+	sendMsg: async function (_ip, _msg) {
 		// 送信は自分のログも残しておく
 		let rawdata = _msg;
 		let els = EL.parseString(_msg);
 
-		ELconv.elsAnarysis(els, function (eljson) {
-			for (const [key, value] of Object.entries(eljson.EDT)) {
-				eldataModel.create({ srcip: mainEL.localaddresses[0], srcmac: mainArp.toMAC(mainEL.localaddresses[0]), seoj: eljson.SEOJ, deoj: eljson.DEOJ, esv: eljson.ESV, epc: key, edt: value });
+		ELconv.elsAnarysis(els, async (eljson) => {
+			try {
+				for (const [key, value] of Object.entries(eljson.EDT)) {
+					await eldataModel.create({ srcip: mainEL.localaddresses[0], srcmac: mainArp.toMAC(mainEL.localaddresses[0]), seoj: eljson.SEOJ, deoj: eljson.DEOJ, esv: eljson.ESV, epc: key, edt: value });
+				}
+			} catch (err) {
+				logger.error('mainEL', 'sendMsg eldataModel.create error:', err);
 			}
 		});
-		elrawModel.create({ srcip: mainEL.localaddresses[0], srcmac: mainArp.toMAC(mainEL.localaddresses[0]), dstip: _ip, dstmac: mainArp.toMAC(_ip), rawdata: rawdata, seoj: els.SEOJ, deoj: els.DEOJ, esv: els.ESV, opc: els.OPC, detail: els.DETAIL });
+		try {
+			await elrawModel.create({ srcip: mainEL.localaddresses[0], srcmac: mainArp.toMAC(mainEL.localaddresses[0]), dstip: _ip, dstmac: mainArp.toMAC(_ip), rawdata: rawdata, seoj: els.SEOJ, deoj: els.DEOJ, esv: els.ESV, opc: els.OPC, detail: els.DETAIL });
+		} catch (err) {
+			logger.error('mainEL', 'sendMsg elrawModel.create error:', err);
+		}
 		EL.sendString(_ip, _msg);
 	},
 
@@ -324,7 +341,7 @@ let mainEL = {
 		// Ether等でつながるスマート電力量サブメータ
 		if (config.enabled && persist.parsed) {
 			arg = await mainEL.getTodayElectricEnergy_submeter();
-			// config.debug?console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.getTodayElectricEnergy_submeter() arg:\x1b[32m', arg, '\x1b[0m' ):0;
+			// logger.debug('mainEL', config.debug, `getTodayElectricEnergy_submeter() arg: ${JSON.stringify(arg)}`);
 
 			if (Array.isArray(arg) && arg.filter((d) => { return d.instantaneousPower != null }).length) {  // 何もないと [] が来るので、lengthで判定してNodataならフロントに送らない
 				sendIPCMessage('renewTodayElectricEnergy_submeter', JSON.stringify(arg));
@@ -340,13 +357,13 @@ let mainEL = {
 		// cron.schedule('*/3 * * * *', async () => {
 		cron.schedule('*/1 * * * *', async () => {
 			try {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.cron.schedule() every 3min') : 0;
+				logger.debug('mainEL', config.debug, 'cron.schedule() every 3min');
 
 				let dt = new Date();
 
 				// スマート電力サブメーターの状態のチェック
 				if (config.enabled && persist.parsed && persist.parsed.IPs && persist.parsed.IPs.length != 0) {
-					// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.cron.schedule() persist.elParsed:\x1b[32m', persist.elParsed, '\x1b[0m' ):0;
+					// logger.debug('mainEL', config.debug, `cron.schedule() persist.elParsed: ${JSON.stringify(persist.elParsed)}`);
 
 					// persist.elParsed の中にスマート電力サブメータあるか？あればIP取得
 					let ip = '';
@@ -363,12 +380,12 @@ let mainEL = {
 
 						// 蓄積するほどデータがそろってない場合はやらない
 						if (isObjEmpty(sm.Means)) {
-							config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.cron.schedule() SubMeter sm.Means is Empty.') : 0;
+							logger.debug('mainEL', config.debug, 'cron.schedule() SubMeter sm.Means is Empty.');
 						}
 
 						// 設置場所は取得する
 						else if (!sm['スマート電力量サブメータ01(028d01)']['設置場所(81)']) {
-							config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.cron.schedule() SubMeter place is Null.') : 0;
+							logger.debug('mainEL', config.debug, 'cron.schedule() SubMeter place is Null.');
 							EL.sendOPC1(ip, [0x0e, 0xf0, 0x01], [0x02, 0x88, 0x01], EL.GET, [0x81], [0x00]);  // サブメータの設置場所
 
 						} else {
@@ -425,16 +442,16 @@ let mainEL = {
 								commulativeAmountsFixedTimeRiversePower: mergeObj['定時積算電力量計測値逆方向']['計測値[kWh]']
 							};
 
-							// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.cron.schedule() SubMeter insert:\x1b[32m', q, '\x1b[0m' ):0;
-							electricEnergyModel.create(q);
+							// config.debug ? logger.debug('mainEL', config.debug, `SubMeter insert: ${JSON.stringify(q)}`) : 0;
+							await electricEnergyModel.create(q);
 						}
 					}
 				};
 
-				mainEL.sendTodayEnergy(); 		// 本日のデータの定期的送信 スマートメータ分
+				await mainEL.sendTodayEnergy(); 		// 本日のデータの定期的送信 スマートメータ分
 
 			} catch (error) {
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.cron.schedule() each 3min, error:', error);
+				logger.error('mainEL', 'cron.schedule() each 1min, error:', error);
 				mainEL.isRun = false;
 				throw error;
 			}
@@ -471,14 +488,14 @@ let mainEL = {
 		// (2) facilities 復元
 		EL.facilities = persist.facilities;
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.start() config:\x1b[32m', config, '\x1b[0m') : 0;
+		logger.debug('mainEL', config.debug, 'init() start.');
 
 		// (3) IPv6 の利用可否判定（awdl0 など不安定 NIC の ENETDOWN 回避）。
 		if (network.IPver === 0 || network.IPver === '0' || network.IPver === 6 || network.IPver === '6') {
 			const usable = mainEL.hasUsableIPv6();
 			mainEL.disableIPv6 = !usable;
 			if (!usable) {
-				config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.init(): IPv6 disabled (no usable interface)') : 0;
+				logger.warn('mainEL', 'init(): IPv6 disabled (no usable interface)');
 			}
 		}
 
@@ -496,25 +513,25 @@ let mainEL = {
 
 		// (5a) 未取得EPC補完 + 定期観測（3分毎）
 		mainEL.observationTask = cron.schedule('*/3 * * * *', async () => {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.cron.schedule() observationTask') : 0;
+			logger.debug('mainEL', config.debug, 'cron.schedule() observationTask');
 			try {
 				// complementFacilities() 前に最低限のサニタイズで undefined.match 例外を防止
 				mainEL.sanitizeFacilities();
 				EL.complementFacilities();
 			} catch (e) {
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.observationTask complementFacilities error:', e);
+				logger.error('mainEL', 'observationTask complementFacilities error:', e);
 			}
 			try {
 				await mainEL.observation();
 			} catch (e) {
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.observationTask observation error:', e);
+				logger.error('mainEL', 'observationTask observation error:', e);
 			}
 		});
 
 		// (5b) facilities 構造変化検出（1分毎）
 		let oldVal = JSON.stringify(EL.objectSort(EL.facilities));
 		mainEL.changeTask = cron.schedule('*/1 * * * *', async () => {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.cron.schedule() changeTask') : 0;
+			logger.debug('mainEL', config.debug, 'cron.schedule() changeTask');
 			const newVal = JSON.stringify(EL.objectSort(EL.facilities));
 			if (oldVal == newVal) return;
 
@@ -572,7 +589,7 @@ let mainEL = {
 				}
 			}
 		} catch (e) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.sanitizeFacilities error:', e);
+			logger.error('mainEL', 'sanitizeFacilities error:', e);
 		}
 	},
 
@@ -654,7 +671,7 @@ let mainEL = {
 				}
 			}
 		} catch (e) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.hasUsableIPv6 error:', e);
+			logger.error('mainEL', 'hasUsableIPv6 error:', e);
 		}
 		return false;
 	},
@@ -665,7 +682,7 @@ let mainEL = {
 	 * @returns {Promise<void>}
 	 */
 	stopObservation: async function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainEL.stopObservation()') : 0;
+		logger.debug('mainEL', config.debug, 'stopObservation()');
 
 		if (mainEL.observationTask) {
 			await mainEL.observationTask.stop();
@@ -701,7 +718,7 @@ let mainEL = {
 			let end = new Date(begin);  // 現在時刻UTCで取得
 			end.setMinutes(begin.getMinutes() + 3); // begin + 3min
 
-			// config.debug? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| sendTodayRoomEnv: begin:\x1b[32m', begin.toISOString(), '\x1b[0mend:\x1b[32m', end.toISOString(), '\x1b[0m' ):0;
+			// logger.debug('mainEL', config.debug, `sendTodayRoomEnv: begin:${begin.toISOString()} end:${end.toISOString()}`);
 
 			// 24h x 3分(=20回)
 			let rows = [];
@@ -760,7 +777,7 @@ let mainEL = {
 			return array;
 
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.getTodayElectricEnergy_submeter()', error);
+			logger.error('mainEL', 'getTodayElectricEnergy_submeter() error:', error);
 		}
 	}
 

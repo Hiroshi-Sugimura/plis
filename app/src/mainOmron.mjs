@@ -12,7 +12,8 @@ import omron from 'usb-2jcie-bu';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, Op, roomEnvModel } = localDB;
-import { mergeDeeply } from './mainSubmodule.mjs';
+import { objectSort, getNow, formatDate, getTodayDate, getYesterdayDate, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
 
 /**
  * @typedef {Object} OmronConfig
@@ -84,13 +85,13 @@ let mainOmron = {
 		sendIPCMessage("renewOmronConfigView", config);
 
 		if (config.enabled == false) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.start() Omron is disabled.') : 0;
+			logger.debug('mainOmron', config.debug, 'start() Omron is disabled.');
 			mainOmron.isRun = false;
 			return;
 		}
 		mainOmron.isRun = true;
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.start()') : 0;
+		logger.debug('mainOmron', config.debug, 'start()');
 
 		try {
 			omron.start((sensorData, error) => {
@@ -101,23 +102,23 @@ let mainOmron = {
 							break;
 
 						case 'Error: recvData is nothing.': // recvDataがないというのはよく発生する
-							config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.omron.start() callback', '\x1b[32m', error, '\x1b[0m') : 0;
+							logger.debug('mainOmron', config.debug, 'omron.start() callback error:', error);
 							break;
 
 						case 'Error: usb-2jcie-bu.requestData(): port is not found.':  // portがないというのもよくある
-							config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.omron.start() callback', '\x1b[32m', error, '\x1b[0m') : 0;
+							logger.debug('mainOmron', config.debug, 'omron.start() callback error:', error);
 							break;
 
 						default:
 							// それ以外のエラーは良く知らないのでエラーとして出す
-							console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.omron.start()', error);
+							logger.error('mainOmron', 'omron.start() error:', error);
 					}
 					return;
 				}
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.start() sensorData:', '\x1b[32m', sensorData, '\x1b[0m') : 0;
+				logger.debug('mainOmron', config.debug, 'start() sensorData:', sensorData);
 
 				persist = sensorData;
-				persist.time = new Date().toFormat("YYYY-MM-DD HH24:MI:SS");
+				persist.time = getNow();
 				sendIPCMessage("renewOmron", persist);
 			}, { debug: config.debug });
 
@@ -127,23 +128,22 @@ let mainOmron = {
 			});
 			mainOmron.observationJob.start();
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.start().start()', error);
+			logger.error('mainOmron', 'start() outer error:', error);
 		}
 
 		// 3秒毎にセンサの値チェック、画面表示は3秒毎にするが、DBへの記録は1分毎とする
 		mainOmron.storeJob = cron.schedule('*/3 * * * *', async () => {
 			try {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.cron.schedule() every 3min') : 0;
+				logger.debug('mainOmron', config.debug, 'cron.schedule() every 3min');
 
 				let dt = new Date();
 
 				//------------------------------------------------------------
 				// 部屋の環境を記録、Omron
-				if (config.enabled && persist.length != 0) {
-					// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.cron.schedule() Store Omron'):0;
+				if (config.enabled && !isObjEmpty(persist)) {
 					let n = persist;
 					if (n) {
-						roomEnvModel.create({
+						await roomEnvModel.create({
 							dateTime: dt,
 							srcType: 'omron',
 							place: config.place ? config.place : 'MyRoom',
@@ -159,12 +159,12 @@ let mainOmron = {
 						});
 					}
 				} else {
-					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.cron.schedule() persist:', persist) : 0;
+					logger.debug('mainOmron', config.debug, 'cron.schedule() persist is empty or disabled:', persist);
 				}
 
 				mainOmron.sendTodayRoomEnv(); 		// 本日のデータの定期的送信
 			} catch (error) {
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.cron.schedule() each 3min, error:', error);
+				logger.error('mainOmron', 'cron.schedule() each 3min, error:', error);
 			}
 		});
 
@@ -179,7 +179,7 @@ let mainOmron = {
 	 */
 	stop: async function () {
 		mainOmron.isRun = false;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.stop()') : 0;
+		logger.debug('mainOmron', config.debug, 'stop()');
 
 		if (mainOmron.observationJob) {  // センサ監視ジョブ
 			await mainOmron.observationJob.stop();
@@ -202,7 +202,7 @@ let mainOmron = {
 	 */
 	stopWithoutSave: async function () {
 		mainOmron.isRun = false;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.stopWithoutSave()') : 0;
+		logger.debug('mainOmron', config.debug, 'stopWithoutSave()');
 
 		if (mainOmron.observationJob) {  // センサ監視ジョブ
 			await mainOmron.observationJob.stop();
@@ -286,9 +286,7 @@ let mainOmron = {
 
 		let ret = "";
 		for (let t = 0; t < 480; t += 1) {  // 24h * 20 times (= 60min / 3min)
-			// console.log( T1.toISOString(), ':', T1.toFormat('YYYY-MM-DD HH24:MI'), ', ', T4.toFormat('HH24:MI') );
-
-			ret += `WHEN "createdAt" LIKE "${T1.toFormat('YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${T2.toFormat('YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${T3.toFormat('YYYY-MM-DD HH24:MI')}%" THEN "${T4.toFormat('HH24:MI')}" \n`;
+			ret += `WHEN "createdAt" LIKE "${formatDate(T1, 'YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${formatDate(T2, 'YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${formatDate(T3, 'YYYY-MM-DD HH24:MI')}%" THEN "${formatDate(T4, 'HH24:MI')}" \n`;
 
 			T1.setMinutes(T1.getMinutes() + 3); // + 3 min
 			T2.setMinutes(T2.getMinutes() + 3); // + 3 min
@@ -341,7 +339,7 @@ let mainOmron = {
 
 			return rows;
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.getTodayRoomEnvOmron()', error);
+			logger.error('mainOmron', 'getRows()', error);
 		}
 	},
 
@@ -361,7 +359,7 @@ let mainOmron = {
 			T1.setHours(0, 0, 0);
 			let array = [];
 			for (let t = 0; t < 480; t += 1) {
-				let row = rows.find((row) => row.dataValues.timeunit == T1.toFormat('HH24:MI'));
+				let row = rows.find((row) => row.dataValues.timeunit == formatDate(T1, 'HH24:MI'));
 
 				if (row) {
 					array.push({
@@ -400,7 +398,7 @@ let mainOmron = {
 
 			return array;
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.getTodayRoomEnvOmron()', error);
+			logger.error('mainOmron', 'getTodayRoomEnv()', error);
 		}
 	},
 
@@ -417,7 +415,7 @@ let mainOmron = {
 			arg = await mainOmron.getTodayRoomEnv();
 			sendIPCMessage('renewRoomEnvOmron', JSON.stringify(arg));
 		} else {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainOmron.sendTodayRoomEnv() config.enabled:', config.enabled);
+			logger.debug('mainOmron', config.debug, 'sendTodayRoomEnv() config.enabled is false');
 		}
 	}
 };

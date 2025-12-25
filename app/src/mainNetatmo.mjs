@@ -13,7 +13,8 @@ import axios from 'axios';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, Op, netatmoModel, roomEnvModel } = localDB;
-import { mergeDeeply } from './mainSubmodule.mjs';
+import { objectSort, getNow, formatDate, getTodayDate, getYesterdayDate, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
 
 
 let sendIPCMessage = null;
@@ -78,24 +79,24 @@ let mainNetatmo = {
 		config.debug = store.get('config.Netatmo.debug', false);
 		// 旧バージョンのaccessToken永続値は読まない＆削除して整理
 		try { store.delete('config.Netatmo.accessToken'); } catch (_) { }
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() config loaded from store:\x1b[32m', config, '\x1b[0m') : 0;
+		logger.debug('mainNetatmo', config.debug, 'start() config loaded from store:\x1b[32m', config, '\x1b[0m');
 		sendIPCMessage("renewNetatmoConfigView", config);
 
 		persist = store.get('persist.Netatmo', {});
 
 		if (!config.enabled) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() Netatmo is disabled.') : 0;
+			logger.debug('mainNetatmo', config.debug, 'start() Netatmo is disabled.');
 			mainNetatmo.isRun = false;
 			return;
 		}
 
 		// リフレッシュトークンがあれば、起動時にアクセストークンを取得
 		if (config.refreshToken && config.clientId && config.clientSecret) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() リフレッシュトークンからアクセストークンを取得します') : 0;
+			logger.debug('mainNetatmo', config.debug, 'start() リフレッシュトークンからアクセストークンを取得します');
 			try {
 				await mainNetatmo.refreshAccessToken();
 			} catch (e) {
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() 初回リフレッシュ失敗:', e);
+				logger.error('mainNetatmo', 'start() 初回リフレッシュ失敗:', e);
 				if (sendIPCMessage) {
 					sendIPCMessage('NetatmoAuthError', '初回トークン取得失敗: ' + e.message);
 				}
@@ -105,7 +106,7 @@ let mainNetatmo = {
 
 		// 必須の設定がなければ実行しない（Refresh Tokenのみ必須）。
 		if (!config.refreshToken) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() no refreshToken.') : 0;
+			logger.debug('mainNetatmo', config.debug, 'start() no refreshToken.');
 			if (sendIPCMessage) {
 				sendIPCMessage('NetatmoAuthError', '設定が不足しています（Refresh Token が必要です）');
 			}
@@ -115,7 +116,7 @@ let mainNetatmo = {
 		// 実行開始
 		mainNetatmo.isRun = true;
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() config:\x1b[32m', config, '\x1b[0m') : 0;
+		logger.debug('mainNetatmo', config.debug, 'start() config:\x1b[32m', config, '\x1b[0m');
 
 		// データ取得
 		try {
@@ -123,7 +124,7 @@ let mainNetatmo = {
 			// 初回も直ちに1レコード保存してUXを向上
 			try {
 				let dt = new Date();
-				if (config.enabled && persist && persist.length) {
+				if (config.enabled && !isObjEmpty(persist) && persist.length) {
 					let n = persist[0];
 					if (n && n.dashboard_data) {
 						await roomEnvModel.create({
@@ -139,12 +140,12 @@ let mainNetatmo = {
 					}
 				}
 			} catch (e) {
-				config.debug ? console.warn(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() initial save warn:', e) : 0;
+				logger.warn('mainNetatmo', 'start() initial save warn:', e);
 			}
 			mainNetatmo.setObserve();
 
 		} catch (e) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.start() error:', e);
+			logger.error('mainNetatmo', 'start() error:', e);
 			// 403やAPIエラー時は必ずトースト通知
 			let msg = '';
 			if (e && e.message && e.message.includes('Netatmoデータ取得失敗')) {
@@ -184,7 +185,7 @@ let mainNetatmo = {
 			throw new Error('Netatmoリフレッシュに必要な情報が不足しています（ClientID, ClientSecret, RefreshToken）');
 		}
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.refreshAccessToken() リフレッシュ開始') : 0;
+		logger.debug('mainNetatmo', config.debug, 'refreshAccessToken() リフレッシュ開始');
 
 		try {
 			const params = new URLSearchParams();
@@ -205,11 +206,11 @@ let mainNetatmo = {
 			mainNetatmo.tokenExpires = Date.now() + (res.data.expires_in * 1000);
 			await store.set('config.Netatmo.refreshToken', config.refreshToken);
 
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.refreshAccessToken() トークン更新成功') : 0;
+			logger.debug('mainNetatmo', config.debug, 'refreshAccessToken() トークン更新成功');
 			return true;
 		} catch (error) {
 			const detail = error.response ? error.response.data : error;
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.refreshAccessToken() エラー:', detail);
+			logger.error('mainNetatmo', 'refreshAccessToken() エラー:', detail);
 			if (detail && detail.error === 'invalid_grant') {
 				// 古い/使用済みのRefresh Token。自動的にクリアしてUIに再設定を促す。
 				config.refreshToken = '';
@@ -238,7 +239,6 @@ let mainNetatmo = {
 			// accessTokenが無いならリフレッシュ実行
 			// await mainNetatmo.refreshAccessToken();
 		}
-		// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.fetchStationsData() using accessToken (masked)') : 0;
 		try {
 			const res = await axios.get('https://api.netatmo.com/api/getstationsdata', {
 				headers: {
@@ -251,20 +251,20 @@ let mainNetatmo = {
 		} catch (error) {
 			// 403エラー（トークン期限切れ）の場合はリフレッシュして再試行
 			if (error.response && error.response.status === 403 && !isRetry && config.refreshToken) {
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.fetchStationsData() トークン期限切れ検出、リフレッシュします') : 0;
+				logger.debug('mainNetatmo', config.debug, 'fetchStationsData() トークン期限切れ検出、リフレッシュします');
 				try {
 					await mainNetatmo.refreshAccessToken();
 					// リフレッシュ成功したら再試行（無限ループ防止でisRetry=true）
 					return await mainNetatmo.fetchStationsData(true);
 				} catch (refreshError) {
-					console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.fetchStationsData() リフレッシュ失敗:', refreshError);
+					logger.error('mainNetatmo', 'fetchStationsData() リフレッシュ失敗:', refreshError);
 					if (sendIPCMessage) {
 						sendIPCMessage('NetatmoAuthError', 'トークンリフレッシュ失敗: ' + refreshError.message);
 					}
 					throw refreshError;
 				}
 			}
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.fetchStationsData() error detail:\x1b[31m', error.response ? error.response.data : error, '\x1b[0m');
+			logger.error('mainNetatmo', 'fetchStationsData() error detail:\x1b[31m', error.response ? error.response.data : error, '\x1b[0m');
 			throw new Error('Netatmoデータ取得失敗: ' + error);
 		}
 	},
@@ -280,7 +280,7 @@ let mainNetatmo = {
 	 */
 	stop: async function () {
 		mainNetatmo.isRun = false;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.stop()') : 0;
+		logger.debug('mainNetatmo', config.debug, 'stop()');
 
 		await mainNetatmo.setConfig(config);
 		await store.set('persist.Netatmo', persist);
@@ -293,7 +293,7 @@ let mainNetatmo = {
 	 */
 	stopWithoutSave: async function () {
 		mainNetatmo.isRun = false;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.stopWithoutSave()') : 0;
+		logger.debug('mainNetatmo', config.debug, 'stopWithoutSave()');
 		await mainNetatmo.stopObservation();
 	},
 
@@ -304,8 +304,7 @@ let mainNetatmo = {
 	 * @returns {Promise<void>}
 	 */
 	setConfig: async function (_config) {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.setConfig() _config:\x1b[33m', _config, '\x1b[0m') : 0;
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.setConfig() before merge config:\x1b[33m', config, '\x1b[0m') : 0;
+		logger.debug('mainNetatmo', config.debug, 'setConfig() _config:\x1b[33m', _config, '\x1b[0m');
 		if (_config) {
 			// accessTokenは無視してマージ
 			if ('accessToken' in _config) {
@@ -313,7 +312,7 @@ let mainNetatmo = {
 			}
 			config = mergeDeeply(config, _config);
 		}
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.setConfig() after merge config:\x1b[32m', config, '\x1b[0m') : 0;
+		logger.debug('mainNetatmo', config.debug, 'setConfig() after merge config:\x1b[32m', config, '\x1b[0m');
 		await store.set('config.Netatmo', config);
 		sendIPCMessage("renewNetatmoConfigView", config);
 		sendIPCMessage("configSaved", 'Netatmo');// 保存したので画面に通知
@@ -358,9 +357,7 @@ let mainNetatmo = {
 
 		let ret = "";
 		for (let t = 0; t < 480; t += 1) {// 24h * 20 times (= 60min / 3min)
-			// console.log( T1.toISOString(), ':', T1.toFormat('YYYY-MM-DD HH24:MI'), ', ', T4.toFormat('HH24:MI') );
-
-			ret += `WHEN "createdAt" LIKE "${T1.toFormat('YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${T2.toFormat('YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${T3.toFormat('YYYY-MM-DD HH24:MI')}%" THEN "${T4.toFormat('HH24:MI')}" \n`;
+			ret += `WHEN "createdAt" LIKE "${formatDate(T1, 'YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${formatDate(T2, 'YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${formatDate(T3, 'YYYY-MM-DD HH24:MI')}%" THEN "${formatDate(T4, 'HH24:MI')}" \n`;
 
 			T1.setMinutes(T1.getMinutes() + 3);// + 3 min
 			T2.setMinutes(T2.getMinutes() + 3);// + 3 min
@@ -409,7 +406,7 @@ let mainNetatmo = {
 
 			return rows;
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.getRows()', error);
+			logger.error('mainNetatmo', 'getRows()', error);
 		}
 	},
 
@@ -429,7 +426,7 @@ let mainNetatmo = {
 
 			let array = [];
 			for (let t = 0; t < 480; t += 1) {
-				let row = rows.find((row) => row.dataValues.timeunit == T1.toFormat('HH24:MI'));
+				let row = rows.find((row) => row.dataValues.timeunit == formatDate(T1, 'HH24:MI'));
 
 				if (row) {
 					array.push({
@@ -460,7 +457,7 @@ let mainNetatmo = {
 			return array;
 
 		} catch (error) {
-			console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.getTodayRoomEnv()', error);
+			logger.error('mainNetatmo', 'getTodayRoomEnv()', error);
 		}
 	},
 
@@ -484,15 +481,13 @@ let mainNetatmo = {
 	 */
 	setObserve: function () {
 		if (mainNetatmo.observationJob) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.observe() is already started.') : 0;
+			logger.debug('mainNetatmo', config.debug, 'observe() is already started.');
 		}
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.observe() start.') : 0;
+		logger.debug('mainNetatmo', config.debug, 'observe() start.');
 
 		// 監視はcronで実施、1分毎
 		mainNetatmo.observationJob = cron.schedule('*/1 * * * *', async () => {
 			try {
-				// config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.cron.schedule() every 1min') : 0;
-
 				// トークンが無い/期限切れなら再取得
 				if (!mainNetatmo.accessToken || (mainNetatmo.tokenExpires && Date.now() > mainNetatmo.tokenExpires - 60000)) {
 					await mainNetatmo.refreshAccessToken();
@@ -500,10 +495,10 @@ let mainNetatmo = {
 				await mainNetatmo.fetchStationsData();
 
 				let dt = new Date();
-				if (config.enabled && persist.length != 0) {
+				if (config.enabled && !isObjEmpty(persist)) {
 					let n = persist[0];
 					if (n) {
-						roomEnvModel.create({
+						await roomEnvModel.create({
 							dateTime: dt,
 							srcType: 'netatmo',
 							place: n.home_name,
@@ -517,7 +512,7 @@ let mainNetatmo = {
 				}
 				mainNetatmo.sendTodayRoomEnv();
 			} catch (error) {
-				console.error(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.cron.schedule() each 1min, error:', error);
+				logger.error('mainNetatmo', 'cron.schedule() each 1min, error:', error);
 			}
 		});
 		mainNetatmo.observationJob.start();
@@ -529,7 +524,7 @@ let mainNetatmo = {
 	 * @returns {void}
 	 */
 	stopObservation: function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainNetatmo.stop() observation.') : 0;
+		logger.debug('mainNetatmo', config.debug, 'stop() observation.');
 
 		if (mainNetatmo.observationJob) {
 			mainNetatmo.observationJob.stop();

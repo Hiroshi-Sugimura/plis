@@ -12,7 +12,9 @@ import { store } from './storeSingleton.mjs';
 import arp from '@network-utils/arp-lookup';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
-const { Sequelize, sqlite3, arpModel } = localDB;
+const { arpModel } = localDB;
+import { objectSort, getNow, formatDate, getTodayDate, getYesterdayDate } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
 
 /**
  * @typedef {Object} ArpConfig
@@ -72,9 +74,7 @@ let mainArp = {
 
 
 		let foundRow = mainArp.table.find((row) => {
-			if (row.ip == IP) {
-				true;
-			}
+			return row.ip == IP;
 		});
 
 		if (foundRow == undefined) {
@@ -103,14 +103,14 @@ let mainArp = {
 		persist = store.get('persist.Arp', {});
 
 		if (!config.enabled) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainArp.start() disabled.') : 0;
+			logger.debug('mainArp', config.debug, 'start() disabled.');
 			return;
 		}
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainArp.start() config:\x1b[32m', config, '\x1b[0m') : 0;
+		logger.debug('mainArp', config.debug, 'start() config:\x1b[32m', config, '\x1b[0m');
 
 		if (mainArp.observationJob) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainArp.observe() already started.') : 0;
+			logger.debug('mainArp', config.debug, 'observe() already started.');
 		}
 
 		mainArp.table = await arp.getTable();  // 監視前に一度実施
@@ -118,12 +118,16 @@ let mainArp = {
 
 		// 監視はcronで実施、10分毎
 		mainArp.observationJob = cron.schedule('*/10 * * * *', async () => {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainArp.cron.schedule()') : 0;
+			try {
+				logger.debug('mainArp', config.debug, 'cron.schedule()');
 
-			if (config.enabled) {
-				mainArp.table = await arp.getTable();
-				persist = mainArp.table;
-				arpModel.create({ detail: JSON.stringify(persist) });
+				if (config.enabled) {
+					mainArp.table = await arp.getTable();
+					persist = mainArp.table;
+					await arpModel.create({ detail: JSON.stringify(persist) });
+				}
+			} catch (error) {
+				logger.error('mainArp', 'observationJob error:', error);
 			}
 		})
 	},
@@ -132,7 +136,7 @@ let mainArp = {
 	// interfaces
 	/** 停止しcron解除（保存あり）。 */
 	stop: async function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainArp.stop()') : 0;
+		logger.debug('mainArp', config.debug, 'stop()');
 		mainArp.isRun = false;
 		config.enabled = false;
 
@@ -141,7 +145,7 @@ let mainArp = {
 
 	/** 保存せず停止。 */
 	stopWithoutSave: async function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainArp.stopWithoutSave()') : 0;
+		logger.debug('mainArp', config.debug, 'stopWithoutSave()');
 		mainArp.isRun = false;
 		config.enabled = false;
 
@@ -150,7 +154,7 @@ let mainArp = {
 
 	/** 監視cron停止。 */
 	stopObservation: async function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainArp.stopObserve() observation.') : 0;
+		logger.debug('mainArp', config.debug, 'stopObserve() observation.');
 
 		if (mainArp.observationJob) {
 			await mainArp.observationJob.stop();

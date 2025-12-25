@@ -39,24 +39,62 @@ function getNow() {
 }
 
 /**
+ * 日付オブジェクトを任意のフォーマット文字列に変換する。
+ * @param {Date} date 対象の日付オブジェクト
+ * @param {string} format フォーマット文字列 (例: "YYYY-MM-DD HH24:MI:SS")
+ * @returns {string} フォーマット済み文字列
+ */
+function formatDate(date, format) {
+    if (!date || !(date instanceof Date)) {
+        return '';
+    }
+    let result = format;
+    result = result.replace(/YYYY/g, date.getFullYear());
+    result = result.replace(/MM/g, ('0' + (date.getMonth() + 1)).slice(-2));
+    result = result.replace(/DD/g, ('0' + date.getDate()).slice(-2));
+    result = result.replace(/HH24/g, ('0' + date.getHours()).slice(-2));
+    result = result.replace(/MI/g, ('0' + date.getMinutes()).slice(-2));
+    result = result.replace(/SS/g, ('0' + date.getSeconds()).slice(-2));
+    result = result.replace(/HH/g, ('0' + (date.getHours() % 12)).slice(-2));
+    return result;
+}
+
+/**
+ * 今日の日付を "YYYY-MM-DD" で取得。
+ * @returns {string}
+ */
+function getTodayDate() {
+    return formatDate(new Date(), 'YYYY-MM-DD');
+}
+
+/**
+ * 昨日の日付を "YYYY-MM-DD" で取得。
+ * @returns {string}
+ */
+function getYesterdayDate() {
+    const d = new Date();
+    d.setDate(d.getDate() - 1);
+    return formatDate(d, 'YYYY-MM-DD');
+}
+
+/**
  * 今日の日付を文字列で返す。
- * フォーマット: "YYYY-MM-DD"
- * 注意: Date.today() は外部拡張（date-utils 等）に依存するよ。
+ * @deprecated getTodayDate を使用してください。外部拡張 Date.today() への依存を避けるため。
  * @returns {string}
  */
 function getToday() {
-    return Date.today().toFormat('YYYY-MM-DD');
+    return getTodayDate();
 }
 
 /**
  * 昨日の日付を文字列で返す。
- * フォーマット: "YYYY-MM-DD"
- * 注意: Date.yesterday() は外部拡張（date-utils 等）に依存するよ。
+ * @deprecated getYesterdayDate を使用してください。外部拡張 Date.yesterday() への依存を避けるため。
  * @returns {string}
  */
 function getYesterday() {
-    return Date.yesterday().toFormat('YYYY-MM-DD');
+    return getYesterdayDate();
 }
+
 /**
  * オブジェクトが空かどうかをチェックする。
  * Object 型は == {} では比較できないのでキー数で判定するよ。
@@ -131,7 +169,7 @@ function checkValue(val, min, max) {
 
 
 
-export { objectSort, getNow, getToday, getYesterday, isObjEmpty, mergeDeeply, roundFloat, checkValue };
+export { objectSort, getNow, formatDate, getTodayDate, getYesterdayDate, getToday, getYesterday, isObjEmpty, mergeDeeply, roundFloat, checkValue };
 
 //////////////////////////////////////////////////////////////////////
 // EOF

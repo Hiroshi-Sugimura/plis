@@ -77,7 +77,7 @@ let mainSystem = {
 		config.autoLaunch = await store.get('config.system.autoLaunch', config.autoLaunch);
 		config.autoLaunchHidden = await store.get('config.system.autoLaunchHidden', config.autoLaunchHidden);
 
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSystem.start()') : 0;
+		logger.debug('mainSystem', config.debug, 'start()');
 	},
 
 	/**
@@ -85,7 +85,7 @@ let mainSystem = {
 	 * @returns {Promise<void>}
 	*/
 	stop: async function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainSystem.stop()') : 0;
+		logger.debug('mainSystem', config.debug, 'stop()');
 		await mainSystem.setConfig(config);
 	},
 
