@@ -13,7 +13,7 @@ import fs from 'fs';
 import path from 'node:path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-import Store from 'electron-store';
+import { store } from './storeSingleton.mjs';
 import eSM from 'e-smartmeter-echonet-lite';
 import cron from 'node-cron';
 import EL from 'echonet-lite';
@@ -27,7 +27,7 @@ import { objectSort, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 // 基礎設定
 const appDir = process.env.NODE_ENV === 'development' ? __dirname : __dirname;
 let sendIPCMessage = null;
-const store = new Store();
+// const store = new Store();
 
 /**
  * @typedef {Object} ESMConfig

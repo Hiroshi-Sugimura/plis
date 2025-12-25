@@ -7,7 +7,7 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-import Store from 'electron-store';
+import { store } from './storeSingleton.mjs';
 import omron from 'usb-2jcie-bu';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.cjs';   // DBデータと連携
@@ -40,7 +40,7 @@ import { mergeDeeply } from './mainSubmodule.cjs';
  */
 
 let sendIPCMessage = null;
-const store = new Store();
+// const store = new Store();
 
 /** @type {OmronConfig} */
 let config = {

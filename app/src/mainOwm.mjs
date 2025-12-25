@@ -7,7 +7,7 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-import Store from 'electron-store';
+import { store } from './storeSingleton.mjs';
 import http from 'http';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.cjs';   // DBデータと連携
@@ -15,7 +15,7 @@ const { owmModel, weatherModel } = localDB;
 import { isObjEmpty, mergeDeeply, getNow } from './mainSubmodule.cjs';
 
 
-const store = new Store();
+// const store = new Store();
 
 /** mainOwmからIPCMessageを呼ぶためのcallback */
 let sendIPCMessage = null;

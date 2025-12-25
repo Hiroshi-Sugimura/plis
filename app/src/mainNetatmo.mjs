@@ -8,7 +8,7 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-import Store from 'electron-store';
+import { store } from './storeSingleton.mjs';
 import axios from 'axios';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.cjs';   // DBデータと連携
@@ -17,7 +17,7 @@ import { mergeDeeply } from './mainSubmodule.cjs';
 
 
 let sendIPCMessage = null;
-const store = new Store();
+// const store = new Store();
 
 /**
  * @typedef {Object} NetatmoConfig

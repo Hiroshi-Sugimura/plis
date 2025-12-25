@@ -13,7 +13,7 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-import Store from 'electron-store';
+import { store } from './storeSingleton.mjs';
 import { SwitchBotHandler } from 'switchbot-handler';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.cjs';   // DBデータと連携
@@ -38,7 +38,7 @@ import { objectSort, isObjEmpty, mergeDeeply, getToday } from './mainSubmodule.c
  * @param {any} payload
  */
 
-const store = new Store();
+// const store = new Store();
 
 /** mainSwitchBotのconfig */
 /** @type {SwitchBotConfig} */

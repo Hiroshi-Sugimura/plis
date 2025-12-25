@@ -8,7 +8,7 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-import Store from 'electron-store';
+import { store } from './storeSingleton.mjs';
 import arp from '@network-utils/arp-lookup';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.cjs';   // DBデータと連携
@@ -32,7 +32,7 @@ const { Sequelize, sqlite3, arpModel } = localDB;
  */
 
 
-const store = new Store();
+// const store = new Store();
 /** @type {ArpConfig} */
 let config = {
 	enabled: true,  // 機能の有効化

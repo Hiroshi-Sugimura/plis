@@ -8,12 +8,12 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-import Store from 'electron-store';
+import { store } from './storeSingleton.mjs';
 import TF from 'tradfri-handler';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.cjs';   // DBデータと連携
 const { ikeaRawModel, ikeaDataModel } = localDB;
-import { isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
+import { objectSort, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 
 /**
  * @typedef {Object} IkeaConfig
@@ -35,7 +35,7 @@ import { isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 
 let sendIPCMessage = null;
 
-const store = new Store();
+// const store = new Store();
 
 /** @type {IkeaConfig} */
 let config = {
@@ -74,7 +74,7 @@ let mainIkea = {
 		if (mainIkea.isRun) { // 重複起動対策
 			if (!isObjEmpty(persist)) {
 				sendIPCMessage("renewIkeaConfigView", config);
-				sendIPCMessage("fclIkea", persist);
+				sendIPCMessage("fclIkea", JSON.parse(JSON.stringify(persist)));
 			}
 			return;
 		}
@@ -113,7 +113,7 @@ let mainIkea = {
 		}
 
 		if (!isObjEmpty(persist)) {
-			sendIPCMessage("fclIkea", persist); // 起動後に一回画面表示
+			sendIPCMessage("fclIkea", JSON.parse(JSON.stringify(persist))); // 起動後に一回画面表示
 			mainIkea.storeData();  // 起動時に一回persistをDB記録
 		}
 	},
@@ -213,7 +213,7 @@ let mainIkea = {
 				// ブラインドは取得すると現在値をとってしまうので無視する（より良い方法がある？）
 			} else {
 				persist = TF.facilities;
-				sendIPCMessage("fclIkea", persist);
+				sendIPCMessage("fclIkea", JSON.parse(JSON.stringify(persist)));
 			}
 		}
 		mainIkea.isRequested = false;
@@ -231,14 +231,14 @@ let mainIkea = {
 		}
 
 		// facilitiesの定期的監視、変化があれば記録
-		let oldValStr = JSON.stringify(TF.objectSort(TF.facilities));
+		let oldValStr = JSON.stringify(objectSort(TF.facilities));
 		mainIkea.observationJob = cron.schedule('0 * * * * *', () => {  // 1分毎にautoget、変化があればログ表示
 			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainIkea.startObserve().cron() each 1min') : 0;
-			let newValStr = JSON.stringify(TF.objectSort(TF.facilities));
+			let newValStr = JSON.stringify(objectSort(TF.facilities));
 			if (oldValStr == newValStr) return;  // 変化しないので無視
 			persist = TF.facilities;
 			if (!isObjEmpty(persist)) {
-				sendIPCMessage("fclIkea", persist);
+				sendIPCMessage("fclIkea", JSON.parse(JSON.stringify(persist)));
 				mainIkea.storeData();
 			}
 			// console.log('TF changed, new TF.facilities:', newVal);
@@ -248,7 +248,7 @@ let mainIkea = {
 
 		// 3分毎にDB登録、変化がなくても記録
 		mainIkea.storeJob = cron.schedule('0 */3 * * * *', () => {
-			sendIPCMessage("fclIkea", persist);
+			sendIPCMessage("fclIkea", JSON.parse(JSON.stringify(persist)));
 			ikeaRawModel.create({ detail: JSON.stringify(persist) });  // store raw data
 		});
 		mainIkea.storeJob.start();

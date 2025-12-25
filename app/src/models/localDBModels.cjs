@@ -5,10 +5,10 @@
 // Require all the stuff
 let Sequelize, Op;
 try {
-  ({ Sequelize, Op } = require('sequelize'));
+	({ Sequelize, Op } = require('sequelize'));
 } catch (e) {
-  Sequelize = null;
-  Op = {};
+	Sequelize = null;
+	Op = {};
 }
 // Windows ARM や sqlite3未導入環境ではSequelizeのsqlite方言が使えないため、
 // ここで安全にスタブへフォールバックする
@@ -61,7 +61,7 @@ function makeStubModel(name) {
 if (!canUseSequelizeSqlite) {
 	sqlite3 = {
 		async sync() { return true; },
-		async transaction() { return { commit: async () => {}, rollback: async () => {} }; }
+		async transaction() { return { commit: async () => { }, rollback: async () => { } }; }
 	};
 }
 

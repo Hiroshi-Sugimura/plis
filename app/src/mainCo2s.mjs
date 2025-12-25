@@ -8,7 +8,7 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-import Store from 'electron-store';
+import { store } from './storeSingleton.mjs';
 import fs from 'fs';
 import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
@@ -39,7 +39,7 @@ import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSub
 
 let sendIPCMessage = null;
 let lastSendTime = 0;
-const store = new Store();
+// const store = new Store();
 
 /** @type {Co2sConfig} */
 let config = {

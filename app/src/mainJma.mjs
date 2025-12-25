@@ -8,7 +8,7 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-import Store from 'electron-store';
+import { store } from './storeSingleton.mjs';
 import request from 'request';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.cjs';   // DBデータと連携
@@ -35,7 +35,7 @@ import { isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 
 
 let sendIPCMessage = null;
-const store = new Store();
+// const store = new Store();
 
 /** @type {JmaConfig} */
 let config = {

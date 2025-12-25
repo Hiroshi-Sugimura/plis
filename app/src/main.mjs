@@ -24,7 +24,7 @@ import { exec } from 'child_process';
 // 追加ライブラリ（date-utils 互換の軽量フォーマッタ）
 import './dateformat.mjs';
 app.disableHardwareAcceleration(); // electron設定とmain window
-import Store from 'electron-store';
+import { store } from './storeSingleton.mjs';
 import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
 import oaw from 'about-window';  // このアプリについて Common JSモジュール対応、デフォルトエクスポート
 const { default: openAboutWindow } = oaw;  // このアプリについて Common JSモジュール対応、オブジェクトのデストラクチャリング
@@ -72,7 +72,7 @@ let localaddresses = [];
 // [{ type: '', id: '', ip: '', mac: '', alias, '' }]
 let managedThings = [];
 
-const store = new Store();
+// const store = new Store(); // Use singleton
 
 /** config */
 let config = {};

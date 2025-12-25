@@ -8,7 +8,7 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-import Store from 'electron-store';
+import { store } from './storeSingleton.mjs';
 import cron from 'node-cron';
 import moment from 'moment';
 import localDB from './models/localDBModels.cjs';   // DBデータと連携
@@ -16,7 +16,7 @@ const { sqlite3, Op, IOT_MajorResultsModel, IOT_MinorResultsModel, switchBotData
 import { mergeDeeply, getToday, getYesterday, roundFloat, checkValue } from './mainSubmodule.cjs';
 import { mainHALlocal } from './mainHALlocal.mjs';
 
-const store = new Store();
+// const store = new Store();
 let sendIPCMessage = null;
 
 

@@ -7,7 +7,7 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-import Store from 'electron-store';
+import { store } from './storeSingleton.mjs';
 import { mergeDeeply } from './mainSubmodule.cjs';
 
 import { fileURLToPath } from "node:url";
@@ -18,7 +18,7 @@ const __dirname = path.dirname(__filename);
 // 基礎設定
 const appDir = process.env.NODE_ENV === 'development' ? __dirname : __dirname;
 let sendIPCMessage = null;
-const store = new Store();
+// const store = new Store();
 
 /**
  * @typedef {Object} UserConfig

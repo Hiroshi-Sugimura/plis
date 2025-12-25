@@ -15,12 +15,12 @@ import { fileURLToPath } from "node:url";
 import path from 'node:path';
 import fs from 'fs';
 import axios from 'axios';
-import Store from 'electron-store';
+import { store } from './storeSingleton.mjs';
 import cron from 'node-cron';
 import { mergeDeeply } from './mainSubmodule.cjs';
 
 
-const store = new Store();
+// const store = new Store();
 
 // const __filename = fileURLToPath(import.meta.url);
 // const __dirname = path.dirname(__filename);
