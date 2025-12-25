@@ -11,9 +11,9 @@
 import { store } from './storeSingleton.mjs';
 import cron from 'node-cron';
 import moment from 'moment';
-import localDB from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { sqlite3, Op, IOT_MajorResultsModel, IOT_MinorResultsModel, switchBotDataModel, IOT_QuestionnaireAnswersModel } = localDB;
-import { mergeDeeply, getToday, getYesterday, roundFloat, checkValue } from './mainSubmodule.cjs';
+import { mergeDeeply, getToday, getYesterday, roundFloat, checkValue } from './mainSubmodule.mjs';
 import { mainHALlocal } from './mainHALlocal.mjs';
 
 // const store = new Store();

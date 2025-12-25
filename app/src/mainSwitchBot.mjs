@@ -16,9 +16,9 @@
 import { store } from './storeSingleton.mjs';
 import { SwitchBotHandler } from 'switchbot-handler';
 import cron from 'node-cron';
-import localDB from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, Op, switchBotRawModel, switchBotDataModel } = localDB;
-import { objectSort, isObjEmpty, mergeDeeply, getToday } from './mainSubmodule.cjs';
+import { objectSort, isObjEmpty, mergeDeeply, getToday } from './mainSubmodule.mjs';
 
 /**
  * @typedef {Object} SwitchBotConfig

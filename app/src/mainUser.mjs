@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
 import { store } from './storeSingleton.mjs';
-import { mergeDeeply } from './mainSubmodule.cjs';
+import { mergeDeeply } from './mainSubmodule.mjs';
 
 import { fileURLToPath } from "node:url";
 import path from 'node:path';

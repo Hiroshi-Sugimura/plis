@@ -13,10 +13,10 @@
  * @returns {Record<string, any>} 並べ替え済み新規オブジェクト
  */
 function objectSort(obj) {
-	const keys = Object.keys(obj).sort();
-	const map = {};
-	for (const k of keys) map[k] = obj[k];
-	return map;
+    const keys = Object.keys(obj).sort();
+    const map = {};
+    for (const k of keys) map[k] = obj[k];
+    return map;
 }
 
 /**
@@ -24,18 +24,18 @@ function objectSort(obj) {
  * @returns {string}
  */
 function getNow() {
-	const now = new Date();
-	const date = [
-		now.getFullYear().toString(),
-		('0' + (now.getMonth() + 1)).slice(-2),
-		('0' + now.getDate()).slice(-2)
-	].join('-');
-	const time = [
-		('0' + now.getHours()).slice(-2),
-		('0' + now.getMinutes()).slice(-2),
-		('0' + now.getSeconds()).slice(-2)
-	].join(':');
-	return date + ' ' + time;
+    const now = new Date();
+    const date = [
+        now.getFullYear().toString(),
+        ('0' + (now.getMonth() + 1)).slice(-2),
+        ('0' + now.getDate()).slice(-2)
+    ].join('-');
+    const time = [
+        ('0' + now.getHours()).slice(-2),
+        ('0' + now.getMinutes()).slice(-2),
+        ('0' + now.getSeconds()).slice(-2)
+    ].join(':');
+    return date + ' ' + time;
 }
 
 /**
@@ -45,7 +45,7 @@ function getNow() {
  * @returns {string}
  */
 function getToday() {
-	return Date.today().toFormat('YYYY-MM-DD');
+    return Date.today().toFormat('YYYY-MM-DD');
 }
 
 /**
@@ -55,7 +55,7 @@ function getToday() {
  * @returns {string}
  */
 function getYesterday() {
-	return Date.yesterday().toFormat('YYYY-MM-DD');
+    return Date.yesterday().toFormat('YYYY-MM-DD');
 }
 /**
  * オブジェクトが空かどうかをチェックする。
@@ -64,7 +64,8 @@ function getYesterday() {
  * @returns {boolean} 空なら true
  */
 function isObjEmpty(obj) {
-	return Object.keys(obj).length === 0;
+    if (!obj) return true;
+    return Object.keys(obj).length === 0;
 }
 
 
@@ -84,22 +85,22 @@ function isObjEmpty(obj) {
  * @returns {Record<string, any>} マージ結果
  */
 function mergeDeeply(target, source, opts) {
-	const isObject = o => o && typeof o === 'object' && !Array.isArray(o);
-	const concat = opts && opts.concatArray;
-	let result = { ...target };
-	if (isObject(target) && isObject(source)) {
-		for (const [k, v] of Object.entries(source)) {
-			const tv = target[k];
-			if (concat && Array.isArray(v) && Array.isArray(tv)) {
-				result[k] = tv.concat(...v);
-			} else if (isObject(v) && Object.prototype.hasOwnProperty.call(target, k)) {
-				result[k] = mergeDeeply(tv, v, opts);
-			} else {
-				result[k] = v;
-			}
-		}
-	}
-	return result;
+    const isObject = o => o && typeof o === 'object' && !Array.isArray(o);
+    const concat = opts && opts.concatArray;
+    let result = { ...target };
+    if (isObject(target) && isObject(source)) {
+        for (const [k, v] of Object.entries(source)) {
+            const tv = target[k];
+            if (concat && Array.isArray(v) && Array.isArray(tv)) {
+                result[k] = tv.concat(...v);
+            } else if (isObject(v) && Object.prototype.hasOwnProperty.call(target, k)) {
+                result[k] = mergeDeeply(tv, v, opts);
+            } else {
+                result[k] = v;
+            }
+        }
+    }
+    return result;
 }
 
 
@@ -110,7 +111,7 @@ function mergeDeeply(target, source, opts) {
  * @returns {number} 丸め後の数値
  */
 function roundFloat(n, digit = 2) {
-	return parseFloat(n.toFixed(digit));
+    return parseFloat(n.toFixed(digit));
 }
 
 
@@ -122,15 +123,15 @@ function roundFloat(n, digit = 2) {
  * @returns {number} 範囲に収めた数値
  */
 function checkValue(val, min, max) {
-	if (val < min) { val = min; }
-	if (val > max) { val = max; }
-	return val;
+    if (val < min) { val = min; }
+    if (val > max) { val = max; }
+    return val;
 }
 
 
 
 
-module.exports = { objectSort, getNow, getToday, getYesterday, isObjEmpty, mergeDeeply, roundFloat, checkValue };
+export { objectSort, getNow, getToday, getYesterday, isObjEmpty, mergeDeeply, roundFloat, checkValue };
 
 //////////////////////////////////////////////////////////////////////
 // EOF

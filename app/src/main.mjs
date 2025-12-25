@@ -25,10 +25,10 @@ import { exec } from 'child_process';
 import './dateformat.mjs';
 app.disableHardwareAcceleration(); // electron設定とmain window
 import { store } from './storeSingleton.mjs';
-import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
+import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
 import oaw from 'about-window';  // このアプリについて Common JSモジュール対応、デフォルトエクスポート
 const { default: openAboutWindow } = oaw;  // このアプリについて Common JSモジュール対応、オブジェクトのデストラクチャリング
-import localDB from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { sqlite3 } = localDB;
 import { mainSystem } from './mainSystem.mjs';  // System configの管理
 import { mainAutoAssessment } from './mainAutoAssessment.mjs';  // 成績付け
@@ -707,7 +707,11 @@ function safeRecreateWindow() {
 // did-become-active: Mac only
 
 // windows用デスクトップとスタートメニューにショートカットを追加する
-// if (require('electron-squirrel-startup')) return;
+if (process.platform === 'win32') {
+	const { createRequire } = await import('module');
+	const require = createRequire(import.meta.url);
+	if (require('electron-squirrel-startup')) app.quit();
+}
 
 // Entry point
 app.on('ready', async () => {

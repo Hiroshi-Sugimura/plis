@@ -18,9 +18,9 @@ import eSM from 'e-smartmeter-echonet-lite';
 import cron from 'node-cron';
 import EL from 'echonet-lite';
 import ELconv from 'echonet-lite-conv';
-import localDB from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, Op, esmdataModel, esmrawModel, electricEnergyModel } = localDB;
-import { objectSort, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
+import { objectSort, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
 
 
 

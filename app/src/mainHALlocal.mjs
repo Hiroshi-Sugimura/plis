@@ -8,11 +8,11 @@
 
 //////////////////////////////////////////////////////////////////////
 // 基本ライブラリ
-import localDB from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { sqlite3, eldataModel, IOT_QuestionnaireAnswersModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_MinorkeyMeansModel, MinorkeyMeansValues } = localDB;
 import { Op } from "sequelize";
 import { store } from './storeSingleton.mjs';
-import { getToday, roundFloat } from './mainSubmodule.cjs';
+import { getToday, roundFloat } from './mainSubmodule.mjs';
 
 // const store = new Store();
 

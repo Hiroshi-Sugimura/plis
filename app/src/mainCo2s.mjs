@@ -14,9 +14,9 @@ import { createRequire } from 'module';
 const require = createRequire(import.meta.url);
 import co2s from 'usb-ud-co2s';
 import cron from 'node-cron';
-import localDB from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, Op, roomEnvModel } = localDB;
-import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
+import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
 
 /**
  * @typedef {Object} Co2sConfig

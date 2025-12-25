@@ -11,9 +11,9 @@
 import { store } from './storeSingleton.mjs';
 import TF from 'tradfri-handler';
 import cron from 'node-cron';
-import localDB from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { ikeaRawModel, ikeaDataModel } = localDB;
-import { objectSort, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
+import { objectSort, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
 
 /**
  * @typedef {Object} IkeaConfig

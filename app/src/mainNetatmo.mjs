@@ -11,9 +11,9 @@
 import { store } from './storeSingleton.mjs';
 import axios from 'axios';
 import cron from 'node-cron';
-import localDB from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, Op, netatmoModel, roomEnvModel } = localDB;
-import { mergeDeeply } from './mainSubmodule.cjs';
+import { mergeDeeply } from './mainSubmodule.mjs';
 
 
 let sendIPCMessage = null;

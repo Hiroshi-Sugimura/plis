@@ -11,7 +11,7 @@
 import { store } from './storeSingleton.mjs';
 import arp from '@network-utils/arp-lookup';
 import cron from 'node-cron';
-import localDB from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, sqlite3, arpModel } = localDB;
 
 /**

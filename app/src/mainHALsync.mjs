@@ -11,9 +11,9 @@
 import { store } from './storeSingleton.mjs';
 import https from 'https';
 import cron from 'node-cron';
-import localDB from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Op, eldataModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel } = localDB;
-import { getToday, mergeDeeply } from './mainSubmodule.cjs';
+import { getToday, mergeDeeply } from './mainSubmodule.mjs';
 
 // const store = new Store();
 const HAL_API_BASE_URL = 'https://hal.sugi-lab.net/api';

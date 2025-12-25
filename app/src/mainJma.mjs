@@ -11,9 +11,9 @@
 import { store } from './storeSingleton.mjs';
 import request from 'request';
 import cron from 'node-cron';
-import localDB from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel } = localDB;
-import { isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
+import { isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
 
 /**
  * @typedef {Object} JmaConfig

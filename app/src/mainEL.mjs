@@ -19,9 +19,9 @@ import EL from 'echonet-lite';
 import ELconv from 'echonet-lite-conv';
 import { mainArp } from './mainArp.mjs';     // arpの管理
 import { mainSystem } from './mainSystem.mjs';     // systemの管理(network部分を利用)
-import localDB from './models/localDBModels.cjs';   // DBデータと連携
+import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, Op, elrawModel, eldataModel, electricEnergyModel } = localDB;
-import { objectSort, isObjEmpty, mergeDeeply } from './mainSubmodule.cjs';
+import { objectSort, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
 
 
 const __filename = fileURLToPath(import.meta.url);

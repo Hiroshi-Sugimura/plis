@@ -17,7 +17,7 @@ import fs from 'fs';
 import axios from 'axios';
 import { store } from './storeSingleton.mjs';
 import cron from 'node-cron';
-import { mergeDeeply } from './mainSubmodule.cjs';
+import { mergeDeeply } from './mainSubmodule.mjs';
 
 
 // const store = new Store();
