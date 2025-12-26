@@ -159,7 +159,11 @@ ipcMain.handle('configSave', async (event, arg) => {
 // URLを開く
 ipcMain.handle('URLopen', async (event, arg) => {
 	logger.debug('main', config.debug, 'ipcMain <- URLopen, arg:', arg);
-	shell.openExternal(arg);
+	if (arg.startsWith('http://') || arg.startsWith('https://')) {
+		shell.openExternal(arg);
+	} else {
+		logger.error('main', 'Security Warning: Blocked non-http/https URL open request:', arg);
+	}
 });
 
 // ページ内検索
