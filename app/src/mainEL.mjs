@@ -93,6 +93,7 @@ let mainEL = {
 	changeTask: null,  // facilities監視するcron
 	isRun: false,  // 実行中か？
 	disableIPv6: false, // 利用可能なIPv6インタフェースが無い/不安定なときにv6送信を抑止
+	updateTimer: null, // UI更新用タイマー
 
 	//////////////////////////////////////////////////////////////////////
 	// インタフェース
@@ -277,6 +278,9 @@ let mainEL = {
 		} catch (err) {
 			logger.error('mainEL', 'received elrawModel.create error:', err);
 		}
+
+		// UI更新リクエスト（スロットル付き）
+		mainEL.requestUpdateFacilities();
 	},
 
 	/**
@@ -535,17 +539,39 @@ let mainEL = {
 			const newVal = JSON.stringify(EL.objectSort(EL.facilities));
 			if (oldVal == newVal) return;
 
-			// 変化通知: parsed 再生成し Renderer へ push
-			persist.facilities = objectSort(EL.facilities);
-			ELconv.refer(persist.facilities, function (devs) {
-				persist.parsed = objectSort(devs);
-				if (!isObjEmpty(persist.parsed)) {
-					sendIPCMessage("fclEL", persist.parsed);
-				}
-			});
-
+			mainEL.updateFacilities();
 			oldVal = newVal;
 		});
+	},
+
+
+	/**
+	 * Facilitiesの状態を解析してUIへ通知する。
+	 * changeTaskまたはrequestUpdateFacilitiesから呼ばれる。
+	 */
+	updateFacilities: function () {
+		// 変化通知: parsed 再生成し Renderer へ push
+		persist.facilities = objectSort(EL.facilities);
+		ELconv.refer(persist.facilities, function (devs) {
+			persist.parsed = objectSort(devs);
+			if (!isObjEmpty(persist.parsed)) {
+				sendIPCMessage("fclEL", persist.parsed);
+			}
+		});
+	},
+
+	/**
+	 * UI更新をリクエストする（3秒間のスロットル/デバウンス制御）。
+	 * 連続して受信がある場合、最後の受信から3秒後、または最初の受信から一定時間後に更新するような挙動にするが、
+	 * ここではシンプルに「タイマーがセットされていなければ3秒後に実行」とする（Throttle的な動き）。
+	 */
+	requestUpdateFacilities: function () {
+		if (mainEL.updateTimer) return; // 既に予約済みなら何もしない
+
+		mainEL.updateTimer = setTimeout(() => {
+			mainEL.updateFacilities();
+			mainEL.updateTimer = null;
+		}, 3000);
 	},
 
 
