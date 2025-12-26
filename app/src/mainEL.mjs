@@ -494,11 +494,16 @@ let mainEL = {
 
 		logger.debug('mainEL', config.debug, 'init() start.');
 
+
 		// (3) IPv6 の利用可否判定（awdl0 など不安定 NIC の ENETDOWN 回避）。
+		let v6addr = '';
 		if (network.IPver === 0 || network.IPver === '0' || network.IPver === 6 || network.IPver === '6') {
 			const usable = mainEL.hasUsableIPv6();
-			mainEL.disableIPv6 = !usable;
-			if (!usable) {
+			if (usable) {
+				v6addr = usable;
+				mainEL.disableIPv6 = false;
+			} else {
+				mainEL.disableIPv6 = true;
 				logger.warn('mainEL', 'init(): IPv6 disabled (no usable interface)');
 			}
 		}
@@ -507,7 +512,7 @@ let mainEL = {
 		mainEL.elsocket = EL.initialize(mainEL.objList, mainEL.received, network.IPver,
 			{
 				v4: network.IPv4 == 'auto' ? '' : network.IPv4,
-				v6: network.IPv6 == 'auto' ? '' : network.IPv6,
+				v6: network.IPv6 == 'auto' ? v6addr : network.IPv6,
 				ignoreMe: true,
 				autoGetProperties: true,
 				autoGetDelay: 1000,
@@ -692,7 +697,7 @@ let mainEL = {
 				if (exclude.some(prefix => name.startsWith(prefix))) continue;
 				for (const addr of addrs) {
 					if (addr && addr.family === 'IPv6' && addr.internal === false) {
-						return true;
+						return addr.address;
 					}
 				}
 			}
@@ -741,33 +746,68 @@ let mainEL = {
 			// つまり、開始は前日の23時から当日の0時の値を、当日の0時の値とする
 			let begin = new Date();  // 現在時刻UTCで取得
 			begin.setHours(begin.getHours() - begin.getHours() - 1, 57, 0, 0); // 前日の23時0分０秒にする
-			let end = new Date(begin);  // 現在時刻UTCで取得
-			end.setMinutes(begin.getMinutes() + 3); // begin + 3min
 
-			// logger.debug('mainEL', config.debug, `sendTodayRoomEnv: begin:${begin.toISOString()} end:${end.toISOString()}`);
+			// 24時間後 (24h * 20slots * 3min = 1440min)
+			let totalSlots = 24 * 20;
+			let rangeEnd = new Date(begin);
+			rangeEnd.setMinutes(rangeEnd.getMinutes() + (totalSlots * 3));
 
-			// 24h x 3分(=20回)
+			// 一括取得 (Raw)
+			let allRows = await electricEnergyModel.findAll({
+				attributes: [
+					'commulativeAmountNormal',
+					'commulativeAmountReverse',
+					'instantaneousPower',
+					'instantaneousCurrentsR',
+					'instantaneousCurrentsT',
+					'commulativeAmountsFixedTimeNormalPower',
+					'commulativeAmountsFixedTimeRiversePower',
+					'dateTime'
+				],
+				where: {
+					srcType: 'SubMeter',
+					dateTime: { [Op.between]: [begin.toISOString(), rangeEnd.toISOString()] }
+				},
+				raw: true
+			});
+
 			let rows = [];
-			for (let i = 0; i < (24 * 20); i += 1) {
+			let currentBegin = new Date(begin);
+			let currentEnd = new Date(begin);
+			currentEnd.setMinutes(currentBegin.getMinutes() + 3);
 
-				// １時間分
-				let r = await electricEnergyModel.findAll({
-					attributes: [[Sequelize.literal(`${i}`), 'id'],
-					[Sequelize.fn('AVG', Sequelize.col('commulativeAmountNormal')), 'avgCommulativeAmountNormal'],
-					[Sequelize.fn('AVG', Sequelize.col('commulativeAmountReverse')), 'avgCommulativeAmountReverse'],
-					[Sequelize.fn('AVG', Sequelize.col('instantaneousPower')), 'avgInstantaneousPower'],
-					[Sequelize.fn('AVG', Sequelize.col('instantaneousCurrentsR')), 'avgInstantaneousCurrentsR'],
-					[Sequelize.fn('AVG', Sequelize.col('instantaneousCurrentsT')), 'avgInstantaneousCurrentsT'],
-					[Sequelize.fn('AVG', Sequelize.col('commulativeAmountsFixedTimeNormalPower')), 'avgCommulativeAmountsFixedTimeNormalPower'],
-					[Sequelize.fn('AVG', Sequelize.col('commulativeAmountsFixedTimeRiversePower')), 'avgCommulativeAmountsFixedTimeRiversePower'],
-					],
-					where: {
-						srcType: 'SubMeter',
-						dateTime: { [Op.between]: [begin.toISOString(), end.toISOString()] }
-					}
+			for (let i = 0; i < totalSlots; i += 1) {
+				// このスロットに含まれる行をフィルタリング
+				const slotRows = allRows.filter(r => {
+					// DBの文字列日時をDate変換して比較
+					// 元コードの Op.between は inclusive なので、ここでは >= begin && <= end とする
+					const t = new Date(r.dateTime).getTime();
+					return t >= currentBegin.getTime() && t <= currentEnd.getTime();
 				});
 
-				const v = (Array.isArray(r) && r.length > 0 && r[0] && r[0].dataValues) ? r[0].dataValues : {
+				// 平均値計算関数のヘルパー
+				const avg = (key) => {
+					let sum = 0;
+					let count = 0;
+					for (const r of slotRows) {
+						if (r[key] != null) {
+							sum += Number(r[key]);
+							count++;
+						}
+					}
+					return count > 0 ? sum / count : null;
+				};
+
+				const v = (slotRows.length > 0) ? {
+					id: i,
+					avgCommulativeAmountNormal: avg('commulativeAmountNormal'),
+					avgCommulativeAmountReverse: avg('commulativeAmountReverse'),
+					avgInstantaneousPower: avg('instantaneousPower'),
+					avgInstantaneousCurrentsR: avg('instantaneousCurrentsR'),
+					avgInstantaneousCurrentsT: avg('instantaneousCurrentsT'),
+					avgCommulativeAmountsFixedTimeNormalPower: avg('commulativeAmountsFixedTimeNormalPower'),
+					avgCommulativeAmountsFixedTimeRiversePower: avg('commulativeAmountsFixedTimeRiversePower')
+				} : {
 					id: i,
 					avgCommulativeAmountNormal: null,
 					avgCommulativeAmountReverse: null,
@@ -777,10 +817,11 @@ let mainEL = {
 					avgCommulativeAmountsFixedTimeNormalPower: null,
 					avgCommulativeAmountsFixedTimeRiversePower: null
 				};
-				rows.push({ t: end.toISOString(), v });
 
-				begin.setMinutes(begin.getMinutes() + 3); // begin + 3min
-				end.setMinutes(begin.getMinutes() + 3); // begin + 3min
+				rows.push({ t: currentEnd.toISOString(), v });
+
+				currentBegin.setMinutes(currentBegin.getMinutes() + 3);
+				currentEnd.setMinutes(currentEnd.getMinutes() + 3);
 			}
 
 			let array = [];
