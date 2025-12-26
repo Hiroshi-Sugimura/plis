@@ -154,12 +154,13 @@ let mainOmron = {
 							place: config.place ? config.place : 'MyRoom',
 							temperature: n.temperature,
 							humidity: n.humidity,
-							light: n.anbient_light, // anbientLight -> light
+							anbientLight: n.anbient_light, // light -> anbientLight
 							pressure: n.pressure,
 							noise: n.noise,
 							TVOC: n.etvoc,
-							CO2: n.eco2
-							// discomfortIndex, heatStroke はモデルに存在しないため削除
+							CO2: n.eco2,
+							discomfortIndex: n.discomfort_index,
+							heatStroke: n.heat_stroke
 						});
 					}
 				} else {
@@ -324,11 +325,13 @@ let mainOmron = {
 				attributes: ['id',
 					[Sequelize.fn('AVG', Sequelize.col('temperature')), 'avgTemperature'],
 					[Sequelize.fn('AVG', Sequelize.col('humidity')), 'avgHumidity'],
-					[Sequelize.fn('AVG', Sequelize.col('light')), 'avgAnbientLight'],
+					[Sequelize.fn('AVG', Sequelize.col('anbientLight')), 'avgAnbientLight'],
 					[Sequelize.fn('AVG', Sequelize.col('pressure')), 'avgPressure'],
 					[Sequelize.fn('AVG', Sequelize.col('noise')), 'avgNoise'],
 					[Sequelize.fn('AVG', Sequelize.col('TVOC')), 'avgTVOC'],
 					[Sequelize.fn('AVG', Sequelize.col('CO2')), 'avgCO2'],
+					[Sequelize.fn('AVG', Sequelize.col('discomfortIndex')), 'avgDiscomfortIndex'],
+					[Sequelize.fn('AVG', Sequelize.col('heatStroke')), 'avgHeatStroke'],
 					'createdAt',
 					[Sequelize.literal(subQuery), 'timeunit']
 				],
@@ -342,6 +345,7 @@ let mainOmron = {
 			return rows;
 		} catch (error) {
 			logger.error('mainOmron', 'getRows()', error);
+			return []; // エラー時は空配列を返す
 		}
 	},
 
@@ -355,7 +359,7 @@ let mainOmron = {
 	getTodayRoomEnv: async function () {
 		// 画面に今日のデータを送信するためのデータ作る
 		try {
-			let rows = await mainOmron.getRows();
+			let rows = (await mainOmron.getRows()) || [];
 
 			let T1 = new Date();
 			T1.setHours(0, 0, 0);

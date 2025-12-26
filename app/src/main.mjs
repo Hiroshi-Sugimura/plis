@@ -586,8 +586,8 @@ app.on('ready', async () => {
 	logger.debug('main', config.debug, `on.ready ipver:${config.IPver} ipv4:${config.IPv4} ipv6:${config.IPv6}`);
 
 	await mainHALlocal.initialize();
-	await sqlite3.sync().then(() => {
-		logger.debug('main', config.debug, 'on.ready. Local lifelog DB is ready.');
+	await sqlite3.sync({ alter: true }).then(() => {
+		logger.debug('main', config.debug, 'on.ready. Local lifelog DB is ready with auto-migration.');
 	});
 
 	createWindow();

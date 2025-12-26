@@ -416,6 +416,7 @@ let mainNetatmo = {
 			return rows;
 		} catch (error) {
 			logger.error('mainNetatmo', 'getRows()', error);
+			return []; // エラー時は空配列を返す
 		}
 	},
 
@@ -429,7 +430,7 @@ let mainNetatmo = {
 		try {
 			let baseDate = targetDate ? new Date(targetDate) : new Date();
 			baseDate.setHours(0, 0, 0, 0);
-			let rows = await mainNetatmo.getRows(baseDate);
+			let rows = (await mainNetatmo.getRows(baseDate)) || [];
 
 			let T1 = new Date(baseDate);
 

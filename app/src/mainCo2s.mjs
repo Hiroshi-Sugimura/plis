@@ -328,6 +328,7 @@ let mainCo2s = {
 			return rows;
 		} catch (error) {
 			logger.error('mainCo2s', 'getRows()', error);
+			return []; // エラー時は空配列を返す
 		}
 	},
 
@@ -342,7 +343,7 @@ let mainCo2s = {
 	getTodayRoomEnv: async function () {
 		// 画面に今日のデータを送信するためのデータ作る
 		try {
-			let rows = await mainCo2s.getRows();
+			let rows = (await mainCo2s.getRows()) || [];
 
 			let T1 = new Date();
 			T1.setHours(0, 0, 0);

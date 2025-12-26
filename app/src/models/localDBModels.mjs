@@ -1184,8 +1184,17 @@ const roomEnvModel = canUseSequelizeSqlite ? sqlite3.define('roomEnv', {
     vibration: {
         type: Sequelize.INTEGER
     },
+    anbientLight: {
+        type: Sequelize.INTEGER
+    },
     light: {
         type: Sequelize.INTEGER
+    },
+    discomfortIndex: {
+        type: Sequelize.FLOAT
+    },
+    heatStroke: {
+        type: Sequelize.FLOAT
     },
     lightColor: {
         type: Sequelize.INTEGER
