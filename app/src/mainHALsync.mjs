@@ -679,115 +679,115 @@ let mainHALsync = {
 	},
 
 	//----------------------------------------------------------------------------------------------
+	/**
+	 * HTTP GET request
+	 * @param {string} url - request url
+	 * @param {string} token - auth token
+	 * @return {Promise<Object>} result
+	 */
 	httpGetRequest: function (url, token) {
 		return new Promise((resolve, reject) => {
-			if (!token) {
-				token = config.halApiToken;
+			let http;
+			if (url.startsWith('https')) {
+				http = https;
+			} else {
+				http = require('http');
 			}
 
 			const options = {
 				method: 'GET',
 				headers: {
-					'Authorization': 'Bearer ' + token
+					'Authorization': `Bearer ${token}`
 				},
-				rejectUnauthorized: false,
 				requestCert: true,
 				agent: false
 			};
 
-			let res_str = '';
-			const req = https.request(url, options, (res) => {
+			const req = http.request(url, options, (res) => {
+				let body = '';
 				res.setEncoding('utf8');
+
 				res.on('data', (chunk) => {
-					res_str += chunk;
+					body += chunk;
 				});
+
 				res.on('end', () => {
-					if (res.statusCode === 200) {
-						let res_data = null;
-						try {
-							res_data = JSON.parse(res_str);
-						} catch (error) {
-							logger.error('mainHALsync', 'httpGetRequest', error);
-							logger.error('mainHALsync', 'error res_str:', res_str);
+					try {
+						// console.log('-- body:', body);
+						if (body == '' || body == 'OK') {
+							resolve('OK');
+						} else {
+							resolve(JSON.parse(body));
 						}
-						resolve(res_data);
-					} else {
-						let message = 'method=get, url=' + url + ', code=' + res.statusCode + ', message=';
-						try {
-							let res_data = JSON.parse(res_str);
-							message += res_data.error;
-						} catch (error) {
-							logger.error('mainHALsync', 'httpGetRequest', error);
-							logger.error('mainHALsync', 'error res_str:', res_str);
-						}
-						reject(new Error('Received an error response from HAL: ' + message));
+					} catch (error) {
+						resolve(body);
 					}
 				});
 			});
 
-			req.on('error', (error) => {
-				reject(new Error('Failed to send a http get request: ' + error.message));
+			req.on('error', (e) => {
+				reject(e);
 			});
 
 			req.end();
 		});
 	},
 
-
+	/**
+	 * HTTP POST request
+	 * @param {string} url - request url
+	 * @param {Object} data - request body
+	 * @param {string} token - auth token
+	 * @return {Promise<Object>} result
+	 */
 	httpPostRequest: function (url, data, token) {
-		if (!token) {
-			token = config.halApiToken;
-		}
 		return new Promise((resolve, reject) => {
-			const req_body_str = JSON.stringify(data);
+			const dataStr = JSON.stringify(data);
+			let http;
+			if (url.startsWith('https')) {
+				http = https;
+			} else {
+				http = require('http');
+			}
 
 			const options = {
 				method: 'POST',
 				headers: {
-					'Authorization': 'Bearer ' + token,
 					'Content-Type': 'application/json',
-					'Content-Length': Buffer.byteLength(req_body_str)
+					'Content-Length': Buffer.byteLength(dataStr),
+					'Authorization': `Bearer ${token}`
 				},
-				rejectUnauthorized: false,
 				requestCert: true,
 				agent: false
 			};
 
-			let res_str = '';
-			const req = https.request(url, options, (res) => {
+			const req = http.request(url, options, (res) => {
+				let body = '';
 				res.setEncoding('utf8');
-				res.on('data', (chunk) => {
-					res_str += chunk;
-				});
-				res.on('end', () => {
-					if (res.statusCode === 200) {
-						let res_data = null;
-						try {
-							res_data = JSON.parse(res_str);
-						} catch (error) {
-							logger.error('mainHALsync', 'httpPostRequest', error);
-							logger.error('mainHALsync', 'error res_str:', res_str);
-						}
-						resolve(res_data);
-					} else {
-						let message = 'method=post, url=' + url + ', code=' + res.statusCode + ', message=';
-						try {
-							let res_data = JSON.parse(res_str);
-							message += res_data.error;
-						} catch (error) {
-							logger.error('mainHALsync', 'httpPostRequest', error);
-						}
 
-						reject(new Error('Received an error response from HAL: ' + message));
+				res.on('data', (chunk) => {
+					body += chunk;
+				});
+
+				res.on('end', () => {
+					try {
+						// console.log('-- body:', body);
+						if (body == '' || body == 'OK') {
+							resolve('OK');
+						} else {
+							resolve(JSON.parse(body));
+						}
+					} catch (error) {
+						resolve(body);
 					}
 				});
 			});
 
-			req.on('error', (error) => {
-				reject(new Error('Failed to send a http post request: ' + error.message));
+			req.on('error', (e) => {
+				reject(e);
 			});
 
-			req.write(req_body_str);
+			req.write(dataStr);
 			req.end();
 		});
 	},

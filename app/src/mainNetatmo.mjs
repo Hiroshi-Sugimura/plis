@@ -13,8 +13,9 @@ import axios from 'axios';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, Op, netatmoModel, roomEnvModel } = localDB;
-import { objectSort, getNow, formatDate, getTodayDate, getYesterdayDate, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
-import { logger } from './logger.mjs';
+import { objectSort, getNow, formatDate, getTodayDate, getYesterdayDate, getToday, isObjEmpty, mergeDeeply, getCases } from './mainSubmodule.mjs';
+
+
 
 
 let sendIPCMessage = null;
@@ -347,34 +348,7 @@ let mainNetatmo = {
 	//////////////////////////////////////////////////////////////////////
 	// innser functions
 
-	/**
-	 * 日次集計用CASE式を生成する内部関数。3分刻み(24h * 20 = 480)で時間帯をバケット化。
-	 * @param {Date} date 対象日（その日の0:00起点）
-	 * @returns {string} SQL CASE 式断片
-	 */
-	getCases: function (date) {
-		let T1 = new Date(date);
-		let T2 = new Date(date);
-		let T3 = new Date(date);
-		let T4 = new Date(date);
 
-		// UTCだがStringにて表現しているので、なんか複雑
-		T1.setHours(T1.getHours() - T1.getHours() - 10, 57, 0, 0);// 前日の14時57分xx秒   14:57:00 .. 15:00:00 --> 00:00
-		T2.setHours(T1.getHours() - T1.getHours() - 10, 58, 0, 0);// T1 + 1min
-		T3.setHours(T1.getHours() - T1.getHours() - 10, 59, 0, 0);// T1 + 2min
-		T4.setHours(T1.getHours() - T1.getHours(), 0, 0, 0);// 集約先
-
-		let ret = "";
-		for (let t = 0; t < 480; t += 1) {// 24h * 20 times (= 60min / 3min)
-			ret += `WHEN "createdAt" LIKE "${formatDate(T1, 'YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${formatDate(T2, 'YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${formatDate(T3, 'YYYY-MM-DD HH24:MI')}%" THEN "${formatDate(T4, 'HH24:MI')}" \n`;
-
-			T1.setMinutes(T1.getMinutes() + 3);// + 3 min
-			T2.setMinutes(T2.getMinutes() + 3);// + 3 min
-			T3.setMinutes(T3.getMinutes() + 3);// + 3 min
-			T4.setMinutes(T4.getMinutes() + 3);// + 3 min
-		}
-		return ret + 'ELSE "24:00"';
-	},
 
 
 	/**
@@ -393,7 +367,7 @@ let mainNetatmo = {
 			let end = new Date(baseDate);
 			end.setDate(end.getDate() + 1); // 翌日の0:00:00
 
-			let cases = mainNetatmo.getCases(baseDate);
+			let cases = getCases(baseDate);
 			let subQuery = `CASE ${cases} END`;
 
 			let rows = await roomEnvModel.findAll({

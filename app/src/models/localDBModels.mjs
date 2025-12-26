@@ -324,8 +324,15 @@ const electricEnergyModel = canUseSequelizeSqlite ? sqlite3.define('electricEner
         allowNull: false
     },
     dateTime: {
-        type: Sequelize.DATE,
-        allowNull: false
+        type: Sequelize.STRING,
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('dateTime', val.toISOString());
+            } else {
+                this.setDataValue('dateTime', val);
+            }
+        }
     },
     srcType: {  // Meter, DistributionBoard, Sensor, and so on.
         type: Sequelize.STRING(32),
@@ -351,13 +358,27 @@ const electricEnergyModel = canUseSequelizeSqlite ? sqlite3.define('electricEner
         type: Sequelize.INTEGER
     },
     commulativeAmountsFixedTimeNormalDaytime: {  // EL ESM:ea, 定時積算電力量計測値（正）, 計測日時
-        type: 'TIMESTAMP',
+        type: Sequelize.STRING,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('commulativeAmountsFixedTimeNormalDaytime', val.toISOString());
+            } else {
+                this.setDataValue('commulativeAmountsFixedTimeNormalDaytime', val);
+            }
+        }
     },
     commulativeAmountsFixedTimeNormalPower: {  // EL ESM:ea, 定時積算電力量計測値（正）, 電力量
         type: Sequelize.INTEGER
     },
     commulativeAmountsFixedTimeReverseDaytime: {  // EL ESM:eb, 定時積算電力量計測値（逆）
-        type: 'TIMESTAMP',
+        type: Sequelize.STRING,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('commulativeAmountsFixedTimeReverseDaytime', val.toISOString());
+            } else {
+                this.setDataValue('commulativeAmountsFixedTimeReverseDaytime', val);
+            }
+        }
     },
     commulativeAmountsFixedTimeRiversePower: {  // EL ESM:eb, 定時積算電力量計測値（逆）, 電力量
         type: Sequelize.INTEGER
@@ -504,7 +525,14 @@ const weatherModel = canUseSequelizeSqlite ? sqlite3.define('weatherTable', {
         allowNull: false
     },
     dateTime: {
-        type: Sequelize.DATE
+        type: Sequelize.STRING,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('dateTime', val.toISOString());
+            } else {
+                this.setDataValue('dateTime', val);
+            }
+        }
     },
     srcType: {
         type: Sequelize.STRING

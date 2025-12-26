@@ -12,8 +12,9 @@ import omron from 'usb-2jcie-bu';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, Op, roomEnvModel } = localDB;
-import { objectSort, getNow, formatDate, getTodayDate, getYesterdayDate, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
-import { logger } from './logger.mjs';
+import { objectSort, getNow, formatDate, getTodayDate, getYesterdayDate, getToday, isObjEmpty, mergeDeeply, getCases } from './mainSubmodule.mjs';
+
+
 
 /**
  * @typedef {Object} OmronConfig
@@ -256,50 +257,7 @@ let mainOmron = {
 	//////////////////////////////////////////////////////////////////////
 	// inner functions
 
-	/**
-	 * @func getCases
-	 * @desc getCases
-	 * @async
-	 * @param {Date}  date
-	 * @return {string} when clause
-	 * @throw error
-	 */
-	/*
-   getCases
-   input
-	   date: Date="2023-01-06"
 
-   output
-	   when createdAt >= "2023-01-05 23:57" and createdAt < "2023-01-06 00:00" then "00:00"
-	   when createdAt >= "2023-01-06 00:00" and createdAt < "2023-01-06 00:03" then "00:03"
-	   when createdAt >= "2023-01-06 00:03" and createdAt < "2023-01-06 00:06" then "00:06"
-	   ...
-	   when createdAt >= "2023-01-06 23:54" and createdAt < "2023-01-06 23:57" then "23:57"
-	   else "24:00"
-   */
-	getCases: function (date) {
-		let T1 = new Date(date);
-		let T2 = new Date(date);
-		let T3 = new Date(date);
-		let T4 = new Date(date);
-
-		// UTCだがStringにて表現しているので、なんか複雑
-		T1.setHours(T1.getHours() - T1.getHours() - 10, 57, 0, 0); // 前日の14時57分xx秒   14:57:00 .. 15:00:00 --> 00:00
-		T2.setHours(T1.getHours() - T1.getHours() - 10, 58, 0, 0); // T1 + 1min
-		T3.setHours(T1.getHours() - T1.getHours() - 10, 59, 0, 0); // T1 + 2min
-		T4.setHours(T1.getHours() - T1.getHours(), 0, 0, 0); // 集約先
-
-		let ret = "";
-		for (let t = 0; t < 480; t += 1) {  // 24h * 20 times (= 60min / 3min)
-			ret += `WHEN "createdAt" LIKE "${formatDate(T1, 'YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${formatDate(T2, 'YYYY-MM-DD HH24:MI')}%" OR "createdAt" LIKE "${formatDate(T3, 'YYYY-MM-DD HH24:MI')}%" THEN "${formatDate(T4, 'HH24:MI')}" \n`;
-
-			T1.setMinutes(T1.getMinutes() + 3); // + 3 min
-			T2.setMinutes(T2.getMinutes() + 3); // + 3 min
-			T3.setMinutes(T3.getMinutes() + 3); // + 3 min
-			T4.setMinutes(T4.getMinutes() + 3); // + 3 min
-		}
-		return ret + 'ELSE "24:00"';
-	},
 
 	/**
 	 * @func getRows
@@ -316,7 +274,7 @@ let mainOmron = {
 			begin.setHours(begin.getHours() - begin.getHours() - 1, 57, 0, 0); // 前日の23時57分０秒にする
 			let end = new Date(begin);  // 現在時刻UTCで取得
 			end.setHours(begin.getHours() + 25, 0, 0, 0); // 次の日の00:00:00にする
-			let cases = mainOmron.getCases(now);
+			let cases = getCases(now);
 
 			let subQuery = `CASE ${cases} END`;
 

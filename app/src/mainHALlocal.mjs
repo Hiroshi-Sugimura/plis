@@ -393,7 +393,7 @@ let mainHALlocal = {
 		let eldata_del_count = await eldataModel.destroy({
 			where: {
 				createdAt: {
-					[Op.lt]: new Date(Date.now() - 86400000 * config.ellogExpireDays)
+					[Op.lt]: new Date(Date.now() - 86400000 * config.ellogExpireDays).toISOString()
 				}
 			}
 		});
@@ -402,7 +402,7 @@ let mainHALlocal = {
 		let major_del_count = await IOT_MajorResultsModel.destroy({
 			where: {
 				createdAt: {
-					[Op.lt]: new Date(Date.now() - 86400000 * config.resultExpireDays)
+					[Op.lt]: new Date(Date.now() - 86400000 * config.resultExpireDays).toISOString()
 				}
 			}
 		});
@@ -411,7 +411,7 @@ let mainHALlocal = {
 		let minor_del_count = await IOT_MinorResultsModel.destroy({
 			where: {
 				createdAt: {
-					[Op.lt]: new Date(Date.now() - 86400000 * config.resultExpireDays)
+					[Op.lt]: new Date(Date.now() - 86400000 * config.resultExpireDays).toISOString()
 				}
 			}
 		});
@@ -420,7 +420,7 @@ let mainHALlocal = {
 		let questionnaire_del_count = await IOT_QuestionnaireAnswersModel.destroy({
 			where: {
 				createdAt: {
-					[Op.lt]: new Date(Date.now() - 86400000 * config.resultExpireDays)
+					[Op.lt]: new Date(Date.now() - 86400000 * config.resultExpireDays).toISOString()
 				}
 			}
 		});
