@@ -155,7 +155,6 @@ let mainEL = {
 		await mainEL.stopObservation();
 		await EL.release();
 
-		await mainEL.setConfig();
 		await store.set('persist.EL', persist);
 	},
 

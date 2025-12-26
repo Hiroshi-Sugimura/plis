@@ -835,7 +835,11 @@ let mainHALsync = {
 			arg.profile = profile;
 			persist.profile = profile;
 		} catch (error) {
-			logger.error('mainHALsync', 'getHalUserProfileRequest', error);
+			if (error.code === 'ETIMEDOUT' || error.code === 'EHOSTUNREACH' || (error.message && error.message.includes('AggregateError'))) {
+				logger.error('mainHALsync', `getHalUserProfileRequest Connection Error: ${error.code || error.message.split('\n')[0]}`);
+			} else {
+				logger.error('mainHALsync', 'getHalUserProfileRequest', error);
+			}
 		}
 
 		sendIPCMessage("HALgetUserProfileResponse", arg);

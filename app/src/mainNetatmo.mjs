@@ -275,7 +275,11 @@ let mainNetatmo = {
 					throw refreshError;
 				}
 			}
-			logger.error('mainNetatmo', 'fetchStationsData() error detail:\x1b[31m', error.response ? error.response.data : error, '\x1b[0m');
+			if (error.code === 'ETIMEDOUT' || error.code === 'EHOSTUNREACH' || (error.message && error.message.includes('AggregateError'))) {
+				logger.error('mainNetatmo', `fetchStationsData() Connection Error: ${error.code || error.message.split('\n')[0]}`);
+			} else {
+				logger.error('mainNetatmo', 'fetchStationsData() error detail:\x1b[31m', error.response ? error.response.data : error, '\x1b[0m');
+			}
 			throw new Error('Netatmoデータ取得失敗: ' + error);
 		}
 	},
