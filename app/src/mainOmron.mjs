@@ -91,6 +91,7 @@ let mainOmron = {
 		}
 		mainOmron.isRun = true;
 
+
 		logger.debug('mainOmron', config.debug, 'start()');
 
 		try {
@@ -323,13 +324,11 @@ let mainOmron = {
 				attributes: ['id',
 					[Sequelize.fn('AVG', Sequelize.col('temperature')), 'avgTemperature'],
 					[Sequelize.fn('AVG', Sequelize.col('humidity')), 'avgHumidity'],
-					[Sequelize.fn('AVG', Sequelize.col('anbientLight')), 'avgAnbientLight'],
+					[Sequelize.fn('AVG', Sequelize.col('light')), 'avgAnbientLight'],
 					[Sequelize.fn('AVG', Sequelize.col('pressure')), 'avgPressure'],
 					[Sequelize.fn('AVG', Sequelize.col('noise')), 'avgNoise'],
 					[Sequelize.fn('AVG', Sequelize.col('TVOC')), 'avgTVOC'],
 					[Sequelize.fn('AVG', Sequelize.col('CO2')), 'avgCO2'],
-					[Sequelize.fn('AVG', Sequelize.col('discomfortIndex')), 'avgDiscomfortIndex'],
-					[Sequelize.fn('AVG', Sequelize.col('heatStroke')), 'avgHeatStroke'],
 					'createdAt',
 					[Sequelize.literal(subQuery), 'timeunit']
 				],
