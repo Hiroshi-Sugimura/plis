@@ -210,19 +210,28 @@ let mainNetatmo = {
 			return true;
 		} catch (error) {
 			const detail = error.response ? error.response.data : error;
-			logger.error('mainNetatmo', 'refreshAccessToken() エラー:', detail);
+
 			if (detail && detail.error === 'invalid_grant') {
+				logger.error('mainNetatmo', 'refreshAccessToken() エラー: Refresh Tokenが無効です（古い、または既に使用済み）。');
 				// 古い/使用済みのRefresh Token。自動的にクリアしてUIに再設定を促す。
 				config.refreshToken = '';
 				mainNetatmo.accessToken = null;
 				mainNetatmo.tokenExpires = null;
 				try { await store.set('config.Netatmo.refreshToken', ''); } catch (_) { }
 				if (sendIPCMessage) {
-					sendIPCMessage('NetatmoAuthError', 'Refresh Tokenが無効です。Netatmo開発者ポータルで新しいRefresh Tokenを生成して設定してね');
+					sendIPCMessage('NetatmoAuthError', 'Refresh Tokenが無効です。Netatmo開発者ポータルで新しいRefresh Tokenを生成して再設定してください。');
 					sendIPCMessage('renewNetatmoConfigView', config);
 				}
-				throw new Error('Netatmoトークンリフレッシュ失敗: invalid_grant（古い/既に使用済みのRefresh Token。Netatmo開発者ポータルで新しいトークンを再生成してください）');
+				throw new Error('Netatmoトークンリフレッシュ失敗: invalid_grant');
+			} else if (detail && detail.error === 'invalid_client') {
+				logger.error('mainNetatmo', 'refreshAccessToken() エラー: Client ID または Client Secret が間違っています。');
+				if (sendIPCMessage) {
+					sendIPCMessage('NetatmoAuthError', 'Client ID または Client Secret が間違っています。Netatmo開発者ポータルの設定を確認してください。');
+				}
+				throw new Error('Netatmoトークンリフレッシュ失敗: invalid_client');
 			}
+
+			logger.error('mainNetatmo', 'refreshAccessToken() エラー:', detail);
 			throw new Error('Netatmoトークンリフレッシュ失敗: ' + (error.response ? JSON.stringify(error.response.data) : error.message));
 		}
 	},

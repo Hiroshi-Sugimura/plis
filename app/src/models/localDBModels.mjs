@@ -2,6 +2,10 @@
 //	Copyright (C) Hiroshi SUGIMURA 2020.08.28
 //  Last updated: 2021.09.24
 //////////////////////////////////////////////////////////////////////
+/**
+ * @module localDBModels
+ * @description ローカルのライフログデータベース（SQLite3/Sequelize）のモデル定義および初期化を行うモジュール。
+ */
 // Require all the stuff
 
 import { createRequire } from 'module';
@@ -16,6 +20,7 @@ try {
 }
 // Windows ARM や sqlite3未導入環境ではSequelizeのsqlite方言が使えないため、
 // ここで安全にスタブへフォールバックする
+/** @type {boolean} Sequelize/SQLiteが利用可能かどうか */
 let canUseSequelizeSqlite = !!Sequelize;
 
 // Sequelizeが使えない場合の軽量シム（fn, literal, col）
@@ -48,6 +53,12 @@ if (canUseSequelizeSqlite) {
     }
 }
 
+/**
+ * @func makeStubModel
+ * @desc Sequelizeが利用できない場合に、各モデルのメソッドをモックするためのスタブを生成する。
+ * @param {string} name モデル名
+ * @returns {Object} データベース操作メソッドを模倣したオブジェクト
+ */
 function makeStubModel(name) {
     const stub = {
         create: async function () { return {}; },
@@ -74,7 +85,13 @@ if (!canUseSequelizeSqlite) {
 // timestamps: falseを入れておくと，createdAt, updatedAtが勝手に追加されない
 
 //////////////////////////////////////////////////////////////////////
-// eldata
+/**
+ * @typedef {import('sequelize').Model} Model
+ */
+
+//----------------------------------------------------------------------
+// ECHONET Lite 関連
+/** @type {Model} ECHONET Lite の受信ログ（解析済み） */
 const eldataModel = canUseSequelizeSqlite ? sqlite3.define('eldata', {
     id: {
         type: Sequelize.INTEGER,
@@ -110,7 +127,7 @@ const eldataModel = canUseSequelizeSqlite ? sqlite3.define('eldata', {
 
 
 //////////////////////////////////////////////////////////////////////
-// elraw
+/** @type {Model} ECHONET Lite の生パケットログ */
 const elrawModel = canUseSequelizeSqlite ? sqlite3.define('elraw', {
     id: {
         type: Sequelize.INTEGER,
@@ -156,7 +173,9 @@ const elrawModel = canUseSequelizeSqlite ? sqlite3.define('elraw', {
 
 
 //////////////////////////////////////////////////////////////////////
-// esm data (電力スマートメータ 解析後データ)
+//----------------------------------------------------------------------
+// スマートメータ (ECHONET Lite) 関連
+/** @type {Model} スマートメータ（低圧スマート電力量メータ）のログ */
 const esmdataModel = canUseSequelizeSqlite ? sqlite3.define('esmdata', {
     id: {
         type: Sequelize.INTEGER,
@@ -189,7 +208,7 @@ const esmdataModel = canUseSequelizeSqlite ? sqlite3.define('esmdata', {
 
 
 //////////////////////////////////////////////////////////////////////
-// esm raw (電力スマートメータ 通信生データ)
+/** @type {Model} スマートメータ（低圧スマート電力量メータ）の生パケットログ */
 const esmrawModel = canUseSequelizeSqlite ? sqlite3.define('esmraw', {
     id: {
         type: Sequelize.INTEGER,
@@ -224,9 +243,8 @@ const esmrawModel = canUseSequelizeSqlite ? sqlite3.define('esmraw', {
 }) : makeStubModel('esmraw');
 
 //////////////////////////////////////////////////////////////////////
-// Electric Energy
-// 基本はスマートメータのデータ、他にはスマート分電盤や他のIoT機器による分電盤計測値等
-const electricEnergyModel = canUseSequelizeSqlite ? sqlite3.define('ElectricEnergy', {
+/** @type {Model} 瞬時電力量、積算電力量などの集計データ */
+const electricEnergyModel = canUseSequelizeSqlite ? sqlite3.define('electricEnergyTable', {
     id: {
         type: Sequelize.BIGINT,
         autoIncrement: true,
@@ -280,7 +298,7 @@ const electricEnergyModel = canUseSequelizeSqlite ? sqlite3.define('ElectricEner
 
 
 //////////////////////////////////////////////////////////////////////
-// hueraw
+/** @type {Model} Philips Hue の生データログ */
 const huerawModel = canUseSequelizeSqlite ? sqlite3.define('huerawModel', {
     id: {
         type: Sequelize.INTEGER,
@@ -299,7 +317,7 @@ const huerawModel = canUseSequelizeSqlite ? sqlite3.define('huerawModel', {
 
 
 //////////////////////////////////////////////////////////////////////
-// arpTable
+/** @type {Model} ARPテーブルのログ */
 const arpModel = canUseSequelizeSqlite ? sqlite3.define('arpTable', {
     id: {
         type: Sequelize.INTEGER,
@@ -315,8 +333,9 @@ const arpModel = canUseSequelizeSqlite ? sqlite3.define('arpTable', {
     timestamps: true
 }) : makeStubModel('arpTable');
 
-//////////////////////////////////////////////////////////////////////
-// open weather map
+//----------------------------------------------------------------------
+// OpenWeatherMap 関連
+/** @type {Model} OpenWeatherMap API からの生レスポンスログ */
 const owmModel = canUseSequelizeSqlite ? sqlite3.define('owmTable', {
     id: {
         type: Sequelize.INTEGER,
@@ -332,9 +351,55 @@ const owmModel = canUseSequelizeSqlite ? sqlite3.define('owmTable', {
     timestamps: true
 }) : makeStubModel('owmTable');
 
+/** @type {Model} 取得した気象データ（気温、湿度、気圧など）を抽出・正規化したログ */
+const weatherModel = canUseSequelizeSqlite ? sqlite3.define('weatherTable', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    dateTime: {
+        type: Sequelize.DATE
+    },
+    srcType: {
+        type: Sequelize.STRING
+    },
+    place: {
+        type: Sequelize.STRING
+    },
+    weather: {
+        type: Sequelize.STRING
+    },
+    temperature: {
+        type: Sequelize.DOUBLE
+    },
+    humidity: {
+        type: Sequelize.DOUBLE
+    },
+    pressure: {
+        type: Sequelize.DOUBLE
+    },
+    windSpeed: {
+        type: Sequelize.DOUBLE
+    },
+    windDirection: {
+        type: Sequelize.DOUBLE
+    },
+    cloudCover: {
+        type: Sequelize.DOUBLE
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('weatherTable');
+
+
 
 //////////////////////////////////////////////////////////////////////
-// netatmo
+//----------------------------------------------------------------------
+// Netatmo 関連
+/** @type {Model} Netatmo API からの生デバイスデータログ */
 const netatmoModel = canUseSequelizeSqlite ? sqlite3.define('netatmoTable', {
     id: {
         type: Sequelize.INTEGER,
@@ -351,8 +416,9 @@ const netatmoModel = canUseSequelizeSqlite ? sqlite3.define('netatmoTable', {
 }) : makeStubModel('netatmoTable');
 
 
-//////////////////////////////////////////////////////////////////////
-// switchBot
+//----------------------------------------------------------------------
+// SwitchBot 関連
+/** @type {Model} SwitchBot API からの生デバイスデータログ */
 const switchBotRawModel = canUseSequelizeSqlite ? sqlite3.define('switchBotRawTable', {
     id: {
         type: Sequelize.INTEGER,
@@ -368,6 +434,7 @@ const switchBotRawModel = canUseSequelizeSqlite ? sqlite3.define('switchBotRawTa
     timestamps: true
 }) : makeStubModel('switchBotRawTable');
 
+/** @type {Model} SwitchBot デバイスの抽出・正規化されたデータログ */
 const switchBotDataModel = canUseSequelizeSqlite ? sqlite3.define('switchBotDataTable', {
     id: {
         type: Sequelize.INTEGER,
@@ -398,9 +465,9 @@ const switchBotDataModel = canUseSequelizeSqlite ? sqlite3.define('switchBotData
 }) : makeStubModel('switchBotDataTable');
 
 
-
-//////////////////////////////////////////////////////////////////////
-// IKEA
+//----------------------------------------------------------------------
+// IKEA TRADFRI 関連
+/** @type {Model} IKEA ゲートウェイからの生データログ */
 const ikeaRawModel = canUseSequelizeSqlite ? sqlite3.define('ikeaRawTable', {
     id: {
         type: Sequelize.INTEGER,
@@ -426,7 +493,7 @@ const ikeaRawModel = canUseSequelizeSqlite ? sqlite3.define('ikeaRawTable', {
     timestamps: true
 }) : makeStubModel('ikeaRawTable');
 
-
+/** @type {Model} IKEA デバイスの抽出・正規化されたデータログ */
 const ikeaDataModel = canUseSequelizeSqlite ? sqlite3.define('ikeaDataTable', {
     id: {
         type: Sequelize.INTEGER,
@@ -473,10 +540,9 @@ const ikeaDataModel = canUseSequelizeSqlite ? sqlite3.define('ikeaDataTable', {
 }) : makeStubModel('ikeaDataTable');
 
 
-
-
-//////////////////////////////////////////////////////////////////////
-// IOT_QuestionnaireAnswersModel
+//----------------------------------------------------------------------
+// アンケート・評価・成績関連
+/** @type {Model} ユーザーからのアンケート回答記録 */
 const IOT_QuestionnaireAnswersModel = canUseSequelizeSqlite ? sqlite3.define('IOT_QuestionnaireAnswers', {
     id: {
         type: Sequelize.INTEGER,
@@ -729,8 +795,7 @@ const IOT_QuestionnaireAnswersModel = canUseSequelizeSqlite ? sqlite3.define('IO
 }) : makeStubModel('IOT_QuestionnaireAnswers');
 
 
-//////////////////////////////////////////////////////////////////////
-// IOT_MajorResultsModel
+/** @type {Model} 主要な評価結果（総合スコア、分野別スコア等） */
 const IOT_MajorResultsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MajorResults', {
     idIOT_MajorResults: {
         type: Sequelize.BIGINT,
@@ -799,8 +864,7 @@ const IOT_MajorResultsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MajorR
 }) : makeStubModel('IOT_MajorResults');
 
 
-//////////////////////////////////////////////////////////////////////
-// IOT_MinorResultsModel
+/** @type {Model} 詳細な評価結果（設問ごとのスコア等） */
 const IOT_MinorResultsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MinorResults', {
     idIOT_MinorResults: {
         type: Sequelize.BIGINT,
@@ -971,8 +1035,7 @@ const IOT_MinorResultsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MinorR
 }) : makeStubModel('IOT_MinorResults');
 
 
-//////////////////////////////////////////////////////////////////////
-// IOT_MinorkeyMeansModel
+/** @type {Model} 評価指標の基準値や平均値等 */
 const IOT_MinorkeyMeansModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MinorkeyMeans', {
     idIOT_MinorkeyMeans: {
         type: Sequelize.BIGINT,
@@ -1011,8 +1074,65 @@ const IOT_MinorkeyMeansModel = canUseSequelizeSqlite ? sqlite3.define('IOT_Minor
 }) : makeStubModel('IOT_MinorkeyMeans');
 
 
-//////////////////////////////////////////////////////////////////////
-// roomEnv
+/** @type {Object[]} 評価指標のデフォルト値リスト */
+const MinorkeyMeansValues = [
+    { version: '1', key: 'r_1_1', val: 56.5925925925926 },
+    { version: '1', key: 'r_1_2', val: 59.8518518518519 },
+    { version: '1', key: 'r_1_3', val: 49.3333333333333 },
+    { version: '1', key: 'r_1_4', val: 51.5555555555556 },
+    { version: '1', key: 'r_1_5', val: 62.2962962962963 },
+    { version: '1', key: 'r_1_6', val: 40.5925925925926 },
+    { version: '1', key: 'r_1_7', val: 68.3703703703704 },
+    { version: '1', key: 'r_1_8', val: 63.8518518518519 },
+    { version: '1', key: 'r_1_9', val: 63.8518518518519 },
+    { version: '1', key: 'r_2_1', val: 67.5925925925926 },
+    { version: '1', key: 'r_2_2', val: 78.4814814814815 },
+    { version: '1', key: 'r_2_3', val: 74.3703703703704 },
+    { version: '1', key: 'r_2_4', val: 51.5555555555556 },
+    { version: '1', key: 'r_2_5', val: 75.3333333333333 },
+    { version: '1', key: 'r_2_6', val: 65.4074074074074 },
+    { version: '1', key: 'r_2_7', val: 76.5185185185185 },
+    { version: '1', key: 'r_2_8', val: 63.8518518518519 },
+    { version: '1', key: 'r_2_9', val: 77.2592592592593 },
+    { version: '1', key: 'r_3_1', val: 68 },
+    { version: '1', key: 'r_3_2', val: 59.9074074074074 },
+    { version: '1', key: 'r_3_3', val: 50.8148148148148 },
+    { version: '1', key: 'r_3_4', val: 43.1111111111111 },
+    { version: '1', key: 'r_3_5', val: 71.3333333333333 },
+    { version: '1', key: 'r_3_6', val: 65.5555555555556 },
+    { version: '1', key: 'r_3_7', val: 68.4444444444444 },
+    { version: '1', key: 'r_3_8', val: 52 },
+    { version: '1', key: 'r_4_1', val: 65.7037037037037 },
+    { version: '1', key: 'r_4_2', val: 52.8888888888889 },
+    { version: '1', key: 'r_4_3', val: 55.4074074074074 },
+    { version: '1', key: 'r_4_4', val: 43.4074074074074 },
+    { version: '1', key: 'r_4_5', val: 50.1481481481481 },
+    { version: '1', key: 'r_4_6', val: 65.4074074074074 },
+    { version: '1', key: 'r_4_7', val: 48.7407407407407 },
+    { version: '1', key: 'r_4_8', val: 70.0740740740741 },
+    { version: '1', key: 'r_5_1', val: 70.8148148148148 },
+    { version: '1', key: 'r_5_2', val: 55.037037037037 },
+    { version: '1', key: 'r_5_3', val: 55.7777777777778 },
+    { version: '1', key: 'r_5_4', val: 61.7037037037037 },
+    { version: '1', key: 'r_5_5', val: 55.037037037037 },
+    { version: '1', key: 'r_5_6', val: 72.8888888888889 },
+    { version: '1', key: 'r_5_7', val: 60.0740740740741 },
+    { version: '1', key: 'r_5_8', val: 69.8518518518519 },
+    { version: '1', key: 'r_5_9', val: 81.7037037037037 },
+    { version: '1', key: 'r_6_1', val: 56.5925925925926 },
+    { version: '1', key: 'r_6_2', val: 56.6666666666667 },
+    { version: '1', key: 'r_6_3', val: 49.9259259259259 },
+    { version: '1', key: 'r_6_4', val: 79.5555555555556 },
+    { version: '1', key: 'r_6_5', val: 63.3333333333333 },
+    { version: '1', key: 'r_6_6', val: 63.8518518518519 },
+    { version: '1', key: 'r_6_7', val: 77.2592592592593 },
+    { version: '1', key: 'r_6_8', val: 76.5185185185185 }
+];
+
+
+//----------------------------------------------------------------------
+// 環境・ユーザー状態関連
+/** @type {Model} 部屋の環境データ（気温、湿度、CO2、騒音等、Netatmoやセンサーから集約） */
 const roomEnvModel = canUseSequelizeSqlite ? sqlite3.define('roomEnv', {
     id: {
         type: Sequelize.BIGINT,
@@ -1079,8 +1199,7 @@ const roomEnvModel = canUseSequelizeSqlite ? sqlite3.define('roomEnv', {
 }) : makeStubModel('roomEnv');
 
 
-//////////////////////////////////////////////////////////////////////
-// userState
+/** @type {Model} ユーザーの現在の状態ログ */
 const userStateModel = canUseSequelizeSqlite ? sqlite3.define('userState', {
     id: {
         type: Sequelize.BIGINT,
@@ -1126,73 +1245,6 @@ const userStateModel = canUseSequelizeSqlite ? sqlite3.define('userState', {
 
 
 //////////////////////////////////////////////////////////////////////
-// initial data
-//////////////////////////////////////////////////////////////////////
-
-const MinorkeyMeansValues = [
-    { version: '1', key: 'r_1_1', val: 56.5925925925926 },
-    { version: '1', key: 'r_1_2', val: 59.8518518518519 },
-    { version: '1', key: 'r_1_3', val: 49.3333333333333 },
-    { version: '1', key: 'r_1_4', val: 51.5555555555556 },
-    { version: '1', key: 'r_1_5', val: 62.2962962962963 },
-    { version: '1', key: 'r_1_6', val: 40.5925925925926 },
-    { version: '1', key: 'r_1_7', val: 68.3703703703704 },
-    { version: '1', key: 'r_1_8', val: 63.8518518518519 },
-    { version: '1', key: 'r_1_9', val: 63.8518518518519 },
-    { version: '1', key: 'r_2_1', val: 67.5925925925926 },
-    { version: '1', key: 'r_2_2', val: 78.4814814814815 },
-    { version: '1', key: 'r_2_3', val: 74.3703703703704 },
-    { version: '1', key: 'r_2_4', val: 51.5555555555556 },
-    { version: '1', key: 'r_2_5', val: 75.3333333333333 },
-    { version: '1', key: 'r_2_6', val: 65.4074074074074 },
-    { version: '1', key: 'r_2_7', val: 76.5185185185185 },
-    { version: '1', key: 'r_2_8', val: 63.8518518518519 },
-    { version: '1', key: 'r_2_9', val: 77.2592592592593 },
-    { version: '1', key: 'r_3_1', val: 68 },
-    { version: '1', key: 'r_3_2', val: 59.9074074074074 },
-    { version: '1', key: 'r_3_3', val: 50.8148148148148 },
-    { version: '1', key: 'r_3_4', val: 43.1111111111111 },
-    { version: '1', key: 'r_3_5', val: 71.3333333333333 },
-    { version: '1', key: 'r_3_6', val: 65.5555555555556 },
-    { version: '1', key: 'r_3_7', val: 68.4444444444444 },
-    { version: '1', key: 'r_3_8', val: 52 },
-    { version: '1', key: 'r_4_1', val: 65.7037037037037 },
-    { version: '1', key: 'r_4_2', val: 52.8888888888889 },
-    { version: '1', key: 'r_4_3', val: 55.4074074074074 },
-    { version: '1', key: 'r_4_4', val: 43.4074074074074 },
-    { version: '1', key: 'r_4_5', val: 50.1481481481481 },
-    { version: '1', key: 'r_4_6', val: 65.4074074074074 },
-    { version: '1', key: 'r_4_7', val: 48.7407407407407 },
-    { version: '1', key: 'r_4_8', val: 70.0740740740741 },
-    { version: '1', key: 'r_5_1', val: 70.8148148148148 },
-    { version: '1', key: 'r_5_2', val: 55.037037037037 },
-    { version: '1', key: 'r_5_3', val: 55.7777777777778 },
-    { version: '1', key: 'r_5_4', val: 61.7037037037037 },
-    { version: '1', key: 'r_5_5', val: 55.037037037037 },
-    { version: '1', key: 'r_5_6', val: 72.8888888888889 },
-    { version: '1', key: 'r_5_7', val: 60.0740740740741 },
-    { version: '1', key: 'r_5_8', val: 69.8518518518519 },
-    { version: '1', key: 'r_5_9', val: 81.7037037037037 },
-    { version: '1', key: 'r_6_1', val: 56.5925925925926 },
-    { version: '1', key: 'r_6_2', val: 56.6666666666667 },
-    { version: '1', key: 'r_6_3', val: 49.9259259259259 },
-    { version: '1', key: 'r_6_4', val: 79.5555555555556 },
-    { version: '1', key: 'r_6_5', val: 63.3333333333333 },
-    { version: '1', key: 'r_6_6', val: 63.8518518518519 },
-    { version: '1', key: 'r_6_7', val: 77.2592592592593 },
-    { version: '1', key: 'r_6_8', val: 76.5185185185185 }
-];
-
-
-// module.exports = {
-// 	Sequelize, Op, sqlite3,
-// 	eldataModel,
-// 	elrawModel,
-// 	esmdataModel,
-// 	esmrawModel,
-// 	electricEnergyModel,
-// 	huerawModel,
-// 	arpModel,
 // 	owmModel,
 // 	netatmoModel,
 // 	switchBotRawModel,
@@ -1210,7 +1262,8 @@ const MinorkeyMeansValues = [
 
 
 //////////////////////////////////////////////////////////////////////
-// jmaRaw
+// 気象庁防災情報XML関連
+/** @type {Model} 気象庁防災情報XMLの生データログ */
 const jmaRawModel = canUseSequelizeSqlite ? sqlite3.define('jmaRawTable', {
     id: {
         type: Sequelize.INTEGER,
@@ -1239,8 +1292,7 @@ const jmaRawModel = canUseSequelizeSqlite ? sqlite3.define('jmaRawTable', {
 }) : makeStubModel('jmaRawTable');
 
 
-//////////////////////////////////////////////////////////////////////
-// jmaAbst
+/** @type {Model} 気象庁防災情報XMLの概況データ */
 const jmaAbstModel = canUseSequelizeSqlite ? sqlite3.define('jmaAbstTable', {
     id: {
         type: Sequelize.INTEGER,
@@ -1269,8 +1321,7 @@ const jmaAbstModel = canUseSequelizeSqlite ? sqlite3.define('jmaAbstTable', {
 }) : makeStubModel('jmaAbstTable');
 
 
-//////////////////////////////////////////////////////////////////////
-// weatherForecast
+/** @type {Model} 天気予報データ */
 const weatherForecastModel = canUseSequelizeSqlite ? sqlite3.define('weatherForecastTable', {
     id: {
         type: Sequelize.INTEGER,
@@ -1321,8 +1372,7 @@ const weatherForecastModel = canUseSequelizeSqlite ? sqlite3.define('weatherFore
 }) : makeStubModel('weatherForecastTable');
 
 
-//////////////////////////////////////////////////////////////////////
-// popsForecast
+/** @type {Model} 降水確率予報データ */
 const popsForecastModel = canUseSequelizeSqlite ? sqlite3.define('popsForecastTable', {
     id: {
         type: Sequelize.INTEGER,
@@ -1364,8 +1414,7 @@ const popsForecastModel = canUseSequelizeSqlite ? sqlite3.define('popsForecastTa
 }) : makeStubModel('popsForecastTable');
 
 
-//////////////////////////////////////////////////////////////////////
-// tempForecast
+/** @type {Model} 気温予報データ */
 const tempForecastModel = canUseSequelizeSqlite ? sqlite3.define('tempForecastTable', {
     id: {
         type: Sequelize.INTEGER,
@@ -1407,7 +1456,293 @@ const tempForecastModel = canUseSequelizeSqlite ? sqlite3.define('tempForecastTa
 }) : makeStubModel('tempForecastTable');
 
 
+//----------------------------------------------------------------------
+// Garmin 関連
+/** @type {Model} Garmin アクティビティログ */
+const IOT_GarminActivitiesModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminActivities', {
+    idIOT_GarminActivities: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    activityId: { type: Sequelize.STRING },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    activityType: { type: Sequelize.STRING },
+    averageHeartRateInBeatsPerMinute: { type: Sequelize.INTEGER },
+    averageRunCadenceInStepsPerMinute: { type: Sequelize.INTEGER },
+    averageSpeedInMetersPerSecond: { type: Sequelize.DOUBLE },
+    averagePaceInMinutesPerKilometer: { type: Sequelize.DOUBLE },
+    activeKilocalories: { type: Sequelize.INTEGER },
+    deviceName: { type: Sequelize.STRING },
+    distanceInMeters: { type: Sequelize.DOUBLE },
+    maxHeartRateInBeatsPerMinute: { type: Sequelize.INTEGER },
+    maxPaceInMinutesPerKilometer: { type: Sequelize.DOUBLE },
+    maxRunCadenceInStepsPerMinute: { type: Sequelize.INTEGER },
+    maxSpeedInMetersPerSecond: { type: Sequelize.DOUBLE },
+    steps: { type: Sequelize.INTEGER }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminActivities');
+
+/** @type {Model} Garmin アクティビティの詳細データ（ラップ情報等） */
+const IOT_GarminActivityDetailsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminActivityDetails', {
+    idIOT_GarminActivityDetails: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    activityId: { type: Sequelize.STRING },
+    summary: { type: Sequelize.TEXT },
+    samples: { type: Sequelize.TEXT },
+    laps: { type: Sequelize.TEXT }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminActivityDetails');
+
+/** @type {Model} Garmin 呼吸数（終日）データ */
+const IOT_GarminAllDayRespirationModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminAllDayRespiration', {
+    idIOT_GarminAllDayRespiration: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    activityId: { type: Sequelize.STRING },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    timeOffsetEpochToBreaths: { type: Sequelize.TEXT }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminAllDayRespiration');
+
+/** @type {Model} Garmin 体組成（筋肉量、骨量、体脂肪率等）データ */
+const IOT_GarminBodyCompsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminBodyComps', {
+    idIOT_GarminBodyComps: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    muscleMassInGrams: { type: Sequelize.INTEGER },
+    boneMassInGrams: { type: Sequelize.INTEGER },
+    bodyWaterInPercent: { type: Sequelize.DOUBLE },
+    bodyFatInPercent: { type: Sequelize.DOUBLE },
+    bodyMassIndex: { type: Sequelize.DOUBLE },
+    weightInGrams: { type: Sequelize.INTEGER },
+    measurementTimeInSeconds: { type: Sequelize.BIGINT },
+    measurementTimeOffsetInSeconds: { type: Sequelize.INTEGER }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminBodyComps');
+
+/** @type {Model} Garmin 日次活動記録（歩数、心拍、ストレス等） */
+const IOT_GarminDailiesModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminDailies', {
+    idIOT_GarminDailies: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    calendarDate: { type: Sequelize.STRING },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    activityType: { type: Sequelize.STRING },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    steps: { type: Sequelize.INTEGER },
+    distanceInMeters: { type: Sequelize.DOUBLE },
+    activeTimeInSeconds: { type: Sequelize.INTEGER },
+    activeKilocalories: { type: Sequelize.INTEGER },
+    bmrKilocalories: { type: Sequelize.INTEGER },
+    cunsumedCalories: { type: Sequelize.INTEGER },
+    moderateIntensityDurationInSeconds: { type: Sequelize.INTEGER },
+    vigorousIntensityDurationInSeconds: { type: Sequelize.INTEGER },
+    floorsClimbed: { type: Sequelize.INTEGER },
+    minHeartRateInBeatsPerMinute: { type: Sequelize.INTEGER },
+    averageHeartRateInBeatsPerMinute: { type: Sequelize.INTEGER },
+    maxHeartRateInBeatsPerMinute: { type: Sequelize.INTEGER },
+    restStressDurationInSeconds: { type: Sequelize.INTEGER },
+    timeOffsetHeartRateSamples: { type: Sequelize.TEXT },
+    averageStressLevel: { type: Sequelize.INTEGER },
+    maxStressLevel: { type: Sequelize.INTEGER },
+    stressDurationInSeconds: { type: Sequelize.INTEGER },
+    activityStressDurationInSeconds: { type: Sequelize.INTEGER },
+    lowStressDurationInSeconds: { type: Sequelize.INTEGER },
+    mediumStressDurationInSeconds: { type: Sequelize.INTEGER },
+    highStressDurationInSeconds: { type: Sequelize.INTEGER },
+    stressQualifier: { type: Sequelize.STRING },
+    stepsGoal: { type: Sequelize.INTEGER },
+    netKilocaloriesGoal: { type: Sequelize.INTEGER },
+    intensityDurationGoalInSeconds: { type: Sequelize.INTEGER },
+    floorsClimbedGoal: { type: Sequelize.INTEGER }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminDailies');
+
+/** @type {Model} Garmin 指定期間（エポック）の活動サマリーデータ */
+const IOT_GarminEpochsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminEpochs', {
+    idIOT_GarminEpochs: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    activityType: { type: Sequelize.STRING },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    activeTimeInSeconds: { type: Sequelize.INTEGER },
+    steps: { type: Sequelize.INTEGER },
+    distanceInMeters: { type: Sequelize.DOUBLE },
+    activeKilocalories: { type: Sequelize.INTEGER },
+    met: { type: Sequelize.DOUBLE },
+    intensity: { type: Sequelize.STRING },
+    meanMotionIntensity: { type: Sequelize.DOUBLE },
+    maxMotionIntensity: { type: Sequelize.DOUBLE }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminEpochs');
+
+/** @type {Model} Garmin Move IQ（自動検知アクティビティ）データ */
+const IOT_GarminMoveIQActivitiesModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminMoveIQActivities', {
+    idIOT_GarminMoveIQActivities: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    calendarDate: { type: Sequelize.STRING },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    offsetInSeconds: { type: Sequelize.INTEGER },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    activityType: { type: Sequelize.STRING },
+    activitySubType: { type: Sequelize.STRING }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminMoveIQActivities');
+
+/** @type {Model} Garmin パルスオキシメータ（血中酸素トラッキング）データ */
+const IOT_GarminPulseoxModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminPulseox', {
+    idIOT_GarminPulseox: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    calendarDate: { type: Sequelize.STRING },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    timeOffsetSpo2Values: { type: Sequelize.TEXT },
+    onDemand: { type: Sequelize.BOOLEAN }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminPulseox');
+
+/** @type {Model} Garmin 睡眠トラッキング（睡眠段階、スコア等）データ */
+const IOT_GarminSleepsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminSleeps', {
+    idIOT_GarminSleeps: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    calendarDate: { type: Sequelize.STRING },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    unmeasurableSleepInSeconds: { type: Sequelize.INTEGER },
+    deepSleepDurationInSeconds: { type: Sequelize.INTEGER },
+    lightSleepDurationInSeconds: { type: Sequelize.INTEGER },
+    remSleepInSeconds: { type: Sequelize.INTEGER },
+    awakeDurationInSeconds: { type: Sequelize.INTEGER },
+    sleepLevelsMap: { type: Sequelize.TEXT },
+    validation: { type: Sequelize.STRING },
+    timeOffsetSleepRespiration: { type: Sequelize.TEXT },
+    timeOffsetSleepSpo2: { type: Sequelize.TEXT },
+    overallSleepScore: { type: Sequelize.INTEGER }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminSleeps');
+
+/** @type {Model} Garmin ストレス詳細・Body Battery データ */
+const IOT_GarminStressDetailsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminStressDetails', {
+    idIOT_GarminStressDetails: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    calendarDate: { type: Sequelize.STRING },
+    timeOffsetStressLevelValues: { type: Sequelize.TEXT },
+    timeOffsetBodyBatteryValues: { type: Sequelize.TEXT }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminStressDetails');
+
+/** @type {Model} Garmin ユーザー指標（最大酸素摂取量、フィットネス年齢等） */
+const IOT_GarminUserMetricsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminUserMetrics', {
+    idIOT_GarminUserMetrics: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    calendarDate: { type: Sequelize.STRING },
+    vo2Max: { type: Sequelize.DOUBLE },
+    fitnessAge: { type: Sequelize.INTEGER }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminUserMetrics');
+
+
+/** データベースモデルを公開するオブジェクト */
 export default {
+    /** 
+     * @type {import('sequelize').Sequelize} Sequelize クラス本体
+     * @type {import('sequelize').Op} オペレーター (And, Or, Between 等)
+     * @type {import('sequelize').Sequelize} 接続済みの Sequelize インスタンス
+     */
     Sequelize, Op, sqlite3,
     eldataModel,
     elrawModel,
@@ -1433,5 +1768,18 @@ export default {
     jmaAbstModel,
     weatherForecastModel,
     popsForecastModel,
-    tempForecastModel
+    tempForecastModel,
+    weatherModel,
+    IOT_GarminActivitiesModel,
+    IOT_GarminActivityDetailsModel,
+    IOT_GarminAllDayRespirationModel,
+    IOT_GarminBodyCompsModel,
+    IOT_GarminDailiesModel,
+    IOT_GarminEpochsModel,
+    IOT_GarminMoveIQActivitiesModel,
+    IOT_GarminPulseoxModel,
+    IOT_GarminSleepsModel,
+    IOT_GarminStressDetailsModel,
+    IOT_GarminUserMetricsModel
 };
+
