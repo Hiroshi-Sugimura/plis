@@ -484,14 +484,18 @@ let mainAutoAssessment = {
 
 		mainAutoAssessment.observationJob = cron.schedule('0 0 9 * * *', async () => {  // 本番用の AM9:00
 			// mainAutoAssessment.observationJob = cron.schedule('*/1 * * * *', async () => {  // debug用の1分毎
-			logger.debug('mainAutoAssessment', config.debug, 'start().observationJob');
+			try {
+				logger.debug('mainAutoAssessment', config.debug, 'start().observationJob');
 
-			let today = getToday();
-			let yesterday = getYesterday();
+				let today = getToday();
+				let yesterday = getYesterday();
 
-			await mainAutoAssessment.assessment(today, yesterday);
-			// 点数付けたので画面更新
-			sendIPCMessage("HALRenewResponse", await mainHALlocal.getLastData());
+				await mainAutoAssessment.assessment(today, yesterday);
+				// 点数付けたので画面更新
+				sendIPCMessage("HALRenewResponse", await mainHALlocal.getLastData());
+			} catch (error) {
+				logger.error('mainAutoAssessment', 'observationJob error:', error);
+			}
 		});
 
 		mainAutoAssessment.observationJob.start();

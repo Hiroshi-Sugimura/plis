@@ -59,6 +59,17 @@ const isDevelopment = process.env.NODE_ENV == 'development'
 const databaseDir = path.join(userHome, appname);  // SQLite3ファイルの置き場
 
 
+//////////////////////////////////////////////////////////////////////
+// Global Error Handlers
+process.on('uncaughtException', (err) => {
+	logger.error('main', 'Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (reason, p) => {
+	logger.error('main', 'Unhandled Rejection at:', p, 'reason:', reason);
+});
+
+
 /** electronのmain window */
 let mainWindow = null;
 let tray = null;

@@ -102,8 +102,12 @@ let mainCalendar = {
 
 		// 日替わりでカレンダー更新
 		mainCalendar.observationTask = cron.schedule('0 0 * * *', async () => { // 毎日0時0分
-			logger.debug('mainCalendar', config.debug, 'start() observationTask');
-			sendIPCMessage('renewCalendar');
+			try {
+				logger.debug('mainCalendar', config.debug, 'start() observationTask');
+				sendIPCMessage('renewCalendar');
+			} catch (error) {
+				logger.error('mainCalendar', 'observationTask error:', error);
+			}
 		});
 
 		mainCalendar.observationTask.start();
