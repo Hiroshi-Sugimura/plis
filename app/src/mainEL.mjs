@@ -178,11 +178,12 @@ let mainEL = {
 	setConfig: async function (_config) {
 		logger.debug('mainEL', config.debug, `setConfig() _config:${_config}`);
 
+
 		if (_config) {
 			config = mergeDeeply(config, _config);
 		}
 		await store.set('config.EL', config);
-		mainSystem.setConfig(network);
+
 
 		sendIPCMessage("renewELConfigView", config);  // 保存したので画面に通知
 		sendIPCMessage("configSaved", 'EL');  // 保存したので画面に通知
