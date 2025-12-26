@@ -13,12 +13,12 @@
 window.addEventListener('DOMContentLoaded', function () {
 	console.dir('## DOMContentLoaded subNetatmo.js');
 
-		// Netatmo認証エラー通知（mainからIPCで受け取る）
-		if (window.ipc && window.ipc.on) {
-			window.ipc.on('NetatmoAuthError', function (msg) {
-				window.addToast('Error', 'Netatmo認証失敗: ' + (msg || '認証情報を確認してください。'));
-			});
-		}
+	// Netatmo認証エラー通知（mainからIPCで受け取る）
+	if (window.ipc && window.ipc.on) {
+		window.ipc.on('NetatmoAuthError', function (msg) {
+			window.addToast('Error', 'Netatmo認証失敗: ' + (msg || '認証情報を確認してください。'));
+		});
+	}
 
 	let facilitiesNetatmo; // 宅内情報（netatmo）
 
@@ -144,11 +144,11 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	window.renewNetatmoConfigView = function (arg) {
-	inNetatmoUse.checked = arg.enabled;
-	inNetatmoClientId.value = arg.clientId;
-	inNetatmoClientSecret.value = arg.clientSecret;
-	inNetatmoRefreshToken.value = arg.refreshToken;
-	selNetatmoDebugMode.value = arg.debug;
+		inNetatmoUse.checked = arg.enabled;
+		inNetatmoClientId.value = arg.clientId;
+		inNetatmoClientSecret.value = arg.clientSecret;
+		inNetatmoRefreshToken.value = arg.refreshToken;
+		selNetatmoDebugMode.value = arg.debug;
 
 		if (inNetatmoUse.checked) {  // Netatmo有効なので画面表示
 			H3Netatmo.style.display = 'block';
@@ -278,6 +278,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	// 複数軸用の、軸オプション
 	let complexChartOption = {
 		responsive: true,
+		spanGaps: true,
 		plugins: {
 			legend: {
 				display: true,
@@ -334,16 +335,18 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	let renewCanvasNetatmo = function () {
-		if (myChartNetatmo) { myChartNetatmo.destroy(); }  // chartがすでにctxを使っていると、リエントラントで"Canvas is already in use."のエラーが出る
-
-		myChartNetatmo = new Chart(ctxNetatmo, {
-			type: 'bar',
-			data: {
-				// labels: LABEL_X,
-				datasets: datasetsNetatmo
-			},
-			options: complexChartOption
-		});
+		if (myChartNetatmo) {
+			myChartNetatmo.data.datasets = datasetsNetatmo;
+			myChartNetatmo.update();
+		} else {
+			myChartNetatmo = new Chart(ctxNetatmo, {
+				type: 'line',
+				data: {
+					datasets: datasetsNetatmo
+				},
+				options: complexChartOption
+			});
+		}
 	};
 
 	/**
@@ -353,6 +356,10 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	window.renewRoomEnvNetatmo = function (_envDataArray) {
+		if (inNetatmoUse.checked == false) {
+			return;
+		}
+
 		let envDataArray = JSON.parse(_envDataArray);
 		// console.log( 'window.renewRoomEnvNetatmo()', _envDataArray );
 		datasetsNetatmo = [];
@@ -375,23 +382,23 @@ window.addEventListener('DOMContentLoaded', function () {
 			datasetsNetatmo.push(
 				{
 					label: '温度 [℃]', type: 'line', data: nTemperature, borderColor: "rgba(255,178,178,1.0)", backgroundColor: "rgba(255,178,178,1.0)",
-					radius: '1', borderWidth: 2, xAxisID: 'x', yAxisID: 'y-axis-left'
+					radius: 1.5, borderWidth: 2, xAxisID: 'x', yAxisID: 'y-axis-left'
 				},
 				{
 					label: '湿度 [%]', type: 'line', data: nHumidity, borderColor: "rgba(255,178,255,1.0)", backgroundColor: "rgba(255,178,255,1.0)",
-					radius: '1', borderWidth: 2, xAxisID: 'x', yAxisID: 'y-axis-left'
+					radius: 1.5, borderWidth: 2, xAxisID: 'x', yAxisID: 'y-axis-left'
 				},
 				{
 					label: '気圧 [mb]', type: 'line', data: nPressure, borderColor: "rgba(178,178,255,1.0)", backgroundColor: "rgba(178,178,255,1.0)",
-					radius: '1', borderWidth: 2, xAxisID: 'x', yAxisID: 'y-axis-right'
+					radius: 1.5, borderWidth: 2, xAxisID: 'x', yAxisID: 'y-axis-right'
 				},
 				{
 					label: 'CO2 [ppm]', type: 'line', data: nCO2, borderColor: "rgba(50,100,0,1.0)", backgroundColor: "rgba(50,100,0,1.0)",
-					radius: '1', borderWidth: 2, xAxisID: 'x', yAxisID: 'y-axis-right'
+					radius: 1.5, borderWidth: 2, xAxisID: 'x', yAxisID: 'y-axis-right'
 				},
 				{
 					label: '騒音 [dB]', type: 'line', data: nNoise, borderColor: "rgba(70,70,220,1.0)", backgroundColor: "rgba(70,70,220,1.0)",
-					radius: '1', borderWidth: 2, xAxisID: 'x', yAxisID: 'y-axis-left'
+					radius: 1.5, borderWidth: 2, xAxisID: 'x', yAxisID: 'y-axis-left'
 				}
 			);
 		}

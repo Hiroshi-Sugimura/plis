@@ -103,32 +103,36 @@ let mainCo2s = {
 
 		try {
 			co2s.start((sensorData, error) => {
-				if (error) {
-					// それ以外のエラーは良く知らないのでエラーとして出す
-					logger.error('mainCo2s', 'co2s.start() error:', error);
-					return;
-				}
+				try {
+					if (error) {
+						// それ以外のエラーは良く知らないのでエラーとして出す
+						logger.error('mainCo2s', 'co2s.start() error:', error);
+						return;
+					}
 
-				logger.debug('mainCo2s', config.debug, 'start() sensorData:', sensorData);
+					logger.debug('mainCo2s', config.debug, 'start() sensorData:', sensorData);
 
-				switch (sensorData.state) {
-					case 'OK':
-						break;
-					case 'connected':
-						persist.time = getNow();
-						persist.temperature = sensorData.TMP;
-						persist.humidity = sensorData.HUM;
-						persist.co2 = sensorData.CO2;
-						if (typeof sendIPCMessage === 'function') {
-							let now = Date.now();
-							if (now - lastSendTime > 1000) { // 1000ms limit
-								sendIPCMessage("renewCo2s", persist);
-								lastSendTime = now;
+					switch (sensorData.state) {
+						case 'OK':
+							break;
+						case 'connected':
+							persist.time = getNow();
+							persist.temperature = sensorData.TMP;
+							persist.humidity = sensorData.HUM;
+							persist.co2 = sensorData.CO2;
+							if (typeof sendIPCMessage === 'function') {
+								let now = Date.now();
+								if (now - lastSendTime > 1000) { // 1000ms limit
+									sendIPCMessage("renewCo2s", persist);
+									lastSendTime = now;
+								}
+							} else {
+								logger.warn('mainCo2s', config.debug, 'co2s.start() callback sendIPCMessage not initialized');
 							}
-						} else {
-							logger.warn('mainCo2s', config.debug, 'co2s.start() callback sendIPCMessage not initialized');
-						}
-						break;
+							break;
+					}
+				} catch (e) {
+					logger.error('mainCo2s', 'co2s.start() callback catch error:', e);
 				}
 			});
 		} catch (e) {
@@ -183,7 +187,7 @@ let mainCo2s = {
 
 		if (mainCo2s.observationJob) {
 			await mainCo2s.observationJob.stop();
-			mainArp.observationJob = null;
+			mainCo2s.observationJob = null;
 		}
 
 		await mainCo2s.setConfig(config);

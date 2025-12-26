@@ -16,6 +16,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	let facilitiesOmron; // 宅内情報（omron）
 	let H3Omron = document.getElementById('H3Omron');
 	let divOmronAbst = document.getElementById('divOmronAbst');
+	let divOmronChart = document.getElementById('divOmronChart');
 	let divOmronSuggest = document.getElementById('divOmronSuggest');
 
 	// config
@@ -167,11 +168,13 @@ window.addEventListener('DOMContentLoaded', function () {
 		if (inOmronUse.checked) { // 利用するので表示する
 			H3Omron.style.display = 'block';
 			divOmronAbst.style.display = 'block';
+			divOmronChart.style.display = 'block';
 			canRoomEnvChartOmron.style.display = 'block';
 			divOmronSuggest.style.display = 'none';
 		} else {
 			H3Omron.style.display = 'none';
 			divOmronAbst.style.display = 'none';
+			divOmronChart.style.display = 'none';
 			canRoomEnvChartOmron.style.display = 'none';
 			divOmronSuggest.style.display = 'block';
 		}
@@ -417,8 +420,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	let renewCanvasOmron = function () {
-		canRoomEnvChartOmron.style.display = 'block';
-
 		if (myChartOmron) {
 			// すでにチャートがあればアップデートだけ
 			myChartOmron.data.datasets = datasetsOmron;
@@ -445,6 +446,10 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	window.renewRoomEnvOmron = function (_envDataArray) {
+		if (inOmronUse.checked == false) {
+			return;
+		}
+
 		let envDataArray = JSON.parse(_envDataArray);
 		// console.log( 'window.renewRoomEnvOnron()', envDataArray );
 

@@ -124,7 +124,11 @@ let mainOmron = {
 
 			// 3秒毎にセンサの値チェック、画面表示は3秒毎にするが、DBへの記録は1分毎とする
 			mainOmron.observationJob = cron.schedule('*/3 * * * * *', () => {
-				omron.requestData();
+				try {
+					omron.requestData();
+				} catch (error) {
+					logger.error('mainOmron', 'omron.requestData() error:', error);
+				}
 			});
 			mainOmron.observationJob.start();
 		} catch (error) {
@@ -149,13 +153,12 @@ let mainOmron = {
 							place: config.place ? config.place : 'MyRoom',
 							temperature: n.temperature,
 							humidity: n.humidity,
-							anbientLight: n.anbient_light,
+							light: n.anbient_light, // anbientLight -> light
 							pressure: n.pressure,
 							noise: n.noise,
 							TVOC: n.etvoc,
-							CO2: n.eco2,
-							discomfortIndex: n.discomfort_index,
-							heatStroke: n.heat_stroke
+							CO2: n.eco2
+							// discomfortIndex, heatStroke はモデルに存在しないため削除
 						});
 					}
 				} else {

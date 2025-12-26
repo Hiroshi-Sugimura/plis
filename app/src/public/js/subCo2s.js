@@ -16,6 +16,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	let facilitiesCo2s; // 宅内情報（Co2s）
 	let H3Co2s = document.getElementById('H3Co2s');
 	let divCo2sAbst = document.getElementById('divCo2sAbst');
+	let divCo2sChart = document.getElementById('divCo2sChart');
 	let divCo2sSuggest = document.getElementById('divCo2sSuggest');
 
 	// config
@@ -140,11 +141,13 @@ window.addEventListener('DOMContentLoaded', function () {
 		if (inCo2sUse.checked) { // 利用するので表示する
 			H3Co2s.style.display = 'block';
 			divCo2sAbst.style.display = 'block';
+			divCo2sChart.style.display = 'block';
 			canRoomEnvChartCo2s.style.display = 'block';
 			divCo2sSuggest.style.display = 'none';
 		} else {
 			H3Co2s.style.display = 'none';
 			divCo2sAbst.style.display = 'none';
+			divCo2sChart.style.display = 'none';
 			canRoomEnvChartCo2s.style.display = 'none';
 			divCo2sSuggest.style.display = 'block';
 		}
@@ -297,8 +300,6 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	let renewCanvasCo2s = function () {
-		canRoomEnvChartCo2s.style.display = 'block';
-
 		if (myChartCo2s) {
 			// すでにチャートがあればアップデートだけ
 			myChartCo2s.data.datasets = datasetsCo2s;
@@ -325,6 +326,10 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	window.renewRoomEnvCo2s = function (_envDataArray) {
+		if (inCo2sUse.checked == false) {
+			return;
+		}
+
 		let envDataArray = JSON.parse(_envDataArray);
 		// console.log( 'window.renewRoomEnvOnron()', envDataArray );
 
