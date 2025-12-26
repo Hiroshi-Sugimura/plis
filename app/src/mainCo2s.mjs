@@ -17,6 +17,7 @@ import cron from 'node-cron';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, Op, roomEnvModel } = localDB;
 import { objectSort, getNow, formatDate, getTodayDate, getYesterdayDate, getToday, isObjEmpty, mergeDeeply, getCases } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
 
 
 
