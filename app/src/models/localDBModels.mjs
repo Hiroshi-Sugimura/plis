@@ -164,6 +164,30 @@ const elrawModel = canUseSequelizeSqlite ? sqlite3.define('elraw', {
     },
     detail: {
         type: Sequelize.STRING
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -200,6 +224,30 @@ const esmdataModel = canUseSequelizeSqlite ? sqlite3.define('esmdata', {
     },
     edt: {
         type: Sequelize.STRING
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -236,6 +284,30 @@ const esmrawModel = canUseSequelizeSqlite ? sqlite3.define('esmraw', {
     },
     detail: {
         type: Sequelize.STRING
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -308,6 +380,30 @@ const huerawModel = canUseSequelizeSqlite ? sqlite3.define('huerawModel', {
     },
     rawdata: {
         type: Sequelize.STRING
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -327,6 +423,30 @@ const arpModel = canUseSequelizeSqlite ? sqlite3.define('arpTable', {
     },
     detail: {
         type: Sequelize.STRING
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -345,6 +465,30 @@ const owmModel = canUseSequelizeSqlite ? sqlite3.define('owmTable', {
     },
     detail: {
         type: Sequelize.STRING
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -388,6 +532,30 @@ const weatherModel = canUseSequelizeSqlite ? sqlite3.define('weatherTable', {
     },
     cloudCover: {
         type: Sequelize.DOUBLE
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -409,6 +577,30 @@ const netatmoModel = canUseSequelizeSqlite ? sqlite3.define('netatmoTable', {
     },
     detail: {
         type: Sequelize.STRING
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -428,6 +620,30 @@ const switchBotRawModel = canUseSequelizeSqlite ? sqlite3.define('switchBotRawTa
     },
     detail: {
         type: Sequelize.TEXT
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -458,6 +674,30 @@ const switchBotDataModel = canUseSequelizeSqlite ? sqlite3.define('switchBotData
     },
     value: {
         type: Sequelize.TEXT
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -479,14 +719,28 @@ const ikeaRawModel = canUseSequelizeSqlite ? sqlite3.define('ikeaRawTable', {
         type: Sequelize.TEXT
     },
     createdAt: {
-        type: 'TIMESTAMP',
+        type: Sequelize.STRING,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
     },
     updatedAt: {
-        type: 'TIMESTAMP',
+        type: Sequelize.STRING,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -525,14 +779,28 @@ const ikeaDataModel = canUseSequelizeSqlite ? sqlite3.define('ikeaDataTable', {
         type: Sequelize.TEXT
     },
     createdAt: {
-        type: 'TIMESTAMP',
+        type: Sequelize.STRING,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
     },
     updatedAt: {
-        type: 'TIMESTAMP',
+        type: Sequelize.STRING,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -788,6 +1056,30 @@ const IOT_QuestionnaireAnswersModel = canUseSequelizeSqlite ? sqlite3.define('IO
     },
     q_6_15: {
         type: Sequelize.INTEGER
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -857,6 +1149,30 @@ const IOT_MajorResultsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MajorR
     },
     comments: {
         type: Sequelize.TEXT,
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -1028,6 +1344,30 @@ const IOT_MinorResultsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MinorR
     },
     r_6_8: {
         type: Sequelize.DOUBLE
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -1142,9 +1482,16 @@ const roomEnvModel = canUseSequelizeSqlite ? sqlite3.define('roomEnv', {
     },
     dateTime: {
         // type: Sequelize.DATE,
-        type: 'TIMESTAMP',
+        type: Sequelize.STRING,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('dateTime', val.toISOString());
+            } else {
+                this.setDataValue('dateTime', val);
+            }
+        }
     },
     srcType: {  // netatmo, omron, and so on.
         type: Sequelize.STRING(32),
@@ -1201,6 +1548,30 @@ const roomEnvModel = canUseSequelizeSqlite ? sqlite3.define('roomEnv', {
     },
     image: {
         type: Sequelize.TEXT
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -1218,9 +1589,16 @@ const userStateModel = canUseSequelizeSqlite ? sqlite3.define('userState', {
     },
     dateTime: {
         // type: Sequelize.DATE,
-        type: 'TIMESTAMP',
+        type: Sequelize.STRING,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('dateTime', val.toISOString());
+            } else {
+                this.setDataValue('dateTime', val);
+            }
+        }
     },
     srcType: {  // garmin, fitbit, apple watch, ...
         type: Sequelize.STRING(32),
@@ -1246,6 +1624,30 @@ const userStateModel = canUseSequelizeSqlite ? sqlite3.define('userState', {
     },
     bodyBattery: { // Body Battery (garmin)
         type: Sequelize.INTEGER
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -1294,6 +1696,30 @@ const jmaRawModel = canUseSequelizeSqlite ? sqlite3.define('jmaRawTable', {
     },
     json: {
         type: Sequelize.TEXT
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -1323,6 +1749,30 @@ const jmaAbstModel = canUseSequelizeSqlite ? sqlite3.define('jmaAbstTable', {
     },
     text: {
         type: Sequelize.TEXT
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -1366,14 +1816,28 @@ const weatherForecastModel = canUseSequelizeSqlite ? sqlite3.define('weatherFore
         type: Sequelize.TEXT
     },
     createdAt: {
-        type: 'TIMESTAMP',
+        type: Sequelize.STRING,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
     },
     updatedAt: {
-        type: 'TIMESTAMP',
+        type: Sequelize.STRING,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -1408,14 +1872,28 @@ const popsForecastModel = canUseSequelizeSqlite ? sqlite3.define('popsForecastTa
         type: Sequelize.TEXT
     },
     createdAt: {
-        type: 'TIMESTAMP',
+        type: Sequelize.STRING,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
     },
     updatedAt: {
-        type: 'TIMESTAMP',
+        type: Sequelize.STRING,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -1450,14 +1928,28 @@ const tempForecastModel = canUseSequelizeSqlite ? sqlite3.define('tempForecastTa
         type: Sequelize.TEXT
     },
     createdAt: {
-        type: 'TIMESTAMP',
+        type: Sequelize.STRING,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
     },
     updatedAt: {
-        type: 'TIMESTAMP',
+        type: Sequelize.STRING,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-        allowNull: false
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
     }
 }, {
     freezeTableName: true,
@@ -1512,7 +2004,31 @@ const IOT_GarminActivityDetailsModel = canUseSequelizeSqlite ? sqlite3.define('I
     activityId: { type: Sequelize.STRING },
     summary: { type: Sequelize.TEXT },
     samples: { type: Sequelize.TEXT },
-    laps: { type: Sequelize.TEXT }
+    laps: { type: Sequelize.TEXT },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
 }, {
     freezeTableName: true,
     timestamps: true
@@ -1532,7 +2048,31 @@ const IOT_GarminAllDayRespirationModel = canUseSequelizeSqlite ? sqlite3.define(
     durationInSeconds: { type: Sequelize.INTEGER },
     startTimeInSeconds: { type: Sequelize.BIGINT },
     startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
-    timeOffsetEpochToBreaths: { type: Sequelize.TEXT }
+    timeOffsetEpochToBreaths: { type: Sequelize.TEXT },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
 }, {
     freezeTableName: true,
     timestamps: true
@@ -1555,7 +2095,31 @@ const IOT_GarminBodyCompsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_Gar
     bodyMassIndex: { type: Sequelize.DOUBLE },
     weightInGrams: { type: Sequelize.INTEGER },
     measurementTimeInSeconds: { type: Sequelize.BIGINT },
-    measurementTimeOffsetInSeconds: { type: Sequelize.INTEGER }
+    measurementTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
 }, {
     freezeTableName: true,
     timestamps: true
@@ -1601,7 +2165,31 @@ const IOT_GarminDailiesModel = canUseSequelizeSqlite ? sqlite3.define('IOT_Garmi
     stepsGoal: { type: Sequelize.INTEGER },
     netKilocaloriesGoal: { type: Sequelize.INTEGER },
     intensityDurationGoalInSeconds: { type: Sequelize.INTEGER },
-    floorsClimbedGoal: { type: Sequelize.INTEGER }
+    floorsClimbedGoal: { type: Sequelize.INTEGER },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
 }, {
     freezeTableName: true,
     timestamps: true
@@ -1628,7 +2216,31 @@ const IOT_GarminEpochsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_Garmin
     met: { type: Sequelize.DOUBLE },
     intensity: { type: Sequelize.STRING },
     meanMotionIntensity: { type: Sequelize.DOUBLE },
-    maxMotionIntensity: { type: Sequelize.DOUBLE }
+    maxMotionIntensity: { type: Sequelize.DOUBLE },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
 }, {
     freezeTableName: true,
     timestamps: true
@@ -1649,7 +2261,31 @@ const IOT_GarminMoveIQActivitiesModel = canUseSequelizeSqlite ? sqlite3.define('
     offsetInSeconds: { type: Sequelize.INTEGER },
     durationInSeconds: { type: Sequelize.INTEGER },
     activityType: { type: Sequelize.STRING },
-    activitySubType: { type: Sequelize.STRING }
+    activitySubType: { type: Sequelize.STRING },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
 }, {
     freezeTableName: true,
     timestamps: true
@@ -1670,7 +2306,31 @@ const IOT_GarminPulseoxModel = canUseSequelizeSqlite ? sqlite3.define('IOT_Garmi
     durationInSeconds: { type: Sequelize.INTEGER },
     startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
     timeOffsetSpo2Values: { type: Sequelize.TEXT },
-    onDemand: { type: Sequelize.BOOLEAN }
+    onDemand: { type: Sequelize.BOOLEAN },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
 }, {
     freezeTableName: true,
     timestamps: true
@@ -1699,7 +2359,31 @@ const IOT_GarminSleepsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_Garmin
     validation: { type: Sequelize.STRING },
     timeOffsetSleepRespiration: { type: Sequelize.TEXT },
     timeOffsetSleepSpo2: { type: Sequelize.TEXT },
-    overallSleepScore: { type: Sequelize.INTEGER }
+    overallSleepScore: { type: Sequelize.INTEGER },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
 }, {
     freezeTableName: true,
     timestamps: true
@@ -1720,7 +2404,31 @@ const IOT_GarminStressDetailsModel = canUseSequelizeSqlite ? sqlite3.define('IOT
     durationInSeconds: { type: Sequelize.INTEGER },
     calendarDate: { type: Sequelize.STRING },
     timeOffsetStressLevelValues: { type: Sequelize.TEXT },
-    timeOffsetBodyBatteryValues: { type: Sequelize.TEXT }
+    timeOffsetBodyBatteryValues: { type: Sequelize.TEXT },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
 }, {
     freezeTableName: true,
     timestamps: true
@@ -1738,7 +2446,31 @@ const IOT_GarminUserMetricsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_G
     summaryId: { type: Sequelize.STRING },
     calendarDate: { type: Sequelize.STRING },
     vo2Max: { type: Sequelize.DOUBLE },
-    fitnessAge: { type: Sequelize.INTEGER }
+    fitnessAge: { type: Sequelize.INTEGER },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
 }, {
     freezeTableName: true,
     timestamps: true
