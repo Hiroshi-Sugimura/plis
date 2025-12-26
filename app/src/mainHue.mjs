@@ -269,7 +269,11 @@ let mainHue = {
 			try {
 				await Hue.getState();
 			} catch (e) {
-				logger.error('mainHue', 'task cron error:', e);
+				if (e.code === 'ETIMEDOUT' || e.code === 'EHOSTUNREACH') {
+					logger.error('mainHue', `task cron Connection Error: ${e.code}`);
+				} else {
+					logger.error('mainHue', 'task cron error:', e);
+				}
 				// ブリッジ未解決時はこれ以上リトライせず停止する
 				if (e?.code === 'ENOTFOUND' || e?.hostname === 'undefined') {
 					mainHue.stopObserve();

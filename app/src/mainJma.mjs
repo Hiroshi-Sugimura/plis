@@ -240,14 +240,22 @@ let mainJma = {
 			const abstRes = await axios.get(mainJma.abstURL + config.code + ".json");
 			mainJma.callback({ cmd: "abst", json: abstRes.data });
 		} catch (error) {
-			logger.error('mainJma', 'gets() abst error:', error);
+			if (error.code === 'ETIMEDOUT' || error.code === 'EHOSTUNREACH' || (error.message && error.message.includes('AggregateError'))) {
+				logger.error('mainJma', `gets() abst Connection Error: ${error.code || error.message.split('\n')[0]}`);
+			} else {
+				logger.error('mainJma', 'gets() abst error:', error);
+			}
 		}
 
 		try {
 			const detailRes = await axios.get(mainJma.detailURL + config.code + ".json");
 			mainJma.callback({ cmd: "detail", json: detailRes.data });
 		} catch (error) {
-			logger.error('mainJma', 'gets() detail error:', error);
+			if (error.code === 'ETIMEDOUT' || error.code === 'EHOSTUNREACH' || (error.message && error.message.includes('AggregateError'))) {
+				logger.error('mainJma', `gets() detail Connection Error: ${error.code || error.message.split('\n')[0]}`);
+			} else {
+				logger.error('mainJma', 'gets() detail error:', error);
+			}
 		}
 	},
 

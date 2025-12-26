@@ -288,7 +288,9 @@ let mainHALsync = {
 						means: val
 					});
 				}
-				console.log('Inserted ' + Object.keys(mdata.data).length + ' records in the MinorkeyMeans teble.');
+				if (Object.keys(mdata.data).length > 0 && config.debug) {
+					logger.debug('mainHALsync', 'Inserted ' + Object.keys(mdata.data).length + ' records in the MinorkeyMeans teble.');
+				}
 			}
 			*/
 			mainHALsync.garminDownload();

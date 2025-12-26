@@ -63,6 +63,7 @@ let mainOmron = {
 	observationJob: null,
 	/** @type {cron.ScheduledTask|null} */
 	storeJob: null,
+	lastError: null, // 前回のエラーを保持して連続ログ出力を抑制
 
 	//////////////////////////////////////////////////////////////////////
 	//
@@ -125,12 +126,17 @@ let mainOmron = {
 				sendIPCMessage("renewOmron", persist);
 			}, { debug: config.debug });
 
-			// 3秒毎にセンサの値チェック、画面表示は3秒毎にするが、DBへの記録は1分毎とする
-			mainOmron.observationJob = cron.schedule('*/3 * * * * *', () => {
+			// 10秒毎にセンサの値チェック
+			mainOmron.observationJob = cron.schedule('*/10 * * * * *', () => {
 				try {
 					omron.requestData();
 				} catch (error) {
-					logger.error('mainOmron', 'omron.requestData() error:', error);
+					if (mainOmron.lastError !== error.toString()) {
+						logger.error('mainOmron', 'omron.requestData() error:', error);
+						mainOmron.lastError = error.toString();
+					} else {
+						logger.debug('mainOmron', config.debug, 'omron.requestData() error (suppressed):', error);
+					}
 				}
 			});
 			mainOmron.observationJob.start();

@@ -158,7 +158,11 @@ let mainOwm = {
 				mainOwm.callback(body);
 			});
 		}).on('error', function (error) {
-			logger.error('mainOwm', 'startCore() http.get error:', error);
+			if (error.code === 'ETIMEDOUT' || error.code === 'EHOSTUNREACH') {
+				logger.error('mainOwm', `startCore() Connection Error: ${error.code}`);
+			} else {
+				logger.error('mainOwm', 'startCore() http.get error:', error);
+			}
 		});
 
 	},
@@ -202,7 +206,11 @@ let mainOwm = {
 						}
 					});
 				}).on('error', function (error) {
-					logger.error('mainOwm', 'observationJob.schedule() http.get error:', error);
+					if (error.code === 'ETIMEDOUT' || error.code === 'EHOSTUNREACH') {
+						logger.error('mainOwm', `observationJob.schedule() Connection Error: ${error.code}`);
+					} else {
+						logger.error('mainOwm', 'observationJob.schedule() http.get error:', error);
+					}
 				});
 			} catch (cronError) {
 				logger.error('mainOwm', 'observationJob.schedule() error:', cronError);

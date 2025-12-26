@@ -413,7 +413,7 @@ let mainESM = {
 				logger.debug('mainESM', config.debug, 'received() els is NO Data');
 			}
 		} catch (e) {
-			console.error(e);
+			logger.error('mainESM', 'received() error:', e);
 		}
 	},
 

@@ -308,7 +308,11 @@ let mainSwitchBot = {
 				sendIPCMessage('Error', { datetime: formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), moduleName: 'mainSwitchBot.renewFacilities()', stackLog: `Http 401 Error. User permission is denied due to invalid token.\n${error}` });
 			}
 
-			logger.error('mainSwitchBot', 'renewFacilities() error:', error);
+			if (error.code === 'ETIMEDOUT' || error.code === 'EHOSTUNREACH' || (error.message && error.message.includes('AggregateError'))) {
+				logger.error('mainSwitchBot', `renewFacilities Connection Error: ${error.code || error.message.split('\n')[0]}`);
+			} else {
+				logger.error('mainSwitchBot', 'renewFacilities() error:', error);
+			}
 			throw error;
 		}
 	},
