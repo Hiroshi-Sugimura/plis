@@ -697,7 +697,7 @@ let mainEL = {
 				if (exclude.some(prefix => name.startsWith(prefix))) continue;
 				for (const addr of addrs) {
 					if (addr && addr.family === 'IPv6' && addr.internal === false) {
-						return addr.address;
+						return '%' + name;
 					}
 				}
 			}
