@@ -228,6 +228,12 @@ let mainEL = {
 			return;
 		}
 
+		// Debugging: Log AC packets
+		if (els.SEOJ.startsWith('0130')) {
+			logger.info('mainEL', 'AC Packet Received:', rinfo.address, 'ESV:', els.ESV, 'EPCs:', Object.keys(els.DETAILs));
+			logger.info('mainEL', 'AC Details:', JSON.stringify(els.DETAILs));
+		}
+
 		// EL controller
 		if (els.DEOJ.substr(0, 4) == '05ff') {
 			// ESVで振り分け，主に0x60系列に対応すればいい
@@ -509,15 +515,24 @@ let mainEL = {
 		}
 
 		// (4) ECHONET Lite socket 生成
-		mainEL.elsocket = EL.initialize(mainEL.objList, mainEL.received, network.IPver,
-			{
-				v4: network.IPv4 == 'auto' ? '' : network.IPv4,
-				v6: network.IPv6 == 'auto' ? v6addr : network.IPv6,
-				ignoreMe: true,
-				autoGetProperties: true,
-				autoGetDelay: 1000,
-				debugMode: false
-			});
+
+		logger.info('mainEL', `EL.initialize params: v4=${network.IPv4 == 'auto' ? '' : network.IPv4}, v6=${(network.IPv6 == 'auto' || network.IPv6 == '') ? v6addr : network.IPv6}, v6addr=${v6addr}`);
+
+
+
+		try {
+			mainEL.elsocket = EL.initialize(mainEL.objList, mainEL.received, network.IPver,
+				{
+					v4: network.IPv4 == 'auto' ? '' : network.IPv4,
+					v6: (network.IPv6 == 'auto' || network.IPv6 == '') ? v6addr : network.IPv6,
+					ignoreMe: true,
+					autoGetProperties: true,
+					autoGetDelay: 1000,
+					debugMode: false
+				});
+		} catch (e) {
+			logger.error('mainEL', 'EL.initialize() error:', e);
+		}
 
 
 		// (5a) 未取得EPC補完 + 定期観測（3分毎）
@@ -557,6 +572,18 @@ let mainEL = {
 	updateFacilities: function () {
 		// 変化通知: parsed 再生成し Renderer へ push
 		persist.facilities = objectSort(EL.facilities);
+
+		// Debugging: Log facilities content
+		try {
+			for (let ip in EL.facilities) {
+				for (let seoj in EL.facilities[ip]) {
+					logger.info('mainEL', 'Facility:', ip, 'SEOJ:', seoj, 'EPCs:', Object.keys(EL.facilities[ip][seoj]));
+				}
+			}
+		} catch (e) {
+			logger.error('mainEL', 'Log error', e);
+		}
+
 		ELconv.refer(persist.facilities, function (devs) {
 			persist.parsed = objectSort(devs);
 			if (!isObjEmpty(persist.parsed)) {
@@ -697,7 +724,7 @@ let mainEL = {
 				if (exclude.some(prefix => name.startsWith(prefix))) continue;
 				for (const addr of addrs) {
 					if (addr && addr.family === 'IPv6' && addr.internal === false) {
-						return '%' + name;
+						return name;
 					}
 				}
 			}
@@ -733,6 +760,21 @@ let mainEL = {
 	 */
 	sleep: function (ms) {
 		return new Promise(resolve => setTimeout(resolve, ms));
+	},
+
+	/**
+	 * 指定アドレスがローカル（自分自身）かどうか判定する。
+	 * IPv6 スコープID (%en0等) は無視して比較する。
+	 * @param {string} addr 判定対象IPアドレス
+	 * @returns {boolean} true:自分自身, false:他人
+	 */
+	isLocalAddress: function (addr) {
+		if (!addr || !mainEL.localaddresses) return false;
+		let target = addr.split('%')[0];
+		for (let local of mainEL.localaddresses) {
+			if (local.split('%')[0] == target) return true;
+		}
+		return false;
 	},
 
 	/**

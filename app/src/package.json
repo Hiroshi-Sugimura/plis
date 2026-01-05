@@ -10,7 +10,7 @@
     "@network-utils/arp-lookup": "^2.1.0",
     "about-window": "^1.15.2",
     "e-smartmeter-echonet-lite": "^2.8.0",
-    "echonet-lite": "^2.17.7",
+    "echonet-lite": "2.17.7",
     "echonet-lite-conv": "^1.8.1",
     "electron-squirrel-startup": "^1.0.1",
     "electron-store": "^11.0.2",
