@@ -228,12 +228,6 @@ let mainEL = {
 			return;
 		}
 
-		// Debugging: Log AC packets
-		if (els.SEOJ.startsWith('0130')) {
-			logger.info('mainEL', 'AC Packet Received:', rinfo.address, 'ESV:', els.ESV, 'EPCs:', Object.keys(els.DETAILs));
-			logger.info('mainEL', 'AC Details:', JSON.stringify(els.DETAILs));
-		}
-
 		// EL controller
 		if (els.DEOJ.substr(0, 4) == '05ff') {
 			// ESVで振り分け，主に0x60系列に対応すればいい
@@ -572,17 +566,6 @@ let mainEL = {
 	updateFacilities: function () {
 		// 変化通知: parsed 再生成し Renderer へ push
 		persist.facilities = objectSort(EL.facilities);
-
-		// Debugging: Log facilities content
-		try {
-			for (let ip in EL.facilities) {
-				for (let seoj in EL.facilities[ip]) {
-					logger.info('mainEL', 'Facility:', ip, 'SEOJ:', seoj, 'EPCs:', Object.keys(EL.facilities[ip][seoj]));
-				}
-			}
-		} catch (e) {
-			logger.error('mainEL', 'Log error', e);
-		}
 
 		ELconv.refer(persist.facilities, function (devs) {
 			persist.parsed = objectSort(devs);

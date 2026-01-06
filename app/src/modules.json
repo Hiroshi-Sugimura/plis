@@ -161,7 +161,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron/asar",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron/asar/LICENSE.md"
   },
-  "@electron/fuses@1.8.0": {
+  "@electron/fuses@2.0.0": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/fuses",
     "publisher": "Electron Community",
@@ -1639,7 +1639,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/electron-winstaller",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron-winstaller/LICENSE"
   },
-  "electron@39.2.6": {
+  "electron@39.2.7": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/electron",
     "publisher": "Electron Community",
@@ -3075,7 +3075,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/normalize-url",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/normalize-url/license"
   },
-  "npm-check-updates@19.2.0": {
+  "npm-check-updates@19.3.1": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/raineorshine/npm-check-updates",
     "publisher": "Tomas Junnonen",
