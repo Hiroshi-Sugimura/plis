@@ -2,7 +2,7 @@
   "name": "plis",
   "productName": "PLIS",
   "memo": "publish時にはappx/appxmanifest.xmlのバージョンも変更すること",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Platform for Life Improvement and Support",
   "type": "module",
   "main": "src/main.mjs",
