@@ -55,6 +55,7 @@ let mainNetatmo = {
 	data: {},
 	debug: false,
 	isRun: false,
+	lastStoredTime: 0,
 
 	//////////////////////////////////////////////////////////////////////
 	/**
@@ -125,12 +126,12 @@ let mainNetatmo = {
 			await mainNetatmo.fetchStationsData();
 			// 初回も直ちに1レコード保存してUXを向上
 			try {
-				let dt = new Date();
 				if (config.enabled && !isObjEmpty(persist) && persist.length) {
 					let n = persist[0];
-					if (n && n.dashboard_data) {
+					if (n && n.dashboard_data && n.dashboard_data.time_utc !== mainNetatmo.lastStoredTime) {
+						let dt_sensor = new Date(n.dashboard_data.time_utc * 1000);
 						await roomEnvModel.create({
-							dateTime: dt,
+							dateTime: dt_sensor,
 							srcType: 'netatmo',
 							place: n.home_name,
 							temperature: n.dashboard_data.Temperature,
@@ -139,6 +140,7 @@ let mainNetatmo = {
 							noise: n.dashboard_data.Noise,
 							CO2: n.dashboard_data.CO2
 						});
+						mainNetatmo.lastStoredTime = n.dashboard_data.time_utc;
 					}
 				}
 			} catch (e) {
@@ -255,7 +257,7 @@ let mainNetatmo = {
 				headers: {
 					Authorization: `Bearer ${mainNetatmo.accessToken}`
 				},
-				timeout: 10000
+				timeout: 30000
 			});
 			persist = res.data.body.devices;
 			sendIPCMessage("renewNetatmo", persist);
@@ -484,12 +486,12 @@ let mainNetatmo = {
 				}
 				await mainNetatmo.fetchStationsData();
 
-				let dt = new Date();
 				if (config.enabled && !isObjEmpty(persist)) {
 					let n = persist[0];
-					if (n) {
+					if (n && n.dashboard_data && n.dashboard_data.time_utc !== mainNetatmo.lastStoredTime) {
+						let dt_sensor = new Date(n.dashboard_data.time_utc * 1000);
 						await roomEnvModel.create({
-							dateTime: dt,
+							dateTime: dt_sensor,
 							srcType: 'netatmo',
 							place: n.home_name,
 							temperature: n.dashboard_data.Temperature,
@@ -498,6 +500,7 @@ let mainNetatmo = {
 							noise: n.dashboard_data.Noise,
 							CO2: n.dashboard_data.CO2
 						});
+						mainNetatmo.lastStoredTime = n.dashboard_data.time_utc;
 					}
 				}
 				mainNetatmo.sendTodayRoomEnv();

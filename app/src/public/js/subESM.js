@@ -228,29 +228,27 @@ window.addEventListener('DOMContentLoaded', function () {
 	let oinstantaneousCurrentsT = [];
 	let oinstantaneousPower = [];
 
-	/*
-	const LABEL_X = [
-		'00:00', '00:15', '00:30', '00:45', '01:00', '01:15', '01:30', '01:45', '02:00', '02:15', '02:30', '02:45',
-		'03:00', '03:15', '03:30', '03:45', '04:00', '04:15', '04:30', '04:45', '05:00', '05:15', '05:30', '05:45',
-		'06:00', '06:15', '06:30', '06:45', '07:00', '07:15', '07:30', '07:45', '08:00', '08:15', '08:30', '08:45',
-		'09:00', '09:15', '09:30', '09:45', '10:00', '10:15', '10:30', '10:45', '11:00', '11:15', '11:30', '11:45',
-		'12:00', '12:15', '12:30', '12:45', '13:00', '13:15', '13:30', '13:45', '14:00', '14:15', '14:30', '14:45',
-		'15:00', '15:15', '15:30', '15:45', '16:00', '16:15', '16:30', '16:45', '17:00', '17:15', '17:30', '17:45',
-		'18:00', '18:15', '18:30', '18:45', '19:00', '19:15', '19:30', '19:45', '20:00', '20:15', '20:30', '20:45',
-		'21:00', '21:15', '21:30', '21:45', '22:00', '22:15', '22:30', '22:45', '23:00', '23:15', '23:30', '23:45', '24:00']; */
-
 	// HTML内部とリンク
 	const canEnergyChart = document.getElementById('canEnergyChart'); // エネルギーチャート
 	const ctxESM = canEnergyChart.getContext('2d');
 	let myChartESM = null;
 
+	// 30分刻みの固定ラベル
+	const LABEL_X_30 = [
+		'00:00', '00:30', '01:00', '01:30', '02:00', '02:30', '03:00', '03:30', '04:00', '04:30', '05:00', '05:30',
+		'06:00', '06:30', '07:00', '07:30', '08:00', '08:30', '09:00', '09:30', '10:00', '10:30', '11:00', '11:30',
+		'12:00', '12:30', '13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30',
+		'18:00', '18:30', '19:00', '19:30', '20:00', '20:30', '21:00', '21:30', '22:00', '22:30', '23:00', '23:30', '24:00'];
+
 	// 複数軸用の、軸オプション
 	let complexChartOption = {
 		responsive: true,
+		spanGaps: true,
 		plugins: {
 			legend: {
 				display: true,
-				position: 'top'
+				position: 'top',
+				onClick: newLegendClickHandler
 			},
 			autocolors: false,
 			annotation: {
@@ -310,13 +308,16 @@ window.addEventListener('DOMContentLoaded', function () {
 					displayFormats: {
 						minute: 'HH:mm',
 						hour: 'HH:mm'
-					}
+					},
+					stepSize: 30
 				},
+				labels: LABEL_X_30,
 				min: '00:00',
 				max: '24:00',
 				ticks: {
-					autoSkip: false,
-					maxTicksLimit: 49,   // 24h * 2 + 1
+					autoSkip: true,
+					source: 'labels',
+					minRotation: 90,
 					maxRotation: 90,
 					callback: function (value, index, ticks) {
 						return moment.tz(value, 'Asia/Tokyo').format('HH:mm');
@@ -387,9 +388,6 @@ window.addEventListener('DOMContentLoaded', function () {
 				oinstantaneousCurrentsR.push({ x: moment(d.time), y: d.instantaneousCurrentsR });
 				oinstantaneousCurrentsT.push({ x: moment(d.time), y: d.instantaneousCurrentsT });
 				oinstantaneousPower.push({ x: moment(d.time), y: d.instantaneousPower });
-				// 定時は表示しない
-				// ocommulativeAmountsFixedTimeNormalPower.push( { x:moment(d.time), y:d.commulativeAmountsFixedTimeNormalPower} );
-				// ocommulativeAmountsFixedTimeRiversePower.push( { x:moment(d.time), y:d.commulativeAmountsFixedTimeRiversePower} );
 			}
 
 			datasetsESM.push(
@@ -413,11 +411,6 @@ window.addEventListener('DOMContentLoaded', function () {
 					label: '積算電力量逆方向 [kWh]', type: 'line', data: ocommulativeAmountReverse, borderColor: "rgba(178,178,255,1.0)", backgroundColor: "rgba(178,178,255,1.0)",
 					radius: 1.5, borderWidth: 1, yAxisID: 'y-axis-left-kwh', borderDash: [2, 1]
 				}
-				// 定時は表示しない
-				// { label: '定時積算電力量計測値正方向 [kWh]',    type: 'line', data: ocommulativeAmountsFixedTimeNormalPower, borderColor: "rgba(178,255,178,1.0)", backgroundColor: "rgba(178,255,178,1.0)",
-				// radius:1.5, borderWidth:1, yAxisID: 'y-axis-left', borderDash: [2,1] },
-				// { label: '定時積算電力量計測値逆方向 [kWh]',    type: 'line', data: ocommulativeAmountsFixedTimeRiversePower, borderColor: "rgba(178,255,178,1.0)", backgroundColor: "rgba(178,255,178,1.0)",
-				// radius:1.5, borderWidth:1,  yAxisID: 'y-axis-left', borderDash: [2,1] }
 			);
 
 			renewCanvasESM();

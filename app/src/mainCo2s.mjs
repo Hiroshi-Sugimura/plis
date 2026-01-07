@@ -42,6 +42,7 @@ import { logger } from './logger.mjs';
 
 let sendIPCMessage = null;
 let lastSendTime = 0;
+let lastStoredTime = "";
 // const store = new Store();
 
 /** @type {Co2sConfig} */
@@ -150,16 +151,19 @@ let mainCo2s = {
 				//------------------------------------------------------------
 				// 部屋の環境を記録、Co2s
 				if (config.enabled && !isObjEmpty(persist)) {
-					let n = persist;
-					if (n) {
+					if (persist.time !== lastStoredTime) {
+						let n = persist;
 						await roomEnvModel.create({
-							dateTime: dt,
+							dateTime: n.time,  // 現在時刻(new Date())ではなく、データの取得時刻を使う
 							srcType: 'Co2s',
 							place: config.place ? config.place : 'Room',
 							temperature: n.temperature,
 							humidity: n.humidity,
 							CO2: n.co2
 						});
+						lastStoredTime = n.time;
+					} else {
+						logger.debug('mainCo2s', config.debug, 'cron.schedule() persist.time is same as lastStoredTime, skip.');
 					}
 				} else {
 					logger.debug('mainCo2s', config.debug, 'cron.schedule() persist is empty or disabled:', persist);

@@ -64,6 +64,7 @@ let mainOmron = {
 	/** @type {cron.ScheduledTask|null} */
 	storeJob: null,
 	lastError: null, // 前回のエラーを保持して連続ログ出力を抑制
+	lastStoredTime: "",
 
 	//////////////////////////////////////////////////////////////////////
 	//
@@ -102,6 +103,7 @@ let mainOmron = {
 				if (error) {
 					switch (error) {
 						case 'INF: port is closed.':  // ポート閉じたというのはエラーというか、正常状態でもある
+							persist = {};
 							sendIPCMessage('omronDisconnected', null);
 							break;
 
@@ -154,10 +156,10 @@ let mainOmron = {
 				//------------------------------------------------------------
 				// 部屋の環境を記録、Omron
 				if (config.enabled && !isObjEmpty(persist)) {
-					let n = persist;
-					if (n) {
+					if (persist.time !== mainOmron.lastStoredTime) {
+						let n = persist;
 						await roomEnvModel.create({
-							dateTime: dt,
+							dateTime: n.time,  // 現在時刻(new Date())ではなく、データの取得時刻を使う
 							srcType: 'omron',
 							place: config.place ? config.place : 'MyRoom',
 							temperature: n.temperature,
@@ -170,6 +172,9 @@ let mainOmron = {
 							discomfortIndex: n.discomfort_index,
 							heatStroke: n.heat_stroke
 						});
+						mainOmron.lastStoredTime = n.time;
+					} else {
+						logger.debug('mainOmron', config.debug, 'cron.schedule() persist.time is same as lastStoredTime, skip.');
 					}
 				} else {
 					logger.debug('mainOmron', config.debug, 'cron.schedule() persist is empty or disabled:', persist);
