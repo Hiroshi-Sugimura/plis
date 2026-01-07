@@ -1,86 +1,119 @@
-<img src='https://github.com/Hiroshi-Sugimura/plis/blob/main/img/plis_main_yoko_w.png' alt='logo'>
+<div align="center">
+  <img src="https://github.com/Hiroshi-Sugimura/plis/blob/main/img/plis_main_yoko_w.png?raw=true" alt="PLIS Logo" width="600">
 
-PLIS (Platform for Life Improvement and Support)
+  # PLIS
+  **Platform for Life Improvement and Support**
 
-# User's Manual
+  [![GitHub release](https://img.shields.io/github/v/release/Hiroshi-Sugimura/plis)](https://github.com/Hiroshi-Sugimura/plis/releases)
+  [![License](https://img.shields.io/github/license/Hiroshi-Sugimura/plis)](https://github.com/Hiroshi-Sugimura/plis/blob/main/LICENSE)
+  [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS-blue.svg)](#)
+</div>
 
-- [This page (User's Manual)](https://plis.sugi-lab.net/)
+---
 
-# Developper's Manual
+## 📖 プロジェクト概要
+**PLIS** は、生活の質（QoL）を向上させ、快適な暮らしをサポートするためのオープンなプラットフォームです。家庭内の様々なIoT機器やセンサデータを統合し、可視化・制御するための基盤を提供します。
 
-- [for PLIS developper's README](https://hiroshi-sugimura.github.io/plis/jsdoc/)
+### ✨ 主な機能
+- 📊 **多彩なグラフ表示**: 室温、湿度、CO2濃度、消費電力などを30分単位で精緻に可視化。
+- 🏠 **マルチデバイス対応**: SwitchBot, Netatmo, Omron, IKEA Tradfri, Hue など、主要なIoT機器を統合制御。
+- ⚡ **ECHONET Lite 対応**: 家電製品との高度な連携を低遅延で実現。
+- 🖥️ **クロスプラットフォーム**: Windows と macOS の両方で動作。
+- 🔐 **プライバシー重視**: データはローカルに蓄積され、ユーザーがコントロール可能。
 
+---
 
-# Licenses
+## � マニュアル・ドキュメント
+プロジェクトを最大限に活用するためのリソースです。
 
-ライセンスや著作権に関する概要は下記に記しておきます。詳細はご自身でよく確認してお使いください。
-PLISは個人利用を前提に提供しております。
-そのまま販売するなどの直接的な商用利用行為は禁止します。
+- � **[User's Manual (WEB)](https://plis.sugi-lab.net/)** - 一般ユーザー向け操作ガイド
+- 🛠️ **[Developer's Manual (JSDoc)](https://hiroshi-sugimura.github.io/plis/jsdoc/)** - 開発者向け技術ドキュメント
 
+---
 
-## License of the PLIS
+## ⚖️ ライセンス (Licenses)
+PLISは個人利用を前提に提供しております。そのまま販売するなどの直接的な商用利用行為は禁止します。
 
-PLISのアプリケーション及びソースコードはMITライセンスにて配布しています。
+### 1. PLIS 本体のライセンス
+アプリケーション及びソースコードは **[MITライセンス](https://github.com/Hiroshi-Sugimura/plis/blob/main/LICENSE)** にて配布しています。
 
-[LICENSE file](https://github.com/Hiroshi-Sugimura/plis/blob/main/LICENSE)
+> [!TIP]
+> **MITライセンスの要約 (日本語解説)**
+> - コピー利用、配布、変更、商用利用、有料販売など自由に利用可能です。
+> - **必須条件**: 著作権表示（Copyright (c) 年 作者名）と、ライセンスの全文（英語原文）をソースコードや同梱ファイルに掲載してください。
+> - **保証無し**: 本ソフトウェアを利用して生じた問題に対して、作成者は一切の責任を負いません。
 
-正確には原文を読んで欲しいのですが、簡単に表現すれば次のようになります。
+### 2. サードパーティモジュールのライセンス
+利用している外部モジュール群の詳細は、下記ファイルにまとめています。
+- 📜 **[Modules.json](https://hiroshi-sugimura.github.io/plis/app/src/modules.json)**
 
-```
-コピー利用、配布、変更の追加、変更を加えたもの再配布、商用利用、有料販売など自由に利用可能
+> [!NOTE]
+> 各モジュールのライセンスは開発者によって変更される可能性があるため、商用開発に利用する場合は各自で最新の状態を確認してください。
 
-このソフトウェアの著作権表示（「Copyright (c) 年 作者名」）と、このライセンスの全文（英語の原文）を、
-ソースコードや、ソースコードに同梱したライセンス表示用の別ファイルなどに掲載すること。
-（ユーザが確認可能な場所に書いてください）
+---
 
-保証無し。このソフトを利用して問題が起きた際に、私たちは一切の責任を負いません。
-```
+## 🛠️ API および 認証について (APIs and certifications)
+多種多様なIoT商品のプロトコルを利用していますが、メーカー側のAPI変更や廃止により機能が制限される場合があります。
 
-## Licenses of Other modules
+> [!WARNING]
+> **商用利用に関する重要な注意**
+> - **ECHONET Lite**: 商用ソフトウェアとして販売する場合は、エコーネットコンソーシアムの認証を受ける必要があります。
+> - **API利用権**: 商用開発時には、API利用やプロトコル利用の権利を開発者が確認・保証する必要があります。
 
-PLISは他のモジュールを含んでおり、それらのライセンスに関しては各モジュールのライセンスをご確認ください。
-利用しているモジュール群は下記ファイルにまとめています。
+---
 
-[Modules.json](https://hiroshi-sugimura.github.io/plis/app/src/modules.json)
+## 📜 更新履歴 (Logs)
 
-基本的にはPLIS作成時において、利用している全モジュールが著作権をクリアしていることを確認しているつもりですが、各モジュール開発者がバージョンアップによってライセンスを変更した場合に追従できていない可能性はあります。
-およその場合は、個人利用＆非商用において問題になることはないと思いますが、PLISのソースコードを利用して商用ソフトウェアを開発する場合には各社で知財を確認して保証する必要があります。
+### 最新バージョン
+- **v2.3.1**
+  - グラフの時間軸修正（常に30分刻みを維持しつつレスポンシブ対応）
+  - IPv6対応を更新
+  - ログ出力の最適化（減少）
 
+<details>
+<summary>過去の変更履歴を表示</summary>
 
-## APIs and certifications
+- **v2.3.0**
+  - Netatmoのログ減少、強制終了で設定が飛ぶbug fix、Ikeaのバグ修正、Hueのバグ修正、mjs統一、requestsをaxiosに置き換え、logger未定義修正、重複Toast修正、EL高速化、ログ抑制
+- **v2.2.0**
+  - バックグラウンドモード追加、スタートアップ登録機能追加、CO2Sのdebug
+- **v2.1.0**
+  - Garminグラフ追加、パッケージ化を方法を最新にした、グラフレスポンシブ対応、EL通信を修正、Netatmoを新API対応、全体少し高速化、レンダラのクラッシュ対応、HAL.sync対応
+- **v2.0.1**
+  - パッケージバージョンアップ、EL検索を同期処理にした
+- **v2.0.0**
+  - Electronのバージョンアップ対応、ESModulesに対応、electron-forge V6対応
+- **v1.1.6**
+  - SwitchBotのバッテリーアイコン修正、内部パッケージ更新、CO2のボタン・Toast・Win update対応、電力スマメのDisable時バグ修復、auto assessment / HAL初期化バグ修正
+- **v1.1.5**
+  - SwitchBot APIカウンタ導入、macキーボードショートカット問題解決、メニュー整理、UIアップデート（SwitchBot, IKEA）、IKEA制御追加、各モジュールDebugログ
+- **v1.1.4**
+  - EL旧型探索、HAL同期機能、グラフ表示バグ修正、カレンダー日替わり自動更新、スマメ安定動作オプション、SwitchBot API v1.1対応、Config直接ペースト対応（Electronコア変更影響）、EL電力量センサクラス対応、IKEA表示/エラー対応、HAL Garmin連携、得点付け機能追加、内部モジュール最新化
+- **v1.1.3**
+  - 解析不能ELパケット受信時のエラー処理改善
+- **v1.1.2**
+  - SwitchBot Plug Mini対応、エラー画面出力整理、Moduleライセンス表デザイン変更/リンク、about PLIS、ページ内検索暫定対応、EL v1.0サーチ、ログ削除、パッケージ更新、拡大縮小対応
+- **v1.1.1**
+  - Store配布開始
+- **v1.1.0**
+  - 外部モジュール・権利関係ドキュメント整備、カレンダー自動取得
+- **v1.0.1**
+  - ショートカット作成バグの修正
+- **v1.0.0**
+  - 初期リリース完成
+- **v0.4.0**
+  - JSDoc対応開始
+- **v0.3.0**
+  - エアコンのモード設定機能追加
+- **v0.2.0**
+  - Mac動作確認完了
+- **v0.1.0**
+  - Windows動作確認完了
+- **v0.0.1**
+  - HEMS-Loggerからリポジトリ移行、ソースコード公開開始 (2023.05.26)
 
-PLISでは多種多様なIoT商品のAPI及びプロトコルを利用していますが、もしも商品提供している会社側のAPIが変更や廃止となった場合に、その機能が利用できなくなることがあります。
-およそ、個人利用＆非商用において問題になることはないと思いますが、PLISのソースコードを利用して商用ソフトウェアを開発する場合には開発者がAPI利用やプロトコル利用の権利を確認して保証する必要があります。
+</details>
 
-### 現時点で判明している商用利用に関する注意
-
-- ECHONET Liteプロトコル利用に関して、商用ソフトウェアを開発・販売する場合はエコーネットコンソーシアムにて認証を受ける必要があります。
-
-
-# Logs
-
-- 2.3.1 グラフの時間軸修正（常に30分刻みを維持しつつレスポンシブ対応）、IPv6対応を更新、Log減少
-- 2.3.0 Netatmoのログ減少、強制終了で設定が飛ぶbug fix、Ikeaのバグ修正、Hueのバグ修正、mjs統一、requestsをaxiosに置き換え、logger未定義修正、重複Toast修正、EL高速化、ログ抑制
-- 2.2.0 バックグラウンドモード追加、スタートアップ登録機能追加、CO2Sのdebug
-- 2.1.0 Garminグラフ追加、パッケージ化を方法を最新にした、グラフレスポンシブ対応、EL通信を修正、Netatmoを新API対応、全体少し高速化、レンダラのクラッシュ対応、HAL.sync対応
-- 2.0.1 パッケージバージョンアップ、EL検索を同期処理にした
-- 2.0.0 Electronのバージョンアップ対応、ESModulesに対応、electron-forge V6対応
-- 1.1.6 SwitchBotのバッテリー1/4のアイコン修正、内部パッケージ更新、CO2のボタンが効くようにした、CO2のToast修正、CO2のWin update対応、電力スマメのDisable時を設定が消えるbug fix、auto assessmentのbug fix、HAL有効時のMinorkeyMeansValues初期化bug fix
-- 1.1.5 SwitchBot APIのカウンタ導入、まずはエラー表示のみ。macのキーボードショートカット問題解決、メニューにセパレータ追加など整理、Editメニュー追加。ソースコード整理。ユーザインタフェース関連アップデート（SwitchBot、IKEA）。IKEA制御追加。各モジュールのDebugログ。
-- 1.1.4 EL旧型探索機能追加、HAL同期機能の追加、グラフ表示のバグ修正、カレンダーの日替わり自動更新、スマメ安定動作オプション追加、SwitchBot　API ver.1.1対応（かわりに制御機能がデグレした可能性あり）、ElectronのコアバージョンアップによってClipboard利用が厳しくなったのでしばらくはconfig.jsonに直接pasteしてください、再起動時にELの設定がdisableになるバグ修正、ELの電力量センサクラス対応（ただしELconvモジュールが計測値計算できていないので電力量が表示おかしい）、ELcontrolのデフォルト表記を修正、IKEA tradfriに表示対応とエラー対応、Detailsを見やすくした、HALとのGarminデータ連携機能追加、SwitchBotでのエラーログ処理、SwitchBotで詳細修得できなかったデバイスの格納を避ける、SwitchBotのデバイス数が多くなった時にAPI制限に引っかかるので状態取得を毎分から2分30秒に変更、SwitchBotの制御復活、HALと電力スマメのSecretTextの見た目処理、ELの電力量センサにてデータ未取得時のsplitの保護、得点付け機能追加、内部モジュール最新
-- 1.1.3 解析不能ELパケットを受信したときにダイアログではなくエラーメッセージとする。
-- 1.1.2 SwtichBot Plug Mini対応、エラーの画面出力整理、エラーログのルート作成、Moduleライセンスの表デザイン変更・URLリンク、about PLIS対応、ページ内検索暫定対応、EL ver. 1.0系サーチ対応、無駄なログ削除、パッケージ更新、拡大縮小
-- 1.1.1 Store配布
-- 1.1.0 外部モジュールのアップグレード、権利関係のドキュメント整備、カレンダー無い場合に自動取得
-- 1.0.1 ショートカット作成バグの修正
-- 1.0.0 一通り完成したのでpublish
-- 0.4.0 JSDoc対応開始
-- 0.3.0 エアコンのモード設定機能追加
-- 0.2.0 Mac動作確認
-- 0.1.0 Windows動作確認
-- 0.0.1 HEMS-LoggerからPLISにリポジトリ移行、ソースコード公開開始。2023.05.26
-
-
-# Copyright
+---
 
 Copyright © 2023 Sugimura Laboratory All Rights Reserved.
