@@ -117,7 +117,11 @@ let mainOmron = {
 
 						default:
 							// それ以外のエラーは良く知らないのでエラーとして出す
-							logger.error('mainOmron', 'omron.start() error:', error);
+							if (error.toString().includes('Sensor (2JCE-BU) is not found.')) {
+								logger.warn('mainOmron', 'omron.start() sensor not found. skipping.');
+							} else {
+								logger.error('mainOmron', 'omron.start() error:', error);
+							}
 					}
 					return;
 				}

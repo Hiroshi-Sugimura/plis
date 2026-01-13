@@ -108,8 +108,12 @@ let mainCo2s = {
 			co2s.start((sensorData, error) => {
 				try {
 					if (error) {
-						// それ以外のエラーは良く知らないのでエラーとして出す
-						logger.error('mainCo2s', 'co2s.start() error:', error);
+						if (error.toString().includes('port is closed.')) {
+							logger.debug('mainCo2s', config.debug, 'co2s.start() error:', error);
+						} else {
+							// それ以外のエラーは良く知らないのでエラーとして出す
+							logger.error('mainCo2s', 'co2s.start() error:', error);
+						}
 						return;
 					}
 
