@@ -278,7 +278,7 @@ let mainNetatmo = {
 					throw refreshError;
 				}
 			}
-			if (error.code === 'ETIMEDOUT' || error.code === 'ECONNABORTED' || error.code === 'EHOSTUNREACH' || error.code === 'ECONNRESET' || (error.message && error.message.includes('AggregateError'))) {
+			if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT' || error.code === 'ECONNABORTED' || error.code === 'EHOSTUNREACH' || error.code === 'ECONNRESET' || (error.message && error.message.includes('AggregateError'))) {
 				logger.error('mainNetatmo', `fetchStationsData() Connection Error: ${error.code || error.message.split('\n')[0]}`);
 			} else {
 				logger.error('mainNetatmo', 'fetchStationsData() error detail:\x1b[31m', error.response ? error.response.data : error, '\x1b[0m');

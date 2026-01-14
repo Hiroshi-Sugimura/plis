@@ -92,6 +92,16 @@ let mainSwitchBot = {
 	 *  @type {cron.ScheduledTask|null}
 	 */
 	countResetJob: null,
+	/** @member interval
+	 *  @desc 現在の更新間隔（分）
+	 *  @default 2
+	 */
+	interval: 2,
+	/** @member isLimit
+	 *  @desc API制限（429）が発生しているかどうかのフラグ
+	 *  @default false
+	 */
+	isLimit: false,
 
 	//////////////////////////////////////////////////////////////////////
 	// interfaces
@@ -161,6 +171,8 @@ let mainSwitchBot = {
 					persist = facilities;
 					persist.count = mainSwitchBot.count;
 					persist.countDay = getToday();
+					persist.interval = mainSwitchBot.interval;
+					persist.isLimit = mainSwitchBot.isLimit;
 					sendIPCMessage("fclSwitchBot", persist);
 					await switchBotRawModel.create({ detail: JSON.stringify(persist) });  // store raw data
 					await mainSwitchBot.storeData(facilities);  // store meaningfull data
@@ -233,25 +245,29 @@ let mainSwitchBot = {
 	 * @param {string} command
 	 * @param {string} param
 	 */
-	control: function (id, command, param) {
-		// mainSwitchBot.client
+	control: async function (id, command, param) {
 		logger.debug('mainSwitchBot', config.debug, `control() id:${id}, command:${command}, param:${param}`);
 
-		mainSwitchBot.client.setDeviceStatus(id, command, param, (ret) => {
+		try {
+			let ret = await mainSwitchBot.client.setDeviceStatusSync(id, command, param);
 			if (isObjEmpty(ret)) {
 				logger.error('mainSwitchBot', 'control() ret is empty:', ret);
 			} else {
 				for (let i of ret.items) {
-					// console.log(JSON.stringify(i));
 					if (i.message == 'success') {
 						persist[i.deviceID] = i.status;
 						sendIPCMessage("fclSwitchBot", persist);
-					} else {
-						// console.error(JSON.stringify(ret));
 					}
 				}
 			}
-		});
+		} catch (error) {
+			if (error.status === 429 || error.code === 'ERR_BAD_REQUEST' || error.toString().includes('429')) {
+				logger.error('mainSwitchBot', 'control() API limit reached (429).');
+				sendIPCMessage('Error', { datetime: formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), moduleName: 'mainSwitchBot.control()', stackLog: 'SwitchBot APIの回数制限に達しました。操作を完了できません。' });
+			} else {
+				logger.error('mainSwitchBot', 'control() error:', error.message || error);
+			}
+		}
 		mainSwitchBot.countUp();
 	},
 
@@ -263,57 +279,67 @@ let mainSwitchBot = {
 	 * @param {SwitchBotHandler} _client
 	 * @param {(devStatusList:Object)=>void} callback
 	 */
-	renewFacilities: function (_client, callback) {
+	renewFacilities: async function (_client, callback) {
 		let ret = {};
 		try {
-			_client.getDevices(async (devlist) => {
-				mainSwitchBot.countUp();
-				if (!devlist || !devlist.deviceList) {
-					logger.warn('mainSwitchBot', 'renewFacilities() devlist is undefined or null.');
-					return;
-				}
-				ret.deviceList = devlist.deviceList;
-				ret.infraredRemoteList = devlist.infraredRemoteList;
-				for (let d of ret.deviceList) {
-					switch (d.deviceType) {
-						case 'Plug':
-						case 'Plug Mini (US)':
-						case 'Plug Mini (JP)':
-						case 'Meter':
-						case 'MeterPlus':
-						case 'Curtain':
-						case 'Humidifier':
-						case 'Motion Sensor':
-						case 'Contact Sensor':
-						case 'Color Bulb':
-						case 'Bot':
-							try {
-								ret[d.deviceId] = await _client.getDeviceStatusSync(d.deviceId);
-								mainSwitchBot.countUp();
-							} catch (e) {
-								logger.error('mainSwitchBot', `getDeviceStatusSync error for ${d.deviceId}:`, e);
+			let devlist = await _client.getDevicesSync();
+			mainSwitchBot.countUp();
+
+			if (!devlist || !devlist.deviceList) {
+				logger.warn('mainSwitchBot', 'renewFacilities() devlist is undefined or null.');
+				return;
+			}
+			ret.deviceList = devlist.deviceList;
+			ret.infraredRemoteList = devlist.infraredRemoteList;
+			for (let d of ret.deviceList) {
+				switch (d.deviceType) {
+					case 'Plug':
+					case 'Plug Mini (US)':
+					case 'Plug Mini (JP)':
+					case 'Meter':
+					case 'MeterPlus':
+					case 'Curtain':
+					case 'Humidifier':
+					case 'Motion Sensor':
+					case 'Contact Sensor':
+					case 'Color Bulb':
+					case 'Bot':
+						try {
+							ret[d.deviceId] = await _client.getDeviceStatusSync(d.deviceId);
+							mainSwitchBot.countUp();
+						} catch (e) {
+							if (e.status === 429 || e.code === 'ERR_BAD_REQUEST' || e.toString().includes('429')) {
+								throw e; // 上位でまとめて処理
 							}
-							break;
-						case 'Hub Mini': // APIの回数を抑えるために、詳細を取りに行かないデバイスを設定
-						case 'Indoor Cam':
-						case 'Remote':
-						default:
-							continue;
-					}
+							logger.error('mainSwitchBot', `getDeviceStatusSync error for ${d.deviceId}:`, e);
+						}
+						break;
+					case 'Hub Mini':
+					case 'Indoor Cam':
+					case 'Remote':
+					default:
+						continue;
 				}
-				callback(objectSort(ret));
-			});
+			}
+			mainSwitchBot.isLimit = false; // 成功した場合は制限フラグを折る
+			callback(objectSort(ret));
 		} catch (error) {
+			if (error.status === 429 || error.code === 'ERR_BAD_REQUEST' || error.toString().includes('429')) {
+				mainSwitchBot.isLimit = true; // 制限フラグを立てる
+				logger.error('mainSwitchBot', 'API limit reached (429 Too Many Requests).');
+				sendIPCMessage('Error', { datetime: formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), moduleName: 'mainSwitchBot.renewFacilities()', stackLog: 'SwitchBot APIの回数制限(1日10,000回)に達しました。しばらく時間をおいてから再度お試しください。' });
+				return;
+			}
+
 			if (error.toString().includes('Http 401 Error')) {
 				sendIPCMessage('Error', { datetime: formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), moduleName: 'mainSwitchBot.renewFacilities()', stackLog: `Http 401 Error. User permission is denied due to invalid token.\n${error}` });
 			}
 
-			if (error.code === 'ETIMEDOUT' || error.code === 'EHOSTUNREACH' || (error.message && error.message.includes('AggregateError'))) {
+			if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT' || error.code === 'ECONNABORTED' || error.code === 'EHOSTUNREACH' || error.code === 'ECONNRESET' || (error.message && error.message.includes('AggregateError'))) {
 				logger.error('mainSwitchBot', `renewFacilities Connection Error: ${error.code || error.message.split('\n')[0]}`);
 			} else {
-				logger.error('mainSwitchBot', 'renewFacilities() error:', error);
+				logger.error('mainSwitchBot', 'renewFacilities() error:', error.message || error);
 			}
-			throw error;
 		}
 	},
 
@@ -331,7 +357,7 @@ let mainSwitchBot = {
 	 * 内部：初期取得とcron登録。
 	 * @param {(facilities:Object)=>void} _callback
 	 */
-	startCore: function (_callback) {
+	startCore: async function (_callback) {
 		if (config.token == '' || config.secret == '') {
 			throw new Error('mainSwitchBot.startCore() config.token or config.secret is empty.');
 		}
@@ -342,27 +368,41 @@ let mainSwitchBot = {
 		try {
 			mainSwitchBot.client = new SwitchBotHandler(config.token, config.secret);
 
-			mainSwitchBot.renewFacilities(mainSwitchBot.client, (devStatusList) => {
+			await mainSwitchBot.renewFacilities(mainSwitchBot.client, (devStatusList) => {
 				mainSwitchBot.facilities = devStatusList;
 				mainSwitchBot.callback(mainSwitchBot.facilities);  // mainに通知
-			});  // 一回実行
 
-			// 監視はcronで実施、DBへのクエリ方法をもっと高速になるように考えたほうが良い
-			// 1分に1回実施だと一日10000回のAPI制限に引っかかるので通信時間考えて毎2分30秒で実施、3分に1回という感じ
-			mainSwitchBot.observationJob = cron.schedule('30 */2 * * * *', async () => {
-				logger.debug('mainSwitchBot', config.debug, 'cron.observationJob()');
+				// デバイス数に応じた定期実行スケジュールの算出
+				// devStatusListのキー数（status取得したデバイス）+ 1（一覧取得分）
+				const n = Object.keys(devStatusList).filter(k => k !== 'deviceList' && k !== 'infraredRemoteList').length + 1;
+				const safetyIntervalMin = Math.max(2, Math.ceil((8.64 * n * 1.1) / 60)); // 余裕を持って算出、最低2分
+				mainSwitchBot.interval = safetyIntervalMin;
 
-				mainSwitchBot.renewFacilities(mainSwitchBot.client, (devStatusList) => {  // 現在のデータ取得
-					mainSwitchBot.facilities = devStatusList;
-					mainSwitchBot.callback(mainSwitchBot.facilities);  // mainに通知
-				});  // 一回実行
+				logger.info('mainSwitchBot', `Calculated optimal interval: ${safetyIntervalMin} minutes based on ${n} requests/update.`);
+
+				if (mainSwitchBot.observationJob) {
+					mainSwitchBot.observationJob.stop();
+				}
+
+				mainSwitchBot.observationJob = cron.schedule(`30 */${safetyIntervalMin} * * * *`, async () => {
+					logger.debug('mainSwitchBot', config.debug, 'cron.observationJob()');
+					try {
+						await mainSwitchBot.renewFacilities(mainSwitchBot.client, (devStatusList) => {
+							mainSwitchBot.facilities = devStatusList;
+							mainSwitchBot.callback(mainSwitchBot.facilities);
+						});
+					} catch (error) {
+						logger.error('mainSwitchBot', 'cron.observationJob() error:', error.message || error);
+					}
+				});
+				mainSwitchBot.observationJob.start();
 			});
-			mainSwitchBot.observationJob.start();
 
 			// カウントリセットジョブ
 			mainSwitchBot.countResetJob = cron.schedule('0 0 * * *', () => {
 				logger.debug('mainSwitchBot', config.debug, `cron.countResetJob() count: ${mainSwitchBot.count}`);
 				mainSwitchBot.count = 0;
+				mainSwitchBot.isLimit = false; // 日替わり時に制限フラグもリセット
 			});
 			mainSwitchBot.countResetJob.start();
 

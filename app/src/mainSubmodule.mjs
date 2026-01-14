@@ -83,7 +83,7 @@ function getYesterdayDate() {
 
 /**
  * 今日の日付を文字列で返す。
- * @deprecated getTodayDate を使用してください。外部拡張 Date.today() への依存を避けるため。
+ * @deprecated getTodayDate を使用してください。
  * @returns {string}
  */
 function getToday() {
@@ -92,7 +92,7 @@ function getToday() {
 
 /**
  * 昨日の日付を文字列で返す。
- * @deprecated getYesterdayDate を使用してください。外部拡張 Date.yesterday() への依存を避けるため。
+ * @deprecated getYesterdayDate を使用してください。
  * @returns {string}
  */
 function getYesterday() {

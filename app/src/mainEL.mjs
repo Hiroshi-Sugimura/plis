@@ -393,7 +393,7 @@ let mainEL = {
 							EL.sendOPC1(ip, [0x0e, 0xf0, 0x01], [0x02, 0x88, 0x01], EL.GET, [0x81], [0x00]);  // サブメータの設置場所
 
 						} else {
-							// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| main.cron.schedule() SubMeter sm:\x1b[32m', sm, '\x1b[0m' ):0;
+							// config.debug ? console.log( formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), '| main.cron.schedule() SubMeter sm:\x1b[32m', sm, '\x1b[0m' ):0;
 
 							// merge用ベース
 							let means = {

@@ -1296,8 +1296,8 @@
     "repository": "https://github.com/yargs/cliui",
     "publisher": "Ben Coe",
     "email": "ben@npmjs.com",
-    "path": "/Users/sugimura/Documents/plis/app/node_modules/electron-installer-redhat/node_modules/cliui",
-    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron-installer-redhat/node_modules/cliui/LICENSE.txt"
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/electron-installer-debian/node_modules/cliui",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron-installer-debian/node_modules/cliui/LICENSE.txt"
   },
   "cliui@8.0.1": {
     "licenses": "ISC",
@@ -4518,8 +4518,8 @@
     "repository": "https://github.com/yargs/yargs-parser",
     "publisher": "Ben Coe",
     "email": "ben@npmjs.com",
-    "path": "/Users/sugimura/Documents/plis/app/node_modules/electron-installer-redhat/node_modules/yargs-parser",
-    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron-installer-redhat/node_modules/yargs-parser/LICENSE.txt"
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/electron-installer-debian/node_modules/yargs-parser",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron-installer-debian/node_modules/yargs-parser/LICENSE.txt"
   },
   "yargs-parser@21.1.1": {
     "licenses": "ISC",
@@ -4532,8 +4532,8 @@
   "yargs@16.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/yargs/yargs",
-    "path": "/Users/sugimura/Documents/plis/app/node_modules/electron-installer-redhat/node_modules/yargs",
-    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron-installer-redhat/node_modules/yargs/LICENSE"
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/electron-installer-debian/node_modules/yargs",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron-installer-debian/node_modules/yargs/LICENSE"
   },
   "yargs@17.7.2": {
     "licenses": "MIT",

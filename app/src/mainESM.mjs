@@ -21,7 +21,7 @@ import EL from 'echonet-lite';
 import ELconv from 'echonet-lite-conv';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Sequelize, Op, esmdataModel, esmrawModel, electricEnergyModel } = localDB;
-import { objectSort, isObjEmpty, mergeDeeply, getCases } from './mainSubmodule.mjs';
+import { objectSort, isObjEmpty, mergeDeeply, getCases, formatDate } from './mainSubmodule.mjs';
 
 
 
@@ -196,10 +196,10 @@ let mainESM = {
 	 * 監視Cronを開始（1分毎）。接続/測定/DB登録/送信フローをドライブ。
 	 */
 	startObserve: function () {
-		config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startObserve() start.') : 0;
+		config.debug ? console.log(formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), '| mainESM.startObserve() start.') : 0;
 
 		if (mainESM.observationJob) {
-			config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startObserve() already started.') : 0;
+			config.debug ? console.log(formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), '| mainESM.startObserve() already started.') : 0;
 		}
 
 		// 1分毎に監視タスクは動作する
@@ -220,11 +220,11 @@ let mainESM = {
 
 			} else {
 				// 切断状態なら再接続？
-				config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startObserve.cron.schedule() is NO connection.') : 0;
+				config.debug ? console.log(formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), '| mainESM.startObserve.cron.schedule() is NO connection.') : 0;
 
 				// 既に接続していたら機器情報の変化をみる。接続していなかったら接続する
 				if (eSM.state == 'disconnected') {
-					config.debug ? console.log(new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.startObserve.cron.schedule() eSM.state is disconnected.') : 0;
+					config.debug ? console.log(formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), '| mainESM.startObserve.cron.schedule() eSM.state is disconnected.') : 0;
 					if (config.connectionType == 'stable') {
 						config.EPANDESC = {};
 					}
@@ -298,7 +298,7 @@ let mainESM = {
 
 					// merge用ベースとesmDataとマージ
 					let mergeObj = mergeDeeply(means, sm.Means);
-					// config.debug ? console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| mainESM.insertDB() ESM mergeObj \x1b[32m', mergeObj, '\x1b[0m' ):0;
+					// config.debug ? console.log( formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), '| mainESM.insertDB() ESM mergeObj \x1b[32m', mergeObj, '\x1b[0m' ):0;
 
 					let instantaneousPower = null;
 					if (sm['低圧スマート電力量メータ01(028801)']['瞬時電力計測値(E7)']) {
@@ -423,7 +423,7 @@ let mainESM = {
 	 */
 	changeCallback: function (facilities) {
 		ELconv.refer(objectSort(facilities), function (devs) {
-			// console.log( new Date().toFormat("YYYY-MM-DDTHH24:MI:SS"), '| ESMStart() devs:\x1b[32m', objectSort(devs), '\x1b[0m' );
+			// console.log( formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), '| ESMStart() devs:\x1b[32m', objectSort(devs), '\x1b[0m' );
 			persist = eSM.objectSort(devs);
 			sendIPCMessage("fclESM", persist);
 		});

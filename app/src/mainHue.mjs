@@ -269,8 +269,8 @@ let mainHue = {
 			try {
 				await Hue.getState();
 			} catch (e) {
-				if (e.code === 'ETIMEDOUT' || e.code === 'EHOSTUNREACH' || e.code === 'ECONNABORTED') {
-					logger.error('mainHue', `task cron Connection Error (Timeout/Unreachable): ${e.code}`);
+				if (e.code === 'ENOTFOUND' || e.code === 'ETIMEDOUT' || e.code === 'EHOSTUNREACH' || e.code === 'ECONNABORTED' || e.code === 'ECONNRESET' || e.hostname === 'undefined') {
+					logger.error('mainHue', `task cron Connection Error: ${e.code || 'undefined'}`);
 				} else {
 					logger.error('mainHue', 'task cron error:', e);
 				}
