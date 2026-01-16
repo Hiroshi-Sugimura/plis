@@ -240,7 +240,7 @@ let mainJma = {
 			const abstRes = await axios.get(mainJma.abstURL + config.code + ".json");
 			mainJma.callback({ cmd: "abst", json: abstRes.data });
 		} catch (error) {
-			if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT' || error.code === 'ECONNABORTED' || error.code === 'EHOSTUNREACH' || error.code === 'ECONNRESET' || (error.message && error.message.includes('AggregateError'))) {
+			if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT' || error.code === 'ENETUNREACH' || error.code === 'ECONNABORTED' || error.code === 'EHOSTUNREACH' || error.code === 'ECONNRESET' || (error.message && error.message.includes('AggregateError'))) {
 				logger.error('mainJma', `gets() abst Connection Error: ${error.code || error.message.split('\n')[0]}`);
 			} else {
 				logger.error('mainJma', 'gets() abst error:', error);
@@ -251,7 +251,7 @@ let mainJma = {
 			const detailRes = await axios.get(mainJma.detailURL + config.code + ".json");
 			mainJma.callback({ cmd: "detail", json: detailRes.data });
 		} catch (error) {
-			if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT' || error.code === 'ECONNABORTED' || error.code === 'EHOSTUNREACH' || error.code === 'ECONNRESET' || (error.message && error.message.includes('AggregateError'))) {
+			if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT' || error.code === 'ENETUNREACH' || error.code === 'ECONNABORTED' || error.code === 'EHOSTUNREACH' || error.code === 'ECONNRESET' || (error.message && error.message.includes('AggregateError'))) {
 				logger.error('mainJma', `gets() detail Connection Error: ${error.code || error.message.split('\n')[0]}`);
 			} else {
 				logger.error('mainJma', 'gets() detail error:', error);

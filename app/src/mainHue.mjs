@@ -269,7 +269,7 @@ let mainHue = {
 			try {
 				await Hue.getState();
 			} catch (e) {
-				if (e.code === 'ENOTFOUND' || e.code === 'ETIMEDOUT' || e.code === 'EHOSTUNREACH' || e.code === 'ECONNABORTED' || e.code === 'ECONNRESET' || e.hostname === 'undefined') {
+				if (e.code === 'ENOTFOUND' || e.code === 'ETIMEDOUT' || e.code === 'ENETUNREACH' || e.code === 'EHOSTUNREACH' || e.code === 'ECONNABORTED' || e.code === 'ECONNRESET' || e.hostname === 'undefined') {
 					logger.error('mainHue', `task cron Connection Error: ${e.code || 'undefined'}`);
 				} else {
 					logger.error('mainHue', 'task cron error:', e);
