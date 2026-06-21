@@ -199,6 +199,11 @@ ipcMain.handle('CalendarRenewHolidays', async (event, arg) => {
 	mainCalendar.getHolidays();
 });
 
+ipcMain.handle('CalendarGetWeather', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- CalendarGetWeather, arg:', arg);
+	return await mainCalendar.getWeatherData(arg.year, arg.month);
+});
+
 ipcMain.handle('SystemSetConfig', async (event, arg) => {
 	logger.debug('main', config.debug, 'ipcMain <- SystemSetConfig, arg:', arg);
 	config.screenMode = arg.screenMode;

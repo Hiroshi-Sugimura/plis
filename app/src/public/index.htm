@@ -2082,6 +2082,17 @@
 					<div id="ELSettingsContents"></div>
 				</div>
 			</dialog>
+			
+			<!-- カレンダーの天気詳細ダイアログ -->
+			<dialog id="calendarWeatherDialog">
+				<h3>天気詳細情報</h3>
+				<div class="p" style="max-height: 400px; overflow-y: auto;">
+					<div id="calendarWeatherContents"></div>
+				</div>
+				<p style="text-align: right;">
+					<button type="button" onclick="document.getElementById('calendarWeatherDialog').close();">閉じる</button>
+				</p>
+			</dialog>
 
 			<!-- Philips hueのプッシュスイッチ用ダイアログ -->
 			<dialog id="dlgHuePush">

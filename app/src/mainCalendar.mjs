@@ -19,6 +19,11 @@ import { store } from './storeSingleton.mjs';
 import { logger } from './logger.mjs';
 import cron from 'node-cron';
 import { mergeDeeply } from './mainSubmodule.mjs';
+import { mainJma } from './mainJma.mjs';
+import { mainOwm } from './mainOwm.mjs';
+import localDB from './models/localDBModels.mjs';
+const { weatherModel, weatherForecastModel } = localDB;
+import { Op } from 'sequelize';
 
 
 // const store = new Store();
@@ -193,6 +198,242 @@ let mainCalendar = {
 				logger.error('mainCalendar', 'getHolidays() error:', error);
 			}
 		});
+	},
+
+	/**
+	 * 指定年月の天気データを収集する。
+	 * @param {number} year 年
+	 * @param {number} month 月 (1-12)
+	 * @returns {Promise<Object.<string, any>>} 日付文字列をキーとする天気データのマッピング
+	 */
+	getWeatherData: async function (year, month) {
+		logger.debug('mainCalendar', config.debug, `getWeatherData() year:${year}, month:${month}`);
+		let weatherMap = {};
+
+		// JMA & OWM の設定を取得
+		let jmaConfig = mainJma.getConfig();
+		let owmConfig = mainOwm.getConfig();
+
+		// ソース判定
+		let source = 'none';
+		if (jmaConfig.enabled && owmConfig.enabled) {
+			let isOverseas = false;
+			if (owmConfig.zipcode) {
+				let parts = owmConfig.zipcode.split(',');
+				if (parts.length > 1 && parts[1].trim().toLowerCase() !== 'jp') {
+					isOverseas = true;
+				}
+			}
+			source = isOverseas ? 'owm' : 'jma';
+		} else if (owmConfig.enabled) {
+			source = 'owm';
+		} else if (jmaConfig.enabled) {
+			source = 'jma';
+		}
+
+		if (source === 'none') {
+			return weatherMap;
+		}
+
+		// カレンダー表示領域を考慮して前月20日〜翌月15日までクエリ
+		let startDate = new Date(year, month - 2, 20);
+		let endDate = new Date(year, month, 15);
+		
+		let today = new Date();
+		today.setHours(0, 0, 0, 0);
+
+		let cur = new Date(startDate);
+		while (cur <= endDate) {
+			let dateStr = cur.getFullYear() + '-' + String(cur.getMonth() + 1).padStart(2, '0') + '-' + String(cur.getDate()).padStart(2, '0');
+			let isFuture = cur.getTime() >= today.getTime();
+
+			if (source === 'jma') {
+				if (isFuture) {
+					try {
+						let latestForecast = await weatherForecastModel.findOne({
+							where: { targetArea: jmaConfig.area },
+							order: [['createdAt', 'DESC']]
+						});
+						if (latestForecast) {
+							let timeDefines = JSON.parse(latestForecast.timeDefines);
+							let weathers = JSON.parse(latestForecast.weathers);
+							let weatherCodes = JSON.parse(latestForecast.weatherCodes);
+							
+							let idx = timeDefines.findIndex(t => t.startsWith(dateStr));
+							if (idx !== -1) {
+								let weatherText = weathers[idx];
+								let code = weatherCodes[idx];
+								weatherMap[dateStr] = {
+									type: 'forecast',
+									source: 'jma',
+									weather: weatherText,
+									icon: mainCalendar.mapJmaIcon(code, weatherText),
+									detail: {
+										publishingOffice: latestForecast.publishingOffice,
+										reportDatetime: latestForecast.reportDatetime,
+										targetArea: latestForecast.targetArea,
+										weather: weatherText,
+										wind: JSON.parse(latestForecast.winds)[idx] || '',
+										wave: JSON.parse(latestForecast.waves)[idx] || ''
+									}
+								};
+							}
+						}
+					} catch (e) {
+						logger.error('mainCalendar', 'getWeatherData JMA forecast error:', e);
+					}
+				} else {
+					try {
+						let pastForecast = await weatherForecastModel.findOne({
+							where: {
+								targetArea: jmaConfig.area,
+								timeDefines: { [Op.like]: `%${dateStr}%` }
+							},
+							order: [['createdAt', 'DESC']]
+						});
+						if (pastForecast) {
+							let timeDefines = JSON.parse(pastForecast.timeDefines);
+							let weathers = JSON.parse(pastForecast.weathers);
+							let weatherCodes = JSON.parse(pastForecast.weatherCodes);
+							let idx = timeDefines.findIndex(t => t.startsWith(dateStr));
+							if (idx !== -1) {
+								let weatherText = weathers[idx];
+								let code = weatherCodes[idx];
+								weatherMap[dateStr] = {
+									type: 'actual',
+									source: 'jma',
+									weather: weatherText,
+									icon: mainCalendar.mapJmaIcon(code, weatherText),
+									detail: {
+										publishingOffice: pastForecast.publishingOffice,
+										reportDatetime: pastForecast.reportDatetime,
+										targetArea: pastForecast.targetArea,
+										weather: weatherText,
+										wind: JSON.parse(pastForecast.winds)[idx] || '',
+										wave: JSON.parse(pastForecast.waves)[idx] || '',
+										note: '※この日の実績値の代わりに、当時発表された予報履歴データを表示しています。'
+									}
+								};
+							}
+						}
+					} catch (e) {
+						logger.error('mainCalendar', 'getWeatherData JMA actual error:', e);
+					}
+				}
+			} else if (source === 'owm') {
+				if (isFuture) {
+					let owmPersist = mainOwm.getPersist();
+					if (owmPersist && owmPersist.forecast && owmPersist.forecast.list) {
+						let slots = owmPersist.forecast.list.filter(item => item.dt_txt.startsWith(dateStr));
+						if (slots.length > 0) {
+							let targetSlot = slots.find(item => item.dt_txt.includes('12:00:00')) || slots[Math.floor(slots.length / 2)];
+							let weatherObj = targetSlot.weather[0];
+							weatherMap[dateStr] = {
+								type: 'forecast',
+								source: 'owm',
+								weather: weatherObj.main + ` (${weatherObj.description})`,
+								icon: mainCalendar.mapOwmIcon(weatherObj.main),
+								detail: {
+									place: owmPersist.forecast.city.name,
+									weather: weatherObj.main,
+									description: weatherObj.description,
+									temp: targetSlot.main.temp,
+									tempMax: targetSlot.main.temp_max,
+									tempMin: targetSlot.main.temp_min,
+									humidity: targetSlot.main.humidity,
+									pressure: targetSlot.main.pressure,
+									windSpeed: targetSlot.wind.speed,
+									clouds: targetSlot.clouds.all
+								}
+							};
+						}
+					}
+				} else {
+					try {
+						let startOfDay = dateStr + ' 00:00:00';
+						let endOfDay = dateStr + ' 23:59:59';
+						let records = await weatherModel.findAll({
+							where: {
+								srcType: 'owm',
+								dateTime: { [Op.between]: [startOfDay, endOfDay] }
+							},
+							order: [['dateTime', 'ASC']]
+						});
+
+						if (records && records.length > 0) {
+							let targetRecord = records[0];
+							let minDiff = Infinity;
+							for (let r of records) {
+								let rTime = new Date(r.dateTime).getHours();
+								let diff = Math.abs(rTime - 12);
+								if (diff < minDiff) {
+									minDiff = diff;
+									targetRecord = r;
+								}
+							}
+
+							weatherMap[dateStr] = {
+								type: 'actual',
+								source: 'owm',
+								weather: targetRecord.weather,
+								icon: mainCalendar.mapOwmIcon(targetRecord.weather),
+								detail: {
+									dateTime: targetRecord.dateTime,
+									place: targetRecord.place,
+									weather: targetRecord.weather,
+									temp: targetRecord.temperature,
+									humidity: targetRecord.humidity,
+									pressure: targetRecord.pressure,
+									windSpeed: targetRecord.windSpeed,
+									windDirection: targetRecord.windDirection,
+									clouds: targetRecord.cloudCover
+								}
+							};
+						}
+					} catch (e) {
+						logger.error('mainCalendar', 'getWeatherData OWM actual error:', e);
+					}
+				}
+			}
+
+			cur.setDate(cur.getDate() + 1);
+		}
+
+		return weatherMap;
+	},
+
+	/**
+	 * JMA天気コード・文字列からアイコンタイプへのマッピング
+	 */
+	mapJmaIcon: function (code, text) {
+		if (!code) {
+			if (!text) return 'unknown';
+			if (text.includes('晴')) return 'sunny';
+			if (text.includes('雨')) return 'rainy';
+			if (text.includes('雪')) return 'snowy';
+			if (text.includes('曇') || text.includes('くもり')) return 'cloudy';
+			return 'unknown';
+		}
+		
+		let c = parseInt(code);
+		if (c >= 100 && c < 200) return 'sunny';
+		if (c >= 200 && c < 300) return 'cloudy';
+		if (c >= 300 && c < 400) return 'rainy';
+		if (c >= 400 && c < 500) return 'snowy';
+		return 'unknown';
+	},
+
+	/**
+	 * OWM天気文字列からアイコンタイプへのマッピング
+	 */
+	mapOwmIcon: function (weather) {
+		if (!weather) return 'unknown';
+		let w = weather.toLowerCase();
+		if (w.includes('clear') || w.includes('sunny')) return 'sunny';
+		if (w.includes('cloud') || w.includes('mist') || w.includes('haze') || w.includes('fog')) return 'cloudy';
+		if (w.includes('rain') || w.includes('drizzle') || w.includes('thunderstorm')) return 'rainy';
+		if (w.includes('snow')) return 'snowy';
+		return 'unknown';
 	}
 
 };

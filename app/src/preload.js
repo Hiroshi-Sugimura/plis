@@ -83,6 +83,10 @@ contextBridge.exposeInMainWorld('ipc', {
 		ipcRenderer.invoke('CalendarRenewHolidays', '');
 	},
 
+	CalendarGetWeather: (arg) => {
+		return ipcRenderer.invoke('CalendarGetWeather', arg);
+	},
+
 	/**
 	 * @func
 	 * @desc system settings

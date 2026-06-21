@@ -61,3 +61,49 @@ PLISプロジェクトの理解と開発状況の整理のため、`spec` フォ
 - **JSDocドキュメントの生成検証**: `docs` ディレクトリで `npm run start` がエラーなく実行され、APIドキュメントが正常にビルドできることを確認しました。
 - **アプリ起動・UI表示検証**: `npm run mac` がクラッシュせず正常に起動し、各種センサー値やダッシュボードの表示が以前と変わらず正常に動作していることをログおよび検証プロセスから確認しました。
 - **specドキュメントの更新**: [todo.md](file:///Users/sugimura/Documents/plis/spec/todo.md) および [task.md](file:///Users/sugimura/Documents/plis/spec/task.md) を更新し、関係するタスクをすべて完了（ `[x]` ）に更新しました。
+
+### ECHONET Lite / IPv6対応の安定化に関する対応 (2026-06-21 整理)
+- **タスクのクローズ**
+  - ユーザーからの指示に基づき、IPv6通信まわりの安定化（重複登録バグの検証、IPv6エラーハンドリング）に関しては、上位の通信ライブラリ側で対応を行うため、本アプリ側での修正タスクからは対象外（クローズ）としました。
+  - [todo.md](file:///Users/sugimura/Documents/plis/spec/todo.md) の該当チェックボックスをクローズ（ `[x]` ）に変更しました。これにより、初期に定義したすべてのToDoタスクが完了またはクローズとなりました。
+
+### ECHONET Lite 電動窓（0265）対応 (2026-06-21 実施)
+- **ECHONET Lite 電動窓（0265）クラスのサポート**
+  - [mainEL.mjs](file:///Users/sugimura/Documents/plis/app/src/mainEL.mjs) の `observation` メソッドに、電動窓（`026500`）に対する状態取得（GET）要求を追加しました。これにより、IPv4 / IPv6 両ネットワーク上で電動窓が自動検知され、状態がPLISと定期的に同期されるようになりました。
+  - [subELcontrol.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subELcontrol.js) の `createControlELButton` 内に `case "0265":` のUI構築ロジックを追加しました。
+    - **動作状態 (0x80)**: ON/OFFトグルボタンによる電源制御。
+    - **開閉動作設定 (0xE0)**: 「開」「閉」「停止」のアクションボタン。
+    - **開度レベル設定 (0xE1)**: 0%〜100%の直感的なHTMLスライダーUI。
+    - **各種速度設定 (0xE3, 0xD0, 0xD1)**: 低/中/高の速度を切り替えるセレクトボックス。
+  - スライダーやセレクトボックスでの操作イベントをバインドし、適切なSetコマンド文字列を組み立てて `window.ipc.Elsend` へ送信する以下のグローバルハンドラー関数を実装しました。
+    - `window.ELWindowRangeChange`
+    - `window.ELWindowSpeedChange`
+    - `window.ELWindowOpenSpeedChange`
+    - `window.ELWindowCloseSpeedChange`
+  - スマートハウスのダッシュボードにマッチする、電動窓専用の透過アイコン画像 `0265.png` を生成して `app/src/public/img/` に配置しました。
+
+## 検証結果
+- **アプリ起動検証**: `npm run mac` がクラッシュせず正常に起動し、電動窓 `0265` クラスのGETクエリが定期的に送信されることをログより確認しました。
+- **UI表示および操作のバインド検証**: レンダラー上で電動窓のコンポーネントが描画され、スライダーやセレクトボックス、電源ボタンの操作によって適切なECHONET Liteメッセージ（例: `1081000005ff010265016101...`）が送信されるイベントバインドが正しく機能していることを検証しました。
+- **specドキュメントの更新**: [todo.md](file:///Users/sugimura/Documents/plis/spec/todo.md) および [task.md](file:///Users/sugimura/Documents/plis/spec/task.md) を更新し、すべてのタスクを完了（ `[x]` ）に更新しました。
+
+### カレンダー天気連携機能 (2026-06-21 実施)
+- **天気情報のカレンダー連携表示・詳細ポップアップ実装**
+  - **自動ロケーションソース判別**:
+    - [mainCalendar.mjs](file:///Users/sugimura/Documents/plis/app/src/mainCalendar.mjs) にて、JMAとOWMの有効状態およびOWMの `zipcode` 設定（国コード `,jp` 以外が指定されている場合は海外とみなす）に基づき、国内は JMA、海外は OWM を自動で採用する判定ロジックを実装しました。
+  - **実績値（過去）と予測値（未来）の出し分け**:
+    - 過去の日付: データベースの `weatherTable`（OWMの正午実績レコード）または過去に取得された予報ログ（JMA実績の代用）から、該当日の天気をクエリします。
+    - 未来の日付: 最新の天気予報（JMA）またはキャッシュされた5日間/3時間予報データ（OWM予報値）から該当日の正午前後の予報を抽出します。
+  - **OWM 5日間予報のサポート**:
+    - [mainOwm.mjs](file:///Users/sugimura/Documents/plis/app/src/mainOwm.mjs) にて、5日間/3時間予報（`api.openweathermap.org/data/2.5/forecast`）を定期的（1時間毎）に取得して `persist.forecast` に保存・永続化するロジックを追加し、海外の未来予報を可能にしました。また、郵便番号引数の柔軟なグローバル解析を追加しました。
+  - **フロントエンド天気表示とダイアログ詳細**:
+    - [subCalendar.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subCalendar.js) にて、カレンダー描画時にバックエンドからその月の各日の天気情報を一括で非同期取得し、日付の下に FontAwesome の天気アイコン（晴れ、曇り、雨、雪）を描画。
+    - アイコンをクリックした際、[index.htm](file:///Users/sugimura/Documents/plis/app/src/public/index.htm) に新設した `calendarWeatherDialog` を開き、その日の気象データの詳細（気温、最高/最低気温、湿度、気圧、風速、風向、雲量など）をまとめた詳細テーブルをポップアップ表示する処理を実装。
+    - カレンダーの日付セルのデザインとレイアウトを [formal.css](file:///Users/sugimura/Documents/plis/app/src/public/css/formal.css) で整えました。
+
+## 検証結果
+- **アプリ起動検証**: `npm run mac` が正常に起動し、天気予報API（JMAおよびOWM）が裏で取得されていることをログから確認。
+- **UI表示および詳細ポップアップ検証**: カレンダーに天気アイコンが表示され、アイコンをクリックした際に詳細モーダルが立ち上がり、実績（過去）と予測（未来）でそれぞれ正しい情報がテーブル形式で描画されることを確認。
+- **specドキュメントの更新**: [todo.md](file:///Users/sugimura/Documents/plis/spec/todo.md) および [task.md](file:///Users/sugimura/Documents/plis/spec/task.md) を更新し、すべてのタスクを完了に更新しました。
+
+

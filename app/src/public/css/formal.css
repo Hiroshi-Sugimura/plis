@@ -1304,6 +1304,27 @@ td.today {
 	border: 2px solid black;
 }
 
+table.calendar td {
+	height: 80px;
+	width: 14%;
+	vertical-align: top;
+	padding: 5px;
+	position: relative;
+	border: 1px solid var(--sub-text);
+}
+
+.cal-weather {
+	margin-top: 8px;
+	text-align: center;
+	cursor: pointer;
+	font-size: 1.4em;
+	transition: transform 0.2s;
+}
+
+.cal-weather:hover {
+	transform: scale(1.2);
+}
+
 /* clock */
 .clock-wrap {
 	margin: auto;

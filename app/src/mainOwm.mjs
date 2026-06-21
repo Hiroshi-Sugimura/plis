@@ -133,10 +133,24 @@ let mainOwm = {
 	 */
 	startCore: function (option, _callback) {
 		logger.debug('mainOwm', config.debug, 'startCore(), option:', option);
-		mainOwm.url = 'http://api.openweathermap.org/data/2.5/weather?zip=' + option.zipcode + ',jp&units=metric&appid=' + option.APIKey;
+		
+		let zipQuery = option.zipcode || '';
+		if (zipQuery) {
+			if (!zipQuery.includes(',')) {
+				zipQuery += ',jp';
+			}
+		} else {
+			zipQuery = '100-0001,jp';
+		}
+		// 都市名等のアルファベット指定は q=、数字の郵便番号は zip= として組み立て
+		let urlType = isNaN(parseInt(zipQuery.split(',')[0])) ? 'q' : 'zip';
+
+		mainOwm.url = `http://api.openweathermap.org/data/2.5/weather?${urlType}=${zipQuery}&units=metric&appid=${option.APIKey}`;
+		mainOwm.forecastUrl = `http://api.openweathermap.org/data/2.5/forecast?${urlType}=${zipQuery}&units=metric&appid=${option.APIKey}`;
 		mainOwm.callback = _callback;
 
 		logger.debug('mainOwm', config.debug, 'startCore(), url:', mainOwm.url);
+		logger.debug('mainOwm', config.debug, 'startCore(), forecastUrl:', mainOwm.forecastUrl);
 
 		try {
 			mainOwm.setObserve();  // 1 hour
@@ -154,8 +168,12 @@ let mainOwm = {
 				body += chunk;
 			});
 
-			res.on('data', function (chunk) {
-				mainOwm.callback(body);
+			res.on('end', function () {
+				try {
+					mainOwm.callback(body);
+				} catch (e) {
+					logger.error('mainOwm', 'startCore current weather callback error:', e);
+				}
 			});
 		}).on('error', function (error) {
 			if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT' || error.code === 'ENETUNREACH' || error.code === 'EHOSTUNREACH' || error.code === 'ECONNABORTED' || error.code === 'ECONNRESET') {
@@ -163,6 +181,27 @@ let mainOwm = {
 			} else {
 				logger.error('mainOwm', 'startCore() http.get error:', error);
 			}
+		});
+
+		// 予報を取得
+		http.get(mainOwm.forecastUrl, function (res) {
+			let body = '';
+			res.setEncoding('utf8');
+			res.on('data', function (chunk) {
+				body += chunk;
+			});
+			res.on('end', function () {
+				try {
+					let forecastData = JSON.parse(body);
+					if (forecastData && forecastData.list) {
+						persist.forecast = forecastData;
+					}
+				} catch (e) {
+					logger.error('mainOwm', 'startCore forecast parse error:', e);
+				}
+			});
+		}).on('error', function (error) {
+			logger.error('mainOwm', 'startCore forecast http.get error:', error);
 		});
 
 	},
@@ -212,6 +251,28 @@ let mainOwm = {
 						logger.error('mainOwm', 'observationJob.schedule() http.get error:', error);
 					}
 				});
+
+				// 予報を取得
+				http.get(mainOwm.forecastUrl, function (res) {
+					let body = '';
+					res.setEncoding('utf8');
+					res.on('data', function (chunk) {
+						body += chunk;
+					});
+					res.on('end', function () {
+						try {
+							let forecastData = JSON.parse(body);
+							if (forecastData && forecastData.list) {
+								persist.forecast = forecastData;
+							}
+						} catch (innerError) {
+							logger.error('mainOwm', 'observationJob.schedule() forecast parse error:', innerError);
+						}
+					});
+				}).on('error', function (error) {
+					logger.error('mainOwm', 'observationJob.schedule() forecast http.get error:', error);
+				});
+
 			} catch (cronError) {
 				logger.error('mainOwm', 'observationJob.schedule() error:', cronError);
 			}

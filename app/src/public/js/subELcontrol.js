@@ -137,6 +137,92 @@ window.addEventListener('DOMContentLoaded', function () {
 				}
 				break;
 
+			case "0265": // 電動窓
+				{
+					operatingStatus = facilitiesEL[ip][eoj]["動作状態(80)"];
+					let openCloseStatus = facilitiesEL[ip][eoj]["開閉動作設定(E0)"] || "不明";
+					let rangeStatus = facilitiesEL[ip][eoj]["開度レベル設定(E1)"];
+					let speedStatus = facilitiesEL[ip][eoj]["開閉速度設定(E3)"];
+					let openSpeedStatus = facilitiesEL[ip][eoj]["開速度設定(D0)"];
+					let closeSpeedStatus = facilitiesEL[ip][eoj]["閉速度設定(D1)"];
+					let stateStatus = facilitiesEL[ip][eoj]["開閉状態(EA)"] || "不明";
+
+					// 開度レベルの数値抽出
+					let rangeVal = 0;
+					if (rangeStatus != undefined) {
+						let match = rangeStatus.match(/\d+/);
+						if (match) {
+							rangeVal = parseInt(match[0]);
+						}
+					}
+
+					// 速度設定の現在のHEX値抽出
+					let speedVal = "42"; // デフォルト中
+					if (speedStatus != undefined) {
+						if (speedStatus.includes("低(41)") || speedStatus.includes("41")) speedVal = "41";
+						else if (speedStatus.includes("中(42)") || speedStatus.includes("42")) speedVal = "42";
+						else if (speedStatus.includes("高(43)") || speedStatus.includes("43")) speedVal = "43";
+					}
+
+					let openSpeedVal = "42";
+					if (openSpeedStatus != undefined) {
+						if (openSpeedStatus.includes("低(41)") || openSpeedStatus.includes("41")) openSpeedVal = "41";
+						else if (openSpeedStatus.includes("中(42)") || openSpeedStatus.includes("42")) openSpeedVal = "42";
+						else if (openSpeedStatus.includes("高(43)") || openSpeedStatus.includes("43")) openSpeedVal = "43";
+					}
+
+					let closeSpeedVal = "42";
+					if (closeSpeedStatus != undefined) {
+						if (closeSpeedStatus.includes("低(41)") || closeSpeedStatus.includes("41")) closeSpeedVal = "41";
+						else if (closeSpeedStatus.includes("中(42)") || closeSpeedStatus.includes("42")) closeSpeedVal = "42";
+						else if (closeSpeedStatus.includes("高(43)") || closeSpeedStatus.includes("43")) closeSpeedVal = "43";
+					}
+
+					ret = `<div class='tooltip'><img src="./img/0265.png" class='el-dev' /><div class='description'>${makerCode}&#013;&#010;${ip}</div></div><br>${obj[0]}<br>`;
+					ret += `場所:${instLocation}<br>`;
+					ret += `状態:${stateStatus}<br>`;
+
+					// 1. 電源トグル
+					if (operatingStatus === 'ON(30)') {
+						ret += `<button onclick="window.ELpowButton(this);" value="${ip},${obj[1]},80,31"><i class="fa-solid fa-power-off"></i> OFF</button><br>`;
+					} else {
+						ret += `<button onclick="window.ELpowButton(this);" value="${ip},${obj[1]},80,30"><i class="fa-solid fa-power-off"></i> ON</button><br>`;
+					}
+
+					// 2. 開閉動作設定（開/閉/停止）
+					ret += `<div style="margin: 5px 0;">`;
+					ret += `<button onclick="window.ELpowButton(this);" value="${ip},${obj[1]},E0,41">開</button> `;
+					ret += `<button onclick="window.ELpowButton(this);" value="${ip},${obj[1]},E0,42">閉</button> `;
+					ret += `<button onclick="window.ELpowButton(this);" value="${ip},${obj[1]},E0,43">停止</button>`;
+					ret += `</div>`;
+
+					// 3. 開度レベルスライダー
+					ret += `<div style="margin: 5px 0;">`;
+					ret += `<label>開度:${rangeVal}%</label><br>`;
+					ret += `<input type="range" min="0" max="100" value="${rangeVal}" style="width:80%;" onchange="window.ELWindowRangeChange(this, '${ip}', '${obj[1]}')">`;
+					ret += `</div>`;
+
+					// 4. 速度設定
+					ret += `<div style="margin: 5px 0; font-size: 0.85em;">`;
+					ret += `速度: <select onchange="window.ELWindowSpeedChange(this, '${ip}', '${obj[1]}')">`;
+					ret += `<option value="41" ${speedVal === '41' ? 'selected' : ''}>低</option>`;
+					ret += `<option value="42" ${speedVal === '42' ? 'selected' : ''}>中</option>`;
+					ret += `<option value="43" ${speedVal === '43' ? 'selected' : ''}>高</option>`;
+					ret += `</select><br>`;
+					ret += `開速: <select onchange="window.ELWindowOpenSpeedChange(this, '${ip}', '${obj[1]}')">`;
+					ret += `<option value="41" ${openSpeedVal === '41' ? 'selected' : ''}>低</option>`;
+					ret += `<option value="42" ${openSpeedVal === '42' ? 'selected' : ''}>中</option>`;
+					ret += `<option value="43" ${openSpeedVal === '43' ? 'selected' : ''}>高</option>`;
+					ret += `</select> `;
+					ret += `閉速: <select onchange="window.ELWindowCloseSpeedChange(this, '${ip}', '${obj[1]}')">`;
+					ret += `<option value="41" ${closeSpeedVal === '41' ? 'selected' : ''}>低</option>`;
+					ret += `<option value="42" ${closeSpeedVal === '42' ? 'selected' : ''}>中</option>`;
+					ret += `<option value="43" ${closeSpeedVal === '43' ? 'selected' : ''}>高</option>`;
+					ret += `</select>`;
+					ret += `</div>`;
+				}
+				break;
+
 			case "0263": // シャッター
 				ret = "<div class='tooltip'><img src=\"./img/0263.png\" class='el-dev' /><div class='description'>" + makerCode + "&#013;&#010;" + ip + "</div></div><br>" + obj[0] + "<br>";
 				ret += "場所:" + instLocation + "<br>";
@@ -580,15 +666,35 @@ window.addEventListener('DOMContentLoaded', function () {
 	}
 
 
-	/** 
-	 * @func window.ELpowButton
-	 * @desc 電源ボタンが押された
-	 * @param {object} btn
-	 */
 	window.ELpowButton = function (btn) {
 		let cmd = btn.value.split(",");
 		let msg = "1081000005ff01" + cmd[1] + "6101" + cmd[2] + "01" + cmd[3];
 		window.ipc.Elsend(cmd[0], msg);
+	};
+
+	window.ELWindowRangeChange = function (el, ip, eoj) {
+		let val = parseInt(el.value);
+		let hexVal = val.toString(16).padStart(2, '0');
+		let msg = "1081000005ff01" + eoj + "6101E101" + hexVal;
+		window.ipc.Elsend(ip, msg);
+	};
+
+	window.ELWindowSpeedChange = function (el, ip, eoj) {
+		let val = el.value; // "41", "42", "43"
+		let msg = "1081000005ff01" + eoj + "6101E301" + val;
+		window.ipc.Elsend(ip, msg);
+	};
+
+	window.ELWindowOpenSpeedChange = function (el, ip, eoj) {
+		let val = el.value;
+		let msg = "1081000005ff01" + eoj + "6101D001" + val;
+		window.ipc.Elsend(ip, msg);
+	};
+
+	window.ELWindowCloseSpeedChange = function (el, ip, eoj) {
+		let val = el.value;
+		let msg = "1081000005ff01" + eoj + "6101D101" + val;
+		window.ipc.Elsend(ip, msg);
 	};
 
 

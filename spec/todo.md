@@ -2,20 +2,23 @@
 
 本ドキュメントは、PLIS（Platform for Life Improvement and Support）の開発・メンテナンスにおけるタスク管理用のToDoリストです。
 
-## 📋 優先タスク (直近のバグ修正・安定化)
+## 📋 優先タスク (直近 of the PLIS)
 
 ### 1. ECHONET Lite / IPv6対応の安定化
-- [ ] **IPv6重複登録の検証**
-  - [ ] 同一ネットワーク内にIPv4とIPv6が混在する場合に、デバイスが重複して登録される事象が発生していないか検証。
-  - [ ] 重複防止ロジックが正常に機能しているか [mainEL.mjs](file:///Users/sugimura/Documents/plis/app/src/mainEL.mjs) の確認。
-- [ ] **IPv6エラーハンドリング**
-  - [ ] 一部のローカル環境で発生しているIPv6関連のエラー原因調査とフォールバック処理の実装。
+- [x] **IPv6重複登録の検証**（※ライブラリ側で対応するため対象外としてクローズ）
+- [x] **IPv6エラーハンドリング**（※ライブラリ側で対応するため対象外としてクローズ）
 
 ### 2. サードパーティAPI連携の調整
 - [x] **Netatmoのタイムアウト対策**
   - [x] Netatmo APIの接続タイムアウト発生時の自動リトライ・エラーログ出力の動作確認（[mainNetatmo.mjs](file:///Users/sugimura/Documents/plis/app/src/mainNetatmo.mjs)）。
 - [x] **SwitchBot API バージョン確認**
   - [x] 現在利用している `switchbot-handler` で API v1.1 が安定して動作しているかの動作検証（[mainSwitchBot.mjs](file:///Users/sugimura/Documents/plis/app/src/mainSwitchBot.mjs)）。
+
+### 3. ECHONET Lite 電動窓（0265）対応
+- [x] **電動窓クラス（0265）の検知・可視化・制御の実装**
+  - [x] メインプロセスでの自動検知および定期状態監視（[mainEL.mjs](file:///Users/sugimura/Documents/plis/app/src/mainEL.mjs)）。
+  - [x] レンダラープロセスでの電源、開閉動作、開度（スライダー）、速度制御インターフェースの実装（[subELcontrol.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subELcontrol.js)）。
+  - [x] 電動窓専用アイコン画像（`0265.png`）の追加。
 
 ---
 
@@ -25,6 +28,12 @@
 - [x] **X軸レスポンシブ動作の検証**
   - [x] 30分刻みの時間軸描画において、ウィンドウサイズを変更した際に表示崩れや見切れる問題が発生しないか検証。
   - [x] キリの良い時間での表示が維持されているか確認。
+
+### 3. カレンダーと天気情報の連携
+- [x] **カレンダーへの天気アイコン表示・クリック詳細表示**
+  - [x] 日本国内（JMA優先）と海外（OWM優先）の自動ソース判別ロジックの実装（[mainCalendar.mjs](file:///Users/sugimura/Documents/plis/app/src/mainCalendar.mjs)）。
+  - [x] 過去実績値（データベース）と未来予測値（気象庁予報・OWM5日間予報）の出し分けロジックの実装。
+  - [x] カレンダーセル内へのFontAwesome天気アイコンの表示、およびクリック時の詳細記録ポップアップモーダルの実装。
 
 ### 2. セキュリティおよび堅牢性
 - [x] **XSS対策の再確認**
