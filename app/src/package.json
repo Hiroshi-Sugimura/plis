@@ -1,5 +1,5 @@
 {
-  "name": "PLIS",
+  "name": "plis",
   "description": "Platform for Life Improvement and Support",
   "author": {
     "name": "SUGIMURA Hiroshi (Kanagawa Institute of Technology)",
@@ -9,6 +9,7 @@
   "dependencies": {
     "@network-utils/arp-lookup": "^2.1.0",
     "about-window": "^1.15.2",
+    "axios": "^1.7.9",
     "e-smartmeter-echonet-lite": "^2.8.0",
     "echonet-lite": "^2.18.1",
     "echonet-lite-conv": "^1.9.1",

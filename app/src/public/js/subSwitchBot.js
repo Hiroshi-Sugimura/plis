@@ -57,7 +57,9 @@ window.addEventListener('DOMContentLoaded', function () {
 			return; // 機器情報なければやらない、存在も消す
 		}
 
-		spanSwitchBotTime.innerHTML = `${moment().format("YYYY-MM-DD HH:mm:ss")} 取得, ${arg.count} calls/day`;
+		let intervalMsg = arg.interval ? `, 更新間隔: ${arg.interval}分` : '';
+		let limitMsg = arg.isLimit ? ` <span style="color:red; font-weight:bold;">【API制限中】</span>` : '';
+		spanSwitchBotTime.innerHTML = `${moment().format("YYYY-MM-DD HH:mm:ss")} 取得, ${arg.count} calls/day${intervalMsg}${limitMsg}`;
 
 		let devs = facilitiesSwitchBot.deviceList; // array
 		for (const d of devs) {

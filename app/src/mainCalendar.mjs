@@ -186,6 +186,12 @@ let mainCalendar = {
 				}
 				sendIPCMessage('renewCalendar', csv);
 			});
+		}).catch((error) => {
+			if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT' || error.code === 'ENETUNREACH' || error.code === 'ECONNABORTED' || error.code === 'EHOSTUNREACH' || error.code === 'ECONNRESET') {
+				logger.error('mainCalendar', `getHolidays() Connection Error: ${error.code}`);
+			} else {
+				logger.error('mainCalendar', 'getHolidays() error:', error);
+			}
 		});
 	}
 

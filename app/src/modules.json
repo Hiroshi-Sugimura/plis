@@ -3390,7 +3390,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/pify",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/pify/license"
   },
-  "plis@2.3.0": {
+  "plis@2.3.1": {
     "licenses": "MIT",
     "publisher": "SUGIMURA Hiroshi",
     "email": "hiroshi.sugimura@gmail.com",
