@@ -1,0 +1,2626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>models/localDBModels.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://hiroshi-sugimura.github.io/plis/" target="_blank" class="menu-item" id="forum_link" >Website</a></h2><h2><a href="https://github.com/Hiroshi-Sugimura/plis" target="_blank" class="menu-item" id="website_link" >Github</a></h2><h3>Namespaces</h3><ul><li><a href="subCalendar.html">subCalendar</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subCalendar.html#.checkDate">checkDate</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.createProcess">createProcess</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.isHoliday">isHoliday</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.isToday">isToday</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.showProcess">showProcess</a></li></ul></li><li><a href="subClock.html">subClock</a></li><li><a href="subCo2s.html">subCo2s</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subCo2s.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subCo2s.html#.renewCanvasCo2s">renewCanvasCo2s</a></li></ul></li><li><a href="subEL.html">subEL</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subEL.html#.convRT">convRT</a></li><li data-type='method' style='display: none;'><a href="subEL.html#.renewCanvasSubESM">renewCanvasSubESM</a></li></ul></li><li><a href="subELcontrol.html">subELcontrol</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subELcontrol.html#.colorButton">colorButton</a></li></ul></li><li><a href="subESM.html">subESM</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subESM.html#.convRT">convRT</a></li><li data-type='method' style='display: none;'><a href="subESM.html#.renewCanvasESM">renewCanvasESM</a></li></ul></li><li><a href="subGarmin.html">subGarmin</a></li><li><a href="subHAL.html">subHAL</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subHAL.html#.btnQuestionnaireSubmit_click">btnQuestionnaireSubmit_click</a></li><li data-type='method' style='display: none;'><a href="subHAL.html#.ranking">ranking</a></li><li data-type='method' style='display: none;'><a href="subHAL.html#.renewMajorResults">renewMajorResults</a></li><li data-type='method' style='display: none;'><a href="subHAL.html#.renewMinorResults">renewMinorResults</a></li></ul></li><li><a href="subHue.html">subHue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subHue.html#.dlgHuePush_oncancel">dlgHuePush_oncancel</a></li></ul></li><li><a href="subIkea.html">subIkea</a></li><li><a href="subJma.html">subJma</a></li><li><a href="subLog.html">subLog</a></li><li><a href="subNetatmo.html">subNetatmo</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subNetatmo.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subNetatmo.html#.renewCanvasNetatmo">renewCanvasNetatmo</a></li></ul></li><li><a href="subOmron.html">subOmron</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subOmron.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subOmron.html#.renewCanvasOmron">renewCanvasOmron</a></li></ul></li><li><a href="subOwm.html">subOwm</a></li><li><a href="subQuestionnaire.html">subQuestionnaire</a></li><li><a href="subSwitchBot.html">subSwitchBot</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.newPowerLegendClickHandler">newPowerLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.renewCanvasSwitchBot">renewCanvasSwitchBot</a></li><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.renewPowerCanvasSwitchBot">renewPowerCanvasSwitchBot</a></li></ul></li><li><a href="subSystem.html">subSystem</a></li><li><a href="subToast.html">subToast</a></li><li><a href="subUser.html">subUser</a></li><li><a href="subautoAssessment.html">subautoAssessment</a></li><li><a href="window_.html">window</a><ul class='methods'><li data-type='method' style='display: none;'><a href="window_.html#.Co2sConfigSaved">Co2sConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELAAirconChangeMode">ELAAirconChangeMode</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELAirconShowControlDialog">ELAirconShowControlDialog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELConfigSaved">ELConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELLightingScineButton">ELLightingScineButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELSendTest">ELSendTest</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELSettings">ELSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELUpdateLocation">ELUpdateLocation</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELUpdateSettings">ELUpdateSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELpowButton">ELpowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELpowButton">ELpowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ESMConfigSaved">ESMConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ESMDebugLog">ESMDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALRedraw">HALRedraw</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALSyncResponse">HALSyncResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALdeleteApiTokenResponse">HALdeleteApiTokenResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALgetUserProfileResponse">HALgetUserProfileResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALsetApiTokenResponse">HALsetApiTokenResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HueConfigSaved">HueConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HueDebugLog">HueDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HuePowButton">HuePowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HueRename">HueRename</a></li><li data-type='method' style='display: none;'><a href="window_.html#.IkeaConfigSaved">IkeaConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.IkeaDebugPrint">IkeaDebugPrint</a></li><li data-type='method' style='display: none;'><a href="window_.html#.JmaConfigSaved">JmaConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.JmaDebugLog">JmaDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.NetatmoConfigSaved">NetatmoConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OmronConfigSaved">OmronConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OmronDebugLog">OmronDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OwmConfigSaved">OwmConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OwmDebugLog">OwmDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotBot">SwitchBotBot</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotBulb">SwitchBotBulb</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotConfigSaved">SwitchBotConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotDebugLog">SwitchBotDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotPlug">SwitchBotPlug</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SystemConfigSaved">SystemConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.URLopen">URLopen</a></li><li data-type='method' style='display: none;'><a href="window_.html#.UserConfigSaved">UserConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.addToast">addToast</a></li><li data-type='method' style='display: none;'><a href="window_.html#.autoAssessmentConfigSaved">autoAssessmentConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.autoAssessmentDebugLog">autoAssessmentDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnAutoAssessmentConfigSet_Click">btnAutoAssessmentConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnCalendarRenewSyukujitsu_Click">btnCalendarRenewSyukujitsu_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnCo2sConfigSet_Click">btnCo2sConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnDeleteHalApiToken_Click">btnDeleteHalApiToken_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnELConfigSet_Click">btnELConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnESMConfigSet_Click">btnESMConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnHALsync_Click">btnHALsync_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnHueConfigSet_Click">btnHueConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnIkeaBulbOnOff_Click">btnIkeaBulbOnOff_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnIkeaConfigSet_Click">btnIkeaConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnJmaConfigSet_Click">btnJmaConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnNetatmoConfigSet_Click">btnNetatmoConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnNetworkConfigSet_Click">btnNetworkConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnOmronConfigSet_Click">btnOmronConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnOwmConfigSet_Click">btnOwmConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSetHalApiTokenBtn_Click">btnSetHalApiTokenBtn_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotBulbUpdateBrightnessSettings">btnSwitchBotBulbUpdateBrightnessSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotBulbUpdateColorSettings">btnSwitchBotBulbUpdateColorSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotBulbUpdateColorTemperatureSettings">btnSwitchBotBulbUpdateColorTemperatureSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotConfigSet_Click">btnSwitchBotConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSystemConfigSet_Click">btnSystemConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnUserProfileSet_Click">btnUserProfileSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.calendarNext">calendarNext</a></li><li data-type='method' style='display: none;'><a href="window_.html#.calendarPrev">calendarPrev</a></li><li data-type='method' style='display: none;'><a href="window_.html#.co2sDocSectionClicked">co2sDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.createControlELButton">createControlELButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.disconnectedCo2s">disconnectedCo2s</a></li><li data-type='method' style='display: none;'><a href="window_.html#.disconnectedESM">disconnectedESM</a></li><li data-type='method' style='display: none;'><a href="window_.html#.disconnectedOmron">disconnectedOmron</a></li><li data-type='method' style='display: none;'><a href="window_.html#.esmDocSectionClicked">esmDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.getQuestionnaire">getQuestionnaire</a></li><li data-type='method' style='display: none;'><a href="window_.html#.hueLinked">hueLinked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inIkeaBlindApertureNumber_Change">inIkeaBlindApertureNumber_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inIkeaBlindApertureRange_Change">inIkeaBlindApertureRange_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbBriNumber_Change">inSwitchBotBulbBriNumber_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbBriRange_Change">inSwitchBotBulbBriRange_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbTempNumber_Change">inSwitchBotBulbTempNumber_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbTempRange_Change">inSwitchBotBulbTempRange_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.makeJmaArea">makeJmaArea</a></li><li data-type='method' style='display: none;'><a href="window_.html#.netatmoDocSectionClicked">netatmoDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.omronDocSectionClicked">omronDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.onLoad">onLoad</a></li><li data-type='method' style='display: none;'><a href="window_.html#.openHueRenameDlg">openHueRenameDlg</a></li><li data-type='method' style='display: none;'><a href="window_.html#.pushHideButton">pushHideButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.redrawToast">redrawToast</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewAutoAssessmentConfigView">renewAutoAssessmentConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewCo2s">renewCo2s</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewCo2sConfigView">renewCo2sConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewELConfigView">renewELConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewESM">renewESM</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewESMConfigView">renewESMConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewEnergy">renewEnergy</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewEnergySubmeter">renewEnergySubmeter</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesEL">renewFacilitiesEL</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesHue">renewFacilitiesHue</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesIkea">renewFacilitiesIkea</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesSwitchBot">renewFacilitiesSwitchBot</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHALConfigView">renewHALConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHALProfile">renewHALProfile</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHALToken">renewHALToken</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHueConfigView">renewHueConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHueLog">renewHueLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewIkeaConfigView">renewIkeaConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewIkeaLog">renewIkeaLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJma">renewJma</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJmaAbst">renewJmaAbst</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJmaConfigView">renewJmaConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJmaDetail">renewJmaDetail</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewNetatmo">renewNetatmo</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewNetatmoConfigView">renewNetatmoConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOmron">renewOmron</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOmronConfigView">renewOmronConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOwm">renewOwm</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOwmConfigView">renewOwmConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvCo2s">renewRoomEnvCo2s</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvNetatmo">renewRoomEnvNetatmo</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvOmron">renewRoomEnvOmron</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvSwitchBot">renewRoomEnvSwitchBot</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewSubESM">renewSubESM</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewSwitchBotConfigView">renewSwitchBotConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewSystemConfigView">renewSystemConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewUserConfigView">renewUserConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.selJmaArea_Change">selJmaArea_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.showDlgSwitchBotSettingsDialog4Bulb">showDlgSwitchBotSettingsDialog4Bulb</a></li><li data-type='method' style='display: none;'><a href="window_.html#.showGarminData">showGarminData</a></li></ul></li><li><a href="window.ipc.html">ipc</a></li></ul><h3>Modules</h3><ul><li><a href="module-localDBModels.html">localDBModels</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-localDBModels.html#~makeStubModel">makeStubModel</a></li></ul></li><li><a href="module-logger.html">logger</a></li><li><a href="module-main.html">main</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-main.html#~sendIPCMessage">sendIPCMessage</a></li></ul></li><li><a href="module-mainArp.html">mainArp</a></li><li><a href="module-mainAutoAssessment.html">mainAutoAssessment</a></li><li><a href="module-mainCalendar.html">mainCalendar</a></li><li></li><li><a href="module-mainCo2s.html">mainCo2s</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~getRows">getRows</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~getTodayRoomEnv">getTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~sendTodayRoomEnv">sendTodayRoomEnv</a></li></ul></li><li><a href="module-mainEL.html">mainEL</a></li><li><a href="module-mainESM.html">mainESM</a></li><li><a href="module-mainHALlocal.html">mainHALlocal</a></li><li><a href="module-mainHALsync.html">mainHALsync</a></li><li><a href="module-mainHue.html">mainHue</a></li><li><a href="module-mainIkea.html">mainIkea</a></li><li><a href="module-mainJma.html">mainJma</a></li><li><a href="module-mainNetatmo.html">mainNetatmo</a></li><li><a href="module-mainOmron.html">mainOmron</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getRows">getRows</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getTodayRoomEnv">getTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~sendTodayRoomEnv">sendTodayRoomEnv</a></li></ul></li><li><a href="module-mainOwm.html">mainOwm</a></li><li><a href="module-mainSubmodule.html">mainSubmodule</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~checkValue">checkValue</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~formatDate">formatDate</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getCases">getCases</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getNow">getNow</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getToday">getToday</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getTodayDate">getTodayDate</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getYesterday">getYesterday</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getYesterdayDate">getYesterdayDate</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~isObjEmpty">isObjEmpty</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~mergeDeeply">mergeDeeply</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~objectSort">objectSort</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~roundFloat">roundFloat</a></li></ul></li><li><a href="module-mainSwitchBot.html">mainSwitchBot</a></li><li><a href="module-mainSystem.html">mainSystem</a></li><li><a href="module-mainUser.html">mainUser</a></li><li><a href="module-preload.html">preload</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-preload.html#~AutoAssessmentConfig">AutoAssessmentConfig</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~CalendarRenewHolidays">CalendarRenewHolidays</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~Co2sStop">Co2sStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~Co2sUse">Co2sUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELStop">ELStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELStopOldSearch">ELStopOldSearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELUse">ELUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELUseOldSearch">ELUseOldSearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELsearch">ELsearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ESMUse">ESMUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ESMnotUse">ESMnotUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~Elsend">Elsend</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ElsendOPC1">ElsendOPC1</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALSyncRequeset">HALSyncRequeset</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALdeleteApiToken">HALdeleteApiToken</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALgetApiTokenRequest">HALgetApiTokenRequest</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALgetUserProfileRequest">HALgetUserProfileRequest</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALrenew">HALrenew</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALsetApiTokenRequest">HALsetApiTokenRequest</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALsubmitQuestionnaire">HALsubmitQuestionnaire</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueControl">HueControl</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueUse">HueUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueUseCancel">HueUseCancel</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueUseStop">HueUseStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~IkeaSend">IkeaSend</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~IkeaUse">IkeaUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~IkeaUseStop">IkeaUseStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~JmaConfigSave">JmaConfigSave</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~NetatmoStop">NetatmoStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~NetatmoUse">NetatmoUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OmronStop">OmronStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OmronUse">OmronUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OwmStop">OwmStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OwmUse">OwmUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearch">PageInSearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearchNext">PageInSearchNext</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearchPrev">PageInSearchPrev</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearchStop">PageInSearchStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ScreenMode">ScreenMode</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SwitchBotControl">SwitchBotControl</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SwitchBotStop">SwitchBotStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SwitchBotUse">SwitchBotUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SystemSetConfig">SystemSetConfig</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~URLopen">URLopen</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~already">already</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~userProfileSave">userProfileSave</a></li></ul></li><li><a href="module-test-el-sanitize.html">test-el-sanitize</a></li></ul><h3>Events</h3><ul><li><a href="multicastSearch.html#event:click">click</a></li><li><a href="window.ipc.html#.event:to-renderer">to-renderer</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">models/localDBModels.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>//////////////////////////////////////////////////////////////////////
+//	Copyright (C) Hiroshi SUGIMURA 2020.08.28
+//  Last updated: 2021.09.24
+//////////////////////////////////////////////////////////////////////
+/**
+ * @module localDBModels
+ * @description ローカルのライフログデータベース（SQLite3/Sequelize）のモデル定義および初期化を行うモジュール。
+ */
+// Require all the stuff
+
+import { createRequire } from 'module';
+const require = createRequire(import.meta.url);
+
+let Sequelize, Op;
+try {
+    ({ Sequelize, Op } = require('sequelize'));
+} catch (e) {
+    Sequelize = null;
+    Op = {};
+}
+// Windows ARM や sqlite3未導入環境ではSequelizeのsqlite方言が使えないため、
+// ここで安全にスタブへフォールバックする
+/** @type {boolean} Sequelize/SQLiteが利用可能かどうか */
+let canUseSequelizeSqlite = !!Sequelize;
+
+// Sequelizeが使えない場合の軽量シム（fn, literal, col）
+const SequelizeShim = {
+    fn: function (name, arg) { return { type: 'fn', name, arg }; },
+    literal: function (val) { return { type: 'literal', val }; },
+    col: function (name) { return { type: 'col', name }; },
+};
+const env = process.env.NODE_ENV || "development";
+
+import path from 'node:path';
+import { fileURLToPath } from 'url';
+
+const appname = 'PLIS';
+const userHome = process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"];
+const configDir = path.join(userHome, appname);
+
+// Setup sequelize db connection (fallback to stub when sqlite3 is unavailable)
+let sqlite3;
+if (canUseSequelizeSqlite) {
+    try {
+        sqlite3 = new Sequelize('database', '', '', {
+            dialect: 'sqlite',
+            storage: path.join(configDir, 'lifelog.db'),
+            logging: false
+        });
+    } catch (e) {
+        console.warn(new Date().toISOString(), '| localDBModels: Sequelize sqlite init failed, fallback to stub:', e.message);
+        canUseSequelizeSqlite = false;
+    }
+}
+
+/**
+ * @func makeStubModel
+ * @desc Sequelizeが利用できない場合に、各モデルのメソッドをモックするためのスタブを生成する。
+ * @param {string} name モデル名
+ * @returns {Object} データベース操作メソッドを模倣したオブジェクト
+ */
+function makeStubModel(name) {
+    const stub = {
+        create: async function () { return {}; },
+        findAll: async function () { return []; },
+        findOne: async function () { return null; },
+        update: async function () { return [0]; },
+        destroy: async function () { return 0; },
+        bulkCreate: async function () { return []; },
+        sync: async function () { return true; },
+        define: function () { return this; }
+    };
+    return stub;
+}
+
+// When Sequelize sqlite is unavailable, provide a sqlite3 stub with sync()
+if (!canUseSequelizeSqlite) {
+    sqlite3 = {
+        async sync() { return true; },
+        async transaction() { return { commit: async () => { }, rollback: async () => { } }; }
+    };
+}
+
+// freezeTableNameはモデルに渡した名前を実テーブルにマッピングする際に複数形に変換してしまうのを抑制する
+// timestamps: falseを入れておくと，createdAt, updatedAtが勝手に追加されない
+
+//////////////////////////////////////////////////////////////////////
+/**
+ * @typedef {import('sequelize').Model} Model
+ */
+
+//----------------------------------------------------------------------
+// ECHONET Lite 関連
+/** @type {Model} ECHONET Lite の受信ログ（解析済み） */
+const eldataModel = canUseSequelizeSqlite ? sqlite3.define('eldata', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    srcip: {
+        type: Sequelize.STRING
+    },
+    srcmac: {
+        type: Sequelize.STRING
+    },
+    seoj: {
+        type: Sequelize.STRING
+    },
+    deoj: {
+        type: Sequelize.STRING
+    },
+    esv: {
+        type: Sequelize.STRING
+    },
+    epc: {
+        type: Sequelize.STRING
+    },
+    edt: {
+        type: Sequelize.STRING
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('eldata');
+
+
+//////////////////////////////////////////////////////////////////////
+/** @type {Model} ECHONET Lite の生パケットログ */
+const elrawModel = canUseSequelizeSqlite ? sqlite3.define('elraw', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    srcip: {
+        type: Sequelize.STRING
+    },
+    srcmac: {
+        type: Sequelize.STRING
+    },
+    dstip: {
+        type: Sequelize.STRING
+    },
+    dstmac: {
+        type: Sequelize.STRING
+    },
+    rawdata: {
+        type: Sequelize.STRING
+    },
+    seoj: {
+        type: Sequelize.STRING
+    },
+    deoj: {
+        type: Sequelize.STRING
+    },
+    esv: {
+        type: Sequelize.STRING
+    },
+    opc: {
+        type: Sequelize.STRING
+    },
+    detail: {
+        type: Sequelize.STRING
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('elraw');
+
+
+
+//////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
+// スマートメータ (ECHONET Lite) 関連
+/** @type {Model} スマートメータ（低圧スマート電力量メータ）のログ */
+const esmdataModel = canUseSequelizeSqlite ? sqlite3.define('esmdata', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    srcip: {
+        type: Sequelize.STRING
+    },
+    seoj: {
+        type: Sequelize.STRING
+    },
+    deoj: {
+        type: Sequelize.STRING
+    },
+    esv: {
+        type: Sequelize.STRING
+    },
+    epc: {
+        type: Sequelize.STRING
+    },
+    edt: {
+        type: Sequelize.STRING
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('esmdata');
+
+
+//////////////////////////////////////////////////////////////////////
+/** @type {Model} スマートメータ（低圧スマート電力量メータ）の生パケットログ */
+const esmrawModel = canUseSequelizeSqlite ? sqlite3.define('esmraw', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    srcip: {
+        type: Sequelize.STRING
+    },
+    rawdata: {
+        type: Sequelize.STRING
+    },
+    seoj: {
+        type: Sequelize.STRING
+    },
+    deoj: {
+        type: Sequelize.STRING
+    },
+    esv: {
+        type: Sequelize.STRING
+    },
+    opc: {
+        type: Sequelize.STRING
+    },
+    detail: {
+        type: Sequelize.STRING
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('esmraw');
+
+//////////////////////////////////////////////////////////////////////
+/** @type {Model} 瞬時電力量、積算電力量などの集計データ */
+const electricEnergyModel = canUseSequelizeSqlite ? sqlite3.define('electricEnergyTable', {
+    id: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    dateTime: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('dateTime', val.toISOString());
+            } else {
+                this.setDataValue('dateTime', val);
+            }
+        }
+    },
+    srcType: {  // Meter, DistributionBoard, Sensor, and so on.
+        type: Sequelize.STRING(32),
+        allowNull: false
+    },
+    place: {
+        type: Sequelize.STRING(128),
+        allowNull: false
+    },
+    commulativeAmountNormal: {  // EL ESM:e0, 積算電力量（正）
+        type: Sequelize.DOUBLE
+    },
+    commulativeAmountReverse: {  // EL ESM:e3, 積算電力量計測値（逆）
+        type: Sequelize.DOUBLE
+    },
+    instantaneousPower: {  // EL ESM:e7, 瞬時電力計測値
+        type: Sequelize.FLOAT
+    },
+    instantaneousCurrentsR: {  // EL ESM:e8, 瞬時電流計測値, R相
+        type: Sequelize.INTEGER
+    },
+    instantaneousCurrentsT: {  // EL ESM:e8, 瞬時電流計測値, T相
+        type: Sequelize.INTEGER
+    },
+    commulativeAmountsFixedTimeNormalDaytime: {  // EL ESM:ea, 定時積算電力量計測値（正）, 計測日時
+        type: Sequelize.STRING,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('commulativeAmountsFixedTimeNormalDaytime', val.toISOString());
+            } else {
+                this.setDataValue('commulativeAmountsFixedTimeNormalDaytime', val);
+            }
+        }
+    },
+    commulativeAmountsFixedTimeNormalPower: {  // EL ESM:ea, 定時積算電力量計測値（正）, 電力量
+        type: Sequelize.INTEGER
+    },
+    commulativeAmountsFixedTimeReverseDaytime: {  // EL ESM:eb, 定時積算電力量計測値（逆）
+        type: Sequelize.STRING,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('commulativeAmountsFixedTimeReverseDaytime', val.toISOString());
+            } else {
+                this.setDataValue('commulativeAmountsFixedTimeReverseDaytime', val);
+            }
+        }
+    },
+    commulativeAmountsFixedTimeRiversePower: {  // EL ESM:eb, 定時積算電力量計測値（逆）, 電力量
+        type: Sequelize.INTEGER
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('ElectricEnergy');
+
+
+
+//////////////////////////////////////////////////////////////////////
+/** @type {Model} Philips Hue の生データログ */
+const huerawModel = canUseSequelizeSqlite ? sqlite3.define('huerawModel', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    rawdata: {
+        type: Sequelize.STRING
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('huerawModel');
+
+
+
+//////////////////////////////////////////////////////////////////////
+/** @type {Model} ARPテーブルのログ */
+const arpModel = canUseSequelizeSqlite ? sqlite3.define('arpTable', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    detail: {
+        type: Sequelize.STRING
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('arpTable');
+
+//----------------------------------------------------------------------
+// OpenWeatherMap 関連
+/** @type {Model} OpenWeatherMap API からの生レスポンスログ */
+const owmModel = canUseSequelizeSqlite ? sqlite3.define('owmTable', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    detail: {
+        type: Sequelize.STRING
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('owmTable');
+
+/** @type {Model} 取得した気象データ（気温、湿度、気圧など）を抽出・正規化したログ */
+const weatherModel = canUseSequelizeSqlite ? sqlite3.define('weatherTable', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    dateTime: {
+        type: Sequelize.STRING,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('dateTime', val.toISOString());
+            } else {
+                this.setDataValue('dateTime', val);
+            }
+        }
+    },
+    srcType: {
+        type: Sequelize.STRING
+    },
+    place: {
+        type: Sequelize.STRING
+    },
+    weather: {
+        type: Sequelize.STRING
+    },
+    temperature: {
+        type: Sequelize.DOUBLE
+    },
+    humidity: {
+        type: Sequelize.DOUBLE
+    },
+    pressure: {
+        type: Sequelize.DOUBLE
+    },
+    windSpeed: {
+        type: Sequelize.DOUBLE
+    },
+    windDirection: {
+        type: Sequelize.DOUBLE
+    },
+    cloudCover: {
+        type: Sequelize.DOUBLE
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('weatherTable');
+
+
+
+//////////////////////////////////////////////////////////////////////
+//----------------------------------------------------------------------
+// Netatmo 関連
+/** @type {Model} Netatmo API からの生デバイスデータログ */
+const netatmoModel = canUseSequelizeSqlite ? sqlite3.define('netatmoTable', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    detail: {
+        type: Sequelize.STRING
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('netatmoTable');
+
+
+//----------------------------------------------------------------------
+// SwitchBot 関連
+/** @type {Model} SwitchBot API からの生デバイスデータログ */
+const switchBotRawModel = canUseSequelizeSqlite ? sqlite3.define('switchBotRawTable', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    detail: {
+        type: Sequelize.TEXT
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('switchBotRawTable');
+
+/** @type {Model} SwitchBot デバイスの抽出・正規化されたデータログ */
+const switchBotDataModel = canUseSequelizeSqlite ? sqlite3.define('switchBotDataTable', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    deviceId: {
+        type: Sequelize.TEXT,
+        allowNull: false
+    },
+    deviceType: {
+        type: Sequelize.TEXT,
+        allowNull: false
+    },
+    deviceName: {
+        type: Sequelize.TEXT
+    },
+    property: {
+        type: Sequelize.TEXT
+    },
+    value: {
+        type: Sequelize.TEXT
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('switchBotDataTable');
+
+
+//----------------------------------------------------------------------
+// IKEA TRADFRI 関連
+/** @type {Model} IKEA ゲートウェイからの生データログ */
+const ikeaRawModel = canUseSequelizeSqlite ? sqlite3.define('ikeaRawTable', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    detail: {
+        type: Sequelize.TEXT
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('ikeaRawTable');
+
+/** @type {Model} IKEA デバイスの抽出・正規化されたデータログ */
+const ikeaDataModel = canUseSequelizeSqlite ? sqlite3.define('ikeaDataTable', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    deviceId: {
+        type: Sequelize.TEXT,
+        allowNull: false
+    },
+    deviceType: {
+        type: Sequelize.TEXT,
+        allowNull: false
+    },
+    deviceName: {
+        type: Sequelize.TEXT
+    },
+    alive: {
+        type: Sequelize.BOOLEAN
+    },
+    power: {
+        type: Sequelize.INTEGER
+    },
+    battery: {
+        type: Sequelize.INTEGER
+    },
+    list: {
+        type: Sequelize.TEXT
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('ikeaDataTable');
+
+
+//----------------------------------------------------------------------
+// アンケート・評価・成績関連
+/** @type {Model} ユーザーからのアンケート回答記録 */
+const IOT_QuestionnaireAnswersModel = canUseSequelizeSqlite ? sqlite3.define('IOT_QuestionnaireAnswers', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    date: {
+        type: Sequelize.DATEONLY,
+        unique: true,
+        allowNull: false
+    },
+    q_1_1: {
+        type: Sequelize.INTEGER
+    },
+    q_1_2: {
+        type: Sequelize.INTEGER
+    },
+    q_1_3: {
+        type: Sequelize.INTEGER
+    },
+    q_1_4: {
+        type: Sequelize.INTEGER
+    },
+    q_1_5: {
+        type: Sequelize.INTEGER
+    },
+    q_1_6: {
+        type: Sequelize.INTEGER
+    },
+    q_1_7: {
+        type: Sequelize.INTEGER
+    },
+    q_1_8: {
+        type: Sequelize.INTEGER
+    },
+    q_1_9: {
+        type: Sequelize.INTEGER
+    },
+    q_1_10: {
+        type: Sequelize.INTEGER
+    },
+    q_1_11: {
+        type: Sequelize.INTEGER
+    },
+    q_1_12: {
+        type: Sequelize.INTEGER
+    },
+    q_1_15: {
+        type: Sequelize.INTEGER
+    },
+    q_2_1: {
+        type: Sequelize.INTEGER
+    },
+    q_2_2: {
+        type: Sequelize.INTEGER
+    },
+    q_2_3: {
+        type: Sequelize.INTEGER
+    },
+    q_2_4: {
+        type: Sequelize.INTEGER
+    },
+    q_2_5: {
+        type: Sequelize.INTEGER
+    },
+    q_2_6: {
+        type: Sequelize.INTEGER
+    },
+    q_2_7: {
+        type: Sequelize.INTEGER
+    },
+    q_2_8: {
+        type: Sequelize.INTEGER
+    },
+    q_2_9: {
+        type: Sequelize.INTEGER
+    },
+    q_2_10: {
+        type: Sequelize.INTEGER
+    },
+    q_2_11: {
+        type: Sequelize.INTEGER
+    },
+    q_2_12: {
+        type: Sequelize.INTEGER
+    },
+    q_2_15: {
+        type: Sequelize.INTEGER
+    },
+    q_3_1: {
+        type: Sequelize.INTEGER
+    },
+    q_3_2: {
+        type: Sequelize.INTEGER
+    },
+    q_3_3: {
+        type: Sequelize.INTEGER
+    },
+    q_3_4: {
+        type: Sequelize.INTEGER
+    },
+    q_3_5: {
+        type: Sequelize.INTEGER
+    },
+    q_3_6: {
+        type: Sequelize.INTEGER
+    },
+    q_3_7: {
+        type: Sequelize.INTEGER
+    },
+    q_3_8: {
+        type: Sequelize.INTEGER
+    },
+    q_3_9: {
+        type: Sequelize.INTEGER
+    },
+    q_3_10: {
+        type: Sequelize.INTEGER
+    },
+    q_3_11: {
+        type: Sequelize.INTEGER
+    },
+    q_3_12: {
+        type: Sequelize.INTEGER
+    },
+    q_3_15: {
+        type: Sequelize.INTEGER
+    },
+    q_4_1: {
+        type: Sequelize.INTEGER
+    },
+    q_4_2: {
+        type: Sequelize.INTEGER
+    },
+    q_4_3: {
+        type: Sequelize.INTEGER
+    },
+    q_4_4: {
+        type: Sequelize.INTEGER
+    },
+    q_4_5: {
+        type: Sequelize.INTEGER
+    },
+    q_4_6: {
+        type: Sequelize.INTEGER
+    },
+    q_4_7: {
+        type: Sequelize.INTEGER
+    },
+    q_4_8: {
+        type: Sequelize.INTEGER
+    },
+    q_4_9: {
+        type: Sequelize.INTEGER
+    },
+    q_4_10: {
+        type: Sequelize.INTEGER
+    },
+    q_4_11: {
+        type: Sequelize.INTEGER
+    },
+    q_4_12: {
+        type: Sequelize.INTEGER
+    },
+    q_4_15: {
+        type: Sequelize.INTEGER
+    },
+    q_5_1: {
+        type: Sequelize.INTEGER
+    },
+    q_5_2: {
+        type: Sequelize.INTEGER
+    },
+    q_5_3: {
+        type: Sequelize.INTEGER
+    },
+    q_5_4: {
+        type: Sequelize.INTEGER
+    },
+    q_5_5: {
+        type: Sequelize.INTEGER
+    },
+    q_5_6: {
+        type: Sequelize.INTEGER
+    },
+    q_5_7: {
+        type: Sequelize.INTEGER
+    },
+    q_5_8: {
+        type: Sequelize.INTEGER
+    },
+    q_5_9: {
+        type: Sequelize.INTEGER
+    },
+    q_5_10: {
+        type: Sequelize.INTEGER
+    },
+    q_5_11: {
+        type: Sequelize.INTEGER
+    },
+    q_5_12: {
+        type: Sequelize.INTEGER
+    },
+    q_5_15: {
+        type: Sequelize.INTEGER
+    },
+    q_6_1: {
+        type: Sequelize.INTEGER
+    },
+    q_6_2: {
+        type: Sequelize.INTEGER
+    },
+    q_6_3: {
+        type: Sequelize.INTEGER
+    },
+    q_6_4: {
+        type: Sequelize.INTEGER
+    },
+    q_6_5: {
+        type: Sequelize.INTEGER
+    },
+    q_6_6: {
+        type: Sequelize.INTEGER
+    },
+    q_6_7: {
+        type: Sequelize.INTEGER
+    },
+    q_6_8: {
+        type: Sequelize.INTEGER
+    },
+    q_6_9: {
+        type: Sequelize.INTEGER
+    },
+    q_6_10: {
+        type: Sequelize.INTEGER
+    },
+    q_6_11: {
+        type: Sequelize.INTEGER
+    },
+    q_6_12: {
+        type: Sequelize.INTEGER
+    },
+    q_6_15: {
+        type: Sequelize.INTEGER
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_QuestionnaireAnswers');
+
+
+/** @type {Model} 主要な評価結果（総合スコア、分野別スコア等） */
+const IOT_MajorResultsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MajorResults', {
+    idIOT_MajorResults: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    date: {
+        type: Sequelize.DATEONLY,
+        unique: true,
+        allowNull: false
+    },
+    assessmentSource: {
+        type: Sequelize.STRING(16)
+    },
+    smartLifeIndex: {
+        type: Sequelize.DOUBLE
+    },
+    totalPoint: {
+        type: Sequelize.DOUBLE
+    },
+    totalRank: {
+        type: Sequelize.STRING(10)
+    },
+    clothingPoint: {
+        type: Sequelize.DOUBLE
+    },
+    clothingRawScore: {
+        type: Sequelize.DOUBLE
+    },
+    foodPoint: {
+        type: Sequelize.DOUBLE
+    },
+    foodRawScore: {
+        type: Sequelize.DOUBLE
+    },
+    housingPoint: {
+        type: Sequelize.DOUBLE
+    },
+    housingRawScore: {
+        type: Sequelize.DOUBLE
+    },
+    physicalHealthPoint: {
+        type: Sequelize.DOUBLE
+    },
+    physicalHealthRawScore: {
+        type: Sequelize.DOUBLE
+    },
+    mentalHealthPoint: {
+        type: Sequelize.DOUBLE
+    },
+    mentalHealthRawScore: {
+        type: Sequelize.DOUBLE
+    },
+    ecologyPoint: {
+        type: Sequelize.DOUBLE
+    },
+    ecologyRawScore: {
+        type: Sequelize.DOUBLE
+    },
+    comments: {
+        type: Sequelize.TEXT,
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_MajorResults');
+
+
+/** @type {Model} 詳細な評価結果（設問ごとのスコア等） */
+const IOT_MinorResultsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MinorResults', {
+    idIOT_MinorResults: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    date: {
+        type: Sequelize.DATEONLY,
+        unique: true,
+        allowNull: false
+    },
+    assessmentSource: {
+        type: Sequelize.STRING(16)
+    },
+    r_1_1: {
+        type: Sequelize.DOUBLE
+    },
+    r_1_2: {
+        type: Sequelize.DOUBLE
+    },
+    r_1_3: {
+        type: Sequelize.DOUBLE
+    },
+    r_1_4: {
+        type: Sequelize.DOUBLE
+    },
+    r_1_5: {
+        type: Sequelize.DOUBLE
+    },
+    r_1_6: {
+        type: Sequelize.DOUBLE
+    },
+    r_1_7: {
+        type: Sequelize.DOUBLE
+    },
+    r_1_8: {
+        type: Sequelize.DOUBLE
+    },
+    r_1_9: {
+        type: Sequelize.DOUBLE
+    },
+    r_2_1: {
+        type: Sequelize.DOUBLE
+    },
+    r_2_2: {
+        type: Sequelize.DOUBLE
+    },
+    r_2_3: {
+        type: Sequelize.DOUBLE
+    },
+    r_2_4: {
+        type: Sequelize.DOUBLE
+    },
+    r_2_5: {
+        type: Sequelize.DOUBLE
+    },
+    r_2_6: {
+        type: Sequelize.DOUBLE
+    },
+    r_2_7: {
+        type: Sequelize.DOUBLE
+    },
+    r_2_8: {
+        type: Sequelize.DOUBLE
+    },
+    r_3_1: {
+        type: Sequelize.DOUBLE
+    },
+    r_3_2: {
+        type: Sequelize.DOUBLE
+    },
+    r_3_3: {
+        type: Sequelize.DOUBLE
+    },
+    r_3_4: {
+        type: Sequelize.DOUBLE
+    },
+    r_3_5: {
+        type: Sequelize.DOUBLE
+    },
+    r_3_6: {
+        type: Sequelize.DOUBLE
+    },
+    r_3_7: {
+        type: Sequelize.DOUBLE
+    },
+    r_3_8: {
+        type: Sequelize.DOUBLE
+    },
+    r_4_1: {
+        type: Sequelize.DOUBLE
+    },
+    r_4_2: {
+        type: Sequelize.DOUBLE
+    },
+    r_4_3: {
+        type: Sequelize.DOUBLE
+    },
+    r_4_4: {
+        type: Sequelize.DOUBLE
+    },
+    r_4_5: {
+        type: Sequelize.DOUBLE
+    },
+    r_4_6: {
+        type: Sequelize.DOUBLE
+    },
+    r_4_7: {
+        type: Sequelize.DOUBLE
+    },
+    r_4_8: {
+        type: Sequelize.DOUBLE
+    },
+    r_5_1: {
+        type: Sequelize.DOUBLE
+    },
+    r_5_2: {
+        type: Sequelize.DOUBLE
+    },
+    r_5_3: {
+        type: Sequelize.DOUBLE
+    },
+    r_5_4: {
+        type: Sequelize.DOUBLE
+    },
+    r_5_5: {
+        type: Sequelize.DOUBLE
+    },
+    r_5_6: {
+        type: Sequelize.DOUBLE
+    },
+    r_5_7: {
+        type: Sequelize.DOUBLE
+    },
+    r_5_8: {
+        type: Sequelize.DOUBLE
+    },
+    r_5_9: {
+        type: Sequelize.DOUBLE
+    },
+    r_6_1: {
+        type: Sequelize.DOUBLE
+    },
+    r_6_2: {
+        type: Sequelize.DOUBLE
+    },
+    r_6_3: {
+        type: Sequelize.DOUBLE
+    },
+    r_6_4: {
+        type: Sequelize.DOUBLE
+    },
+    r_6_5: {
+        type: Sequelize.DOUBLE
+    },
+    r_6_6: {
+        type: Sequelize.DOUBLE
+    },
+    r_6_7: {
+        type: Sequelize.DOUBLE
+    },
+    r_6_8: {
+        type: Sequelize.DOUBLE
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_MinorResults');
+
+
+/** @type {Model} 評価指標の基準値や平均値等 */
+const IOT_MinorkeyMeansModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MinorkeyMeans', {
+    idIOT_MinorkeyMeans: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    version: {
+        type: Sequelize.STRING(16),
+        allowNull: false
+    },
+    majorKey: {
+        type: Sequelize.INTEGER
+    },
+    minorKey: {
+        type: Sequelize.INTEGER
+    },
+    key: {
+        type: Sequelize.VIRTUAL,
+        get() {
+            return `r_${this.getDataValue('majorKey')}_${this.getDataValue('minorKey')}`;
+        },
+        set(value) {
+            if (!value) return;
+            const parts = value.split('_');
+            this.setDataValue('majorKey', parseInt(parts[1], 10));
+            this.setDataValue('minorKey', parseInt(parts[2], 10));
+        }
+    },
+    val: {
+        type: Sequelize.DOUBLE,
+        field: 'means'
+    }
+}, {
+    freezeTableName: true,
+    timestamps: false
+}) : makeStubModel('IOT_MinorkeyMeans');
+
+
+/** @type {Object[]} 評価指標のデフォルト値リスト */
+const MinorkeyMeansValues = [
+    { version: '1', key: 'r_1_1', val: 56.5925925925926 },
+    { version: '1', key: 'r_1_2', val: 59.8518518518519 },
+    { version: '1', key: 'r_1_3', val: 49.3333333333333 },
+    { version: '1', key: 'r_1_4', val: 51.5555555555556 },
+    { version: '1', key: 'r_1_5', val: 62.2962962962963 },
+    { version: '1', key: 'r_1_6', val: 40.5925925925926 },
+    { version: '1', key: 'r_1_7', val: 68.3703703703704 },
+    { version: '1', key: 'r_1_8', val: 63.8518518518519 },
+    { version: '1', key: 'r_1_9', val: 63.8518518518519 },
+    { version: '1', key: 'r_2_1', val: 67.5925925925926 },
+    { version: '1', key: 'r_2_2', val: 78.4814814814815 },
+    { version: '1', key: 'r_2_3', val: 74.3703703703704 },
+    { version: '1', key: 'r_2_4', val: 51.5555555555556 },
+    { version: '1', key: 'r_2_5', val: 75.3333333333333 },
+    { version: '1', key: 'r_2_6', val: 65.4074074074074 },
+    { version: '1', key: 'r_2_7', val: 76.5185185185185 },
+    { version: '1', key: 'r_2_8', val: 63.8518518518519 },
+    { version: '1', key: 'r_2_9', val: 77.2592592592593 },
+    { version: '1', key: 'r_3_1', val: 68 },
+    { version: '1', key: 'r_3_2', val: 59.9074074074074 },
+    { version: '1', key: 'r_3_3', val: 50.8148148148148 },
+    { version: '1', key: 'r_3_4', val: 43.1111111111111 },
+    { version: '1', key: 'r_3_5', val: 71.3333333333333 },
+    { version: '1', key: 'r_3_6', val: 65.5555555555556 },
+    { version: '1', key: 'r_3_7', val: 68.4444444444444 },
+    { version: '1', key: 'r_3_8', val: 52 },
+    { version: '1', key: 'r_4_1', val: 65.7037037037037 },
+    { version: '1', key: 'r_4_2', val: 52.8888888888889 },
+    { version: '1', key: 'r_4_3', val: 55.4074074074074 },
+    { version: '1', key: 'r_4_4', val: 43.4074074074074 },
+    { version: '1', key: 'r_4_5', val: 50.1481481481481 },
+    { version: '1', key: 'r_4_6', val: 65.4074074074074 },
+    { version: '1', key: 'r_4_7', val: 48.7407407407407 },
+    { version: '1', key: 'r_4_8', val: 70.0740740740741 },
+    { version: '1', key: 'r_5_1', val: 70.8148148148148 },
+    { version: '1', key: 'r_5_2', val: 55.037037037037 },
+    { version: '1', key: 'r_5_3', val: 55.7777777777778 },
+    { version: '1', key: 'r_5_4', val: 61.7037037037037 },
+    { version: '1', key: 'r_5_5', val: 55.037037037037 },
+    { version: '1', key: 'r_5_6', val: 72.8888888888889 },
+    { version: '1', key: 'r_5_7', val: 60.0740740740741 },
+    { version: '1', key: 'r_5_8', val: 69.8518518518519 },
+    { version: '1', key: 'r_5_9', val: 81.7037037037037 },
+    { version: '1', key: 'r_6_1', val: 56.5925925925926 },
+    { version: '1', key: 'r_6_2', val: 56.6666666666667 },
+    { version: '1', key: 'r_6_3', val: 49.9259259259259 },
+    { version: '1', key: 'r_6_4', val: 79.5555555555556 },
+    { version: '1', key: 'r_6_5', val: 63.3333333333333 },
+    { version: '1', key: 'r_6_6', val: 63.8518518518519 },
+    { version: '1', key: 'r_6_7', val: 77.2592592592593 },
+    { version: '1', key: 'r_6_8', val: 76.5185185185185 }
+];
+
+
+//----------------------------------------------------------------------
+// 環境・ユーザー状態関連
+/** @type {Model} 部屋の環境データ（気温、湿度、CO2、騒音等、Netatmoやセンサーから集約） */
+const roomEnvModel = canUseSequelizeSqlite ? sqlite3.define('roomEnv', {
+    id: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    dateTime: {
+        // type: Sequelize.DATE,
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('dateTime', val.toISOString());
+            } else {
+                this.setDataValue('dateTime', val);
+            }
+        }
+    },
+    srcType: {  // netatmo, omron, and so on.
+        type: Sequelize.STRING(32),
+        allowNull: false
+    },
+    place: {
+        type: Sequelize.STRING(128),
+        allowNull: false
+    },
+    temperature: {
+        type: Sequelize.FLOAT
+    },
+    humidity: {
+        type: Sequelize.FLOAT
+    },
+    pressure: {
+        type: Sequelize.FLOAT
+    },
+    beep: {
+        type: Sequelize.INTEGER
+    },
+    CO2: {
+        type: Sequelize.INTEGER
+    },
+    TVOC: {
+        type: Sequelize.INTEGER
+    },
+    noise: {
+        type: Sequelize.INTEGER
+    },
+    etvoc: {
+        type: Sequelize.INTEGER
+    },
+    sico: {
+        type: Sequelize.FLOAT
+    },
+    vibration: {
+        type: Sequelize.INTEGER
+    },
+    anbientLight: {
+        type: Sequelize.INTEGER
+    },
+    light: {
+        type: Sequelize.INTEGER
+    },
+    discomfortIndex: {
+        type: Sequelize.FLOAT
+    },
+    heatStroke: {
+        type: Sequelize.FLOAT
+    },
+    lightColor: {
+        type: Sequelize.INTEGER
+    },
+    image: {
+        type: Sequelize.TEXT
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('roomEnv');
+
+
+/** @type {Model} ユーザーの現在の状態ログ */
+const userStateModel = canUseSequelizeSqlite ? sqlite3.define('userState', {
+    id: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    dateTime: {
+        // type: Sequelize.DATE,
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('dateTime', val.toISOString());
+            } else {
+                this.setDataValue('dateTime', val);
+            }
+        }
+    },
+    srcType: {  // garmin, fitbit, apple watch, ...
+        type: Sequelize.STRING(32),
+        allowNull: false
+    },
+    place: {  // location
+        type: Sequelize.STRING(128)
+    },
+    steps: {  // steps
+        type: Sequelize.INTEGER
+    },
+    distance: { // distance
+        type: Sequelize.INTEGER
+    },
+    calories: { // Total calories
+        type: Sequelize.INTEGER
+    },
+    heartRate: { // heart rate
+        type: Sequelize.INTEGER
+    },
+    stress: { // stress
+        type: Sequelize.INTEGER
+    },
+    bodyBattery: { // Body Battery (garmin)
+        type: Sequelize.INTEGER
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('userState');
+
+
+//////////////////////////////////////////////////////////////////////
+// 	owmModel,
+// 	netatmoModel,
+// 	switchBotRawModel,
+// 	switchBotDataModel,
+// 	ikeaRawModel,
+// 	ikeaDataModel,
+// 	IOT_QuestionnaireAnswersModel,
+// 	IOT_MajorResultsModel,
+// 	IOT_MinorResultsModel,
+// 	IOT_MinorkeyMeansModel,
+// 	MinorkeyMeansValues,
+// 	roomEnvModel,
+// 	userStateModel
+// };
+
+
+//////////////////////////////////////////////////////////////////////
+// 気象庁防災情報XML関連
+/** @type {Model} 気象庁防災情報XMLの生データログ */
+const jmaRawModel = canUseSequelizeSqlite ? sqlite3.define('jmaRawTable', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    type: {
+        type: Sequelize.STRING
+    },
+    publishingOffice: {
+        type: Sequelize.STRING
+    },
+    reportDatetime: {
+        type: Sequelize.STRING
+    },
+    requestAreaCode: {
+        type: Sequelize.STRING
+    },
+    json: {
+        type: Sequelize.TEXT
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('jmaRawTable');
+
+
+/** @type {Model} 気象庁防災情報XMLの概況データ */
+const jmaAbstModel = canUseSequelizeSqlite ? sqlite3.define('jmaAbstTable', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    reportDatetime: {
+        type: Sequelize.STRING
+    },
+    publishingOffice: {
+        type: Sequelize.STRING
+    },
+    requestAreaCode: {
+        type: Sequelize.STRING
+    },
+    headlineText: {
+        type: Sequelize.TEXT
+    },
+    text: {
+        type: Sequelize.TEXT
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('jmaAbstTable');
+
+
+/** @type {Model} 天気予報データ */
+const weatherForecastModel = canUseSequelizeSqlite ? sqlite3.define('weatherForecastTable', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    reportDatetime: {
+        type: Sequelize.STRING
+    },
+    publishingOffice: {
+        type: Sequelize.STRING
+    },
+    targetArea: {
+        type: Sequelize.STRING
+    },
+    code: {
+        type: Sequelize.STRING
+    },
+    timeDefines: {
+        type: Sequelize.TEXT
+    },
+    weatherCodes: {
+        type: Sequelize.TEXT
+    },
+    weathers: {
+        type: Sequelize.TEXT
+    },
+    winds: {
+        type: Sequelize.TEXT
+    },
+    waves: {
+        type: Sequelize.TEXT
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('weatherForecastTable');
+
+
+/** @type {Model} 降水確率予報データ */
+const popsForecastModel = canUseSequelizeSqlite ? sqlite3.define('popsForecastTable', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    reportDatetime: {
+        type: Sequelize.STRING
+    },
+    publishingOffice: {
+        type: Sequelize.STRING
+    },
+    targetArea: {
+        type: Sequelize.STRING
+    },
+    code: {
+        type: Sequelize.STRING
+    },
+    timeDefines: {
+        type: Sequelize.TEXT
+    },
+    pops: {
+        type: Sequelize.TEXT
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('popsForecastTable');
+
+
+/** @type {Model} 気温予報データ */
+const tempForecastModel = canUseSequelizeSqlite ? sqlite3.define('tempForecastTable', {
+    id: {
+        type: Sequelize.INTEGER,
+        autoIncrement: true,
+        primaryKey: true,
+        allowNull: false
+    },
+    reportDatetime: {
+        type: Sequelize.STRING
+    },
+    publishingOffice: {
+        type: Sequelize.STRING
+    },
+    targetArea: {
+        type: Sequelize.STRING
+    },
+    code: {
+        type: Sequelize.STRING
+    },
+    timeDefines: {
+        type: Sequelize.TEXT
+    },
+    temps: {
+        type: Sequelize.TEXT
+    },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('tempForecastTable');
+
+
+//----------------------------------------------------------------------
+// Garmin 関連
+/** @type {Model} Garmin アクティビティログ */
+const IOT_GarminActivitiesModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminActivities', {
+    idIOT_GarminActivities: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    activityId: { type: Sequelize.STRING },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    activityType: { type: Sequelize.STRING },
+    averageHeartRateInBeatsPerMinute: { type: Sequelize.INTEGER },
+    averageRunCadenceInStepsPerMinute: { type: Sequelize.INTEGER },
+    averageSpeedInMetersPerSecond: { type: Sequelize.DOUBLE },
+    averagePaceInMinutesPerKilometer: { type: Sequelize.DOUBLE },
+    activeKilocalories: { type: Sequelize.INTEGER },
+    deviceName: { type: Sequelize.STRING },
+    distanceInMeters: { type: Sequelize.DOUBLE },
+    maxHeartRateInBeatsPerMinute: { type: Sequelize.INTEGER },
+    maxPaceInMinutesPerKilometer: { type: Sequelize.DOUBLE },
+    maxRunCadenceInStepsPerMinute: { type: Sequelize.INTEGER },
+    maxSpeedInMetersPerSecond: { type: Sequelize.DOUBLE },
+    steps: { type: Sequelize.INTEGER }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminActivities');
+
+/** @type {Model} Garmin アクティビティの詳細データ（ラップ情報等） */
+const IOT_GarminActivityDetailsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminActivityDetails', {
+    idIOT_GarminActivityDetails: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    activityId: { type: Sequelize.STRING },
+    summary: { type: Sequelize.TEXT },
+    samples: { type: Sequelize.TEXT },
+    laps: { type: Sequelize.TEXT },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminActivityDetails');
+
+/** @type {Model} Garmin 呼吸数（終日）データ */
+const IOT_GarminAllDayRespirationModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminAllDayRespiration', {
+    idIOT_GarminAllDayRespiration: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    activityId: { type: Sequelize.STRING },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    timeOffsetEpochToBreaths: { type: Sequelize.TEXT },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminAllDayRespiration');
+
+/** @type {Model} Garmin 体組成（筋肉量、骨量、体脂肪率等）データ */
+const IOT_GarminBodyCompsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminBodyComps', {
+    idIOT_GarminBodyComps: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    muscleMassInGrams: { type: Sequelize.INTEGER },
+    boneMassInGrams: { type: Sequelize.INTEGER },
+    bodyWaterInPercent: { type: Sequelize.DOUBLE },
+    bodyFatInPercent: { type: Sequelize.DOUBLE },
+    bodyMassIndex: { type: Sequelize.DOUBLE },
+    weightInGrams: { type: Sequelize.INTEGER },
+    measurementTimeInSeconds: { type: Sequelize.BIGINT },
+    measurementTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminBodyComps');
+
+/** @type {Model} Garmin 日次活動記録（歩数、心拍、ストレス等） */
+const IOT_GarminDailiesModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminDailies', {
+    idIOT_GarminDailies: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    calendarDate: { type: Sequelize.STRING },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    activityType: { type: Sequelize.STRING },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    steps: { type: Sequelize.INTEGER },
+    distanceInMeters: { type: Sequelize.DOUBLE },
+    activeTimeInSeconds: { type: Sequelize.INTEGER },
+    activeKilocalories: { type: Sequelize.INTEGER },
+    bmrKilocalories: { type: Sequelize.INTEGER },
+    cunsumedCalories: { type: Sequelize.INTEGER },
+    moderateIntensityDurationInSeconds: { type: Sequelize.INTEGER },
+    vigorousIntensityDurationInSeconds: { type: Sequelize.INTEGER },
+    floorsClimbed: { type: Sequelize.INTEGER },
+    minHeartRateInBeatsPerMinute: { type: Sequelize.INTEGER },
+    averageHeartRateInBeatsPerMinute: { type: Sequelize.INTEGER },
+    maxHeartRateInBeatsPerMinute: { type: Sequelize.INTEGER },
+    restStressDurationInSeconds: { type: Sequelize.INTEGER },
+    timeOffsetHeartRateSamples: { type: Sequelize.TEXT },
+    averageStressLevel: { type: Sequelize.INTEGER },
+    maxStressLevel: { type: Sequelize.INTEGER },
+    stressDurationInSeconds: { type: Sequelize.INTEGER },
+    activityStressDurationInSeconds: { type: Sequelize.INTEGER },
+    lowStressDurationInSeconds: { type: Sequelize.INTEGER },
+    mediumStressDurationInSeconds: { type: Sequelize.INTEGER },
+    highStressDurationInSeconds: { type: Sequelize.INTEGER },
+    stressQualifier: { type: Sequelize.STRING },
+    stepsGoal: { type: Sequelize.INTEGER },
+    netKilocaloriesGoal: { type: Sequelize.INTEGER },
+    intensityDurationGoalInSeconds: { type: Sequelize.INTEGER },
+    floorsClimbedGoal: { type: Sequelize.INTEGER },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminDailies');
+
+/** @type {Model} Garmin 指定期間（エポック）の活動サマリーデータ */
+const IOT_GarminEpochsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminEpochs', {
+    idIOT_GarminEpochs: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    activityType: { type: Sequelize.STRING },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    activeTimeInSeconds: { type: Sequelize.INTEGER },
+    steps: { type: Sequelize.INTEGER },
+    distanceInMeters: { type: Sequelize.DOUBLE },
+    activeKilocalories: { type: Sequelize.INTEGER },
+    met: { type: Sequelize.DOUBLE },
+    intensity: { type: Sequelize.STRING },
+    meanMotionIntensity: { type: Sequelize.DOUBLE },
+    maxMotionIntensity: { type: Sequelize.DOUBLE },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminEpochs');
+
+/** @type {Model} Garmin Move IQ（自動検知アクティビティ）データ */
+const IOT_GarminMoveIQActivitiesModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminMoveIQActivities', {
+    idIOT_GarminMoveIQActivities: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    calendarDate: { type: Sequelize.STRING },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    offsetInSeconds: { type: Sequelize.INTEGER },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    activityType: { type: Sequelize.STRING },
+    activitySubType: { type: Sequelize.STRING },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminMoveIQActivities');
+
+/** @type {Model} Garmin パルスオキシメータ（血中酸素トラッキング）データ */
+const IOT_GarminPulseoxModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminPulseox', {
+    idIOT_GarminPulseox: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    calendarDate: { type: Sequelize.STRING },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    timeOffsetSpo2Values: { type: Sequelize.TEXT },
+    onDemand: { type: Sequelize.BOOLEAN },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminPulseox');
+
+/** @type {Model} Garmin 睡眠トラッキング（睡眠段階、スコア等）データ */
+const IOT_GarminSleepsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminSleeps', {
+    idIOT_GarminSleeps: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    calendarDate: { type: Sequelize.STRING },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    unmeasurableSleepInSeconds: { type: Sequelize.INTEGER },
+    deepSleepDurationInSeconds: { type: Sequelize.INTEGER },
+    lightSleepDurationInSeconds: { type: Sequelize.INTEGER },
+    remSleepInSeconds: { type: Sequelize.INTEGER },
+    awakeDurationInSeconds: { type: Sequelize.INTEGER },
+    sleepLevelsMap: { type: Sequelize.TEXT },
+    validation: { type: Sequelize.STRING },
+    timeOffsetSleepRespiration: { type: Sequelize.TEXT },
+    timeOffsetSleepSpo2: { type: Sequelize.TEXT },
+    overallSleepScore: { type: Sequelize.INTEGER },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminSleeps');
+
+/** @type {Model} Garmin ストレス詳細・Body Battery データ */
+const IOT_GarminStressDetailsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminStressDetails', {
+    idIOT_GarminStressDetails: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    startTimeInSeconds: { type: Sequelize.BIGINT },
+    startTimeOffsetInSeconds: { type: Sequelize.INTEGER },
+    durationInSeconds: { type: Sequelize.INTEGER },
+    calendarDate: { type: Sequelize.STRING },
+    timeOffsetStressLevelValues: { type: Sequelize.TEXT },
+    timeOffsetBodyBatteryValues: { type: Sequelize.TEXT },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminStressDetails');
+
+/** @type {Model} Garmin ユーザー指標（最大酸素摂取量、フィットネス年齢等） */
+const IOT_GarminUserMetricsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_GarminUserMetrics', {
+    idIOT_GarminUserMetrics: {
+        type: Sequelize.BIGINT,
+        autoIncrement: true,
+        primaryKey: true
+    },
+    garminId: { type: Sequelize.STRING },
+    garminAccessToken: { type: Sequelize.STRING },
+    summaryId: { type: Sequelize.STRING },
+    calendarDate: { type: Sequelize.STRING },
+    vo2Max: { type: Sequelize.DOUBLE },
+    fitnessAge: { type: Sequelize.INTEGER },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('createdAt', val.toISOString());
+            } else {
+                this.setDataValue('createdAt', val);
+            }
+        }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) {
+            if (val instanceof Date) {
+                this.setDataValue('updatedAt', val.toISOString());
+            } else {
+                this.setDataValue('updatedAt', val);
+            }
+        }
+    }
+}, {
+    freezeTableName: true,
+    timestamps: true
+}) : makeStubModel('IOT_GarminUserMetrics');
+
+
+export default {
+    Sequelize, Op, sqlite3,
+    eldataModel,
+    elrawModel,
+    esmdataModel,
+    esmrawModel,
+    electricEnergyModel,
+    huerawModel,
+    arpModel,
+    owmModel,
+    netatmoModel,
+    switchBotRawModel,
+    switchBotDataModel,
+    ikeaRawModel,
+    ikeaDataModel,
+    IOT_QuestionnaireAnswersModel,
+    IOT_MajorResultsModel,
+    IOT_MinorResultsModel,
+    IOT_MinorkeyMeansModel,
+    MinorkeyMeansValues,
+    roomEnvModel,
+    userStateModel,
+    jmaRawModel,
+    jmaAbstModel,
+    weatherForecastModel,
+    popsForecastModel,
+    tempForecastModel,
+    weatherModel,
+    IOT_GarminActivitiesModel,
+    IOT_GarminActivityDetailsModel,
+    IOT_GarminAllDayRespirationModel,
+    IOT_GarminBodyCompsModel,
+    IOT_GarminDailiesModel,
+    IOT_GarminEpochsModel,
+    IOT_GarminMoveIQActivitiesModel,
+    IOT_GarminPulseoxModel,
+    IOT_GarminSleepsModel,
+    IOT_GarminStressDetailsModel,
+    IOT_GarminUserMetricsModel
+};
+
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sun Jun 21 2026 16:33:45 GMT+0900 (Japan Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>mainJma.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://hiroshi-sugimura.github.io/plis/" target="_blank" class="menu-item" id="forum_link" >Website</a></h2><h2><a href="https://github.com/Hiroshi-Sugimura/plis" target="_blank" class="menu-item" id="website_link" >Github</a></h2><h3>Namespaces</h3><ul><li><a href="subCalendar.html">subCalendar</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subCalendar.html#.checkDate">checkDate</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.createProcess">createProcess</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.isHoliday">isHoliday</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.isToday">isToday</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.showProcess">showProcess</a></li></ul></li><li><a href="subClock.html">subClock</a></li><li><a href="subCo2s.html">subCo2s</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subCo2s.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subCo2s.html#.renewCanvasCo2s">renewCanvasCo2s</a></li></ul></li><li><a href="subEL.html">subEL</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subEL.html#.convRT">convRT</a></li><li data-type='method' style='display: none;'><a href="subEL.html#.renewCanvasSubESM">renewCanvasSubESM</a></li></ul></li><li><a href="subELcontrol.html">subELcontrol</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subELcontrol.html#.colorButton">colorButton</a></li></ul></li><li><a href="subESM.html">subESM</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subESM.html#.convRT">convRT</a></li><li data-type='method' style='display: none;'><a href="subESM.html#.renewCanvasESM">renewCanvasESM</a></li></ul></li><li><a href="subGarmin.html">subGarmin</a></li><li><a href="subHAL.html">subHAL</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subHAL.html#.btnQuestionnaireSubmit_click">btnQuestionnaireSubmit_click</a></li><li data-type='method' style='display: none;'><a href="subHAL.html#.ranking">ranking</a></li><li data-type='method' style='display: none;'><a href="subHAL.html#.renewMajorResults">renewMajorResults</a></li><li data-type='method' style='display: none;'><a href="subHAL.html#.renewMinorResults">renewMinorResults</a></li></ul></li><li><a href="subHue.html">subHue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subHue.html#.dlgHuePush_oncancel">dlgHuePush_oncancel</a></li></ul></li><li><a href="subIkea.html">subIkea</a></li><li><a href="subJma.html">subJma</a></li><li><a href="subLog.html">subLog</a></li><li><a href="subNetatmo.html">subNetatmo</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subNetatmo.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subNetatmo.html#.renewCanvasNetatmo">renewCanvasNetatmo</a></li></ul></li><li><a href="subOmron.html">subOmron</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subOmron.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subOmron.html#.renewCanvasOmron">renewCanvasOmron</a></li></ul></li><li><a href="subOwm.html">subOwm</a></li><li><a href="subQuestionnaire.html">subQuestionnaire</a></li><li><a href="subSwitchBot.html">subSwitchBot</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.newPowerLegendClickHandler">newPowerLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.renewCanvasSwitchBot">renewCanvasSwitchBot</a></li><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.renewPowerCanvasSwitchBot">renewPowerCanvasSwitchBot</a></li></ul></li><li><a href="subSystem.html">subSystem</a></li><li><a href="subToast.html">subToast</a></li><li><a href="subUser.html">subUser</a></li><li><a href="subautoAssessment.html">subautoAssessment</a></li><li><a href="window_.html">window</a><ul class='methods'><li data-type='method' style='display: none;'><a href="window_.html#.Co2sConfigSaved">Co2sConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELAAirconChangeMode">ELAAirconChangeMode</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELAirconShowControlDialog">ELAirconShowControlDialog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELConfigSaved">ELConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELLightingScineButton">ELLightingScineButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELSendTest">ELSendTest</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELSettings">ELSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELUpdateLocation">ELUpdateLocation</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELUpdateSettings">ELUpdateSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELpowButton">ELpowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELpowButton">ELpowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ESMConfigSaved">ESMConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ESMDebugLog">ESMDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALRedraw">HALRedraw</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALSyncResponse">HALSyncResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALdeleteApiTokenResponse">HALdeleteApiTokenResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALgetUserProfileResponse">HALgetUserProfileResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALsetApiTokenResponse">HALsetApiTokenResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HueConfigSaved">HueConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HueDebugLog">HueDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HuePowButton">HuePowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HueRename">HueRename</a></li><li data-type='method' style='display: none;'><a href="window_.html#.IkeaConfigSaved">IkeaConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.IkeaDebugPrint">IkeaDebugPrint</a></li><li data-type='method' style='display: none;'><a href="window_.html#.JmaConfigSaved">JmaConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.JmaDebugLog">JmaDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.NetatmoConfigSaved">NetatmoConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OmronConfigSaved">OmronConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OmronDebugLog">OmronDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OwmConfigSaved">OwmConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OwmDebugLog">OwmDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotBot">SwitchBotBot</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotBulb">SwitchBotBulb</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotConfigSaved">SwitchBotConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotDebugLog">SwitchBotDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotPlug">SwitchBotPlug</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SystemConfigSaved">SystemConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.URLopen">URLopen</a></li><li data-type='method' style='display: none;'><a href="window_.html#.UserConfigSaved">UserConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.addToast">addToast</a></li><li data-type='method' style='display: none;'><a href="window_.html#.autoAssessmentConfigSaved">autoAssessmentConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.autoAssessmentDebugLog">autoAssessmentDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnAutoAssessmentConfigSet_Click">btnAutoAssessmentConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnCalendarRenewSyukujitsu_Click">btnCalendarRenewSyukujitsu_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnCo2sConfigSet_Click">btnCo2sConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnDeleteHalApiToken_Click">btnDeleteHalApiToken_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnELConfigSet_Click">btnELConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnESMConfigSet_Click">btnESMConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnHALsync_Click">btnHALsync_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnHueConfigSet_Click">btnHueConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnIkeaBulbOnOff_Click">btnIkeaBulbOnOff_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnIkeaConfigSet_Click">btnIkeaConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnJmaConfigSet_Click">btnJmaConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnNetatmoConfigSet_Click">btnNetatmoConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnNetworkConfigSet_Click">btnNetworkConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnOmronConfigSet_Click">btnOmronConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnOwmConfigSet_Click">btnOwmConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSetHalApiTokenBtn_Click">btnSetHalApiTokenBtn_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotBulbUpdateBrightnessSettings">btnSwitchBotBulbUpdateBrightnessSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotBulbUpdateColorSettings">btnSwitchBotBulbUpdateColorSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotBulbUpdateColorTemperatureSettings">btnSwitchBotBulbUpdateColorTemperatureSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotConfigSet_Click">btnSwitchBotConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSystemConfigSet_Click">btnSystemConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnUserProfileSet_Click">btnUserProfileSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.calendarNext">calendarNext</a></li><li data-type='method' style='display: none;'><a href="window_.html#.calendarPrev">calendarPrev</a></li><li data-type='method' style='display: none;'><a href="window_.html#.co2sDocSectionClicked">co2sDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.createControlELButton">createControlELButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.disconnectedCo2s">disconnectedCo2s</a></li><li data-type='method' style='display: none;'><a href="window_.html#.disconnectedESM">disconnectedESM</a></li><li data-type='method' style='display: none;'><a href="window_.html#.disconnectedOmron">disconnectedOmron</a></li><li data-type='method' style='display: none;'><a href="window_.html#.esmDocSectionClicked">esmDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.getQuestionnaire">getQuestionnaire</a></li><li data-type='method' style='display: none;'><a href="window_.html#.hueLinked">hueLinked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inIkeaBlindApertureNumber_Change">inIkeaBlindApertureNumber_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inIkeaBlindApertureRange_Change">inIkeaBlindApertureRange_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbBriNumber_Change">inSwitchBotBulbBriNumber_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbBriRange_Change">inSwitchBotBulbBriRange_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbTempNumber_Change">inSwitchBotBulbTempNumber_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbTempRange_Change">inSwitchBotBulbTempRange_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.makeJmaArea">makeJmaArea</a></li><li data-type='method' style='display: none;'><a href="window_.html#.netatmoDocSectionClicked">netatmoDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.omronDocSectionClicked">omronDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.onLoad">onLoad</a></li><li data-type='method' style='display: none;'><a href="window_.html#.openHueRenameDlg">openHueRenameDlg</a></li><li data-type='method' style='display: none;'><a href="window_.html#.pushHideButton">pushHideButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.redrawToast">redrawToast</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewAutoAssessmentConfigView">renewAutoAssessmentConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewCo2s">renewCo2s</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewCo2sConfigView">renewCo2sConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewELConfigView">renewELConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewESM">renewESM</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewESMConfigView">renewESMConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewEnergy">renewEnergy</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewEnergySubmeter">renewEnergySubmeter</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesEL">renewFacilitiesEL</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesHue">renewFacilitiesHue</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesIkea">renewFacilitiesIkea</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesSwitchBot">renewFacilitiesSwitchBot</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHALConfigView">renewHALConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHALProfile">renewHALProfile</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHALToken">renewHALToken</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHueConfigView">renewHueConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHueLog">renewHueLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewIkeaConfigView">renewIkeaConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewIkeaLog">renewIkeaLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJma">renewJma</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJmaAbst">renewJmaAbst</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJmaConfigView">renewJmaConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJmaDetail">renewJmaDetail</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewNetatmo">renewNetatmo</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewNetatmoConfigView">renewNetatmoConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOmron">renewOmron</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOmronConfigView">renewOmronConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOwm">renewOwm</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOwmConfigView">renewOwmConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvCo2s">renewRoomEnvCo2s</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvNetatmo">renewRoomEnvNetatmo</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvOmron">renewRoomEnvOmron</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvSwitchBot">renewRoomEnvSwitchBot</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewSubESM">renewSubESM</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewSwitchBotConfigView">renewSwitchBotConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewSystemConfigView">renewSystemConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewUserConfigView">renewUserConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.selJmaArea_Change">selJmaArea_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.showDlgSwitchBotSettingsDialog4Bulb">showDlgSwitchBotSettingsDialog4Bulb</a></li><li data-type='method' style='display: none;'><a href="window_.html#.showGarminData">showGarminData</a></li></ul></li><li><a href="window.ipc.html">ipc</a></li></ul><h3>Modules</h3><ul><li><a href="module-localDBModels.html">localDBModels</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-localDBModels.html#~makeStubModel">makeStubModel</a></li></ul></li><li><a href="module-logger.html">logger</a></li><li><a href="module-main.html">main</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-main.html#~sendIPCMessage">sendIPCMessage</a></li></ul></li><li><a href="module-mainArp.html">mainArp</a></li><li><a href="module-mainAutoAssessment.html">mainAutoAssessment</a></li><li><a href="module-mainCalendar.html">mainCalendar</a></li><li></li><li><a href="module-mainCo2s.html">mainCo2s</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~getRows">getRows</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~getTodayRoomEnv">getTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~sendTodayRoomEnv">sendTodayRoomEnv</a></li></ul></li><li><a href="module-mainEL.html">mainEL</a></li><li><a href="module-mainESM.html">mainESM</a></li><li><a href="module-mainHALlocal.html">mainHALlocal</a></li><li><a href="module-mainHALsync.html">mainHALsync</a></li><li><a href="module-mainHue.html">mainHue</a></li><li><a href="module-mainIkea.html">mainIkea</a></li><li><a href="module-mainJma.html">mainJma</a></li><li><a href="module-mainNetatmo.html">mainNetatmo</a></li><li><a href="module-mainOmron.html">mainOmron</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getRows">getRows</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getTodayRoomEnv">getTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~sendTodayRoomEnv">sendTodayRoomEnv</a></li></ul></li><li><a href="module-mainOwm.html">mainOwm</a></li><li><a href="module-mainSubmodule.html">mainSubmodule</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~checkValue">checkValue</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~formatDate">formatDate</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getCases">getCases</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getNow">getNow</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getToday">getToday</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getTodayDate">getTodayDate</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getYesterday">getYesterday</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getYesterdayDate">getYesterdayDate</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~isObjEmpty">isObjEmpty</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~mergeDeeply">mergeDeeply</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~objectSort">objectSort</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~roundFloat">roundFloat</a></li></ul></li><li><a href="module-mainSwitchBot.html">mainSwitchBot</a></li><li><a href="module-mainSystem.html">mainSystem</a></li><li><a href="module-mainUser.html">mainUser</a></li><li><a href="module-preload.html">preload</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-preload.html#~AutoAssessmentConfig">AutoAssessmentConfig</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~CalendarRenewHolidays">CalendarRenewHolidays</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~Co2sStop">Co2sStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~Co2sUse">Co2sUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELStop">ELStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELStopOldSearch">ELStopOldSearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELUse">ELUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELUseOldSearch">ELUseOldSearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELsearch">ELsearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ESMUse">ESMUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ESMnotUse">ESMnotUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~Elsend">Elsend</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ElsendOPC1">ElsendOPC1</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALSyncRequeset">HALSyncRequeset</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALdeleteApiToken">HALdeleteApiToken</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALgetApiTokenRequest">HALgetApiTokenRequest</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALgetUserProfileRequest">HALgetUserProfileRequest</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALrenew">HALrenew</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALsetApiTokenRequest">HALsetApiTokenRequest</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALsubmitQuestionnaire">HALsubmitQuestionnaire</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueControl">HueControl</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueUse">HueUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueUseCancel">HueUseCancel</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueUseStop">HueUseStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~IkeaSend">IkeaSend</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~IkeaUse">IkeaUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~IkeaUseStop">IkeaUseStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~JmaConfigSave">JmaConfigSave</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~NetatmoStop">NetatmoStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~NetatmoUse">NetatmoUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OmronStop">OmronStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OmronUse">OmronUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OwmStop">OwmStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OwmUse">OwmUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearch">PageInSearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearchNext">PageInSearchNext</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearchPrev">PageInSearchPrev</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearchStop">PageInSearchStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ScreenMode">ScreenMode</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SwitchBotControl">SwitchBotControl</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SwitchBotStop">SwitchBotStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SwitchBotUse">SwitchBotUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SystemSetConfig">SystemSetConfig</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~URLopen">URLopen</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~already">already</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~userProfileSave">userProfileSave</a></li></ul></li><li><a href="module-test-el-sanitize.html">test-el-sanitize</a></li></ul><h3>Events</h3><ul><li><a href="multicastSearch.html#event:click">click</a></li><li><a href="window.ipc.html#.event:to-renderer">to-renderer</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">mainJma.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>//////////////////////////////////////////////////////////////////////
+//	Copyright (C) Hiroshi SUGIMURA 2022.09.06
+//////////////////////////////////////////////////////////////////////
+/**
+ * @module mainJma
+ */
+// 'use strict'
+
+//////////////////////////////////////////////////////////////////////
+// 基本ライブラリ
+import { store } from './storeSingleton.mjs';
+import axios from 'axios';
+import cron from 'node-cron';
+import localDB from './models/localDBModels.mjs';   // DBデータと連携
+const { jmaRawModel, jmaAbstModel, weatherForecastModel, popsForecastModel, tempForecastModel } = localDB;
+import { getNow, formatDate, getTodayDate, getYesterdayDate, getToday, isObjEmpty, mergeDeeply } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
+
+/**
+ * @typedef {Object} JmaConfig
+ * @property {boolean} enabled 機能有効フラグ
+ * @property {string} area UI表示用エリア名
+ * @property {string} code 気象庁API用エリアコード
+ * @property {boolean} debug デバッグログ
+ */
+/**
+ * @typedef {Object} JmaPersist
+ * @property {Object} abst 概要情報
+ * @property {Object} detail 詳細情報（weather/pops/temperature 配列含む）
+ */
+/**
+ * @callback SendIPCMessage
+ * @param {string} channel
+ * @param {any} payload
+ */
+
+
+let sendIPCMessage = null;
+// const store = new Store();
+
+/** @type {JmaConfig} */
+let config = {
+	enabled: true,
+	area: '東京都',
+	code: '130000',
+	debug: false
+};
+/** @type {JmaPersist} */
+let persist = {};
+
+
+//////////////////////////////////////////////////////////////////////
+// config
+
+let mainJma = {
+	/** @type {boolean} 多重起動防止 */
+	isRun: false,
+	/** 天気概要の取得URL、固定値 */
+	abstURL: "https://www.jma.go.jp/bosai/forecast/data/overview_forecast/",
+	/** 詳細予報取得URL、固定値 */
+	detailURL: "https://www.jma.go.jp/bosai/forecast/data/forecast/",
+	/** @type {cron.ScheduledTask|null} 監視ジョブ */
+	observationJob: null,
+	/** @type {Function|null} 画面更新先 */
+	callback: null,
+	/** エリアコード、固定値（UIから選択可） */
+	areaCodes: {
+		"群馬県": "100000",
+		"埼玉県": "110000",
+		"千葉県": "120000",
+		"東京都": "130000",
+		"神奈川県": "140000",
+		"新潟県": "150000",
+		"富山県": "160000",
+		"石川県": "170000",
+		"福井県": "180000",
+		"山梨県": "190000",
+		"長野県": "200000",
+		"岐阜県": "210000",
+		"静岡県": "220000",
+		"愛知県": "230000",
+		"三重県": "240000",
+		"滋賀県": "250000",
+		"京都府": "260000",
+		"大阪府": "270000",
+		"兵庫県": "280000",
+		"奈良県": "290000",
+		"和歌山県": "300000",
+		"鳥取県": "310000",
+		"島根県": "320000",
+		"岡山県": "330000",
+		"広島県": "340000",
+		"山口県": "350000",
+		"徳島県": "360000",
+		"香川県": "370000",
+		"愛媛県": "380000",
+		"高知県": "390000",
+		"福岡県": "400000",
+		"佐賀県": "410000",
+		"長崎県": "420000",
+		"熊本県": "430000",
+		"大分県": "440000",
+		"宮崎県": "450000",
+		"奄美地方": "460040",
+		"鹿児島県（奄美地方除く）": "460100",
+		"沖縄本島地方": "471000",
+		"大東島地方": "472000",
+		"宮古島地方": "473000",
+		"八重山地方": "474000",
+		"青森県": "020000",
+		"岩手県": "030000",
+		"宮城県": "040000",
+		"秋田県": "050000",
+		"山形県": "060000",
+		"福島県": "070000",
+		"茨城県": "080000",
+		"栃木県": "090000"
+	},
+
+	//////////////////////////////////////////////////////////////////////
+	/**
+	 * 気象庁予報取得開始。重複起動時は現在persist/configをUIへ再送する。
+	 * @param {SendIPCMessage} _sendIPCMessage
+	 */
+	start: function (_sendIPCMessage) {
+		sendIPCMessage = _sendIPCMessage;
+		if (mainJma.isRun) {  // 重複起動は現在データを渡す
+			sendIPCMessage('renewJmaConfigView', config);
+			if (!isObjEmpty(persist.abst)) { sendIPCMessage("renewJmaAbst", persist.abst); }
+			if (!isObjEmpty(persist.detail)) { sendIPCMessage("renewJmaDetail", persist.detail); }
+			return;
+		}
+
+		config.enabled = store.get('config.JMA.enabled', true);
+		config.area = store.get('config.JMA.area', '東京都');
+		config.code = store.get('config.JMA.code', '130000');
+		config.debug = store.get('config.JMA.debug', false);
+		persist = store.get('persist.JMA', {});
+
+		if (!config.enabled) {
+			logger.debug('mainJma', config.debug, 'start(): Jma is disabled.');
+			mainJma.isRun = false;
+			return;
+		}
+		mainJma.isRun = true;
+
+		logger.debug('mainJma', config.debug, 'start() config:\x1b[32m', config, '\x1b[0m');
+		if (!persist || isObjEmpty(persist)) { persist = { abst: {}, detail: {} }; }
+
+		mainJma.callback = async function (res) {
+			switch (res.cmd) {
+				case "abst":
+					try {
+						if (!isObjEmpty(res.json)) {
+							// raw
+							let raw = mainJma.parseAbstRaw(res.json);
+
+							let row = await jmaRawModel.findOne({ where: { requestAreaCode: raw.requestAreaCode, reportDatetime: raw.reportDatetime, type: 'abst' } });
+							if (!row) {
+								await jmaRawModel.create(raw);
+							}
+
+							// 構造化されたデータ
+							persist.abst = mainJma.parseAbst(res.json);
+							sendIPCMessage("renewJmaAbst", persist.abst);
+
+							let arow = await jmaAbstModel.findOne({ where: { requestAreaCode: persist.abst.requestAreaCode, reportDatetime: persist.abst.reportDatetime } });
+							if (!arow) {
+								await jmaAbstModel.create(persist.abst);
+							}
+						}
+					} catch (error) {
+						logger.error('mainJma', 'abst callback error:', error);
+					}
+					break;
+
+
+				case "detail":
+					try {
+						if (!isObjEmpty(res.json)) {
+							// raw
+							let raw = mainJma.parseDetailRaw(res.json);
+
+							let row = await jmaRawModel.findOne({ where: { requestAreaCode: raw.requestAreaCode, reportDatetime: raw.reportDatetime, type: 'detail' } });
+							if (!row) {
+								await jmaRawModel.create(raw);
+							}
+
+							// 構造化されたデータ
+							persist.detail = mainJma.parseDetail(res.json);
+							sendIPCMessage("renewJmaDetail", persist.detail);
+
+
+							// 詳細の天気
+							for (let item of persist.detail.weather) {
+								let wrow = await weatherForecastModel.findOne({ where: { targetArea: item.targetArea, reportDatetime: item.reportDatetime } });
+								if (!wrow) {
+									await weatherForecastModel.create(item);
+								}
+							}
+
+							// 詳細の降水確率
+							for (let item of persist.detail.pops) {
+								let prow = await popsForecastModel.findOne({ where: { targetArea: item.targetArea, reportDatetime: item.reportDatetime } });
+								if (!prow) {
+									await popsForecastModel.create(item);
+								}
+							}
+
+							// 詳細の気温
+							for (let item of persist.detail.temperature) {
+								let trow = await tempForecastModel.findOne({ where: { targetArea: item.targetArea, reportDatetime: item.reportDatetime } });
+								if (!trow) {
+									await tempForecastModel.create(item);
+								}
+							}
+						}
+					} catch (error) {
+						logger.error('mainJma', 'detail callback error:', error);
+					}
+					break;
+			}
+		};
+
+		mainJma.setObserve();  // 3 hour each
+
+		sendIPCMessage('renewJmaConfigView', config);
+		if (!isObjEmpty(persist.abst)) { sendIPCMessage("renewJmaAbst", persist.abst); }
+		if (!isObjEmpty(persist.detail)) { sendIPCMessage("renewJmaDetail", persist.detail); }
+		mainJma.gets(); // 初回起動はデータ取得する
+	},
+
+
+	// ---------------------------------------------------------------
+	/**
+	 * 内部：天気概要/詳細を取得し callback に渡す。
+	 */
+	gets: async function () {
+		try {
+			const abstRes = await axios.get(mainJma.abstURL + config.code + ".json");
+			mainJma.callback({ cmd: "abst", json: abstRes.data });
+		} catch (error) {
+			if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT' || error.code === 'ENETUNREACH' || error.code === 'ECONNABORTED' || error.code === 'EHOSTUNREACH' || error.code === 'ECONNRESET' || (error.message &amp;&amp; error.message.includes('AggregateError'))) {
+				logger.error('mainJma', `gets() abst Connection Error: ${error.code || error.message.split('\n')[0]}`);
+			} else {
+				logger.error('mainJma', 'gets() abst error:', error);
+			}
+		}
+
+		try {
+			const detailRes = await axios.get(mainJma.detailURL + config.code + ".json");
+			mainJma.callback({ cmd: "detail", json: detailRes.data });
+		} catch (error) {
+			if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT' || error.code === 'ENETUNREACH' || error.code === 'ECONNABORTED' || error.code === 'EHOSTUNREACH' || error.code === 'ECONNRESET' || (error.message &amp;&amp; error.message.includes('AggregateError'))) {
+				logger.error('mainJma', `gets() detail Connection Error: ${error.code || error.message.split('\n')[0]}`);
+			} else {
+				logger.error('mainJma', 'gets() detail error:', error);
+			}
+		}
+	},
+
+	/**
+	 * 取得した概要JSONをそのままraw保存形式へ変換。
+	 * @param {any} body APIレスポンス
+	 * @returns {{type:string,publishingOffice:string,reportDatetime:string,requestAreaCode:string,json:string}}
+	 */
+	parseAbstRaw: function (body) {
+		return {
+			type: 'abst',
+			publishingOffice: body.publishingOffice,
+			reportDatetime: body.reportDatetime,
+			requestAreaCode: config.code,
+			json: JSON.stringify(body)
+		};
+	},
+
+	/**
+	 * 概要JSONをUI/DB向け構造へ変換。
+	 * @param {any} body APIレスポンス
+	 * @returns {{reportDatetime:string,publishingOffice:string,requestAreaCode:string,headlineText:string,text:string}}
+	 */
+	parseAbst: function (body) {
+		return {
+			reportDatetime: body.reportDatetime,
+			publishingOffice: body.publishingOffice,
+			requestAreaCode: config.code,
+			headlineText: body.headlineText || "",
+			text: body.text || ""
+		}
+	},
+
+	/**
+	 * 詳細予報JSON配列をraw保存形式へ変換。
+	 * @param {any[]} body APIレスポンス
+	 * @returns {{type:string,publishingOffice:string,reportDatetime:string,requestAreaCode:string,json:string}}
+	 */
+	parseDetailRaw: function (body) {
+		let w = body[0];  // json[1]はちょっとよくわからんので
+		let publishingOffice = w.publishingOffice;
+		let reportDatetime = w.reportDatetime;
+
+		return {
+			type: 'detail',
+			publishingOffice: publishingOffice,
+			reportDatetime: reportDatetime,
+			requestAreaCode: config.code,
+			json: JSON.stringify(body)
+		};
+	},
+
+	/**
+	 * 詳細予報を weather/pops/temperature の配列へ正規化。
+	 * @param {any[]} body APIレスポンス
+	 * @returns {{weather:Array,pops:Array,temperature:Array}}
+	 */
+	parseDetail: function (body) {
+		let res = { weather: [], pops: [], temperature: [] };
+		let w = body[0];  // body[1]はちょっとよくわからんので
+		let publishingOffice = w.publishingOffice;
+		let reportDatetime = w.reportDatetime;
+		let we = w.timeSeries[0];  // 天気関係
+		let po = w.timeSeries[1];  // 降水確率
+		let te = w.timeSeries[2];  // 気温
+
+		// timeseries 0 = weather
+		let timeDefines0 = JSON.stringify(we.timeDefines);
+		for (let a of we.areas) {
+			res.weather.push({
+				reportDatetime: reportDatetime,
+				publishingOffice: publishingOffice,
+				targetArea: a.area.name,
+				code: a.area.code,
+				timeDefines: timeDefines0,
+				weatherCodes: JSON.stringify(a.weatherCodes),
+				weathers: JSON.stringify(a.weathers),
+				winds: JSON.stringify(a.winds || []),
+				waves: JSON.stringify(a.waves || [])
+			});
+		}
+
+		// timeseries 1 = pops
+		let timeDefines1 = JSON.stringify(po.timeDefines);
+		for (let a of po.areas) {
+			res.pops.push({
+				reportDatetime: reportDatetime,
+				publishingOffice: publishingOffice,
+				targetArea: a.area.name,
+				code: a.area.code,
+				timeDefines: timeDefines1,
+				pops: JSON.stringify(a.pops)
+			});
+		};
+
+		// timeseries 2 = temperature
+		if (te) {
+			let timeDefines2 = JSON.stringify(te.timeDefines);
+			for (let a of te.areas) {
+				res.temperature.push({
+					reportDatetime: reportDatetime,
+					publishingOffice: publishingOffice,
+					targetArea: a.area.name,
+					code: a.area.code,
+					timeDefines: timeDefines2,
+					temps: JSON.stringify(a.temps)
+				});
+			};
+		}
+
+		return res;
+	},
+
+
+	/**
+	 * cronスケジュール登録 (3時間毎)。
+	 */
+	setObserve: function () {
+		logger.debug('mainJma', config.debug, 'setObserve() start.');
+
+		if (mainJma.observationJob) {
+			logger.debug('mainJma', config.debug, 'setObserve() already started.');
+		}
+
+		// 監視はcronで実施、3時間毎
+		mainJma.observationJob = cron.schedule('0 */3 * * *', async () => {
+			logger.debug('mainJma', config.debug, 'observationJob cron.schedule()');
+			await mainJma.gets();
+		});
+
+		mainJma.observationJob.start();
+	},
+
+	/**
+	 * 監視停止。
+	 */
+	stopObservation: function () {
+		logger.debug('mainJma', config.debug, 'stopObservation()');
+
+		if (mainJma.observationJob) {
+			mainJma.observationJob.stop();
+			mainJma.observationJob = null;
+		}
+	},
+
+	/**
+	 * 設定/persist保存して停止。
+	 * @returns {Promise&lt;void>}
+	 */
+	stop: async function () {
+		logger.debug('mainJma', config.debug, 'stop()');
+
+		await mainJma.setConfig(config);
+		await store.set('persist.JMA', persist);
+		await mainJma.stopObservation();
+	},
+
+	/**
+	 * 保存せず停止。
+	 * @returns {Promise&lt;void>}
+	 */
+	stopWithoutSave: async function () {
+		logger.debug('mainJma', config.debug, 'stopWithoutSave()');
+		await mainJma.stopObservation();
+	},
+
+	/**
+	 * 設定をマージ保存。UIへ通知。
+	 * @param {Partial&lt;JmaConfig>} [_config]
+	 */
+	setConfig: async function (_config) {
+		if (_config) {
+			config = mergeDeeply(config, _config);
+		}
+		await store.set('config.JMA', config);
+		sendIPCMessage("configSaved", 'JMA');  // 保存したので画面に通知
+	},
+
+	/**
+	 * 現在設定の取得。
+	 * @returns {JmaConfig}
+	 */
+	getConfig: function () {
+		return config;
+	},
+
+	/**
+	 * 現在persistの取得。
+	 * @returns {JmaPersist}
+	 */
+	getPersist: function () {
+		return persist;
+	}
+
+};
+
+
+
+// module.exports = mainJma;
+export { mainJma };
+//////////////////////////////////////////////////////////////////////
+// EOF
+//////////////////////////////////////////////////////////////////////
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sun Jun 21 2026 16:33:45 GMT+0900 (Japan Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

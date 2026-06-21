@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>mainHALlocal.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://hiroshi-sugimura.github.io/plis/" target="_blank" class="menu-item" id="forum_link" >Website</a></h2><h2><a href="https://github.com/Hiroshi-Sugimura/plis" target="_blank" class="menu-item" id="website_link" >Github</a></h2><h3>Namespaces</h3><ul><li><a href="subCalendar.html">subCalendar</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subCalendar.html#.checkDate">checkDate</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.createProcess">createProcess</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.isHoliday">isHoliday</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.isToday">isToday</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.showProcess">showProcess</a></li></ul></li><li><a href="subClock.html">subClock</a></li><li><a href="subCo2s.html">subCo2s</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subCo2s.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subCo2s.html#.renewCanvasCo2s">renewCanvasCo2s</a></li></ul></li><li><a href="subEL.html">subEL</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subEL.html#.convRT">convRT</a></li><li data-type='method' style='display: none;'><a href="subEL.html#.renewCanvasSubESM">renewCanvasSubESM</a></li></ul></li><li><a href="subELcontrol.html">subELcontrol</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subELcontrol.html#.colorButton">colorButton</a></li></ul></li><li><a href="subESM.html">subESM</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subESM.html#.convRT">convRT</a></li><li data-type='method' style='display: none;'><a href="subESM.html#.renewCanvasESM">renewCanvasESM</a></li></ul></li><li><a href="subGarmin.html">subGarmin</a></li><li><a href="subHAL.html">subHAL</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subHAL.html#.btnQuestionnaireSubmit_click">btnQuestionnaireSubmit_click</a></li><li data-type='method' style='display: none;'><a href="subHAL.html#.ranking">ranking</a></li><li data-type='method' style='display: none;'><a href="subHAL.html#.renewMajorResults">renewMajorResults</a></li><li data-type='method' style='display: none;'><a href="subHAL.html#.renewMinorResults">renewMinorResults</a></li></ul></li><li><a href="subHue.html">subHue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subHue.html#.dlgHuePush_oncancel">dlgHuePush_oncancel</a></li></ul></li><li><a href="subIkea.html">subIkea</a></li><li><a href="subJma.html">subJma</a></li><li><a href="subLog.html">subLog</a></li><li><a href="subNetatmo.html">subNetatmo</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subNetatmo.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subNetatmo.html#.renewCanvasNetatmo">renewCanvasNetatmo</a></li></ul></li><li><a href="subOmron.html">subOmron</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subOmron.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subOmron.html#.renewCanvasOmron">renewCanvasOmron</a></li></ul></li><li><a href="subOwm.html">subOwm</a></li><li><a href="subQuestionnaire.html">subQuestionnaire</a></li><li><a href="subSwitchBot.html">subSwitchBot</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.newPowerLegendClickHandler">newPowerLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.renewCanvasSwitchBot">renewCanvasSwitchBot</a></li><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.renewPowerCanvasSwitchBot">renewPowerCanvasSwitchBot</a></li></ul></li><li><a href="subSystem.html">subSystem</a></li><li><a href="subToast.html">subToast</a></li><li><a href="subUser.html">subUser</a></li><li><a href="subautoAssessment.html">subautoAssessment</a></li><li><a href="window_.html">window</a><ul class='methods'><li data-type='method' style='display: none;'><a href="window_.html#.Co2sConfigSaved">Co2sConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELAAirconChangeMode">ELAAirconChangeMode</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELAirconShowControlDialog">ELAirconShowControlDialog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELConfigSaved">ELConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELLightingScineButton">ELLightingScineButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELSendTest">ELSendTest</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELSettings">ELSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELUpdateLocation">ELUpdateLocation</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELUpdateSettings">ELUpdateSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELpowButton">ELpowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELpowButton">ELpowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ESMConfigSaved">ESMConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ESMDebugLog">ESMDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALRedraw">HALRedraw</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALSyncResponse">HALSyncResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALdeleteApiTokenResponse">HALdeleteApiTokenResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALgetUserProfileResponse">HALgetUserProfileResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALsetApiTokenResponse">HALsetApiTokenResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HueConfigSaved">HueConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HueDebugLog">HueDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HuePowButton">HuePowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HueRename">HueRename</a></li><li data-type='method' style='display: none;'><a href="window_.html#.IkeaConfigSaved">IkeaConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.IkeaDebugPrint">IkeaDebugPrint</a></li><li data-type='method' style='display: none;'><a href="window_.html#.JmaConfigSaved">JmaConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.JmaDebugLog">JmaDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.NetatmoConfigSaved">NetatmoConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OmronConfigSaved">OmronConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OmronDebugLog">OmronDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OwmConfigSaved">OwmConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OwmDebugLog">OwmDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotBot">SwitchBotBot</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotBulb">SwitchBotBulb</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotConfigSaved">SwitchBotConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotDebugLog">SwitchBotDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotPlug">SwitchBotPlug</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SystemConfigSaved">SystemConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.URLopen">URLopen</a></li><li data-type='method' style='display: none;'><a href="window_.html#.UserConfigSaved">UserConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.addToast">addToast</a></li><li data-type='method' style='display: none;'><a href="window_.html#.autoAssessmentConfigSaved">autoAssessmentConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.autoAssessmentDebugLog">autoAssessmentDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnAutoAssessmentConfigSet_Click">btnAutoAssessmentConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnCalendarRenewSyukujitsu_Click">btnCalendarRenewSyukujitsu_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnCo2sConfigSet_Click">btnCo2sConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnDeleteHalApiToken_Click">btnDeleteHalApiToken_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnELConfigSet_Click">btnELConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnESMConfigSet_Click">btnESMConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnHALsync_Click">btnHALsync_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnHueConfigSet_Click">btnHueConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnIkeaBulbOnOff_Click">btnIkeaBulbOnOff_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnIkeaConfigSet_Click">btnIkeaConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnJmaConfigSet_Click">btnJmaConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnNetatmoConfigSet_Click">btnNetatmoConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnNetworkConfigSet_Click">btnNetworkConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnOmronConfigSet_Click">btnOmronConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnOwmConfigSet_Click">btnOwmConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSetHalApiTokenBtn_Click">btnSetHalApiTokenBtn_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotBulbUpdateBrightnessSettings">btnSwitchBotBulbUpdateBrightnessSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotBulbUpdateColorSettings">btnSwitchBotBulbUpdateColorSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotBulbUpdateColorTemperatureSettings">btnSwitchBotBulbUpdateColorTemperatureSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotConfigSet_Click">btnSwitchBotConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSystemConfigSet_Click">btnSystemConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnUserProfileSet_Click">btnUserProfileSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.calendarNext">calendarNext</a></li><li data-type='method' style='display: none;'><a href="window_.html#.calendarPrev">calendarPrev</a></li><li data-type='method' style='display: none;'><a href="window_.html#.co2sDocSectionClicked">co2sDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.createControlELButton">createControlELButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.disconnectedCo2s">disconnectedCo2s</a></li><li data-type='method' style='display: none;'><a href="window_.html#.disconnectedESM">disconnectedESM</a></li><li data-type='method' style='display: none;'><a href="window_.html#.disconnectedOmron">disconnectedOmron</a></li><li data-type='method' style='display: none;'><a href="window_.html#.esmDocSectionClicked">esmDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.getQuestionnaire">getQuestionnaire</a></li><li data-type='method' style='display: none;'><a href="window_.html#.hueLinked">hueLinked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inIkeaBlindApertureNumber_Change">inIkeaBlindApertureNumber_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inIkeaBlindApertureRange_Change">inIkeaBlindApertureRange_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbBriNumber_Change">inSwitchBotBulbBriNumber_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbBriRange_Change">inSwitchBotBulbBriRange_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbTempNumber_Change">inSwitchBotBulbTempNumber_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbTempRange_Change">inSwitchBotBulbTempRange_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.makeJmaArea">makeJmaArea</a></li><li data-type='method' style='display: none;'><a href="window_.html#.netatmoDocSectionClicked">netatmoDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.omronDocSectionClicked">omronDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.onLoad">onLoad</a></li><li data-type='method' style='display: none;'><a href="window_.html#.openHueRenameDlg">openHueRenameDlg</a></li><li data-type='method' style='display: none;'><a href="window_.html#.pushHideButton">pushHideButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.redrawToast">redrawToast</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewAutoAssessmentConfigView">renewAutoAssessmentConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewCo2s">renewCo2s</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewCo2sConfigView">renewCo2sConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewELConfigView">renewELConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewESM">renewESM</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewESMConfigView">renewESMConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewEnergy">renewEnergy</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewEnergySubmeter">renewEnergySubmeter</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesEL">renewFacilitiesEL</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesHue">renewFacilitiesHue</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesIkea">renewFacilitiesIkea</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesSwitchBot">renewFacilitiesSwitchBot</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHALConfigView">renewHALConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHALProfile">renewHALProfile</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHALToken">renewHALToken</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHueConfigView">renewHueConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHueLog">renewHueLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewIkeaConfigView">renewIkeaConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewIkeaLog">renewIkeaLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJma">renewJma</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJmaAbst">renewJmaAbst</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJmaConfigView">renewJmaConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJmaDetail">renewJmaDetail</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewNetatmo">renewNetatmo</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewNetatmoConfigView">renewNetatmoConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOmron">renewOmron</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOmronConfigView">renewOmronConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOwm">renewOwm</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOwmConfigView">renewOwmConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvCo2s">renewRoomEnvCo2s</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvNetatmo">renewRoomEnvNetatmo</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvOmron">renewRoomEnvOmron</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvSwitchBot">renewRoomEnvSwitchBot</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewSubESM">renewSubESM</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewSwitchBotConfigView">renewSwitchBotConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewSystemConfigView">renewSystemConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewUserConfigView">renewUserConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.selJmaArea_Change">selJmaArea_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.showDlgSwitchBotSettingsDialog4Bulb">showDlgSwitchBotSettingsDialog4Bulb</a></li><li data-type='method' style='display: none;'><a href="window_.html#.showGarminData">showGarminData</a></li></ul></li><li><a href="window.ipc.html">ipc</a></li></ul><h3>Modules</h3><ul><li><a href="module-localDBModels.html">localDBModels</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-localDBModels.html#~makeStubModel">makeStubModel</a></li></ul></li><li><a href="module-logger.html">logger</a></li><li><a href="module-main.html">main</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-main.html#~sendIPCMessage">sendIPCMessage</a></li></ul></li><li><a href="module-mainArp.html">mainArp</a></li><li><a href="module-mainAutoAssessment.html">mainAutoAssessment</a></li><li><a href="module-mainCalendar.html">mainCalendar</a></li><li></li><li><a href="module-mainCo2s.html">mainCo2s</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~getRows">getRows</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~getTodayRoomEnv">getTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~sendTodayRoomEnv">sendTodayRoomEnv</a></li></ul></li><li><a href="module-mainEL.html">mainEL</a></li><li><a href="module-mainESM.html">mainESM</a></li><li><a href="module-mainHALlocal.html">mainHALlocal</a></li><li><a href="module-mainHALsync.html">mainHALsync</a></li><li><a href="module-mainHue.html">mainHue</a></li><li><a href="module-mainIkea.html">mainIkea</a></li><li><a href="module-mainJma.html">mainJma</a></li><li><a href="module-mainNetatmo.html">mainNetatmo</a></li><li><a href="module-mainOmron.html">mainOmron</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getRows">getRows</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getTodayRoomEnv">getTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~sendTodayRoomEnv">sendTodayRoomEnv</a></li></ul></li><li><a href="module-mainOwm.html">mainOwm</a></li><li><a href="module-mainSubmodule.html">mainSubmodule</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~checkValue">checkValue</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~formatDate">formatDate</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getCases">getCases</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getNow">getNow</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getToday">getToday</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getTodayDate">getTodayDate</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getYesterday">getYesterday</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getYesterdayDate">getYesterdayDate</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~isObjEmpty">isObjEmpty</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~mergeDeeply">mergeDeeply</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~objectSort">objectSort</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~roundFloat">roundFloat</a></li></ul></li><li><a href="module-mainSwitchBot.html">mainSwitchBot</a></li><li><a href="module-mainSystem.html">mainSystem</a></li><li><a href="module-mainUser.html">mainUser</a></li><li><a href="module-preload.html">preload</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-preload.html#~AutoAssessmentConfig">AutoAssessmentConfig</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~CalendarRenewHolidays">CalendarRenewHolidays</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~Co2sStop">Co2sStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~Co2sUse">Co2sUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELStop">ELStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELStopOldSearch">ELStopOldSearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELUse">ELUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELUseOldSearch">ELUseOldSearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELsearch">ELsearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ESMUse">ESMUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ESMnotUse">ESMnotUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~Elsend">Elsend</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ElsendOPC1">ElsendOPC1</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALSyncRequeset">HALSyncRequeset</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALdeleteApiToken">HALdeleteApiToken</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALgetApiTokenRequest">HALgetApiTokenRequest</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALgetUserProfileRequest">HALgetUserProfileRequest</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALrenew">HALrenew</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALsetApiTokenRequest">HALsetApiTokenRequest</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALsubmitQuestionnaire">HALsubmitQuestionnaire</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueControl">HueControl</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueUse">HueUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueUseCancel">HueUseCancel</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueUseStop">HueUseStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~IkeaSend">IkeaSend</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~IkeaUse">IkeaUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~IkeaUseStop">IkeaUseStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~JmaConfigSave">JmaConfigSave</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~NetatmoStop">NetatmoStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~NetatmoUse">NetatmoUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OmronStop">OmronStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OmronUse">OmronUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OwmStop">OwmStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OwmUse">OwmUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearch">PageInSearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearchNext">PageInSearchNext</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearchPrev">PageInSearchPrev</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearchStop">PageInSearchStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ScreenMode">ScreenMode</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SwitchBotControl">SwitchBotControl</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SwitchBotStop">SwitchBotStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SwitchBotUse">SwitchBotUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SystemSetConfig">SystemSetConfig</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~URLopen">URLopen</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~already">already</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~userProfileSave">userProfileSave</a></li></ul></li><li><a href="module-test-el-sanitize.html">test-el-sanitize</a></li></ul><h3>Events</h3><ul><li><a href="multicastSearch.html#event:click">click</a></li><li><a href="window.ipc.html#.event:to-renderer">to-renderer</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">mainHALlocal.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>//////////////////////////////////////////////////////////////////////
+//	Copyright (C) Hiroshi SUGIMURA 2021.11.09
+//////////////////////////////////////////////////////////////////////
+/**
+ * @module mainHALlocal
+ */
+// 'use strict'
+
+//////////////////////////////////////////////////////////////////////
+// 基本ライブラリ
+import localDB from './models/localDBModels.mjs';   // DBデータと連携
+const { sqlite3, eldataModel, IOT_QuestionnaireAnswersModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_MinorkeyMeansModel, MinorkeyMeansValues } = localDB;
+import { Op } from "sequelize";
+import { store } from './storeSingleton.mjs';
+import { getToday, roundFloat, formatDate } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
+
+// const store = new Store();
+
+//////////////////////////////////////////////////////////////////////
+// config
+/**
+ * HAL Local モジュール設定
+ * @typedef {Object} HALLocalConfig
+ * @property {boolean} enabled HAL連携有効/無効
+ * @property {string} halApiToken HAL APIトークン(未使用: local専用処理用の名残)
+ * @property {number} startUploadEldata 家電ログアップロード開始遅延(ms)
+ * @property {number} resultExpireDays 成績データ保持日数
+ * @property {number} ellogExpireDays 家電操作ログ保持日数
+ * @property {number} UPLOAD_UNIT_NUM 分割アップロード件数
+ * @property {number} UPLOAD_UNIT_INTERVAL 分割アップロード間隔(ms)
+ * @property {number} UPLOAD_START_INTERVAL 周期起動間隔(ms)
+ * @property {boolean} debug デバッグログ出力
+ */
+let config = /** @type {HALLocalConfig} */ ({  // デフォルト値
+	enabled: false,
+	halApiToken: '',
+	startUploadEldata: 300000,
+	resultExpireDays: 365,
+	ellogExpireDays: 30,
+	UPLOAD_UNIT_NUM: 100, 	// 分割アップロードのログの数
+	UPLOAD_UNIT_INTERVAL: 1000, // 分割アップロードの間隔 (ミリ秒)
+	UPLOAD_START_INTERVAL: 300000, // アップロード処理の起動間隔 (ミリ秒)
+	debug: false // mainHALsyncのdebug
+});
+
+
+//////////////////////////////////////////////////////////////////////
+/** @typedef {{[key:string]: any}} HALLocalPersist */
+let mainHALlocal = {
+
+	/**
+	 * 初期化: ストアから設定をロード。
+	 * 既存値が無ければデフォルトを維持。
+	 * @returns {Promise&lt;void>}
+	 */
+	initialize: async function () {
+		config = await store.get('config.HAL', config);
+	},
+
+
+	//////////////////////////////////////////////////////////////////////
+	/**
+	 * アンケート回答受理処理: 回答を検証し Major / Minor / Answers をUpsert。
+	 * 既存レコード assessmentSource=PLIS の場合は null のみ埋める方針を維持。
+	 * @param {Record&lt;string,any>} arg フロントからの回答マップ(q_i_j)
+	 * @param {Function} succeessFunc 成功コールバック
+	 * @param {Function} errorFunc 失敗コールバック
+	 * @returns {Promise&lt;void>}
+	 */
+	submitQuestionnaire: async function (arg, succeessFunc, errorFunc) {
+		logger.debug('mainHALlocal', config.debug, 'submitQuestionnaire()');
+		// console.dir( arg );
+
+		let today = getToday();
+
+		// IOT_QuestionnaireAnswers テーブル用データ
+		let q_data = {
+			date: today
+		};
+
+		// IOT_MinorResults テーブル用データ
+		let minor_data = {
+			date: today
+		};
+
+		// アンケート回答の値をチェック
+		try {
+			for (let i = 1; i &lt;= 6; i++) {
+				for (let j = 1; j &lt;= 15; j++) {
+					let k = 'q_' + i + '_' + j;
+					let v = arg[k];
+					if (!v) {
+						q_data[k] = null;
+						minor_data['r_' + i + '_' + j] = null;
+					} else if (/^\d+$/.test(v)) {
+						v = parseInt(v, 10);
+						if (v >= 0 || v &lt;= 100) {
+							q_data[k] = v;
+							minor_data['r_' + i + '_' + j] = v;
+						} else {
+							throw new Error('回答の値が不正です: ' + k + '=' + v);
+						}
+					} else {
+						throw new Error('回答の値が不正です: ' + k + '=' + v);
+					}
+				}
+			}
+		} catch (error) {
+			logger.error('mainHALlocal', 'questionnaire_error', error.message);
+			return;
+		}
+		// console.log( 'アンケート回答の値をチェック ok' );
+
+
+		// MajorResults を計算
+		let major_data = mainHALlocal.calcMajorResults(q_data);
+		// console.log( 'mainHALlocal.calcMajorResults ok' );
+
+		// SQL トランザクション開始
+		let t = await sqlite3.transaction();
+		// console.log( 'transaction started' );
+
+		try {
+			// IOT_QuestionnaireAnswers テーブルから該当ユーザーの今日のレコードを取得
+			let record = await IOT_QuestionnaireAnswersModel.findOne({ where: { date: today } });
+
+			if (record) {
+				await record.update(q_data);	// レコードあればUpdate
+			} else {
+				await IOT_QuestionnaireAnswersModel.create(q_data);	// レコードなければinsert
+			}
+			// console.log('アンケート格納 ok');
+
+			// IOT_MinorResults テーブルから該当ユーザーの今日のレコードを取得
+			let minor = await IOT_MinorResultsModel.findOne({ where: { date: today } });
+
+			let now = new Date();
+
+			// console.log('today, now確認');
+			// console.dir(today);
+			// console.dir(now);
+
+			if (minor) {
+				// 今日の minorResults レコードが見つかれば、成績データを更新
+				let minor_update_data = {};
+				if (minor.dataValues.assessmentSource === 'PLIS') {
+					// assessmentSource が "PLIS" なら null のカラムだけ更新
+					for (let [k, v] of Object.entries(minor.dataValues)) {
+						if (/^r_\d+_\d+$/.test(k) &amp;&amp; v === null) {
+							minor_update_data[k] = v;
+						}
+					}
+				} else {
+					// assessmentSource が "questionnaire" のとき，すべてのカラムを更新
+					minor_update_data = minor_data;
+				}
+
+				// minorResults を UPDATE
+				minor_update_data.updatedAt = now;
+				await IOT_MinorResultsModel.update(minor_update_data, {
+					where: {
+						idIOT_MinorResults: minor.dataValues.idIOT_MinorResults
+					}
+				});
+
+				// 該当ユーザーの今日の majorResults レコードを検索
+				// MinorResults レコードがあれば、MajorResults のレコードもあるはず
+				let major = await IOT_MajorResultsModel.findOne({ where: { date: today } });
+				if (!major) {
+					throw new Error('成績データ major/minor 不整合が見つかりました。');
+				}
+
+				let major_update_data = {};
+				if (major.dataValues.assessmentSource === 'PLIS') {
+					// assessmentSource が "PLIS" なら null のカラムだけ更新
+					for (let [k, v] of Object.entries(major.dataValues)) {
+						if (/^r_\d+_\d+$/.test(k) &amp;&amp; v === null) {
+							major_update_data[k] = v;
+						}
+					}
+				} else {
+					// assessmentSource が "questionnaire" なら、すべてのカラムを更新
+					major_update_data = major_data;
+				}
+
+				// majorResults を UPDATE
+				major_update_data.updatedAt = now;
+				await IOT_MajorResultsModel.update(major_update_data, {
+					where: {
+						idIOT_MajorResults: major.dataValues.idIOT_MajorResults
+					}
+				});
+
+			} else {
+				// 該当ユーザーの今日の minorResults レコードが見つからなければ、新規に成績データを追加
+				// minor_data.createdAt = now;
+				// minor_data.updatedAt = now;
+				minor_data.assessmentSource = 'questionnaire';
+				await IOT_MinorResultsModel.create(minor_data);
+				logger.debug('mainHALlocal', config.debug, 'submitQuestionnaire() IOT_MinorResultsModel格納');
+
+				major_data.date = today;
+				major_data.assessmentSource = 'questionnaire';
+				await IOT_MajorResultsModel.create(major_data);
+				logger.debug('mainHALlocal', config.debug, 'submitQuestionnaire() IOT_MajorResultsModel格納');
+			}
+
+			// コミット
+			await t.commit();
+			// console.log('commited');
+
+			succeessFunc();
+		} catch (error) {
+			// ロールバック
+			await t.rollback();
+			logger.debug('mainHALlocal', config.debug, 'submitQuestionnaire() rollbacked');
+			logger.error('mainHALlocal', error);
+
+			// HTTP レスポンス
+			errorFunc();
+		}
+	},
+
+	/**
+	 * Major 成績算出: 分野別平均値→ポイント/生スコア/総合ランク算出。
+	 * @param {Record&lt;string, number|null>} q_data 設問回答
+	 * @returns {Object} major結果レコード(INSERT/UPDATE用)
+	 */
+	calcMajorResults: function (q_data) {
+		// console.log( '-- calcMajorResults()' );
+		// console.dir( q_data );
+		let clothing_sum = 0;
+		let clothing_num = 0;
+		let food_sum = 0;
+		let food_num = 0;
+		let housing_sum = 0;
+		let housing_num = 0;
+		let physical_sum = 0;
+		let physical_num = 0;
+		let mental_sum = 0;
+		let mental_num = 0;
+		let ecology_sum = 0;
+		let ecology_num = 0;
+
+		for (let [k, v] of Object.entries(q_data)) {
+			if (v === null) {
+				continue;
+			}
+			if (k.startsWith('q_1_')) {
+				clothing_sum += v;
+				clothing_num++;
+			} else if (k.startsWith('q_2_')) {
+				food_sum += v;
+				food_num++;
+			} else if (k.startsWith('q_3_')) {
+				housing_sum += v;
+				housing_num++;
+			} else if (k.startsWith('q_4_')) {
+				physical_sum += v;
+				physical_num++;
+			} else if (k.startsWith('q_5_')) {
+				mental_sum += v;
+				mental_num++;
+			} else if (k.startsWith('q_6_')) {
+				ecology_sum += v;
+				ecology_num++;
+			}
+		}
+
+		// 平均値を求める
+		let clothing_point = clothing_sum / clothing_num;
+		let food_point = food_sum / food_num;
+		let housing_point = housing_sum / housing_num;
+		let physical_point = physical_sum / physical_num;
+		let mental_point = mental_sum / mental_num;
+		let ecology_point = ecology_sum / ecology_num;
+
+		// totalPoint は平均値の和
+		let total_point = (clothing_point + food_point + housing_point + physical_point + mental_point + ecology_point) / 6;
+
+		// totalRank の特定
+		let total_rank = '';
+
+		if (total_point >= 90) {
+			total_rank = 'SSS';
+		} else if (total_point >= 80) {
+			total_rank = 'SS';
+		} else if (total_point >= 70) {
+			total_rank = 'S';
+		} else if (total_point >= 60) {
+			total_rank = 'A';
+		} else if (total_point >= 50) {
+			total_rank = 'B';
+		} else if (total_point >= 40) {
+			total_rank = 'C';
+		} else if (total_point >= 30) {
+			total_rank = 'D';
+		} else if (total_point >= 20) {
+			total_rank = 'E';
+		} else {
+			total_rank = 'F';
+		}
+
+		let data = {
+			clothingPoint: roundFloat(clothing_point),
+			clothingRawScore: roundFloat(clothing_point * 5),
+			foodPoint: roundFloat(food_point),
+			foodRawScore: roundFloat(food_point * 5),
+			housingPoint: roundFloat(housing_point),
+			housingRawScore: roundFloat(housing_point * 5),
+			physicalHealthPoint: roundFloat(physical_point),
+			physicalHealthRawScore: roundFloat(physical_point * 5),
+			mentalHealthPoint: roundFloat(mental_point),
+			mentalHealthRawScore: roundFloat(mental_point * 5),
+			ecologyPoint: roundFloat(ecology_point),
+			ecologyRawScore: roundFloat(ecology_point * 5),
+			totalPoint: roundFloat(total_point),
+			totalRank: total_rank
+		};
+
+		return data;
+	},
+
+
+	/**
+	 * 最新 Major / Minor / MinorkeyMeans を取得。存在しないものはスキップ。
+	 * @returns {Promise&lt;{MajorResults:any,MinorResults:any,MinorkeyMeans:any[]}>}
+	 */
+	getLastData: async function () {
+		let halData = {};
+		let MajorResults = {};
+		let MinorResults = {};
+		let MinorkeyMeans = [];
+
+		// ローカルの MajorResults から最新のレコードを取得
+		logger.debug('mainHALlocal', config.debug, 'getLastData() Getting the latest record in the local MajorResults table.');
+		MajorResults = await IOT_MajorResultsModel.findOne({
+			order: [['date', 'DESC']]
+		});
+		if (MajorResults) {
+			halData.majorResults = MajorResults.dataValues;
+		} else {
+			logger.debug('mainHALlocal', config.debug, 'getLastData() local MajorResults table is empty.');
+		}
+
+		// ローカルの MinorResults から最新のレコードを取得
+		logger.debug('mainHALlocal', config.debug, 'getLastData() Getting the latest record in the local MinorResults table.');
+		MinorResults = await IOT_MinorResultsModel.findOne({
+			order: [['date', 'DESC']]
+		});
+		if (MinorResults) {
+			halData.minorResults = MinorResults.dataValues;
+		} else {
+			logger.debug('mainHALlocal', config.debug, 'getLastData() local MinorResults table is empty.');
+		}
+
+		// ローカルの MinorkeyMeans から最新のレコードを取得
+		await IOT_MinorkeyMeansModel.findAll({
+			where: { version: '1' }
+		}).then(function (data) {
+			// console.dir( data.length );
+			if (data &amp;&amp; data.length != 0) { // データはあって，空ではないなら
+				// データあり
+				logger.debug('mainHALlocal', config.debug, 'getLastData() MinorkeyMeans data is found.');
+				data.forEach((d) => {
+					MinorkeyMeans.push(d.dataValues);
+				});
+			} else {
+				// データなし
+				logger.debug('mainHALlocal', config.debug, 'getLastData() MinorkeyMeans data is NOT found.');
+				IOT_MinorkeyMeansModel.bulkCreate(MinorkeyMeansValues);
+			}
+		}).catch(function (err) {
+			// DBエラーした
+			logger.error('mainHALlocal', 'getLastData() IOT_MinorkeyMeans occurs error.', err);
+		});
+
+		halData.minorkeyMeans = MinorkeyMeans;
+
+		return { MajorResults, MinorResults, MinorkeyMeans };
+	},
+
+
+	/**
+	 * ログ/成績テーブルの期限切れレコードを削除。
+	 * 削除件数はデバッグ時のみログ。
+	 * @returns {Promise&lt;void>}
+	 */
+	truncatelogs: async function () {
+
+		// eldata テーブルのレコード削除
+		let eldata_del_count = await eldataModel.destroy({
+			where: {
+				createdAt: {
+					[Op.lt]: new Date(Date.now() - 86400000 * config.ellogExpireDays).toISOString()
+				}
+			}
+		});
+
+		// IOT_MajorResults テーブルのレコード削除
+		let major_del_count = await IOT_MajorResultsModel.destroy({
+			where: {
+				createdAt: {
+					[Op.lt]: new Date(Date.now() - 86400000 * config.resultExpireDays).toISOString()
+				}
+			}
+		});
+
+		// IOT_MinorResults テーブルのレコード削除
+		let minor_del_count = await IOT_MinorResultsModel.destroy({
+			where: {
+				createdAt: {
+					[Op.lt]: new Date(Date.now() - 86400000 * config.resultExpireDays).toISOString()
+				}
+			}
+		});
+
+		// IOT_QuestionnaireAnswersModel テーブルのレコード削除
+		let questionnaire_del_count = await IOT_QuestionnaireAnswersModel.destroy({
+			where: {
+				createdAt: {
+					[Op.lt]: new Date(Date.now() - 86400000 * config.resultExpireDays).toISOString()
+				}
+			}
+		});
+
+		logger.debug('mainHALlocal', config.debug, 'truncatelogs()');
+		logger.debug('mainHALlocal', config.debug, `|- Deleted ${eldata_del_count} records from the eldata table.`);
+		logger.debug('mainHALlocal', config.debug, `|- Deleted ${major_del_count} records from the IOT_MajorResults table.`);
+		logger.debug('mainHALlocal', config.debug, `|- Deleted ${minor_del_count} records from the IOT_MinorResults table.`);
+		logger.debug('mainHALlocal', config.debug, `|- Deleted ${questionnaire_del_count} records from the IOT_QuestionnaireAnswersModel table.`);
+	}
+
+};
+
+// module.exports = mainHALlocal;
+export { mainHALlocal };
+//////////////////////////////////////////////////////////////////////
+// EOF
+//////////////////////////////////////////////////////////////////////
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sun Jun 21 2026 16:33:45 GMT+0900 (Japan Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

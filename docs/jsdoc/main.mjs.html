@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>main.mjs - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+    <h2><a href="index.html">Home</a></h2><h2><a href="https://hiroshi-sugimura.github.io/plis/" target="_blank" class="menu-item" id="forum_link" >Website</a></h2><h2><a href="https://github.com/Hiroshi-Sugimura/plis" target="_blank" class="menu-item" id="website_link" >Github</a></h2><h3>Namespaces</h3><ul><li><a href="subCalendar.html">subCalendar</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subCalendar.html#.checkDate">checkDate</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.createProcess">createProcess</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.isHoliday">isHoliday</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.isToday">isToday</a></li><li data-type='method' style='display: none;'><a href="subCalendar.html#.showProcess">showProcess</a></li></ul></li><li><a href="subClock.html">subClock</a></li><li><a href="subCo2s.html">subCo2s</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subCo2s.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subCo2s.html#.renewCanvasCo2s">renewCanvasCo2s</a></li></ul></li><li><a href="subEL.html">subEL</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subEL.html#.convRT">convRT</a></li><li data-type='method' style='display: none;'><a href="subEL.html#.renewCanvasSubESM">renewCanvasSubESM</a></li></ul></li><li><a href="subELcontrol.html">subELcontrol</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subELcontrol.html#.colorButton">colorButton</a></li></ul></li><li><a href="subESM.html">subESM</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subESM.html#.convRT">convRT</a></li><li data-type='method' style='display: none;'><a href="subESM.html#.renewCanvasESM">renewCanvasESM</a></li></ul></li><li><a href="subGarmin.html">subGarmin</a></li><li><a href="subHAL.html">subHAL</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subHAL.html#.btnQuestionnaireSubmit_click">btnQuestionnaireSubmit_click</a></li><li data-type='method' style='display: none;'><a href="subHAL.html#.ranking">ranking</a></li><li data-type='method' style='display: none;'><a href="subHAL.html#.renewMajorResults">renewMajorResults</a></li><li data-type='method' style='display: none;'><a href="subHAL.html#.renewMinorResults">renewMinorResults</a></li></ul></li><li><a href="subHue.html">subHue</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subHue.html#.dlgHuePush_oncancel">dlgHuePush_oncancel</a></li></ul></li><li><a href="subIkea.html">subIkea</a></li><li><a href="subJma.html">subJma</a></li><li><a href="subLog.html">subLog</a></li><li><a href="subNetatmo.html">subNetatmo</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subNetatmo.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subNetatmo.html#.renewCanvasNetatmo">renewCanvasNetatmo</a></li></ul></li><li><a href="subOmron.html">subOmron</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subOmron.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subOmron.html#.renewCanvasOmron">renewCanvasOmron</a></li></ul></li><li><a href="subOwm.html">subOwm</a></li><li><a href="subQuestionnaire.html">subQuestionnaire</a></li><li><a href="subSwitchBot.html">subSwitchBot</a><ul class='methods'><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.newLegendClickHandler">newLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.newPowerLegendClickHandler">newPowerLegendClickHandler</a></li><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.renewCanvasSwitchBot">renewCanvasSwitchBot</a></li><li data-type='method' style='display: none;'><a href="subSwitchBot.html#.renewPowerCanvasSwitchBot">renewPowerCanvasSwitchBot</a></li></ul></li><li><a href="subSystem.html">subSystem</a></li><li><a href="subToast.html">subToast</a></li><li><a href="subUser.html">subUser</a></li><li><a href="subautoAssessment.html">subautoAssessment</a></li><li><a href="window_.html">window</a><ul class='methods'><li data-type='method' style='display: none;'><a href="window_.html#.Co2sConfigSaved">Co2sConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELAAirconChangeMode">ELAAirconChangeMode</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELAirconShowControlDialog">ELAirconShowControlDialog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELConfigSaved">ELConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELLightingScineButton">ELLightingScineButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELSendTest">ELSendTest</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELSettings">ELSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELUpdateLocation">ELUpdateLocation</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELUpdateSettings">ELUpdateSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELpowButton">ELpowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ELpowButton">ELpowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ESMConfigSaved">ESMConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.ESMDebugLog">ESMDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALRedraw">HALRedraw</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALSyncResponse">HALSyncResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALdeleteApiTokenResponse">HALdeleteApiTokenResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALgetUserProfileResponse">HALgetUserProfileResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HALsetApiTokenResponse">HALsetApiTokenResponse</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HueConfigSaved">HueConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HueDebugLog">HueDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HuePowButton">HuePowButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.HueRename">HueRename</a></li><li data-type='method' style='display: none;'><a href="window_.html#.IkeaConfigSaved">IkeaConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.IkeaDebugPrint">IkeaDebugPrint</a></li><li data-type='method' style='display: none;'><a href="window_.html#.JmaConfigSaved">JmaConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.JmaDebugLog">JmaDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.NetatmoConfigSaved">NetatmoConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OmronConfigSaved">OmronConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OmronDebugLog">OmronDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OwmConfigSaved">OwmConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.OwmDebugLog">OwmDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotBot">SwitchBotBot</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotBulb">SwitchBotBulb</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotConfigSaved">SwitchBotConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotDebugLog">SwitchBotDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SwitchBotPlug">SwitchBotPlug</a></li><li data-type='method' style='display: none;'><a href="window_.html#.SystemConfigSaved">SystemConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.URLopen">URLopen</a></li><li data-type='method' style='display: none;'><a href="window_.html#.UserConfigSaved">UserConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.addToast">addToast</a></li><li data-type='method' style='display: none;'><a href="window_.html#.autoAssessmentConfigSaved">autoAssessmentConfigSaved</a></li><li data-type='method' style='display: none;'><a href="window_.html#.autoAssessmentDebugLog">autoAssessmentDebugLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnAutoAssessmentConfigSet_Click">btnAutoAssessmentConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnCalendarRenewSyukujitsu_Click">btnCalendarRenewSyukujitsu_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnCo2sConfigSet_Click">btnCo2sConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnDeleteHalApiToken_Click">btnDeleteHalApiToken_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnELConfigSet_Click">btnELConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnESMConfigSet_Click">btnESMConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnHALsync_Click">btnHALsync_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnHueConfigSet_Click">btnHueConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnIkeaBulbOnOff_Click">btnIkeaBulbOnOff_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnIkeaConfigSet_Click">btnIkeaConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnJmaConfigSet_Click">btnJmaConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnNetatmoConfigSet_Click">btnNetatmoConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnNetworkConfigSet_Click">btnNetworkConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnOmronConfigSet_Click">btnOmronConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnOwmConfigSet_Click">btnOwmConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSetHalApiTokenBtn_Click">btnSetHalApiTokenBtn_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotBulbUpdateBrightnessSettings">btnSwitchBotBulbUpdateBrightnessSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotBulbUpdateColorSettings">btnSwitchBotBulbUpdateColorSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotBulbUpdateColorTemperatureSettings">btnSwitchBotBulbUpdateColorTemperatureSettings</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSwitchBotConfigSet_Click">btnSwitchBotConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnSystemConfigSet_Click">btnSystemConfigSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.btnUserProfileSet_Click">btnUserProfileSet_Click</a></li><li data-type='method' style='display: none;'><a href="window_.html#.calendarNext">calendarNext</a></li><li data-type='method' style='display: none;'><a href="window_.html#.calendarPrev">calendarPrev</a></li><li data-type='method' style='display: none;'><a href="window_.html#.co2sDocSectionClicked">co2sDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.createControlELButton">createControlELButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.disconnectedCo2s">disconnectedCo2s</a></li><li data-type='method' style='display: none;'><a href="window_.html#.disconnectedESM">disconnectedESM</a></li><li data-type='method' style='display: none;'><a href="window_.html#.disconnectedOmron">disconnectedOmron</a></li><li data-type='method' style='display: none;'><a href="window_.html#.esmDocSectionClicked">esmDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.getQuestionnaire">getQuestionnaire</a></li><li data-type='method' style='display: none;'><a href="window_.html#.hueLinked">hueLinked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inIkeaBlindApertureNumber_Change">inIkeaBlindApertureNumber_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inIkeaBlindApertureRange_Change">inIkeaBlindApertureRange_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbBriNumber_Change">inSwitchBotBulbBriNumber_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbBriRange_Change">inSwitchBotBulbBriRange_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbTempNumber_Change">inSwitchBotBulbTempNumber_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.inSwitchBotBulbTempRange_Change">inSwitchBotBulbTempRange_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.makeJmaArea">makeJmaArea</a></li><li data-type='method' style='display: none;'><a href="window_.html#.netatmoDocSectionClicked">netatmoDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.omronDocSectionClicked">omronDocSectionClicked</a></li><li data-type='method' style='display: none;'><a href="window_.html#.onLoad">onLoad</a></li><li data-type='method' style='display: none;'><a href="window_.html#.openHueRenameDlg">openHueRenameDlg</a></li><li data-type='method' style='display: none;'><a href="window_.html#.pushHideButton">pushHideButton</a></li><li data-type='method' style='display: none;'><a href="window_.html#.redrawToast">redrawToast</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewAutoAssessmentConfigView">renewAutoAssessmentConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewCo2s">renewCo2s</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewCo2sConfigView">renewCo2sConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewELConfigView">renewELConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewESM">renewESM</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewESMConfigView">renewESMConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewEnergy">renewEnergy</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewEnergySubmeter">renewEnergySubmeter</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesEL">renewFacilitiesEL</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesHue">renewFacilitiesHue</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesIkea">renewFacilitiesIkea</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewFacilitiesSwitchBot">renewFacilitiesSwitchBot</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHALConfigView">renewHALConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHALProfile">renewHALProfile</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHALToken">renewHALToken</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHueConfigView">renewHueConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewHueLog">renewHueLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewIkeaConfigView">renewIkeaConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewIkeaLog">renewIkeaLog</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJma">renewJma</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJmaAbst">renewJmaAbst</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJmaConfigView">renewJmaConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewJmaDetail">renewJmaDetail</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewNetatmo">renewNetatmo</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewNetatmoConfigView">renewNetatmoConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOmron">renewOmron</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOmronConfigView">renewOmronConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOwm">renewOwm</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewOwmConfigView">renewOwmConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvCo2s">renewRoomEnvCo2s</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvNetatmo">renewRoomEnvNetatmo</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvOmron">renewRoomEnvOmron</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewRoomEnvSwitchBot">renewRoomEnvSwitchBot</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewSubESM">renewSubESM</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewSwitchBotConfigView">renewSwitchBotConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewSystemConfigView">renewSystemConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.renewUserConfigView">renewUserConfigView</a></li><li data-type='method' style='display: none;'><a href="window_.html#.selJmaArea_Change">selJmaArea_Change</a></li><li data-type='method' style='display: none;'><a href="window_.html#.showDlgSwitchBotSettingsDialog4Bulb">showDlgSwitchBotSettingsDialog4Bulb</a></li><li data-type='method' style='display: none;'><a href="window_.html#.showGarminData">showGarminData</a></li></ul></li><li><a href="window.ipc.html">ipc</a></li></ul><h3>Modules</h3><ul><li><a href="module-localDBModels.html">localDBModels</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-localDBModels.html#~makeStubModel">makeStubModel</a></li></ul></li><li><a href="module-logger.html">logger</a></li><li><a href="module-main.html">main</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-main.html#~sendIPCMessage">sendIPCMessage</a></li></ul></li><li><a href="module-mainArp.html">mainArp</a></li><li><a href="module-mainAutoAssessment.html">mainAutoAssessment</a></li><li><a href="module-mainCalendar.html">mainCalendar</a></li><li></li><li><a href="module-mainCo2s.html">mainCo2s</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~getRows">getRows</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~getTodayRoomEnv">getTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainCo2s.html#~sendTodayRoomEnv">sendTodayRoomEnv</a></li></ul></li><li><a href="module-mainEL.html">mainEL</a></li><li><a href="module-mainESM.html">mainESM</a></li><li><a href="module-mainHALlocal.html">mainHALlocal</a></li><li><a href="module-mainHALsync.html">mainHALsync</a></li><li><a href="module-mainHue.html">mainHue</a></li><li><a href="module-mainIkea.html">mainIkea</a></li><li><a href="module-mainJma.html">mainJma</a></li><li><a href="module-mainNetatmo.html">mainNetatmo</a></li><li><a href="module-mainOmron.html">mainOmron</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getRows">getRows</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~getTodayRoomEnv">getTodayRoomEnv</a></li><li data-type='method' style='display: none;'><a href="module-mainOmron.html#~sendTodayRoomEnv">sendTodayRoomEnv</a></li></ul></li><li><a href="module-mainOwm.html">mainOwm</a></li><li><a href="module-mainSubmodule.html">mainSubmodule</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~checkValue">checkValue</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~formatDate">formatDate</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getCases">getCases</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getNow">getNow</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getToday">getToday</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getTodayDate">getTodayDate</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getYesterday">getYesterday</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~getYesterdayDate">getYesterdayDate</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~isObjEmpty">isObjEmpty</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~mergeDeeply">mergeDeeply</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~objectSort">objectSort</a></li><li data-type='method' style='display: none;'><a href="module-mainSubmodule.html#~roundFloat">roundFloat</a></li></ul></li><li><a href="module-mainSwitchBot.html">mainSwitchBot</a></li><li><a href="module-mainSystem.html">mainSystem</a></li><li><a href="module-mainUser.html">mainUser</a></li><li><a href="module-preload.html">preload</a><ul class='methods'><li data-type='method' style='display: none;'><a href="module-preload.html#~AutoAssessmentConfig">AutoAssessmentConfig</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~CalendarRenewHolidays">CalendarRenewHolidays</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~Co2sStop">Co2sStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~Co2sUse">Co2sUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELStop">ELStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELStopOldSearch">ELStopOldSearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELUse">ELUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELUseOldSearch">ELUseOldSearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ELsearch">ELsearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ESMUse">ESMUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ESMnotUse">ESMnotUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~Elsend">Elsend</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ElsendOPC1">ElsendOPC1</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALSyncRequeset">HALSyncRequeset</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALdeleteApiToken">HALdeleteApiToken</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALgetApiTokenRequest">HALgetApiTokenRequest</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALgetUserProfileRequest">HALgetUserProfileRequest</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALrenew">HALrenew</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALsetApiTokenRequest">HALsetApiTokenRequest</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HALsubmitQuestionnaire">HALsubmitQuestionnaire</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueControl">HueControl</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueUse">HueUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueUseCancel">HueUseCancel</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~HueUseStop">HueUseStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~IkeaSend">IkeaSend</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~IkeaUse">IkeaUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~IkeaUseStop">IkeaUseStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~JmaConfigSave">JmaConfigSave</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~NetatmoStop">NetatmoStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~NetatmoUse">NetatmoUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OmronStop">OmronStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OmronUse">OmronUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OwmStop">OwmStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~OwmUse">OwmUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearch">PageInSearch</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearchNext">PageInSearchNext</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearchPrev">PageInSearchPrev</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~PageInSearchStop">PageInSearchStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~ScreenMode">ScreenMode</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SwitchBotControl">SwitchBotControl</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SwitchBotStop">SwitchBotStop</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SwitchBotUse">SwitchBotUse</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~SystemSetConfig">SystemSetConfig</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~URLopen">URLopen</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~already">already</a></li><li data-type='method' style='display: none;'><a href="module-preload.html#~userProfileSave">userProfileSave</a></li></ul></li><li><a href="module-test-el-sanitize.html">test-el-sanitize</a></li></ul><h3>Events</h3><ul><li><a href="multicastSearch.html#event:click">click</a></li><li><a href="window.ipc.html#.event:to-renderer">to-renderer</a></li></ul>
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">main.mjs</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>//////////////////////////////////////////////////////////////////////
+//	Copyright (C) Hiroshi SUGIMURA 2018.03.16
+//  Last updated: 2021.09.25
+//////////////////////////////////////////////////////////////////////
+/**
+ * @module main
+ */
+
+
+//////////////////////////////////////////////////////////////////////
+// 基本ライブラリ
+import { app, BrowserView, BrowserWindow, Menu, Tray, ipcMain, nativeImage, shell, clipboard } from 'electron';
+
+import { fileURLToPath } from "node:url";
+import path from 'node:path';
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+import os from 'os';
+import fs from 'fs';
+import { exec } from 'child_process';
+
+
+//////////////////////////////////////////////////////////////////////
+app.disableHardwareAcceleration(); // electron設定とmain window
+import { store } from './storeSingleton.mjs';
+import { objectSort, getNow, getToday, isObjEmpty, mergeDeeply, formatDate } from './mainSubmodule.mjs';
+import { logger } from './logger.mjs';
+import oaw from 'about-window';  // このアプリについて Common JSモジュール対応、デフォルトエクスポート
+const { default: openAboutWindow } = oaw;  // このアプリについて Common JSモジュール対応、オブジェクトのデストラクチャリング
+import localDB from './models/localDBModels.mjs';   // DBデータと連携
+const { sqlite3 } = localDB;
+import { mainSystem } from './mainSystem.mjs';  // System configの管理
+import { mainAutoAssessment } from './mainAutoAssessment.mjs';  // 成績付け
+import { mainUser } from './mainUser.mjs';     // User configの管理
+import { mainArp } from './mainArp.mjs';     // arpの管理
+import { mainEL } from './mainEL.mjs';      // ELの管理
+import { mainESM } from './mainESM.mjs'; // スマートメータの管理
+import { mainHue } from './mainHue.mjs';     // hueの管理
+import { mainIkea } from './mainIkea.mjs';    // Ikeaの管理
+import { mainNetatmo } from './mainNetatmo.mjs';  // netatmoの管理
+import { mainOwm } from './mainOwm.mjs';      // open weather mapの管理
+import { mainOmron } from './mainOmron.mjs';    // Omron/USBの管理
+import { mainHALlocal } from './mainHALlocal.mjs'; // HAL，独立で動く部分
+import { mainHALsync } from './mainHALsync.mjs';  // HAL，連携する部分
+import { mainJma } from './mainJma.mjs';    // 天気予報、気象庁
+import { mainSwitchBot } from './mainSwitchBot.mjs'; // SwitchBot
+import { mainCalendar } from './mainCalendar.mjs'; // カレンダー準備
+import { mainCo2s } from './mainCo2s.mjs';  // usb-ud-co2センサー
+import licenses from './modules.json' with { type: "json" };
+
+//////////////////////////////////////////////////////////////////////
+// 基本設定，electronのファイル読み込み対策，developmentで変更できるようにした（けどつかってない）
+const appname = 'PLIS';
+const appDir = process.env.NODE_ENV === 'development' ? __dirname : __dirname;
+const isWin = process.platform == "win32" ? true : false;
+const isMac = process.platform == "darwin" ? true : false;
+const userHome = process.env[isWin ? "USERPROFILE" : "HOME"];
+const isDevelopment = process.env.NODE_ENV == 'development'
+const databaseDir = path.join(userHome, appname);  // SQLite3ファイルの置き場
+
+
+//////////////////////////////////////////////////////////////////////
+// Global Error Handlers
+process.on('uncaughtException', (err) => {
+	logger.error('main', 'Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (reason, p) => {
+	logger.error('main', 'Unhandled Rejection at:', p, 'reason:', reason);
+});
+
+
+/** electronのmain window */
+let mainWindow = null;
+let tray = null;
+let isQuitting = false;
+
+/** NICリスト */
+let localaddresses = [];
+
+/** 管理しているデバイスやサービスのリストにユーザが名前を付けたい */
+// [{ type: '', id: '', ip: '', mac: '', alias, '' }]
+let managedThings = [];
+
+// const store = new Store(); // Use singleton
+
+/** config */
+let config = {};
+
+/** persist */
+let persist = {};
+
+//////////////////////////////////////////////////////////////////////
+// local function
+//////////////////////////////////////////////////////////////////////
+/**
+ * @func sendIPCMessage
+ * @desc レンダラープロセスへIPCメッセージを安全に送信する共通関数。ウィンドウ/ WebContentsが破棄済みの場合は何もしない。
+ * @param {string} cmdStr - コマンド名（レンダラー側で判定するキー）
+ * @param {*} argStr - 引数（構造化複製されそのままpostされる）
+ * @returns {void}
+ * @throws 送信中に例外が発生した場合は catch でログ出力のみ（再スローしない）
+ */
+let sendIPCMessage = function (cmdStr, argStr) {
+	try {
+		if (
+			mainWindow != null &amp;&amp;
+			!mainWindow.isDestroyed?.() &amp;&amp;
+			mainWindow.webContents != null &amp;&amp;
+			!mainWindow.webContents.isDestroyed?.()
+		) {
+			mainWindow.webContents.send('to-renderer', { cmd: cmdStr, arg: argStr });
+		}
+	} catch (error) {
+		logger.error('main', 'sendIPCMessage() error:', error);
+	}
+};
+
+//----------------------------------------------------------------------
+// IPC通信 (Renderer -> Main)
+//----------------------------------------------------------------------
+
+// 起動時に一回だけ呼ばれる。
+ipcMain.handle('already', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- already');
+
+	sendIPCMessage("renewSystemConfigView", config);
+	sendIPCMessage("renewUserConfigView", mainUser.getConfig());
+	sendIPCMessage("renewLicenses", licenses);
+
+	await Promise.all([
+		mainEL.start(sendIPCMessage, localaddresses),
+		mainArp.start(sendIPCMessage),
+		mainHue.start(sendIPCMessage),
+		mainOwm.start(sendIPCMessage),
+		mainJma.start(sendIPCMessage),
+		mainNetatmo.start(sendIPCMessage),
+		mainIkea.start(sendIPCMessage),
+		mainESM.start(sendIPCMessage),
+		mainOmron.start(sendIPCMessage),
+		mainCo2s.start(sendIPCMessage),
+		mainSwitchBot.start(sendIPCMessage),
+		mainCalendar.start(sendIPCMessage),
+		mainHALsync.start(sendIPCMessage),
+		mainAutoAssessment.start(sendIPCMessage)
+	]);
+
+	persist.HAL = await mainHALlocal.getLastData();
+	sendIPCMessage("HALRenewResponse", persist.HAL);
+});
+
+// 設定保存
+ipcMain.handle('configSave', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- configSave, arg:', arg);
+	await saveConfig();
+	sendIPCMessage("configSaved", 'All');
+});
+
+// URLを開く
+ipcMain.handle('URLopen', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- URLopen, arg:', arg);
+	if (arg.startsWith('http://') || arg.startsWith('https://')) {
+		shell.openExternal(arg);
+	} else {
+		logger.error('main', 'Security Warning: Blocked non-http/https URL open request:', arg);
+	}
+});
+
+// ページ内検索
+ipcMain.handle('PageInSearch', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- PageInSearch, arg:', arg);
+	try {
+		mainWindow.webContents.findInPage(arg, {
+			forward: true,
+			findNext: false,
+			matchCase: false
+		});
+	} catch (error) {
+		sendIPCMessage('Error', { datetime: formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), moduleName: 'main.PageInSearch', stackLog: error.message });
+	}
+});
+
+ipcMain.handle('PageInSearchNext', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- PageInSearchNext, arg:', arg);
+	mainWindow.webContents.findInPage(arg, { forward: true, findNext: true });
+});
+
+ipcMain.handle('PageInSearchPrev', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- PageInSearchPrev, arg:', arg);
+	mainWindow.webContents.findInPage(arg, { forward: false, findNext: true });
+});
+
+ipcMain.handle('PageInSearchStop', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- PageInSearchStop');
+	mainWindow.webContents.stopFindInPage('clearSelection');
+});
+
+ipcMain.handle('CalendarRenewHolidays', async (event, arg) => {
+	mainCalendar.getHolidays();
+});
+
+ipcMain.handle('SystemSetConfig', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- SystemSetConfig, arg:', arg);
+	config.screenMode = arg.screenMode;
+	config.debug = arg.debug;
+	config.ellogExpireDays = arg.ellogExpireDays;
+	config.resultExpireDays = arg.resultExpireDays;
+	config.IPver = arg.IPver;
+	config.IPv4 = arg.IPv4;
+	config.IPv6 = arg.IPv6;
+	config.backgroundMode = arg.backgroundMode;
+	config.autoLaunch = arg.autoLaunch;
+	config.autoLaunchHidden = arg.autoLaunchHidden;
+
+	app.setLoginItemSettings({
+		openAtLogin: config.autoLaunch,
+		openAsHidden: config.autoLaunchHidden,
+		path: process.execPath,
+		args: config.autoLaunchHidden ? ['--hidden'] : []
+	});
+
+	switch (config.screenMode) {
+		case 'fullscreen':
+			mainWindow.setFullScreen(true);
+			break;
+		case 'window':
+		default:
+			mainWindow.setFullScreen(false);
+			break;
+	}
+
+	config.windowWidth = mainWindow.getSize()[0];
+	config.windowHeight = mainWindow.getSize()[1];
+
+	mainSystem.setConfig(arg);
+});
+
+ipcMain.handle('ScreenMode', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- ScreenMode, arg:', arg);
+	config.screenMode = arg.screenMode;
+	switch (config.screenMode) {
+		case 'fullscreen':
+			mainWindow.setFullScreen(true);
+			break;
+		case 'window':
+		default:
+			mainWindow.setFullScreen(false);
+			break;
+	}
+	config.windowWidth = mainWindow.getSize()[0];
+	config.windowHeight = mainWindow.getSize()[1];
+	mainSystem.setConfig(config);
+});
+
+ipcMain.handle('userProfileSave', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- userProfileSave, arg:', arg);
+	mainUser.setConfig(arg);
+});
+
+ipcMain.handle('HALsetApiTokenRequest', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- HALsetApiTokenRequest.');
+	mainHALsync.setHalApiTokenRequest(arg);
+});
+
+ipcMain.handle('HALgetApiTokenRequest', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- HALgetApiTokenRequest token:', mainHALsync.config.halApiToken);
+	sendIPCMessage("HALgetApiTokenResponse", mainHALsync.config.halApiToken);
+});
+
+ipcMain.handle('HALdeleteApiToken', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- HALdeleteApiToken.');
+	mainHALsync.deleteHalApiToken();
+});
+
+ipcMain.handle('HALSyncRequeset', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- HALSyncRequeset.');
+	mainHALsync.startSync();
+});
+
+ipcMain.handle('HALgetUserProfileRequest', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- HALgetUserProfileRequest.');
+	mainHALsync.getHalUserProfileRequest();
+});
+
+ipcMain.handle('HALrenew', async (event, arg) => {
+	persist.HAL = await mainHALlocal.getLastData();
+	logger.debug('main', config.debug, 'ipcMain &lt;- HALrenew, halData: &lt;skip>');
+	sendIPCMessage("HALRenewResponse", persist.HAL);
+});
+
+ipcMain.handle('HALsubmitQuestionnaire', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- HALsubmitQuestionnaire, arg:', arg);
+	mainHALlocal.submitQuestionnaire(arg,
+		() => { sendIPCMessage('Info', 'アンケートを保存しました。'); },
+		(err) => { sendIPCMessage('Error', { datetime: formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), moduleName: 'main', stackLog: err.message }); });
+});
+
+ipcMain.handle('AutoAssessmentConfig', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- AutoAssessmentConfig, arg:', arg);
+	mainAutoAssessment.setConfig(arg);
+});
+
+ipcMain.handle('ELUse', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- ELUse, arg:', arg);
+	await mainEL.setConfig({ enabled: true });
+	mainEL.start(sendIPCMessage, localaddresses);
+});
+
+ipcMain.handle('ELStop', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- ELStop, arg:', arg);
+	await mainEL.setConfig({ enabled: false });
+	mainEL.stop();
+});
+
+ipcMain.handle('ELUseOldSearch', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- ELUseOldSearch, arg:', arg);
+	mainEL.setConfig({ oldSearch: true });
+});
+
+ipcMain.handle('ELStopOldSearch', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- ELStopOldSearch, arg:', arg);
+	mainEL.setConfig({ oldSearch: false });
+});
+
+ipcMain.handle('Elsend', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- Elsend, arg:', arg);
+	mainEL.sendMsg(arg.ip, arg.msg);
+});
+
+ipcMain.handle('ElsendOPC1', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- ElsendOPC1, arg:', arg);
+	mainEL.sendOPC1(arg.ip, arg.seoj, arg.deoj, arg.esv, arg.epc, arg.edt);
+});
+
+ipcMain.handle('ELSearch', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- ELSearch.');
+	mainEL.search();
+});
+
+ipcMain.handle('ESMUse', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- ESMUse, arg:', arg);
+	arg.enabled = true;
+	arg.connected = false;
+	arg.EPANDESC = {};
+	await mainESM.setConfig(arg);
+	mainESM.start(sendIPCMessage);
+});
+
+ipcMain.handle('ESMnotUse', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- ESMnotUse, arg:', arg);
+	arg.enabled = false;
+	await mainESM.setConfig(arg);
+	await mainESM.stop();
+});
+
+ipcMain.handle('HueUse', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- HueUse, key:', arg.key);
+	arg.enabled = true;
+	await mainHue.setConfig(arg);
+	mainHue.start(sendIPCMessage);
+});
+
+ipcMain.handle('HueUseCancel', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- HueUseCancel, key:', arg.key);
+	arg.enabled = false;
+	await mainHue.setConfig(arg);
+	await mainHue.stop();
+});
+
+ipcMain.handle('HueUseStop', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- HueUseStop, key:', arg.key);
+	arg.enabled = false;
+	await mainHue.setConfig(arg);
+	await mainHue.stop();
+});
+
+ipcMain.handle('HueControl', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- HueControl, arg:', arg);
+	mainHue.control(arg.url, JSON.stringify(arg.json));
+});
+
+ipcMain.handle('IkeaUse', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- IkeaUse, arg:', arg);
+	arg.enabled = true;
+	await mainIkea.setConfig(arg);
+	mainIkea.start(sendIPCMessage);
+});
+
+ipcMain.handle('IkeaUseStop', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- IkeaUseStop, arg:', arg);
+	arg.enabled = false;
+	await mainIkea.setConfig(arg);
+	await mainIkea.stop();
+});
+
+ipcMain.handle('IkeaSend', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- IkeaSend, arg:', arg);
+	mainIkea.control(arg.key, arg.type, arg.command);
+});
+
+ipcMain.handle('OwmUse', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- OwmUse, key:', arg.APIKey, 'zipCode:', arg.zipcode);
+	arg.enabled = true;
+	await mainOwm.setConfig(arg);
+	mainOwm.start(sendIPCMessage);
+});
+
+ipcMain.handle('OwmStop', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- OwmStop, key:', arg.APIKey, 'zipCode:', arg.zipcode);
+	arg.enabled = false;
+	await mainOwm.setConfig(arg);
+	mainOwm.stop();
+});
+
+ipcMain.handle('JmaConfigSave', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- JmaConfigSave, arg:', arg);
+	await mainJma.setConfig(arg);
+	mainJma.gets();
+});
+
+ipcMain.handle('NetatmoUse', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- NetatmoUse, arg:', arg);
+	arg.enabled = true;
+	await mainNetatmo.setConfig(arg);
+	mainNetatmo.start(sendIPCMessage);
+});
+
+ipcMain.handle('NetatmoStop', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- NetatmoStop, arg:', arg);
+	arg.enabled = false;
+	await mainNetatmo.setConfig(arg);
+	mainNetatmo.stop();
+});
+
+ipcMain.handle('OmronUse', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- OmronUse, arg:', arg);
+	arg.enabled = true;
+	await mainOmron.setConfig(arg);
+	mainOmron.start(sendIPCMessage);
+});
+
+ipcMain.handle('OmronStop', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- OmronStop, arg:', arg);
+	arg.enabled = false;
+	await mainOmron.setConfig(arg);
+	mainOmron.stop();
+});
+
+ipcMain.handle('Co2sUse', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- Co2sUse, arg:', arg);
+	arg.enabled = true;
+	await mainCo2s.setConfig(arg);
+	mainCo2s.start(sendIPCMessage);
+});
+
+ipcMain.handle('Co2sStop', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- Co2sStop, arg:', arg);
+	arg.enabled = false;
+	await mainCo2s.setConfig(arg);
+	mainCo2s.stop();
+});
+
+ipcMain.handle('SwitchBotUse', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- SwitchBotUse, token:', arg.token);
+	arg.enabled = true;
+	await mainSwitchBot.setConfig(arg);
+	mainSwitchBot.start(sendIPCMessage);
+});
+
+ipcMain.handle('SwitchBotStop', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- SwitchBotStop, token:', arg.token);
+	arg.enabled = false;
+	await mainSwitchBot.setConfig(arg);
+	await mainSwitchBot.stop();
+});
+
+ipcMain.handle('SwitchBotControl', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain &lt;- SwitchBotControl, arg:', arg);
+	mainSwitchBot.control(arg.id, arg.command, arg.param);
+});
+
+
+//----------------------------------------------------------------------
+// Life Cycle Events
+//----------------------------------------------------------------------
+
+async function createWindow() {
+	try {
+		mainWindow = new BrowserWindow({
+			show: false,
+			fullscreen: config ? config.screenMode == 'fullscreen' : false,
+			width: config.windowWidth,
+			height: config.windowHeight,
+			webPreferences: {
+				nodeIntegration: false,
+				contextIsolation: true,
+				worldSafeExecuteJavaScript: true,
+				preload: path.join(__dirname, 'preload.js')
+			},
+			icon: path.join(__dirname, "assets/icon.png")
+		});
+		menuInitialize();
+		mainWindow.loadFile(path.join(__dirname, 'public', 'index.htm'));
+
+		if (config.debug) {
+			mainWindow.webContents.openDevTools();
+		}
+
+		mainWindow.webContents.on('found-in-page', (event, result) => {
+			if (result.finalUpdate) {
+				mainWindow.webContents.stopFindInPage('keepSelection');
+				sendIPCMessage('foundResultShow', result);
+			}
+		});
+
+		mainWindow.on('close', async (event) => {
+			logger.debug('main', config.debug, 'mainWindow.on.close');
+			if (!isQuitting &amp;&amp; config.backgroundMode) {
+				event.preventDefault();
+				mainWindow.hide();
+				return;
+			}
+			config.windowWidth = mainWindow.getSize()[0];
+			config.windowHeight = mainWindow.getSize()[1];
+			await mainSystem.setConfig(config);
+		});
+
+		mainWindow.on('closed', () => {
+			logger.debug('main', config.debug, 'mainWindow.on.closed');
+			mainWindow = null;
+		});
+
+		createTray();
+
+		await mainHALlocal.truncatelogs();
+
+		mainWindow.webContents.on('render-process-gone', (event, details) => {
+			logger.error('main', 'render-process-gone:', details?.reason, details);
+			safeRecreateWindow();
+		});
+
+		mainWindow.on('unresponsive', () => {
+			logger.error('main', 'window unresponsive');
+		});
+
+		mainWindow.webContents.on('gpu-process-crashed', (event, killed) => {
+			logger.error('main', 'gpu-process-crashed. killed:', killed);
+		});
+
+	} catch (error) {
+		logger.error('main', 'createWindow() error:', error);
+	}
+}
+
+function safeRecreateWindow() {
+	try {
+		if (mainWindow &amp;&amp; !mainWindow.isDestroyed?.()) {
+			mainWindow.destroy();
+		}
+	} catch (e) {
+		logger.error('main', 'safeRecreateWindow destroy error:', e);
+	} finally {
+		createWindow();
+	}
+}
+
+if (process.platform === 'win32') {
+	const { createRequire } = await import('module');
+	const require = createRequire(import.meta.url);
+	if (require('electron-squirrel-startup')) app.quit();
+}
+
+app.on('ready', async () => {
+	logger.info('main', `---------- ${appname} ----------`);
+
+	const lock = app.requestSingleInstanceLock();
+	if (lock) {
+		app.on('second-instance', (event, args) => {
+			if (mainWindow === null) return;
+			if (mainWindow.isMinimized()) { mainWindow.restore(); }
+			mainWindow.focus();
+		});
+	} else {
+		await app.quit();
+	}
+
+	await mainSystem.start(sendIPCMessage);
+	config = mainSystem.getConfig();
+	await mainUser.start(sendIPCMessage);
+	persist = await store.get('persist', persist);
+
+	let interfaces = os.networkInterfaces();
+	for (let k in interfaces) {
+		for (let k2 in interfaces[k]) {
+			let address = interfaces[k][k2];
+			if (address.family == 'IPv4' &amp;&amp; !address.internal) {
+				localaddresses.push(address.address);
+			}
+		}
+	}
+	logger.debug('main', config.debug, `on.ready ipver:${config.IPver} ipv4:${config.IPv4} ipv6:${config.IPv6}`);
+
+	await mainHALlocal.initialize();
+	// await sqlite3.sync({ alter: true }).then(() => {
+	await sqlite3.sync().then(() => {
+		logger.debug('main', config.debug, 'on.ready. Local lifelog DB is ready with auto-migration.');
+	});
+
+	createWindow();
+
+	const loginItemSettings = app.getLoginItemSettings();
+	const wasOpenedAtLogin = loginItemSettings.wasOpenedAtLogin;
+	const isHiddenStart = process.argv.includes('--hidden') || (wasOpenedAtLogin &amp;&amp; config.autoLaunchHidden);
+
+	if (mainWindow) {
+		if (isHiddenStart) {
+			logger.info('main', 'Start as Hidden');
+		} else {
+			mainWindow.show();
+		}
+	}
+});
+
+function createTray() {
+	if (tray) return;
+
+	let icon;
+	if (isMac) {
+		const icon16 = path.join(__dirname, 'icons', 'plis_16x16.png');
+		const icon32 = path.join(__dirname, 'icons', 'plis_32x32@2x.png');
+		icon = nativeImage.createFromPath(icon16);
+		try {
+			const icon2x = nativeImage.createFromPath(icon32);
+			if (!icon2x.isEmpty()) {
+				icon.addRepresentation({
+					scaleFactor: 2.0,
+					buffer: icon2x.toPNG()
+				});
+			}
+		} catch (e) {
+			logger.error('main', 'Tray icon 2x load error:', e);
+		}
+	} else {
+		icon = path.join(__dirname, 'icons', 'plis_linux_icon.png');
+	}
+
+	tray = new Tray(icon);
+	tray.setToolTip(appname);
+
+	const contextMenu = Menu.buildFromTemplate([
+		{
+			label: '表示/非表示',
+			click: () => {
+				if (mainWindow &amp;&amp; !mainWindow.isDestroyed()) {
+					if (mainWindow.isVisible()) {
+						mainWindow.hide();
+					} else {
+						mainWindow.show();
+					}
+				} else {
+					createWindow();
+				}
+			}
+		},
+		{
+			label: '終了',
+			click: () => {
+				isQuitting = true;
+				app.quit();
+			}
+		}
+	]);
+
+	tray.setContextMenu(contextMenu);
+	tray.on('double-click', () => {
+		if (mainWindow &amp;&amp; !mainWindow.isDestroyed()) {
+			mainWindow.show();
+		}
+	});
+}
+
+app.on("activate", () => {
+	logger.debug('main', config.debug, 'app.on.activate');
+	if (mainWindow === null) {
+		createWindow();
+		mainWindow.show();
+	} else {
+		mainWindow.show();
+	}
+});
+
+app.on('window-all-closed', () => {
+	logger.debug('main', config.debug, 'app.on.window-all-closed');
+	if (config.backgroundMode) return;
+	app.quit();
+});
+
+app.once('before-quit', async () => {
+	isQuitting = true;
+	logger.debug('main', config.debug, 'app.on.before-quit');
+	await savePersist();
+
+	await mainArp.stopWithoutSave();
+	await mainEL.stopWithoutSave();
+	await mainESM.stopWithoutSave();
+	await mainHue.stopWithoutSave();
+	await mainNetatmo.stopWithoutSave();
+	await mainOwm.stopWithoutSave();
+	await mainJma.stopWithoutSave();
+	await mainOmron.stopWithoutSave();
+	await mainCo2s.stopWithoutSave();
+	await mainIkea.stopWithoutSave();
+	await mainSwitchBot.stopWithoutSave();
+	await mainCalendar.stopWithoutSave();
+	await mainUser.stop();
+	await mainSystem.stop();
+});
+
+app.once('will-quit', async () => {
+	logger.debug('main', config.debug, 'app.on.will-quit');
+});
+
+app.once('quit', async () => {
+	logger.debug('main', config.debug, 'app.on.quit');
+});
+
+const menuItems = [
+	{
+		label: appname,
+		submenu: [
+			{
+				label: 'Show your database',
+				accelerator: isMac ? 'Command+s' : 'Control+s',
+				click: async function () { shell.showItemInFolder(databaseDir); }
+			},
+			{
+				label: 'Preferences...',
+				accelerator: isMac ? 'Command+,' : 'Control+,',
+				click: async function () {
+					await saveConfig();
+					sendIPCMessage("configSaved", 'All');
+					shell.showItemInFolder(store.path);
+				}
+			},
+			{ type: "separator" },
+			{
+				label: 'Quit',
+				accelerator: isMac ? 'Command+Q' : 'Alt+F4',
+				click: function () { app.quit(); }
+			}]
+	}, {
+		label: 'Edit',
+		submenu: [
+			{
+				label: 'Cut',
+				accelerator: isMac ? 'Command+X' : 'Control+X',
+				selector: 'cut:'
+			},
+			{
+				label: 'Copy',
+				accelerator: isMac ? 'Command+C' : 'Control+C',
+				selector: 'copy:'
+			},
+			{
+				label: 'Paste',
+				accelerator: isMac ? 'Command+V' : 'Control+V',
+				selector: 'paste:'
+			},
+			{ type: "separator" },
+			{
+				label: "Undo",
+				accelerator: isMac ? 'Command+Z' : 'Control+Z',
+				selector: "undo:"
+			},
+			{
+				label: "Redo",
+				accelerator: isMac ? 'Shift+Command+Z' : 'Shift+Control+Z',
+				selector: "redo:"
+			},
+			{
+				label: "Select All",
+				accelerator: isMac ? 'Command+A' : 'Control+A',
+				selector: "selectAll:"
+			},
+			{ type: "separator" },
+			{
+				label: 'Search in page',
+				accelerator: isMac ? 'Command+F' : 'Control+F',
+				click: function (item, focusedWindow) { sendIPCMessage("openSearch", '') }
+			}
+		]
+	}, {
+		label: 'View',
+		submenu: [
+			{
+				label: 'Reload',
+				accelerator: isMac ? 'Command+R' : 'Control+R',
+				click: function (item, focusedWindow) { if (focusedWindow) focusedWindow.reload() }
+			},
+			{
+				label: 'Toggle Full Screen',
+				accelerator: isMac ? 'Ctrl+Command+F' : 'F11',
+				click: function () { mainWindow.setFullScreen(!mainWindow.isFullScreen()); }
+			},
+			{ type: "separator" },
+			{
+				label: 'Zoom (+)',
+				accelerator: isMac ? 'Command+plus' : 'Control+plus',
+				click: function () { mainWindow.webContents.setZoomFactor(mainWindow.webContents.getZoomFactor() + 0.1); }
+			},
+			{
+				label: 'Zoom (-)',
+				accelerator: isMac ? 'Command+-' : 'Control+-',
+				click: function () {
+					if (mainWindow.webContents.getZoomFactor() >= 0.2) {
+						mainWindow.webContents.setZoomFactor(mainWindow.webContents.getZoomFactor() - 0.1);
+					} else {
+						sendIPCMessage('Error', { datetime: formatDate(new Date(), "YYYY-MM-DD HH24:MI:SS"), moduleName: 'main', stackLog: 'Minimum zoom' });
+					}
+				}
+			},
+			{
+				label: 'Zoom (Reset)',
+				accelerator: isMac ? 'Command+0' : 'Control+0',
+				click: function () { mainWindow.webContents.setZoomFactor(1); }
+			},
+			{
+				label: 'Create shortcut',
+				click: function () { createShortCut(); }
+			}]
+	}, {
+		label: 'Information',
+		submenu: [
+			{
+				label: 'About PLIS',
+				click: function () {
+					openAboutWindow({
+						icon_path: path.join(__dirname, 'icons', 'plis_linux_icon.png'),
+						copyright: 'Copyright (c) 2023 Sugimura Lab.',
+						package_json_dir: __dirname
+					});
+				}
+			},
+			{
+				label: 'About PLIS (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/'); }
+			},
+			{
+				label: 'User manual (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/userManual.html'); }
+			},
+			{
+				label: 'Developper manual (External contents)',
+				click: function () { shell.openExternal('https://hiroshi-sugimura.github.io/plis//v1/docs/jsdoc/'); }
+			},
+			{
+				label: 'Terms (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/terms.html'); }
+			},
+			{
+				label: 'Privacy Policy (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/privacyPolicy.html'); }
+			},
+			{
+				label: 'EURA (External contents)',
+				click: function () { shell.openExternal('https://plis.sugi-lab.net/eula.html'); }
+			},
+			{ type: "separator" },
+			{
+				label: 'Developer Tools',
+				accelerator: isMac ? 'Ctrl+Command+I' : 'Control+Shift+I',
+				click: function () { mainWindow.toggleDevTools(); }
+			}
+		]
+	}];
+
+function menuInitialize() {
+	let menu = Menu.buildFromTemplate(menuItems);
+	Menu.setApplicationMenu(menu);
+	mainWindow.setMenu(menu);
+}
+
+function createShortCut() {
+	if (isWin) {
+		let dist = path.join(userHome, 'Desktop', 'PLIS.lnk');
+		let source = path.join(userHome, 'AppData', 'Local', 'PLIS', 'PLIS.exe');
+		let command = `$WshShell = New-Object -ComObject WScript.Shell; $ShortCut = $WshShell.CreateShortcut("${dist}"); $ShortCut.TargetPath = "${source}"; $ShortCut.Save();`;
+		exec(command, { "shell": "powershell.exe" }, (error, stdout, stderror) => {
+			if (error) {
+				logger.error('main', 'createShortCut error:', error);
+			}
+		});
+	} else {
+		logger.debug('main', config.debug, 'createShortCut: not Win');
+	}
+}
+
+async function saveConfig() {
+	let currentConfig = await store.get('config', {});
+	let _config = {
+		system: mainSystem.getConfig(),
+		HAL: mainHALsync.getConfig(),
+		Hue: mainHue.getConfig(),
+		Ikea: mainIkea.getConfig(),
+		OWM: mainOwm.getConfig(),
+		ESM: mainESM.getConfig(),
+		Netatmo: mainNetatmo.getConfig(),
+		EL: mainEL.getConfig(),
+		Omron: mainOmron.getConfig(),
+		Co2s: mainCo2s.getConfig(),
+		JMA: mainJma.getConfig(),
+		SwitchBot: mainSwitchBot.getConfig(),
+		Calendar: mainCalendar.getConfig(),
+		AutoAssessment: mainAutoAssessment.getConfig(),
+		user: mainUser.getConfig()
+	};
+	// 既存の設定とマージして、メモリ上の空データでディスクの設定を消さないようにする
+	let newConfig = mergeDeeply(currentConfig, _config);
+	await store.set('config', newConfig);
+}
+
+async function savePersist() {
+	persist.Arp = mainArp.getPersist();
+	persist.EL = mainEL.getPersist();
+	persist.ESM = mainESM.getPersist();
+	persist.Hue = mainHue.getPersist();
+	persist.Netatmo = mainNetatmo.getPersist();
+	persist.OWM = mainOwm.getPersist();
+	persist.JMA = mainJma.getPersist();
+	persist.Omron = mainOmron.getPersist();
+	persist.Co2s = mainCo2s.getPersist();
+	persist.Ikea = mainIkea.getPersist();
+	persist.SwitchBot = mainSwitchBot.getPersist();
+	persist.HAL = mainHALsync.getPersist();
+	await store.set('persist', persist);
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+    
+    
+</div>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 4.0.5</a> on Sun Jun 21 2026 16:33:45 GMT+0900 (Japan Standard Time) using the <a href="https://github.com/clenemt/docdash">docdash</a> theme.
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
