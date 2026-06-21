@@ -12,10 +12,10 @@
   - [ ] 一部のローカル環境で発生しているIPv6関連のエラー原因調査とフォールバック処理の実装。
 
 ### 2. サードパーティAPI連携の調整
-- [ ] **Netatmoのタイムアウト対策**
-  - [ ] Netatmo APIの接続タイムアウト発生時の自動リトライ・エラーログ出力の動作確認（[mainNetatmo.mjs](file:///Users/sugimura/Documents/plis/app/src/mainNetatmo.mjs)）。
-- [ ] **SwitchBot API バージョン確認**
-  - [ ] 現在利用している `switchbot-handler` で API v1.1 が安定して動作しているかの動作検証（[mainSwitchBot.mjs](file:///Users/sugimura/Documents/plis/app/src/mainSwitchBot.mjs)）。
+- [x] **Netatmoのタイムアウト対策**
+  - [x] Netatmo APIの接続タイムアウト発生時の自動リトライ・エラーログ出力の動作確認（[mainNetatmo.mjs](file:///Users/sugimura/Documents/plis/app/src/mainNetatmo.mjs)）。
+- [x] **SwitchBot API バージョン確認**
+  - [x] 現在利用している `switchbot-handler` で API v1.1 が安定して動作しているかの動作検証（[mainSwitchBot.mjs](file:///Users/sugimura/Documents/plis/app/src/mainSwitchBot.mjs)）。
 
 ---
 

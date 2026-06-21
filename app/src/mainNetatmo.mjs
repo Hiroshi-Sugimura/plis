@@ -201,7 +201,8 @@ let mainNetatmo = {
 			const res = await axios.post('https://api.netatmo.com/oauth2/token', params, {
 				headers: {
 					'Content-Type': 'application/x-www-form-urlencoded'
-				}
+				},
+				timeout: 10000
 			});
 
 			// 新しいトークンを内部に保持（accessTokenは永続化しない）
@@ -243,11 +244,13 @@ let mainNetatmo = {
 	/**
 	 * Netatmo API (getstationsdata) を叩いて最新デバイス情報を取得し persist に反映・DBへ保存。
 	 * 403で未リトライならトークンをリフレッシュして一度だけ再試行する。
+	 * 一時的な通信エラーの場合は最大3回リトライ。
 	 * @param {boolean} [isRetry=false] 内部再試行フラグ（無限ループ防止）
+	 * @param {number} [retryCount=0] 一時的エラー時のリトライ回数
 	 * @returns {Promise<void>}
 	 * @throws {Error} API失敗/リフレッシュ失敗
 	 */
-	fetchStationsData: async function (isRetry = false) {
+	fetchStationsData: async function (isRetry = false, retryCount = 0) {
 		if (!mainNetatmo.accessToken) {
 			// accessTokenが無いならリフレッシュ実行
 			// await mainNetatmo.refreshAccessToken();
@@ -269,7 +272,7 @@ let mainNetatmo = {
 				try {
 					await mainNetatmo.refreshAccessToken();
 					// リフレッシュ成功したら再試行（無限ループ防止でisRetry=true）
-					return await mainNetatmo.fetchStationsData(true);
+					return await mainNetatmo.fetchStationsData(true, retryCount);
 				} catch (refreshError) {
 					logger.error('mainNetatmo', 'fetchStationsData() リフレッシュ失敗:', refreshError);
 					if (sendIPCMessage) {
@@ -278,8 +281,21 @@ let mainNetatmo = {
 					throw refreshError;
 				}
 			}
-			if (error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT' || error.code === 'ENETUNREACH' || error.code === 'ECONNABORTED' || error.code === 'EHOSTUNREACH' || error.code === 'ECONNRESET' || (error.message && error.message.includes('AggregateError'))) {
-				logger.error('mainNetatmo', `fetchStationsData() Connection Error: ${error.code || error.message.split('\n')[0]}`);
+
+			// 一時的な通信エラーの場合のリトライ処理 (最大3回)
+			const isConnError = error.code === 'ENOTFOUND' || error.code === 'ETIMEDOUT' || error.code === 'ENETUNREACH' || error.code === 'ECONNABORTED' || error.code === 'EHOSTUNREACH' || error.code === 'ECONNRESET' || (error.message && error.message.includes('AggregateError'));
+			if (isConnError && retryCount < 3) {
+				logger.warn('mainNetatmo', `fetchStationsData() 一時的な通信エラーを検出しました。2秒後にリトライします。回数: ${retryCount + 1}/3 (エラーコード: ${error.code || 'AggregateError'})`);
+				await new Promise(resolve => setTimeout(resolve, 2000));
+				return await mainNetatmo.fetchStationsData(isRetry, retryCount + 1);
+			}
+
+			// リトライしても失敗、または他のエラーの場合
+			if (isConnError) {
+				logger.error('mainNetatmo', `fetchStationsData() Connection Error (リトライ上限到達): ${error.code || error.message.split('\n')[0]}`);
+				if (sendIPCMessage) {
+					sendIPCMessage('NetatmoConnectionError', 'Netatmoサーバーとの通信に一時的に失敗しました。インターネット接続環境、またはNetatmoのサーバー稼働状況を確認してください（自動で再試行を継続します）。');
+				}
 			} else {
 				logger.error('mainNetatmo', 'fetchStationsData() error detail:\x1b[31m', error.response ? error.response.data : error, '\x1b[0m');
 			}
@@ -477,8 +493,8 @@ let mainNetatmo = {
 		}
 		logger.debug('mainNetatmo', config.debug, 'observe() start.');
 
-		// 監視はcronで実施、1分毎
-		mainNetatmo.observationJob = cron.schedule('*/1 * * * *', async () => {
+		// 監視はcronで実施、10分毎
+		mainNetatmo.observationJob = cron.schedule('*/10 * * * *', async () => {
 			try {
 				// トークンが無い/期限切れなら再取得
 				if (!mainNetatmo.accessToken || (mainNetatmo.tokenExpires && Date.now() > mainNetatmo.tokenExpires - 60000)) {

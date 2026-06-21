@@ -25,3 +25,20 @@ PLISプロジェクトの理解と開発状況の整理のため、`spec` フォ
 - **JSDocドキュメントの生成検証**: `docs` ディレクトリで `npm run start` を実行し、ESM化された最新のメインプロセスを含むすべてのAPIドキュメント（`docs/jsdoc` 配下）が正常に生成されることを確認しました。
 - **依存関係とアプリ起動検証**: `npm install` がエラーなく完了し、Mac環境下で `npm run mac` がクラッシュせず正常に起動することを確認しました。
 - **specフォルダの更新**: [todo.md](file:///Users/sugimura/Documents/plis/spec/todo.md) を更新し、対応した「開発環境・ドキュメンテーション」のチェックボックスをすべて完了（ `[x]` ）に更新しました。
+
+### サードパーティAPI連携の調整 (2026-06-21 実施)
+- **Netatmo 連携の修正**
+  - [mainNetatmo.mjs](file:///Users/sugimura/Documents/plis/app/src/mainNetatmo.mjs) の `cron` による観測間隔を「1分毎」から **「10分毎（`*/10 * * * *`）」** に変更し、APIアクセス負荷を軽減しました。
+  - `refreshAccessToken`（トークンリフレッシュ）に `timeout: 10000` (10秒) を設定しました。
+  - `fetchStationsData` に一時的なネットワーク通信エラー（タイムアウト等）発生時の **最大3回（2秒間隔）の自動リトライ処理** を実装しました。
+  - リトライ上限に達しても失敗し続けた場合に、UI側へ `NetatmoConnectionError` イベントを通知する処理を追加しました。
+- **Netatmo UI（エラー案内）の改善**
+  - [subNetatmo.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subNetatmo.js) で `NetatmoConnectionError` イベントを購読し、ユーザーへネットワークやサーバー稼働状況の確認を促すとともに、自動再試行する旨を案内するトースト表示を実装しました。
+  - 認証エラー（`NetatmoAuthError`）のメッセージを、*「Netatmoの開発者ポータルで新しい認証トークンを再生成して設定画面で再入力してください」* という具体的な解決手順を提示する内容に改善しました。
+- **SwitchBot 連携（自作モジュール）の修正**
+  - [switchbot-handler/index.js](file:///Users/sugimura/Documents/plis/app/src/node_modules/switchbot-handler/index.js) 内の `axios.create` に `timeout: 10000` (10秒) を設定し、通信不良時におけるプロセスハングを防ぐように修正しました（API v1.1対応であることも併せて確認済み）。
+
+## 検証結果
+- **JSDocの生成検証**: `docs` ディレクトリで `npm run start` がエラーなく実行され、APIドキュメントが正常にビルドできることを確認しました。
+- **アプリ起動検証**: `npm run mac` がクラッシュせず正常に起動し、Netatmoの初期化とSwitchBotとの通信が行われることをログから確認しました。
+- **specドキュメントの更新**: [todo.md](file:///Users/sugimura/Documents/plis/spec/todo.md) および [task.md](file:///Users/sugimura/Documents/plis/spec/task.md) を更新し、関係するタスクをすべて完了（ `[x]` ）に更新しました。
