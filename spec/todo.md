@@ -35,6 +35,12 @@
   - [x] 過去実績値（データベース）と未来予測値（気象庁予報・OWM5日間予報）の出し分けロジックの実装。
   - [x] カレンダーセル内へのFontAwesome天気アイコンの表示、およびクリック時の詳細記録ポップアップモーダルの実装。
 
+### 4. SwitchBot オフラインデバイスのグレーアウト
+- [x] **オフラインデバイスの可視化と制御の無効化**
+  - [x] ステータス未取得のデバイスをオフラインと判定し、カード全体のグレーアウトおよび操作無効（pointer-events: none）を適用。
+  - [x] オフライン時の未定義エラー回避（クラッシュ防止ガード）の実装（[subSwitchBot.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subSwitchBot.js)）。
+  - [x] デバイス名の横に赤字で `(オフライン)` の明示的警告テキストを追記。
+
 ### 2. セキュリティおよび堅牢性
 - [x] **XSS対策の再確認**
   - [x] 外部センサーやAPIから取得した文字列をレンダラーに描画する際、サニタイズ処理が漏れなく適用されているかのレビュー（[js/index.js](file:///Users/sugimura/Documents/plis/app/src/public/js/index.js) および `sub*.js`）。

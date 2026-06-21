@@ -64,13 +64,40 @@ window.addEventListener('DOMContentLoaded', function () {
 		let devs = facilitiesSwitchBot.deviceList; // array
 		for (const d of devs) {
 			let devState = facilitiesSwitchBot[d.deviceId];
+			let isOffline = !devState || isObjEmpty(devState);
+
+			if (isOffline) {
+				devState = {
+					power: 'off',
+					slidePosition: 0,
+					battery: 0,
+					temperature: '--',
+					humidity: '--',
+					doorState: 'unknown',
+					brightness: 'dim',
+					moveDetected: 'no',
+					openState: 'unknown',
+					voltage: 0,
+					electricCurrent: 0,
+					weight: 0,
+					electricityOfDay: 0,
+					color: '0:0:0',
+					colorTemperature: 0,
+					lackWater: false
+				};
+			}
+
 			let icon = '';
 			let subicon = '';
 			let cloudIcon = '';
 			let batteryIcon = '';
 			let control = '';
+			
+			let offlineStyle = isOffline ? " style='opacity: 0.5; filter: grayscale(100%); pointer-events: none;'" : "";
+			let offlineText = isOffline ? " <span style='color:red; font-size:0.85em; font-weight:bold;'>(オフライン)</span>" : "";
+
 			// console.log('window.renewFacilitiesSwitchBot() d:', d, 'devState:', devState);
-			doc += "<div class='LinearLayoutChild'> <section class='dev'>";
+			doc += `<div class='LinearLayoutChild'> <section class='dev'${offlineStyle}>`;
 
 			switch (d.deviceType) {
 				case 'Bot':
@@ -90,17 +117,17 @@ window.addEventListener('DOMContentLoaded', function () {
 					} else {
 						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
 					}
-					doc += `<div class="tooltip">${icon}<div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br>${control}`;
+					doc += `<div class="tooltip">${icon}<div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}${offlineText}<br>${control}`;
 					break;
 
 				case 'Curtain':
-					doc += `<div class="tooltip"><i class="fa-solid fa-person-booth switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>Position:${devState.slidePosition}`;
+					doc += `<div class="tooltip"><i class="fa-solid fa-person-booth switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}${offlineText}<br>Position:${devState.slidePosition}`;
 					break;
 
 				case 'Hub':
 				case 'Hub Plus':
 				case 'Hub Mini':
-					doc += `<div class="tooltip"><i class="fa-solid fa-cube switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}`;
+					doc += `<div class="tooltip"><i class="fa-solid fa-cube switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}${offlineText}`;
 					break;
 
 				case 'Meter':
@@ -117,16 +144,16 @@ window.addEventListener('DOMContentLoaded', function () {
 						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-empty icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
 					}
 
-					doc += `<div class="tooltip"><i class="fa-solid fa-temperature-half switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${batteryIcon}<br>${d.deviceName}<br><i class="fa-solid fa-temperature-three-quarters"></i> ${devState.temperature} ℃<br><i class="fa-solid fa-droplet"></i> ${devState.humidity} ％`;
+					doc += `<div class="tooltip"><i class="fa-solid fa-temperature-half switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${batteryIcon}<br>${d.deviceName}${offlineText}<br><i class="fa-solid fa-temperature-three-quarters"></i> ${devState.temperature} ℃<br><i class="fa-solid fa-droplet"></i> ${devState.humidity} ％`;
 					break;
 
 				case 'Lock':
-					doc += `<div class="tooltip"><i class="fa-solid fa-lock switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}<br>LockState:${d.lockState}<br>DoorState:${devState.doorState}`;
+					doc += `<div class="tooltip"><i class="fa-solid fa-lock switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}${offlineText}<br>LockState:${d.lockState}<br>DoorState:${devState.doorState}`;
 					break;
 
 				case 'Keypad':  // 指紋認証鍵
 				case 'Keypad Touch':
-					doc += `<div class="tooltip"><i class="fa-solid fa-fingerprint switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}`;
+					doc += `<div class="tooltip"><i class="fa-solid fa-fingerprint switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}${offlineText}`;
 					break;
 
 				case 'Remote':  // リモートボタン
@@ -136,7 +163,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
 					}
 
-					doc += `<div class="tooltip"><i class="fa-solid fa-toggle-off switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}`;
+					doc += `<div class="tooltip"><i class="fa-solid fa-toggle-off switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}${offlineText}`;
 					break;
 
 				case 'Motion Sensor':
@@ -163,7 +190,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-empty icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
 					}
 
-					doc += `<div class="tooltip"><i class="fa-solid fa-person-rays switchBot-dev"></i><i class="${subicon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon} ${batteryIcon}<br>${d.deviceName}<br>MoveDetected: ${devState.moveDetected}`;
+					doc += `<div class="tooltip"><i class="fa-solid fa-person-rays switchBot-dev"></i><i class="${subicon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon} ${batteryIcon}<br>${d.deviceName}${offlineText}<br>MoveDetected: ${devState.moveDetected}`;
 					break;
 
 				case 'Contact Sensor':  // 開閉センサ
@@ -196,12 +223,12 @@ window.addEventListener('DOMContentLoaded', function () {
 						batteryIcon = `<span class='icon_layers'><i class='fa-solid fa-battery-empty icon_layers_icon'></i><span class='icon_layers_counter'>${devState.battery}</span></span>`
 					}
 
-					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon} ${batteryIcon}<br>${d.deviceName}<br>MoveDetected: ${devState.moveDetected}`;
+					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon} ${batteryIcon}<br>${d.deviceName}${offlineText}<br>MoveDetected: ${devState.moveDetected}`;
 					break;
 
 				case 'Ceiling Light':
 				case 'Ceiling Light Pro':
-					doc += `<div class="tooltip"><i class="fa-regular fa-lightbulb switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}`;
+					doc += `<div class="tooltip"><i class="fa-regular fa-lightbulb switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}${offlineText}`;
 					break;
 
 				case 'Plug Mini (US)':
@@ -220,7 +247,7 @@ window.addEventListener('DOMContentLoaded', function () {
 						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
 					}
 
-					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br>`;
+					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}${offlineText}<br>`;
 					doc += `${control}<br>`;
 					doc += `${devState.voltage} [V]<br> ${devState.electricCurrent} [A]<br>${devState.weight} [W]<br>`;
 					doc += `<i class="fa-regular fa-clock"></i> ${devState.electricityOfDay} min<br>`;
@@ -241,11 +268,11 @@ window.addEventListener('DOMContentLoaded', function () {
 						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
 					}
 
-					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br>${control}`;
+					doc += `<div class="tooltip"><i class="fa-solid ${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}${offlineText}<br>${control}`;
 					break;
 
 				case 'Strip Light':
-					doc += `<div class="tooltip"><i class="fa-brands fa-strip-s switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}`;
+					doc += `<div class="tooltip"><i class="fa-brands fa-strip-s switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}${offlineText}`;
 					break;
 
 				case 'Color Bulb':
@@ -268,12 +295,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 					control += `<button onClick='window.showDlgSwitchBotSettingsDialog4Bulb("${d.deviceId}");'><i class="fa-solid fa-sliders"></i> Details</button><br>`;
 
-					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br>${control}`;
+					doc += `<div class="tooltip"><i class="${icon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}${offlineText}<br>${control}`;
 					break;
 
 				case 'Robot Vacuum Cleaner S1':
 				case 'Robot Vacuum Cleaner S1 Plus':
-					doc += `<div class="tooltip"><i class="fa-solid fa-circle-notch switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}`;
+					doc += `<div class="tooltip"><i class="fa-solid fa-circle-notch switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}${offlineText}`;
 					break;
 
 				case 'Humidifier':  // 加湿器
@@ -288,21 +315,21 @@ window.addEventListener('DOMContentLoaded', function () {
 						cloudIcon = `<span class='icon_layers'><i class='fa-solid fa-cloud icon_layers_icon'></i><span class='icon_layers_text'>&#10060;</span></span>`
 					}
 
-					doc += `<div class="tooltip"><i class="fa-solid fa-droplet switchBot-dev"></i><i class="fa-solid ${subicon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}<br><i class="fa-solid fa-temperature-three-quarters"></i> ${devState.temperature} ℃<br><i class="fa-solid fa-droplet"></i> ${devState.humidity} ％<br>lackWater: ${devState.lackWater}`;
+					doc += `<div class="tooltip"><i class="fa-solid fa-droplet switchBot-dev"></i><i class="fa-solid ${subicon} switchBot-dev"></i><div class="description">${d.deviceId}</div></div>${cloudIcon}<br>${d.deviceName}${offlineText}<br><i class="fa-solid fa-temperature-three-quarters"></i> ${devState.temperature} ℃<br><i class="fa-solid fa-droplet"></i> ${devState.humidity} ％<br>lackWater: ${devState.lackWater}`;
 					break;
 
 				case 'Indoor Cam':
-					doc += `<div class="tooltip"><i class="fa-solid fa-video switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}`;
+					doc += `<div class="tooltip"><i class="fa-solid fa-video switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}${offlineText}`;
 					break;
 
 				case 'Pan/Tilt Cam':
 				case 'Pan/Tilt Cam 2K':
-					doc += `<div class="tooltip"><i class="fa-solid fa-video switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}`;
+					doc += `<div class="tooltip"><i class="fa-solid fa-video switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}${offlineText}`;
 					break;
 
 				default:
 					// console.log('subSwitchBot, unknown device, d:', d );
-					doc += `<div class="tooltip"><i class="fa-solid fa-circle-nodes switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}`;
+					doc += `<div class="tooltip"><i class="fa-solid fa-circle-nodes switchBot-dev"></i><div class="description">${d.deviceId}</div></div><br>${d.deviceName}${offlineText}`;
 					break;
 			}
 

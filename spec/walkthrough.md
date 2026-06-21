@@ -106,4 +106,17 @@ PLISプロジェクトの理解と開発状況の整理のため、`spec` フォ
 - **UI表示および詳細ポップアップ検証**: カレンダーに天気アイコンが表示され、アイコンをクリックした際に詳細モーダルが立ち上がり、実績（過去）と予測（未来）でそれぞれ正しい情報がテーブル形式で描画されることを確認。
 - **specドキュメントの更新**: [todo.md](file:///Users/sugimura/Documents/plis/spec/todo.md) および [task.md](file:///Users/sugimura/Documents/plis/spec/task.md) を更新し、すべてのタスクを完了に更新しました。
 
+### SwitchBot オフラインデバイスのグレーアウト (2026-06-21 実施)
+- **オフラインデバイスのグレーアウトと操作無効化**
+  - [subSwitchBot.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subSwitchBot.js) にて、SwitchBotのステータスデータ（`devState`）が未定義、または中身が無いデバイスを自動で「オフライン」と判別するロジックを実装しました。
+  - オフライン判定時、デバイス表示カードのコンテナ（`<section class="dev">`）に対して、インラインスタイル `opacity: 0.5; filter: grayscale(100%); pointer-events: none;` を適用するようにしました。これにより、一目でネットワークから外れていることが認識でき、物理的な操作（ON/OFF等のクリックイベント）もブラウザ層で完全にブロックされます。
+  - デバイスがオフラインの場合に、`devState.power` や `devState.temperature` などの未定義プロパティにアクセスしてJavaScriptが実行時エラー（描画の中断）を起こすのを防ぐため、ダミーステータスオブジェクトを安全に代入するガード処理を施し、システムの堅牢性を高めました。
+  - カード上のデバイス名表示の隣に、赤太字で `(オフライン)` の警告表示を追加し、視覚的なわかりやすさを向上させました。
+
+## 検証結果
+- **アプリ起動検証**: `npm run mac` が正常に起動し、SwitchBot関連の通信制限・取得処理がログでエラーなく実行されていることを確認。
+- **UI表示検証**: レンダラープロセス上でオフライン判定されたデバイスのカードがグレーアウトされ、ボタンが無効化されていること、および `(オフライン)` テキストが正常に描画されクラッシュしないことを確認しました。
+- **specドキュメントの更新**: [todo.md](file:///Users/sugimura/Documents/plis/spec/todo.md) および [task.md](file:///Users/sugimura/Documents/plis/spec/task.md) を更新し、すべてのタスクを完了に更新しました。
+
+
 
