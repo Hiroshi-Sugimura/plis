@@ -6,7 +6,7 @@
         "exclude": [
             "../app/src/node_modules"
         ],
-        "includePattern": ".+\\.js(doc)?$",
+        "includePattern": ".+\\.(js|mjs)(doc)?$",
         "excludePattern": "(^|\\/|\\\\)_"
     },
     "opts": {

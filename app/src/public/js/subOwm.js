@@ -155,7 +155,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * @func window.OwmDebugLog
 	 * @desc Owmモジュールがデバッグなら出力する
-	 * @param {...} values
+	 * @param {...any} values
 	 */
 	window.OwmDebugLog = function (param0, ...values) {
 		selOwmDebugMode.value == 'true' ? console.log(param0, ...values) : 0;

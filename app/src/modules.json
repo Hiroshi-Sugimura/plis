@@ -1,89 +1,89 @@
 {
-  "@electron-forge/cli@7.10.2": {
+  "@electron-forge/cli@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/cli",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/cli/LICENSE"
   },
-  "@electron-forge/core-utils@7.10.2": {
+  "@electron-forge/core-utils@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/core-utils",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/core-utils/LICENSE"
   },
-  "@electron-forge/core@7.10.2": {
+  "@electron-forge/core@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/core",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/core/LICENSE"
   },
-  "@electron-forge/maker-appx@7.10.2": {
+  "@electron-forge/maker-appx@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/maker-appx",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/maker-appx/LICENSE"
   },
-  "@electron-forge/maker-base@7.10.2": {
+  "@electron-forge/maker-base@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/maker-base",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/maker-base/LICENSE"
   },
-  "@electron-forge/maker-deb@7.10.2": {
+  "@electron-forge/maker-deb@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/maker-deb",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/maker-deb/LICENSE"
   },
-  "@electron-forge/maker-dmg@7.10.2": {
+  "@electron-forge/maker-dmg@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/maker-dmg",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/maker-dmg/LICENSE"
   },
-  "@electron-forge/maker-rpm@7.10.2": {
+  "@electron-forge/maker-rpm@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/maker-rpm",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/maker-rpm/LICENSE"
   },
-  "@electron-forge/maker-squirrel@7.10.2": {
+  "@electron-forge/maker-squirrel@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/maker-squirrel",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/maker-squirrel/LICENSE"
   },
-  "@electron-forge/maker-zip@7.10.2": {
+  "@electron-forge/maker-zip@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/maker-zip",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/maker-zip/LICENSE"
   },
-  "@electron-forge/plugin-auto-unpack-natives@7.10.2": {
+  "@electron-forge/plugin-auto-unpack-natives@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/plugin-auto-unpack-natives",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/plugin-auto-unpack-natives/LICENSE"
   },
-  "@electron-forge/plugin-base@7.10.2": {
+  "@electron-forge/plugin-base@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/plugin-base",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/plugin-base/LICENSE"
   },
-  "@electron-forge/plugin-fuses@7.10.2": {
+  "@electron-forge/plugin-fuses@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Erik Moura",
@@ -91,49 +91,49 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/plugin-fuses",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/plugin-fuses/LICENSE"
   },
-  "@electron-forge/publisher-base@7.10.2": {
+  "@electron-forge/publisher-base@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/publisher-base",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/publisher-base/LICENSE"
   },
-  "@electron-forge/publisher-github@7.10.2": {
+  "@electron-forge/publisher-github@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/publisher-github",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/publisher-github/LICENSE"
   },
-  "@electron-forge/shared-types@7.10.2": {
+  "@electron-forge/shared-types@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/shared-types",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/shared-types/LICENSE"
   },
-  "@electron-forge/template-base@7.10.2": {
+  "@electron-forge/template-base@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/template-base",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/template-base/LICENSE"
   },
-  "@electron-forge/template-vite-typescript@7.10.2": {
+  "@electron-forge/template-vite-typescript@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "caoxiemeihao",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/template-vite-typescript",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/template-vite-typescript/LICENSE"
   },
-  "@electron-forge/template-vite@7.10.2": {
+  "@electron-forge/template-vite@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "caoxiemeihao",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/template-vite",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/template-vite/LICENSE"
   },
-  "@electron-forge/template-webpack-typescript@7.10.2": {
+  "@electron-forge/template-webpack-typescript@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Shelley Vohr",
@@ -141,19 +141,25 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/template-webpack-typescript",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/template-webpack-typescript/LICENSE"
   },
-  "@electron-forge/template-webpack@7.10.2": {
+  "@electron-forge/template-webpack@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/template-webpack",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/template-webpack/LICENSE"
   },
-  "@electron-forge/tracer@7.10.2": {
+  "@electron-forge/tracer@7.11.2": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/forge",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/tracer",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-forge/tracer/LICENSE"
+  },
+  "@electron-internal/extract-zip@1.0.3": {
+    "licenses": "BSD-2-Clause",
+    "repository": "https://github.com/electron/extract-zip",
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron-internal/extract-zip",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron-internal/extract-zip/README.md"
   },
   "@electron/asar@3.4.1": {
     "licenses": "MIT",
@@ -168,19 +174,19 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron/fuses",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron/fuses/LICENSE"
   },
-  "@electron/get@2.0.3": {
-    "licenses": "MIT",
-    "repository": "https://github.com/electron/get",
-    "publisher": "Samuel Attard",
-    "path": "/Users/sugimura/Documents/plis/app/node_modules/electron/node_modules/@electron/get",
-    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron/node_modules/@electron/get/LICENSE"
-  },
   "@electron/get@3.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/get",
     "publisher": "Samuel Attard",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron/get",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron/get/LICENSE"
+  },
+  "@electron/get@5.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/electron/get",
+    "publisher": "Samuel Attard",
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/electron/node_modules/@electron/get",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron/node_modules/@electron/get/LICENSE"
   },
   "@electron/node-gyp@10.2.0-electron.1": {
     "licenses": "MIT",
@@ -594,7 +600,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@szmarczak/http-timer",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@szmarczak/http-timer/LICENSE"
   },
-  "@tootallnate/once@2.0.0": {
+  "@tootallnate/once@2.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/TooTallNate/once",
     "publisher": "Nathan Rajlich",
@@ -615,19 +621,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@types/cacheable-request",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@types/cacheable-request/LICENSE"
   },
-  "@types/eslint-scope@3.7.7": {
-    "licenses": "MIT",
-    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
-    "path": "/Users/sugimura/Documents/plis/app/node_modules/@types/eslint-scope",
-    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@types/eslint-scope/LICENSE"
-  },
-  "@types/eslint@9.6.1": {
-    "licenses": "MIT",
-    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
-    "path": "/Users/sugimura/Documents/plis/app/node_modules/@types/eslint",
-    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@types/eslint/LICENSE"
-  },
-  "@types/estree@1.0.8": {
+  "@types/estree@1.0.9": {
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@types/estree",
@@ -669,6 +663,12 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@types/node",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@types/node/LICENSE"
   },
+  "@types/node@24.13.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/electron/node_modules/@types/node",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron/node_modules/@types/node/LICENSE"
+  },
   "@types/responselike@1.0.3": {
     "licenses": "MIT",
     "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
@@ -687,9 +687,9 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@types/yauzl",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@types/yauzl/LICENSE"
   },
-  "@vscode/sudo-prompt@9.3.1": {
+  "@vscode/sudo-prompt@9.3.2": {
     "licenses": "MIT",
-    "repository": "https://github.com/bpasero/sudo-prompt",
+    "repository": "https://github.com/microsoft/vscode-sudo-prompt",
     "publisher": "Joran Dirk Greef",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@vscode/sudo-prompt",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@vscode/sudo-prompt/LICENSE"
@@ -797,7 +797,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@webassemblyjs/wast-printer",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@webassemblyjs/wast-printer/LICENSE"
   },
-  "@xmldom/xmldom@0.8.11": {
+  "@xmldom/xmldom@0.9.10": {
     "licenses": "MIT",
     "repository": "https://github.com/xmldom/xmldom",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@xmldom/xmldom",
@@ -835,7 +835,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/acorn-import-phases",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/acorn-import-phases/LICENSE"
   },
-  "acorn@8.15.0": {
+  "acorn@8.17.0": {
     "licenses": "MIT",
     "repository": "https://github.com/acornjs/acorn",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/acorn",
@@ -882,7 +882,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/ajv-keywords",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/ajv-keywords/LICENSE"
   },
-  "ajv@8.17.1": {
+  "ajv@8.20.0": {
     "licenses": "MIT",
     "repository": "https://github.com/ajv-validator/ajv",
     "publisher": "Evgeny Poberezkin",
@@ -1048,7 +1048,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/base64-js",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/base64-js/LICENSE"
   },
-  "baseline-browser-mapping@2.8.25": {
+  "baseline-browser-mapping@2.10.38": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/web-platform-dx/baseline-browser-mapping",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/baseline-browser-mapping",
@@ -1105,7 +1105,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/brace-expansion",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/brace-expansion/LICENSE"
   },
-  "brace-expansion@2.0.2": {
+  "brace-expansion@2.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/juliangruber/brace-expansion",
     "publisher": "Julian Gruber",
@@ -1122,11 +1122,11 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/braces",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/braces/LICENSE"
   },
-  "browserslist@4.28.0": {
+  "browserslist@4.28.2": {
     "licenses": "MIT",
     "repository": "https://github.com/browserslist/browserslist",
     "publisher": "Andrey Sitnik",
-    "email": "andrey@sitnik.ru",
+    "email": "andrey@sitnik.es",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/browserslist",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/browserslist/LICENSE"
   },
@@ -1176,7 +1176,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/cacheable-request",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/cacheable-request/LICENSE"
   },
-  "caniuse-lite@1.0.30001754": {
+  "caniuse-lite@1.0.30001799": {
     "licenses": "CC-BY-4.0",
     "repository": "https://github.com/browserslist/caniuse-lite",
     "publisher": "Ben Briggs",
@@ -1620,9 +1620,9 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/electron-squirrel-startup",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron-squirrel-startup/LICENSE"
   },
-  "electron-to-chromium@1.5.249": {
+  "electron-to-chromium@1.5.376": {
     "licenses": "ISC",
-    "repository": "https://github.com/kilian/electron-to-chromium",
+    "repository": "https://github.com/Kilian/electron-to-chromium",
     "publisher": "Kilian Valkhof",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/electron-to-chromium",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron-to-chromium/LICENSE"
@@ -1639,7 +1639,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/electron-winstaller",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron-winstaller/LICENSE"
   },
-  "electron@39.2.7": {
+  "electron@42.4.1": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/electron",
     "publisher": "Electron Community",
@@ -1668,6 +1668,13 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/encode-utf8",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/encode-utf8/readme.md"
   },
+  "encoding@0.1.13": {
+    "licenses": "MIT",
+    "repository": "https://github.com/andris9/encoding",
+    "publisher": "Andris Reinman",
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/encoding",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/encoding/LICENSE"
+  },
   "end-of-stream@1.4.5": {
     "licenses": "MIT",
     "repository": "https://github.com/mafintosh/end-of-stream",
@@ -1676,7 +1683,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/end-of-stream",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/end-of-stream/LICENSE"
   },
-  "enhanced-resolve@5.18.3": {
+  "enhanced-resolve@5.24.0": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack/enhanced-resolve",
     "publisher": "Tobias Koppers @sokra",
@@ -1691,6 +1698,15 @@
     "url": "sindresorhus.com",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/env-paths",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/env-paths/license"
+  },
+  "env-paths@3.0.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/sindresorhus/env-paths",
+    "publisher": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "https://sindresorhus.com",
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/electron/node_modules/env-paths",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron/node_modules/env-paths/license"
   },
   "err-code@2.0.3": {
     "licenses": "MIT",
@@ -1723,7 +1739,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/es-errors",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/es-errors/LICENSE"
   },
-  "es-module-lexer@1.7.0": {
+  "es-module-lexer@2.1.0": {
     "licenses": "MIT",
     "repository": "https://github.com/guybedford/es-module-lexer",
     "publisher": "Guy Bedford",
@@ -1788,6 +1804,14 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/esrecurse/node_modules/estraverse",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/esrecurse/node_modules/estraverse/LICENSE.BSD"
   },
+  "eta@3.5.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/eta-dev/eta",
+    "publisher": "Ben Gubler",
+    "email": "nebrelbug@gmail.com",
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/eta",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/eta/LICENSE"
+  },
   "eventemitter3@5.0.1": {
     "licenses": "MIT",
     "repository": "https://github.com/primus/eventemitter3",
@@ -1851,7 +1875,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/fast-glob",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/fast-glob/LICENSE"
   },
-  "fast-uri@3.1.0": {
+  "fast-uri@3.1.2": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/fastify/fast-uri",
     "publisher": "Vincent Le Goff",
@@ -1860,7 +1884,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/fast-uri",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/fast-uri/LICENSE"
   },
-  "fastq@1.19.1": {
+  "fastq@1.20.1": {
     "licenses": "ISC",
     "repository": "https://github.com/mcollina/fastq",
     "publisher": "Matteo Collina",
@@ -1951,6 +1975,14 @@
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/fs-extra/LICENSE"
   },
   "fs-extra@11.3.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jprichardson/node-fs-extra",
+    "publisher": "JP Richardson",
+    "email": "jprichardson@gmail.com",
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron/windows-sign/node_modules/fs-extra",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron/windows-sign/node_modules/fs-extra/LICENSE"
+  },
+  "fs-extra@11.3.5": {
     "licenses": "MIT",
     "repository": "https://github.com/jprichardson/node-fs-extra",
     "publisher": "JP Richardson",
@@ -2266,6 +2298,14 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/iconv-lite",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/iconv-lite/LICENSE"
   },
+  "iconv-lite@0.6.3": {
+    "licenses": "MIT",
+    "repository": "https://github.com/ashtuchkin/iconv-lite",
+    "publisher": "Alexander Shtuchkin",
+    "email": "ashtuchkin@gmail.com",
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/encoding/node_modules/iconv-lite",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/encoding/node_modules/iconv-lite/LICENSE"
+  },
   "ieee754@1.2.1": {
     "licenses": "BSD-3-Clause",
     "repository": "https://github.com/feross/ieee754",
@@ -2361,7 +2401,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/interpret",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/interpret/LICENSE"
   },
-  "ip-address@10.1.0": {
+  "ip-address@10.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/beaugunderson/ip-address",
     "publisher": "Beau Gunderson",
@@ -2513,7 +2553,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/jest-worker",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/jest-worker/LICENSE"
   },
-  "jiti@2.6.1": {
+  "jiti@2.7.0": {
     "licenses": "MIT",
     "repository": "https://github.com/unjs/jiti",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/jiti",
@@ -2620,7 +2660,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/load-json-file",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/load-json-file/license"
   },
-  "loader-runner@4.3.1": {
+  "loader-runner@4.3.2": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack/loader-runner",
     "publisher": "Tobias Koppers @sokra",
@@ -2784,6 +2824,12 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/mime-db",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/mime-db/LICENSE"
   },
+  "mime-db@1.54.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/jshttp/mime-db",
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/webpack/node_modules/mime-db",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/webpack/node_modules/mime-db/LICENSE"
+  },
   "mime-types@2.1.35": {
     "licenses": "MIT",
     "repository": "https://github.com/jshttp/mime-types",
@@ -2835,7 +2881,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/minimatch",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/minimatch/LICENSE"
   },
-  "minimatch@5.1.6": {
+  "minimatch@5.1.9": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/minimatch",
     "publisher": "Isaac Z. Schlueter",
@@ -2844,7 +2890,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/@electron/node-gyp/node_modules/minimatch",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/@electron/node-gyp/node_modules/minimatch/LICENSE"
   },
-  "minimatch@9.0.5": {
+  "minimatch@9.0.9": {
     "licenses": "ISC",
     "repository": "https://github.com/isaacs/minimatch",
     "publisher": "Isaac Z. Schlueter",
@@ -2877,14 +2923,14 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/minipass-fetch",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/minipass-fetch/LICENSE"
   },
-  "minipass-flush@1.0.5": {
-    "licenses": "ISC",
+  "minipass-flush@1.0.7": {
+    "licenses": "BlueOak-1.0.0",
     "repository": "https://github.com/isaacs/minipass-flush",
     "publisher": "Isaac Z. Schlueter",
     "email": "i@izs.me",
     "url": "https://izs.me",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/minipass-flush",
-    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/minipass-flush/LICENSE"
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/minipass-flush/LICENSE.md"
   },
   "minipass-pipeline@1.2.4": {
     "licenses": "ISC",
@@ -3012,7 +3058,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/nice-try",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/nice-try/LICENSE"
   },
-  "node-abi@3.80.0": {
+  "node-abi@3.92.0": {
     "licenses": "MIT",
     "repository": "https://github.com/electron/node-abi",
     "publisher": "Lukas Geiger",
@@ -3034,7 +3080,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/node-fetch",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/node-fetch/LICENSE.md"
   },
-  "node-releases@2.0.27": {
+  "node-releases@2.0.48": {
     "licenses": "MIT",
     "repository": "https://github.com/chicoxyzzy/node-releases",
     "publisher": "Sergey Rubanov",
@@ -3075,7 +3121,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/normalize-url",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/normalize-url/license"
   },
-  "npm-check-updates@19.3.1": {
+  "npm-check-updates@22.2.7": {
     "licenses": "Apache-2.0",
     "repository": "https://github.com/raineorshine/npm-check-updates",
     "publisher": "Tomas Junnonen",
@@ -3373,7 +3419,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/picocolors",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/picocolors/LICENSE"
   },
-  "picomatch@2.3.1": {
+  "picomatch@2.3.2": {
     "licenses": "MIT",
     "repository": "https://github.com/micromatch/picomatch",
     "publisher": "Jon Schlinkert",
@@ -3397,7 +3443,7 @@
     "url": "Kanagawa Institute of Technology",
     "path": "/Users/sugimura/Documents/plis/app"
   },
-  "plist@3.1.0": {
+  "plist@3.1.1": {
     "licenses": "MIT",
     "repository": "https://github.com/TooTallNate/node-plist",
     "publisher": "Nathan Rajlich",
@@ -3411,7 +3457,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/postject",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/postject/LICENSE"
   },
-  "prettier@3.6.2": {
+  "prettier@3.8.4": {
     "licenses": "MIT",
     "repository": "https://github.com/prettier/prettier",
     "publisher": "James Long",
@@ -3482,12 +3528,6 @@
     "repository": "https://github.com/LinusU/node-random-path",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/random-path",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/random-path/readme.md"
-  },
-  "randombytes@2.1.0": {
-    "licenses": "MIT",
-    "repository": "https://github.com/crypto-browserify/randombytes",
-    "path": "/Users/sugimura/Documents/plis/app/node_modules/randombytes",
-    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/randombytes/LICENSE"
   },
   "read-binary-file-arch@1.0.6": {
     "licenses": "MIT",
@@ -3781,14 +3821,6 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/serialize-error",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/serialize-error/license"
   },
-  "serialize-javascript@6.0.2": {
-    "licenses": "BSD-3-Clause",
-    "repository": "https://github.com/yahoo/serialize-javascript",
-    "publisher": "Eric Ferraiuolo",
-    "email": "edf@ericf.me",
-    "path": "/Users/sugimura/Documents/plis/app/node_modules/serialize-javascript",
-    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/serialize-javascript/LICENSE"
-  },
   "shebang-command@1.2.0": {
     "licenses": "MIT",
     "repository": "https://github.com/kevva/shebang-command",
@@ -3872,7 +3904,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/socks-proxy-agent",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/socks-proxy-agent/README.md"
   },
-  "socks@2.8.7": {
+  "socks@2.8.9": {
     "licenses": "MIT",
     "repository": "https://github.com/JoshGlazebrook/socks",
     "publisher": "Josh Glazebrook",
@@ -4118,7 +4150,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/supports-preserve-symlinks-flag",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/supports-preserve-symlinks-flag/LICENSE"
   },
-  "tapable@2.3.0": {
+  "tapable@2.3.3": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack/tapable",
     "publisher": "Tobias Koppers @sokra",
@@ -4140,14 +4172,14 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/temp",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/temp/LICENSE"
   },
-  "terser-webpack-plugin@5.3.14": {
+  "terser-webpack-plugin@5.6.1": {
     "licenses": "MIT",
-    "repository": "https://github.com/webpack-contrib/terser-webpack-plugin",
+    "repository": "https://github.com/webpack/minimizer-webpack-plugin",
     "publisher": "webpack Contrib Team",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/terser-webpack-plugin",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/terser-webpack-plugin/LICENSE"
   },
-  "terser@5.44.1": {
+  "terser@5.48.0": {
     "licenses": "BSD-2-Clause",
     "repository": "https://github.com/terser/terser",
     "publisher": "Mihai Bazon",
@@ -4288,6 +4320,18 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/undici-types",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/undici-types/LICENSE"
   },
+  "undici-types@7.18.2": {
+    "licenses": "MIT",
+    "repository": "https://github.com/nodejs/undici",
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/electron/node_modules/undici-types",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron/node_modules/undici-types/LICENSE"
+  },
+  "undici@7.28.0": {
+    "licenses": "MIT",
+    "repository": "https://github.com/nodejs/undici",
+    "path": "/Users/sugimura/Documents/plis/app/node_modules/undici",
+    "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/undici/LICENSE"
+  },
   "unique-filename@2.0.1": {
     "licenses": "ISC",
     "repository": "https://github.com/npm/unique-filename",
@@ -4332,7 +4376,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/unorm",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/unorm/LICENSE.md"
   },
-  "update-browserslist-db@1.1.4": {
+  "update-browserslist-db@1.2.3": {
     "licenses": "MIT",
     "repository": "https://github.com/browserslist/update-db",
     "publisher": "Andrey Sitnik",
@@ -4373,7 +4417,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/validate-npm-package-license",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/validate-npm-package-license/LICENSE"
   },
-  "watchpack@2.4.4": {
+  "watchpack@2.5.2": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack/watchpack",
     "publisher": "Tobias Koppers @sokra",
@@ -4396,14 +4440,14 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/webidl-conversions",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/webidl-conversions/LICENSE.md"
   },
-  "webpack-sources@3.3.3": {
+  "webpack-sources@3.5.0": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack/webpack-sources",
     "publisher": "Tobias Koppers @sokra",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/webpack-sources",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/webpack-sources/LICENSE"
   },
-  "webpack@5.102.1": {
+  "webpack@5.107.2": {
     "licenses": "MIT",
     "repository": "https://github.com/webpack/webpack",
     "publisher": "Tobias Koppers @sokra",
@@ -4535,7 +4579,7 @@
     "path": "/Users/sugimura/Documents/plis/app/node_modules/electron-installer-debian/node_modules/yargs",
     "licenseFile": "/Users/sugimura/Documents/plis/app/node_modules/electron-installer-debian/node_modules/yargs/LICENSE"
   },
-  "yargs@17.7.2": {
+  "yargs@17.7.3": {
     "licenses": "MIT",
     "repository": "https://github.com/yargs/yargs",
     "path": "/Users/sugimura/Documents/plis/app/node_modules/yargs",

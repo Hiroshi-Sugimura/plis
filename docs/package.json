@@ -122,6 +122,7 @@
   "devDependencies": {
     "@clean-jsdoc/clean-jsdoc-es5": "github:clean-jsdoc/clean-jsdoc-es5",
     "docdash": "^2.0.2",
+    "jsdoc": "^4.0.4",
     "npm-check-updates": "^16.14.11"
   },
   "scripts": {

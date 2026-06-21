@@ -1138,7 +1138,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * @func window.JmaDebugLog
 	 * @desc JMAモジュールがデバッグなら出力する
-	 * @param {...} values
+	 * @param {...any} values
 	 */
 	window.JmaDebugLog = function (param0, ...values) {
 		selJmaDebugMode.value == 'true' ? console.log(param0, ...values) : 0;

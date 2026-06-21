@@ -305,7 +305,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * @func window.IkeaDebugPrint
 	 * @desc Ikeaモジュールがデバッグなら出力する
-	 * @param {...} values
+	 * @param {...any} values
 	 */
 	window.IkeaDebugPrint = function (param0, ...values) {
 		selIkeaDebugMode.value == 'true' ? console.log(param0, ...values) : 0;

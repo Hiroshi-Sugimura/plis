@@ -393,9 +393,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	/**
-	 * @func window.SwitchBotDebugPrint
+	 * @func window.SwitchBotDebugLog
 	 * @desc SwitchBotモジュールがデバッグなら出力する
-	 * @param {...} values
+	 * @param {...any} values
 	 */
 	window.SwitchBotDebugLog = function (param0, ...values) {
 		selSwitchBotDebugMode.value == 'true' ? console.log(param0, ...values) : 0;

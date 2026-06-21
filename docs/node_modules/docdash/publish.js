@@ -669,6 +669,9 @@ exports.publish = function(taffyData, opts, tutorials) {
     }
     data().each(function(doclet) {
         var url = helper.createLink(doclet);
+        if (docdash.noURLEncode) {
+            url = decodeURI(url);
+        }
         helper.registerLink(doclet.longname, url);
 
         // add a shortened version of the full path

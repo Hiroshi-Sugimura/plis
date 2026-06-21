@@ -209,9 +209,9 @@ window.addEventListener('DOMContentLoaded', function () {
 
 
 	/**
-	 * @func window.HueDebugPrint
+	 * @func window.HueDebugLog
 	 * @desc Hueモジュールがデバッグなら出力する
-	 * @param {...} values
+	 * @param {...any} values
 	 */
 	window.HueDebugLog = function (param0, ...values) {
 		selHueDebugMode.value == 'true' ? console.log(param0, ...values) : 0;

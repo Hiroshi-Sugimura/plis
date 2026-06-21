@@ -2505,13 +2505,7 @@ const IOT_GarminUserMetricsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_G
 }) : makeStubModel('IOT_GarminUserMetrics');
 
 
-/** データベースモデルを公開するオブジェクト */
 export default {
-    /** 
-     * @type {import('sequelize').Sequelize} Sequelize クラス本体
-     * @type {import('sequelize').Op} オペレーター (And, Or, Between 等)
-     * @type {import('sequelize').Sequelize} 接続済みの Sequelize インスタンス
-     */
     Sequelize, Op, sqlite3,
     eldataModel,
     elrawModel,

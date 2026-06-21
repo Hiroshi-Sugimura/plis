@@ -212,7 +212,7 @@ window.addEventListener('DOMContentLoaded', function () {
 	/**
 	 * @func window.ESMDebugLog
 	 * @desc ESMモジュールがデバッグなら出力する
-	 * @param {...} values
+	 * @param {...any} values
 	 */
 	window.ESMDebugLog = function (param0, ...values) {
 		selESMDebugMode.value == 'true' ? console.log(param0, ...values) : 0;

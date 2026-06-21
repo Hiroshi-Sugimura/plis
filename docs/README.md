@@ -73,18 +73,18 @@ Copyright © 2023-Now Sugimura Laboratory, KAIT All Rights Reserved.
 
 このソフトはNode.js、Electronをベースにしています。
 
-1. Node.js（LTS板がおすすめ）をインストールしておく
-2. ```~/<github>/plis/v1/app``` で ```npm i``` を実行しておく
-3. Windowsなら```npm run win```、Macなら```npm run mac```で起動する
-4. Buildする場合、```npm run make```でコンパイルできる。
+1. Node.js（LTS版がおすすめ）をインストールしておく
+2. `plis/app` で `npm i` を実行しておく
+3. Windowsなら`npm run win`、Macなら`npm run mac`で起動する
+4. Buildする場合、`npm run make`でコンパイルできる。
 
 
 ## API Documentsの自動生成
 
 このAPIマニュアルはJSDocで自動生成しています。
 
-1. ```~/<github>/plis/v1/docs```で```npm i```を実行してJSDocをインストールする
-2. ```npm start```で生成する。
+1. `plis/docs` で `npm i` を実行して必要なモジュールをインストールする
+2. `npm start` で生成する。
 
 ## lifelog.dbのER図自動生成
 
@@ -92,8 +92,8 @@ lifelog.dbのER図はA5:SQL Mk-2で自動生成しています。
 
 1. A5:SQL Mk-2をインストールしておく
 [A5:SQL Mk-2 (x64, for Win)](ms-windows-store://pdp/?productid=9NSBB9XTJW86)
-2. PLISを実行し、```~/PLIS/lifelog.db```をA5で開く
-3. さらに、```~/<github>/plis/v1/docs/lifelog.aSer```を開く
+2. PLISを実行し、`~/PLIS/lifelog.db`をA5で開く
+3. さらに、`plis/docs/lifelog.aSer`を開く
 
 
 ## Maximum sizes of images for UWP （未確認情報）
