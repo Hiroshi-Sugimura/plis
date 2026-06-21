@@ -1,57 +1,63 @@
-# サードパーティAPI連携の調整 実装計画書 (改訂版)
+# UI/UX改善（グラフ表示検証＆XSS対策強化）実装計画書
 
-Netatmo および SwitchBot API 連携における通信タイムアウト対策、サーバー負荷軽減、およびユーザーへの親切なエラー通知・対処方法の提示機能を実装します。
+UI表示の堅牢性を高めるためのXSS対策（`innerHTML`から`textContent`への変更）と、グラフ表示のX軸レスポンシブ動作の検証状況についてまとめます。
 
-## 改善方針
+## 現状の調査結果
 
-### 1. サーバー負荷対策 (Netatmo)
-- **ポーリング間隔の変更**:
-  - Netatmo ウェザーステーションのデータ更新間隔は約10分であるため、現在の「1分毎」のポーリングから **「10分毎（`*/10 * * * *`）」** に変更し、外部サーバーへの負荷を大幅に削減します。
-  - アプリ起動時および設定保存時には即時取得を行います（手動同期と同等の動作）。
+### 1. グラフ表示（X軸レスポンシブ＆キリの良い数字）の検証状況
+- **調査内容**:
+  各UIモジュール（`subEL.js`, `subESM.js`, `subNetatmo.js`, `subOmron.js`, `subCo2s.js`, `subSwitchBot.js`）における Chart.js のX軸設定を調査しました。
+- **結果**:
+  すべてのグラフにおいて、X軸の設定で `autoSkip: true`, `source: 'labels'` および 30分間隔アライメント用のラベル定義（`LABEL_X_30` 等）がすでに適切に設定されていることを確認しました。
+  これにより、レスポンシブ動作でウィンドウサイズが縮小した際、時間は重ならずに自動で間引かれつつ、キリの良い数字（アライメント）が維持されます。本件に関する追加のコード修正は不要です。
 
-### 2. リトライ失敗時および通信切断時の挙動とUI通知
-一時的な接続エラー（タイムアウト等）と、ユーザーの再操作が必要な認証エラー（トークン無効等）を明確に区別し、ユーザーに対処方法を提示します。
+### 2. XSS対策の追加検証と課題
+- **課題**:
+  UIを表示するレンダラープロセス（JavaScriptファイル）の一部において、センサー値や外部APIから取得した文字列、設定画面の入力欄から取得した文字列をHTMLに埋め込む際、`innerHTML` が使用されている箇所が存在します。
+  プレーンテキストを表示するだけで良い場所への `innerHTML` の使用は、将来的なXSS脆弱性の温床となるため、一律で `textContent` に置き換え、セキュリティを強化します。
 
-#### ① 一時的な通信エラー (タイムアウト、オフライン等) の場合
-- **内部処理**: 最大3回リトライ後、エラーをログに記録してその回のcron処理を終了します。次の10分後に自動で再試行します。
-- **画面表示**: UIへ `NetatmoConnectionError` を通知し、以下のメッセージをトースト表示します。
-  - *「Netatmoサーバーとの通信に一時的に失敗しました。インターネット接続環境、またはNetatmoのサーバー稼働状況を確認してください（自動で再試行を継続します）。」*
+---
 
-#### ② ユーザー側の対処が必要なエラー (Refresh Tokenの無効化など) の場合
-- **内部処理**: リフレッシュトークンを自動でクリアし、cron観測ジョブを停止します。
-- **画面表示**: UIへ `NetatmoAuthError` を通知し、以下の具体的な解決策をトーストで表示します。
-  - *「Netatmoの認証期限が切れました。認証情報（Refresh Token）が無効です。Netatmo開発者ポータルで新しいRefresh Tokenを生成し、アプリの設定画面で再設定を行ってください。」*
+## User Review Required
+
+> [!NOTE]
+> - 今回の修正は、プレーンテキストを扱う部分の `innerHTML` を `textContent` に置き換えるリファクタリングが中心となります。表示上の変化や、動的にボタンなどのHTMLマークアップを生成している箇所への影響はありません（動的HTML生成箇所は `innerHTML` のまま維持します）。
 
 ---
 
 ## Proposed Changes
 
-### 1. Netatmo 連携の安定化と負荷軽減
+以下に示すUIスクリプト内のプレーンテキスト代入箇所で、`innerHTML` を安全な `textContent` に書き換えます。
 
-#### [MODIFY] [mainNetatmo.mjs](file:///Users/sugimura/Documents/plis/app/src/mainNetatmo.mjs)
-- `cron.schedule` のポーリング間隔を `*/10 * * * *`（10分おき）に変更します。
-- `refreshAccessToken` の `axios.post` に `timeout: 10000` (10秒) を設定します。
-- `fetchStationsData` において、通信エラー（タイムアウト、接続エラー）発生時に最大3回（2秒間隔）のリトライ処理を実装します。
-- リトライにすべて失敗した場合は `NetatmoConnectionError` IPCイベントをUIへ送信します。
-- 認証エラー（`invalid_grant`等）発生時は、トークンをクリアした上で `NetatmoAuthError` IPCイベントを送信します。
+### レンダラープロセス（UI表示制御）の安全化
+
+#### [MODIFY] [index.js](file:///Users/sugimura/Documents/plis/app/src/public/js/index.js)
+- 検索マッチ件数表示（96行目、570行目）および自IPアドレス表示（365行目）の `innerHTML` を `textContent` に変更。
+
+#### [MODIFY] [subCo2s.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subCo2s.js)
+- 設置場所および各センサー値（55-60行目）の `innerHTML` を `textContent` に変更。
+
+#### [MODIFY] [subESM.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subESM.js)
+- 設置場所、IP、バージョン、各スマートメーター測定値（85-87, 90, 95-96, 100-101行目）の `innerHTML` を `textContent` に変更。
 
 #### [MODIFY] [subNetatmo.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subNetatmo.js)
-- `NetatmoConnectionError` のイベント受信処理を追加し、接続切断の警告と自動再試行の旨を分かりやすくトーストで表示します。
-- `NetatmoAuthError` 受信時のエラーメッセージ表示を、具体的な対処手順（開発者ポータルでの再生成）を含んだ親切な表記に改善します。
+- ホーム名、更新時刻、各センサー値（73-79行目）の `innerHTML` を `textContent` に変更。
 
-### 2. SwitchBot 連携の安定化
+#### [MODIFY] [subHAL.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subHAL.js)
+- プロファイル名、更新日時、ポイント、ランク、各スコア、およびクラウドから取得したコメント欄（131-149, 151行目）の `innerHTML` を `textContent` に変更。
 
-#### [MODIFY] [index.js (switchbot-handler)](file:///Users/sugimura/Documents/plis/app/src/node_modules/switchbot-handler/index.js)
-- `SwitchBotHandler` クラスの `axios.create` に `timeout: 10000` (10秒) を追加します。
+#### [MODIFY] [subSwitchBot.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subSwitchBot.js)
+- 取得時間表示（928, 962行目）の `innerHTML` を `textContent` に変更（動的にHTMLカラータグを挿入している62行目は現状維持）。
+
+#### [MODIFY] [subClock.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subClock.js)
+- 時計表示部（42行目）の `innerHTML` を `textContent` に変更。
 
 ---
 
 ## Verification Plan
 
 ### Automated / Manual Verification
-- **JSDocビルド確認**:
-  - `docs` ディレクトリで `npm run start` を実行し、修正後のJSDoc生成で警告やエラーが出ないことを確認します。
-- **起動・動作検証**:
-  - `npm run mac` を起動し、Netatmoのデータ取得が10分おきのスケジュールで動作していること、初期起動時に即時取得が行われることを確認します。
-- **エラー処理のシミュレーション検証**:
-  - Wi-Fiを切断、または設定にダミーの無効なRefresh Tokenを設定した際、想定通りのエラーメッセージ（接続確認、または再認証の対処法）が画面上に表示されるか検証します。
+- **JSDoc動作確認**:
+  - `docs` ディレクトリで `npm run start` を実行し、APIマニュアル生成に問題がないことを確認します。
+- **起動・表示確認**:
+  - `npm run mac` を実行してアプリを起動し、各種センサー値やダッシュボードの表示が崩れず、正常に値が表示されていることを目視で確認します。

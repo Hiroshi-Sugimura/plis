@@ -52,12 +52,12 @@ window.addEventListener('DOMContentLoaded', function () {
 
 		// console.log(facilitiesCo2s);
 
-		spanCo2sPlace.innerHTML = inCo2sPlace.value;
-		spanCo2sTime.innerHTML = facilitiesCo2s.time;
+		spanCo2sPlace.textContent = inCo2sPlace.value;
+		spanCo2sTime.textContent = facilitiesCo2s.time;
 
-		spanCo2sTemperature.innerHTML = facilitiesCo2s.temperature;
-		spanCo2sHumidity.innerHTML = facilitiesCo2s.humidity;
-		spanCo2sCo2.innerHTML = facilitiesCo2s.co2;
+		spanCo2sTemperature.textContent = facilitiesCo2s.temperature;
+		spanCo2sHumidity.textContent = facilitiesCo2s.humidity;
+		spanCo2sCo2.textContent = facilitiesCo2s.co2;
 	};
 
 

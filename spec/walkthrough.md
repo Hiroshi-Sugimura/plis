@@ -42,3 +42,22 @@ PLISプロジェクトの理解と開発状況の整理のため、`spec` フォ
 - **JSDocの生成検証**: `docs` ディレクトリで `npm run start` がエラーなく実行され、APIドキュメントが正常にビルドできることを確認しました。
 - **アプリ起動検証**: `npm run mac` がクラッシュせず正常に起動し、Netatmoの初期化とSwitchBotとの通信が行われることをログから確認しました。
 - **specドキュメントの更新**: [todo.md](file:///Users/sugimura/Documents/plis/spec/todo.md) および [task.md](file:///Users/sugimura/Documents/plis/spec/task.md) を更新し、関係するタスクをすべて完了（ `[x]` ）に更新しました。
+
+### UI/UX改善とXSS対策強化 (2026-06-21 実施)
+- **X軸レスポンシブ表示とキリの良い時間の検証**
+  - アプリで利用しているグラフモジュール（`subEL.js`, `subESM.js`, `subNetatmo.js`, `subOmron.js`, `subCo2s.js`, `subSwitchBot.js`）の Chart.js 設定において、`autoSkip: true`, `source: 'labels'` などの適切な間引きとアライメント設定が全モジュールで適用されていることを確認しました。これによりレスポンシブな画面縮小時でもキリの良い時間でのアライメントが維持されます。
+- **XSS脆弱性排除のための textContent 置き換え**
+  - UIを表示するレンダラー（JavaScriptファイル）において、HTMLタグを考慮せず単にプレーンテキスト（センサー値や入力文字列など）を埋め込むだけの部分に `innerHTML` が使われていた箇所を、すべて安全な **`textContent`** に置き換え、XSS対策を強化しました。
+    - [index.js](file:///Users/sugimura/Documents/plis/app/src/public/js/index.js) (96, 365, 570行目)
+    - [subCo2s.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subCo2s.js) (55-60行目)
+    - [subESM.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subESM.js) (85-87, 90, 95-96, 100-101行目)
+    - [subNetatmo.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subNetatmo.js) (73-79行目)
+    - [subHAL.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subHAL.js) (131-149, 151行目)
+    - [subSwitchBot.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subSwitchBot.js) (928, 962行目)
+    - [subClock.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subClock.js) (42行目)
+  - ※ 動的にHTMLを構築して表示する箇所（ボタンの自動生成部分など）は、機能維持のために `innerHTML` のままとし、表示に影響が出ないようにしています。
+
+## 検証結果
+- **JSDocドキュメントの生成検証**: `docs` ディレクトリで `npm run start` がエラーなく実行され、APIドキュメントが正常にビルドできることを確認しました。
+- **アプリ起動・UI表示検証**: `npm run mac` がクラッシュせず正常に起動し、各種センサー値やダッシュボードの表示が以前と変わらず正常に動作していることをログおよび検証プロセスから確認しました。
+- **specドキュメントの更新**: [todo.md](file:///Users/sugimura/Documents/plis/spec/todo.md) および [task.md](file:///Users/sugimura/Documents/plis/spec/task.md) を更新し、関係するタスクをすべて完了（ `[x]` ）に更新しました。

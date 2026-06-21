@@ -70,13 +70,13 @@ window.addEventListener('DOMContentLoaded', function () {
 		let netatmo_time = new Date();
 		netatmo_time.setTime(parseInt(facilitiesNetatmo[0].dashboard_data.time_utc) * 1000);  // 秒をミリ秒へ
 
-		spanNetatmoHomename.innerHTML = facilitiesNetatmo[0].home_name;
-		spanNetatmoTime.innerHTML = netatmo_time.toLocaleString();
-		spanNetatmoTemperature.innerHTML = facilitiesNetatmo[0].dashboard_data.Temperature;
-		spanNetatmoHumidity.innerHTML = facilitiesNetatmo[0].dashboard_data.Humidity;
-		spanNetatmoPressure.innerHTML = facilitiesNetatmo[0].dashboard_data.Pressure;
-		spanNetatmoCO2.innerHTML = facilitiesNetatmo[0].dashboard_data.CO2;
-		spanNetatmoNoise.innerHTML = facilitiesNetatmo[0].dashboard_data.Noise;
+		spanNetatmoHomename.textContent = facilitiesNetatmo[0].home_name;
+		spanNetatmoTime.textContent = netatmo_time.toLocaleString();
+		spanNetatmoTemperature.textContent = facilitiesNetatmo[0].dashboard_data.Temperature;
+		spanNetatmoHumidity.textContent = facilitiesNetatmo[0].dashboard_data.Humidity;
+		spanNetatmoPressure.textContent = facilitiesNetatmo[0].dashboard_data.Pressure;
+		spanNetatmoCO2.textContent = facilitiesNetatmo[0].dashboard_data.CO2;
+		spanNetatmoNoise.textContent = facilitiesNetatmo[0].dashboard_data.Noise;
 	}
 
 	/**

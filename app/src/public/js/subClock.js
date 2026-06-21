@@ -39,7 +39,7 @@
 		const s = _getCurTime().sec;
 		const msg = `${h}：${m}：${s}`;
 
-		insertArea.innerHTML = msg;
+		insertArea.textContent = msg;
 	}
 
 	//時計を描画

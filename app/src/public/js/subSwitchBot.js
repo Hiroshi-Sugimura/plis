@@ -925,7 +925,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			let envDataArray = envDataObj[meter];
 			// console.log( 'window.renewRoomEnvSwitchBot() meter:', meter, ', envDataArray:', envDataArray );
 
-			spanSwitchBotEnvTime.innerHTML = moment().format("YYYY-MM-DD HH:mm:ss取得");
+			spanSwitchBotEnvTime.textContent = moment().format("YYYY-MM-DD HH:mm:ss取得");
 
 			if (envDataArray) {
 				let oTemperature = new Array();
@@ -959,7 +959,7 @@ window.addEventListener('DOMContentLoaded', function () {
 			let envDataArray = envDataObj[plug];
 			// console.log( 'window.renewRoomEnvSwitchBot() plug:', plug, ', envDataArray:', envDataArray );
 
-			spanSwitchBotPowerTime.innerHTML = moment().format("YYYY-MM-DD HH:mm:ss取得");
+			spanSwitchBotPowerTime.textContent = moment().format("YYYY-MM-DD HH:mm:ss取得");
 
 			if (envDataArray) {
 				let oWatt = new Array();

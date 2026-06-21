@@ -93,7 +93,7 @@ function onLoad() {
 
 				case 'foundResultShow':
 					console.log('main -> foundResultShow:');
-					searchResult.innerHTML = `${c.arg.activeMatchOrdinal} / ${c.arg.matches}`;
+					searchResult.textContent = `${c.arg.activeMatchOrdinal} / ${c.arg.matches}`;
 					break;
 
 				//----------------------------------------------
@@ -362,7 +362,7 @@ function onLoad() {
 				// PLIS全体
 				case "myIPaddr":
 					console.log('main -> myIPaddr:', c.arg);
-					myIPaddr.innerHTML = 'My IP address list: ' + c.arg;
+					myIPaddr.textContent = 'My IP address list: ' + c.arg;
 					break;
 
 				case "configSaved": // 設定保存の応答
@@ -567,7 +567,7 @@ function onLoad() {
 	// 検索終了
 	window.btnSearchStop_Click = function () {
 		searchBox.style.display = 'none';
-		searchResult.innerHTML = '0 / 0';
+		searchResult.textContent = '0 / 0';
 		window.ipc.PageInSearchStop();
 	}
 

@@ -128,27 +128,27 @@ window.addEventListener('DOMContentLoaded', function () {
 			}
 		});
 
-		divId.innerHTML = profile.name;
-		divDatetime.innerHTML = new Date(majorResults.updatedAt).toLocaleString();
-		divTotalPoint.innerHTML = Math.round(majorResults.totalPoint * 10) / 10;
-		divHALPoint.innerHTML = Math.round(majorResults.totalPoint * 10) / 10;
-		divTotalRank.innerHTML = majorResults.totalRank;
-		divSLI.innerHTML = majorResults.smartLifeIndex;
-		divClothing.innerHTML = Math.round(majorResults.clothingPoint * 10) / 10;
-		divFood.innerHTML = Math.round(majorResults.foodPoint * 10) / 10;
-		divHousing.innerHTML = Math.round(majorResults.housingPoint * 10) / 10;
-		divPhysicalHealth.innerHTML = Math.round(majorResults.physicalHealthPoint * 10) / 10;
-		divMentalHealth.innerHTML = Math.round(majorResults.mentalHealthPoint * 10) / 10;
-		divEcology.innerHTML = Math.round(majorResults.ecologyPoint * 10) / 10;
+		divId.textContent = profile.name;
+		divDatetime.textContent = new Date(majorResults.updatedAt).toLocaleString();
+		divTotalPoint.textContent = Math.round(majorResults.totalPoint * 10) / 10;
+		divHALPoint.textContent = Math.round(majorResults.totalPoint * 10) / 10;
+		divTotalRank.textContent = majorResults.totalRank;
+		divSLI.textContent = majorResults.smartLifeIndex;
+		divClothing.textContent = Math.round(majorResults.clothingPoint * 10) / 10;
+		divFood.textContent = Math.round(majorResults.foodPoint * 10) / 10;
+		divHousing.textContent = Math.round(majorResults.housingPoint * 10) / 10;
+		divPhysicalHealth.textContent = Math.round(majorResults.physicalHealthPoint * 10) / 10;
+		divMentalHealth.textContent = Math.round(majorResults.mentalHealthPoint * 10) / 10;
+		divEcology.textContent = Math.round(majorResults.ecologyPoint * 10) / 10;
 
-		divClothingRatio.innerHTML = clothingRatio;
-		divFoodRatio.innerHTML = foodRatio;
-		divHousingRatio.innerHTML = housingRatio;
-		divPhysicalRatio.innerHTML = physicalRatio;
-		divMentalRatio.innerHTML = mentalRatio;
-		divEcologyRatio.innerHTML = ecologyRatio;
+		divClothingRatio.textContent = clothingRatio;
+		divFoodRatio.textContent = foodRatio;
+		divHousingRatio.textContent = housingRatio;
+		divPhysicalRatio.textContent = physicalRatio;
+		divMentalRatio.textContent = mentalRatio;
+		divEcologyRatio.textContent = ecologyRatio;
 
-		divComment.innerHTML = majorResults.comments ? majorResults.comments : "この調子で頑張ろう！";
+		divComment.textContent = majorResults.comments ? majorResults.comments : "この調子で頑張ろう！";
 	};
 
 	/**

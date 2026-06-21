@@ -82,23 +82,23 @@ window.addEventListener('DOMContentLoaded', function () {
 				if (eoj == '低圧スマート電力量メータ01(028801)') {
 					let obj = arg[ip][eoj];
 
-					spanESMPlace.innerHTML = obj['設置場所(81)'];
-					spanESMIP.innerHTML = ip;
-					spanESMVersion.innerHTML = obj['規格Version情報(82)'];
+					spanESMPlace.textContent = obj['設置場所(81)'];
+					spanESMIP.textContent = ip;
+					spanESMVersion.textContent = obj['規格Version情報(82)'];
 
 					if (obj['瞬時電力計測値(E7)']) {
-						spanESMWatt.innerHTML = obj['瞬時電力計測値(E7)'].split('W')[0];
+						spanESMWatt.textContent = obj['瞬時電力計測値(E7)'].split('W')[0];
 					}
 
 					if (obj['瞬時電流計測値(E8)']) {
 						let amp = JSON.parse(obj['瞬時電流計測値(E8)'].split('(')[0]);
-						spanESMAmpereR.innerHTML = convRT(amp.RPhase);
-						spanESMAmpereT.innerHTML = convRT(amp.TPhase);
+						spanESMAmpereR.textContent = convRT(amp.RPhase);
+						spanESMAmpereT.textContent = convRT(amp.TPhase);
 					}
 
 					if (!isObjEmpty(arg[ip].Means)) {
-						spanESMComWattNorm.innerHTML = parseFloat(arg[ip].Means['積算電力量計測値（正方向計測値）[kWh]']).toFixed(2);
-						spanESMComWattRev.innerHTML = parseFloat(arg[ip].Means['積算電力量計測値（逆方向計測値）[kWh]']).toFixed(2);
+						spanESMComWattNorm.textContent = parseFloat(arg[ip].Means['積算電力量計測値（正方向計測値）[kWh]']).toFixed(2);
+						spanESMComWattRev.textContent = parseFloat(arg[ip].Means['積算電力量計測値（逆方向計測値）[kWh]']).toFixed(2);
 					}
 
 				}
