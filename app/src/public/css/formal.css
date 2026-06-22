@@ -5,22 +5,22 @@
  *********************************************************************/
 /* 変数定義 */
 :root {
-	--main-bg: #F0F0F0;
-	/* うすい灰色 */
-	--main-text: #000000;
-	/* 黒 */
-	--sub-bg: #ffdddd;
-	/* 薄ピンク */
-	--sub-text: #bb4444;
-	/* エンジ */
-	--accent: #2A7762;
-	/* 緑 */
-	--strong: #DC143C;
+	--main-bg: #f8fafc;
+	/* 深みのあるライトグレー */
+	--main-text: #0f172a;
+	/* スレート黒 */
+	--sub-bg: #fff1f2;
+	/* ソフトなローズピンク */
+	--sub-text: #e11d48;
+	/* クリムゾン */
+	--accent: #0f766e;
+	/* ティールグリーン */
+	--strong: #be123c;
+	/* 深い赤 */
+	--link-text: #9f1239;
 	/* 赤 */
-	--link-text: #880000;
-	/* 赤 */
-	--shadow: #333333;
-	/* 灰色 */
+	--shadow: rgba(15, 23, 42, 0.08);
+	/* 柔らかい影 */
 	--inner-bg: #FFFFFF;
 	/* 白 */
 	--p_red: #ffb2b2;
@@ -29,22 +29,22 @@
 	--p_water: #b2ffff;
 	--p_green: #b2ffb2;
 	--p_yellow: #ffffb2;
-	--temprature: rgba(255, 178, 178, .5);
-	--humidity: rgba(255, 178, 255, .5);
-	--pressure: rgba(178, 178, 255, .5);
-	--anbientLight: rgba(255, 196, 137, .2);
-	--noise: rgba(70, 70, 220, .2);
-	--co2: rgba(50, 100, 0, .2);
-	--tvoc: rgba(178, 255, 255, .2);
-	--discomfort: rgba(196, 137, 255, .2);
-	--heatStroke: rgba(137, 196, 255, .2);
-	--watt: rgba(110, 110, 110, 0.3);
-	--ampereR: rgba(255, 70, 70, 0.3);
-	--ampereT: rgba(178, 70, 70, 0.3);
-	--comWattNorm: rgba(70, 70, 255, 0.2);
-	--comWattRev: rgba(70, 70, 178, 0.2);
-	--fixComWattNorm: rgba(178, 255, 178, 0.2);
-	--fixComWattRev: rgba(178, 255, 178, 0.2);
+	--temprature: rgba(255, 70, 70, 0.15);
+	--humidity: rgba(70, 70, 255, 0.15);
+	--pressure: rgba(70, 178, 255, 0.15);
+	--anbientLight: rgba(255, 196, 137, .15);
+	--noise: rgba(70, 70, 220, .15);
+	--co2: rgba(50, 100, 0, .15);
+	--tvoc: rgba(178, 255, 255, .15);
+	--discomfort: rgba(196, 137, 255, .15);
+	--heatStroke: rgba(137, 196, 255, .15);
+	--watt: rgba(110, 110, 110, 0.15);
+	--ampereR: rgba(255, 70, 70, 0.15);
+	--ampereT: rgba(178, 70, 70, 0.15);
+	--comWattNorm: rgba(70, 70, 255, 0.15);
+	--comWattRev: rgba(70, 70, 178, 0.15);
+	--fixComWattNorm: rgba(178, 255, 178, 0.15);
+	--fixComWattRev: rgba(178, 255, 178, 0.15);
 }
 
 
@@ -192,20 +192,19 @@ textarea:read-only {
 section {
 	position: relative;
 	background-color: var(--inner-bg);
-	margin: 1px;
-	padding: 10px;
+	margin: 8px;
+	padding: 18px;
 	/* 影付け */
-	border: 1px solid var(--shadow);
-	-moz-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
-	-webkit-box-shadow: 0 3px 5px rgba(0, 0, 0, .3);
-	box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+	border: 1px solid rgba(15, 23, 42, 0.05);
+	box-shadow: 0 4px 20px var(--shadow);
 	min-width: 120px;
+	border-radius: 12px;
+	transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
 
-	filter: progid:DXImageTransform.Microsoft.Shadow(color=#777777, direction=0, strength=3, enabled=true);
-	/* IE以外なら丸角も */
-	-webkit-border-radius: 5px;
-	-moz-border-radius: 5px;
-	border-radius: 5px;
+section:hover {
+	transform: translateY(-2px);
+	box-shadow: 0 8px 30px rgba(15, 23, 42, 0.12);
 }
 
 
@@ -418,8 +417,7 @@ summary.config {
 html {
 	height: 100%;
 	position: relative;
-	/* font-family: Helvetica , "游ゴシック" , "Yu Gothic" , sans-serif; */
-	font-family: "游明朝体", "Yu Mincho", YuMincho, "Hiragino Kaku Gothic ProN", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, "ＭＳ ゴシック", sans-serif;
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 	scroll-behavior: smooth;
 }
 
@@ -1280,37 +1278,61 @@ section.dev {
 
 /* calendar */
 table.calendar {
-	border-collapse: collapse;
-	/* 隣接セルの間をあけずに配置 */
-	background-color: #FFFFFF;
+	border-collapse: separate;
+	border-spacing: 4px;
+	background-color: transparent;
 	min-width: 600px;
 	width: 100%;
-	border-top: 1px solid var(--sub-text);
-	border-bottom: 1px solid var(--sub-text);
+	border: none;
 }
 
 tr.dayOfWeek {
-	background-color: var(--main-bg);
-	border-bottom: 1px dotted var(--sub-text);
+	background-color: transparent;
+}
+
+tr.dayOfWeek th {
+	font-size: 12px;
+	font-weight: 600;
+	color: #64748b;
+	padding: 8px 0;
 }
 
 table.calendar td:first-child,
 td.holiday {
-	background-color: var(--sub-bg);
-	color: red;
+	background-color: #fff1f2;
+	color: #e11d48;
 }
 
 td.today {
-	border: 2px solid black;
+	border: 2px solid #0f766e !important;
+	background-color: #f0fdfa !important;
 }
 
 table.calendar td {
-	height: 80px;
+	height: 75px;
 	width: 14%;
 	vertical-align: top;
-	padding: 5px;
+	padding: 8px;
 	position: relative;
-	border: 1px solid var(--sub-text);
+	background-color: #ffffff;
+	border-radius: 8px;
+	border: 1px solid rgba(15, 23, 42, 0.04);
+	box-shadow: 0 2px 8px rgba(15, 23, 42, 0.02);
+	transition: all 0.2s ease;
+}
+
+table.calendar td:hover {
+	transform: translateY(-1px);
+	box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+	background-color: #f8fafc;
+}
+
+table.calendar td.disabled {
+	background-color: #f1f5f9;
+	color: #94a3b8;
+	border-color: transparent;
+	box-shadow: none;
+	cursor: not-allowed;
 }
 
 .cal-weather {
