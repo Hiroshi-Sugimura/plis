@@ -164,7 +164,11 @@ function onLoad() {
 
 				case "renewELConfigView":
 					console.log('main -> renewELConfigView');
-					window.renewELConfigView(c.arg);
+					if (typeof window.renewELConfigView === 'function') {
+						window.renewELConfigView(c.arg);
+					} else {
+						console.warn('renewELConfigView: window.renewELConfigView is not ready yet, skipping');
+					}
 					break;
 
 
@@ -346,12 +350,20 @@ function onLoad() {
 
 				case "renewRoomEnvEL":
 					console.log('main -> renewRoomEnvEL');
-					window.renewRoomEnvEL(c.arg);
+					if (typeof window.renewRoomEnvEL === 'function') {
+						window.renewRoomEnvEL(c.arg);
+					} else {
+						console.warn('renewRoomEnvEL: window.renewRoomEnvEL is not a function yet, skipping');
+					}
 					break;
 
 				case "renewPowerEL":
 					console.log('main -> renewPowerEL');
-					window.renewPowerEL(c.arg);
+					if (typeof window.renewPowerEL === 'function') {
+						window.renewPowerEL(c.arg);
+					} else {
+						console.warn('renewPowerEL: window.renewPowerEL is not a function yet, skipping');
+					}
 					break;
 
 

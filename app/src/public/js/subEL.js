@@ -50,6 +50,18 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	let inUserAmpere = document.getElementById('inUserAmpere'); // 契約アンペア
 
+	// ECHONET Lite グラフ関連のDOM（先頭で宣言: TDZエラー回避）
+	let H3EL = document.getElementById('H3EL');
+	let H3ELPower = document.getElementById('H3ELPower');
+	let canRoomEnvChartEL = document.getElementById('canRoomEnvChartEL');
+	let canRoomPowerChartEL = document.getElementById('canRoomPowerChartEL');
+	let ctxEL = canRoomEnvChartEL ? canRoomEnvChartEL.getContext('2d') : null;
+	let ctxELPower = canRoomPowerChartEL ? canRoomPowerChartEL.getContext('2d') : null;
+	let myChartEL = null;
+	let myPowerChartEL = null;
+	let datasetsEL = [];
+	let datasetsELPower = [];
+
 
 	//----------------------------------------------------------------------------------------------
 	/**
@@ -224,10 +236,26 @@ window.addEventListener('DOMContentLoaded', function () {
 			H2ControlEL.style.display = 'block';
 			divControlEL.style.display = '-webkit-flex';
 			divELSuggest.style.display = 'none';
+
+			H3EL.style.display = 'block';
+			H3ELPower.style.display = 'block';
+			if (!myChartEL) {
+				document.getElementById('divELNoData').style.display = 'block';
+			}
+			if (!myPowerChartEL) {
+				document.getElementById('divELPowerNoData').style.display = 'block';
+			}
 		} else {  // 利用しない場合
 			H2ControlEL.style.display = 'none';
 			divControlEL.style.display = 'none';
 			divELSuggest.style.display = 'block';
+
+			H3EL.style.display = 'none';
+			H3ELPower.style.display = 'none';
+			document.getElementById('divELNoData').style.display = 'none';
+			document.getElementById('divELPowerNoData').style.display = 'none';
+			canRoomEnvChartEL.style.display = 'none';
+			canRoomPowerChartEL.style.display = 'none';
 		}
 	};
 
@@ -619,23 +647,12 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
-	// ECHONET Lite チャート
-	let myChartEL = null;
-	let myPowerChartEL = null;
-	let datasetsEL = [];
-	let datasetsELPower = [];
-
-	const canRoomEnvChartEL = document.getElementById('canRoomEnvChartEL');
-	const canRoomPowerChartEL = document.getElementById('canRoomPowerChartEL');
-	const ctxEL = canRoomEnvChartEL.getContext('2d');
-	const ctxELPower = canRoomPowerChartEL.getContext('2d');
-	const H3EL = document.getElementById('H3EL');
-	const H3ELPower = document.getElementById('H3ELPower');
-
+	// ECHONET Lite チャート（変数は先頭で宣言済み）
 	const pointStyleList = ['circle', 'triangle', 'cross', 'rect', 'star', 'dash', 'rectRounded', 'crossRot', 'rectRot', 'line'];
 
 	let renewCanvasEL = function () {
 		H3EL.style.display = 'block';
+		document.getElementById('divELNoData').style.display = 'none';
 		canRoomEnvChartEL.style.display = 'block';
 		if (myChartEL) {
 			myChartEL.data.datasets = datasetsEL;
@@ -653,6 +670,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 	let renewPowerCanvasEL = function () {
 		H3ELPower.style.display = 'block';
+		document.getElementById('divELPowerNoData').style.display = 'none';
 		canRoomPowerChartEL.style.display = 'block';
 		if (myPowerChartEL) {
 			myPowerChartEL.data.datasets = datasetsELPower;
@@ -710,7 +728,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		if (datasetsEL.length > 0) {
 			renewCanvasEL();
 		} else {
-			H3EL.style.display = 'none';
+			H3EL.style.display = 'block';
+			document.getElementById('divELNoData').style.display = 'block';
 			canRoomEnvChartEL.style.display = 'none';
 		}
 	};
@@ -747,7 +766,8 @@ window.addEventListener('DOMContentLoaded', function () {
 		if (datasetsELPower.length > 0) {
 			renewPowerCanvasEL();
 		} else {
-			H3ELPower.style.display = 'none';
+			H3ELPower.style.display = 'block';
+			document.getElementById('divELPowerNoData').style.display = 'block';
 			canRoomPowerChartEL.style.display = 'none';
 		}
 	};

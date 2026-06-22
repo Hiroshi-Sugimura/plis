@@ -134,6 +134,7 @@ let mainEL = {
 		await mainEL.init();
 
 		await mainEL.sendTodayEnergy(); 	// 本日のスマメデータの定期的送信、一発目
+		mainEL.requestDeviceStates(); 		// 機器のステータスを取得開始
 		await mainEL.sendTodayRoomEnv(); 	// 本日のエアコン温湿度データの送信、一発目
 		await mainEL.sendTodayPower(); 	// 本日の消費電力データの送信、一発目
 
@@ -548,6 +549,7 @@ let mainEL = {
 			}
 			try {
 				if (config.enabled) {
+					mainEL.requestDeviceStates();
 					await mainEL.sendTodayRoomEnv();
 					await mainEL.sendTodayPower();
 				}
@@ -581,6 +583,8 @@ let mainEL = {
 			persist.parsed = objectSort(devs);
 			if (!isObjEmpty(persist.parsed)) {
 				sendIPCMessage("fclEL", persist.parsed);
+				mainEL.sendTodayRoomEnv();
+				mainEL.sendTodayPower();
 			}
 		});
 	},
@@ -1074,6 +1078,43 @@ let mainEL = {
 			let arg = await mainEL.getTodayPowerEL();
 			if (arg && arg.deviceList && arg.deviceList.length > 0) {
 				sendIPCMessage('renewPowerEL', JSON.stringify(arg));
+			}
+		}
+	},
+
+	/**
+	 * 認識されているECHONET Lite機器に対して、定期的に温度や消費電力のGetリクエストを送信する。
+	 */
+	requestDeviceStates: function () {
+		if (!config.enabled || !persist.parsed || !persist.parsed.IPs) return;
+
+		for (const ip of persist.parsed.IPs) {
+			const device = persist.parsed[ip];
+			if (!device || !device.EOJs) continue;
+
+			for (const eojString of device.EOJs) {
+				// eojString は "家庭用エアコン01(013001)" のような形式
+				// カッコ内の6桁のHEXコードを抽出する
+				const match = eojString.match(/\(([0-9a-fA-F]{6})\)/);
+				if (!match) continue;
+				const eoj = match[1]; // 例: "013001"
+
+				// クラスグループとクラスコード（先頭4桁）を取得
+				const classCode = eoj.substring(0, 4); // 例: "0130"
+
+				// 1. エアコンに対する温度・湿度リクエスト (0130: 家庭用エアコン)
+				if (classCode === '0130') {
+					// 室内温度計測値(BB) と 測定室相対湿度計測値(C0) を Get
+					EL.sendOPC1(ip, [0x0e, 0xf0, 0x01], EL.toHexArray(eoj), EL.GET, [0xbb], [0x00]);
+					EL.sendOPC1(ip, [0x0e, 0xf0, 0x01], EL.toHexArray(eoj), EL.GET, [0xc0], [0x00]);
+				}
+
+				// 2. スマートメーター類を除く一般家電に対する消費電力リクエスト
+				const isSmartMeter = (classCode === '0287' || classCode === '0288' || classCode === '028d');
+				if (!isSmartMeter) {
+					// 瞬時消費電力計測値(84) を Get
+					EL.sendOPC1(ip, [0x0e, 0xf0, 0x01], EL.toHexArray(eoj), EL.GET, [0x84], [0x00]);
+				}
 			}
 		}
 	}
