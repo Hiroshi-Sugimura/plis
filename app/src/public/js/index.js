@@ -156,6 +156,27 @@ function onLoad() {
 					break;
 
 				//----------------------------------------------
+				// Fitbit関連
+				case "renewFitbitConfigView":
+					console.log('main -> renewFitbitConfigView:', c.arg);
+					if (typeof window.renewFitbitConfigView === 'function') {
+						window.renewFitbitConfigView(c.arg);
+					}
+					break;
+
+				case "fitbitAuthStatus":
+					console.log('main -> fitbitAuthStatus:', c.arg);
+					if (typeof window.fitbitAuthStatus === 'function') {
+						window.fitbitAuthStatus(c.arg);
+					}
+					break;
+
+				case "showFitbitData":
+					console.log('main -> showFitbitData:', c.arg);
+					if (typeof window.showFitbitData === 'function') {
+						window.showFitbitData(c.arg);
+					}
+					break;
 				// EL関連
 				case "fclEL":
 					console.log('main -> fclEL:', c.arg);

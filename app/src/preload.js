@@ -520,6 +520,38 @@ contextBridge.exposeInMainWorld('ipc', {
 		ipcRenderer.invoke('ELSearch', '');
 	},
 
+	/**
+	 * @func FitbitSetConfig
+	 * @desc Fitbitの設定を保存
+	 */
+	FitbitSetConfig: (config) => {
+		ipcRenderer.invoke('FitbitSetConfig', config);
+	},
+
+	/**
+	 * @func FitbitGetConfig
+	 * @desc Fitbitの設定を取得
+	 */
+	FitbitGetConfig: () => {
+		ipcRenderer.invoke('FitbitGetConfig');
+	},
+
+	/**
+	 * @func FitbitStartAuth
+	 * @desc Fitbitの認可フロー開始
+	 */
+	FitbitStartAuth: () => {
+		ipcRenderer.invoke('FitbitStartAuth');
+	},
+
+	/**
+	 * @func FitbitSync
+	 * @desc Fitbitの手動同期を実行
+	 */
+	FitbitSync: () => {
+		ipcRenderer.invoke('FitbitSync');
+	},
+
 	//======================================================
 	// main to renderer
 	on: (channel, callback) => {

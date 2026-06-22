@@ -118,5 +118,26 @@ PLISプロジェクトの理解と開発状況の整理のため、`spec` フォ
 - **UI表示検証**: レンダラープロセス上でオフライン判定されたデバイスのカードがグレーアウトされ、ボタンが無効化されていること、および `(オフライン)` テキストが正常に描画されクラッシュしないことを確認しました。
 - **specドキュメントの更新**: [todo.md](file:///Users/sugimura/Documents/plis/spec/todo.md) および [task.md](file:///Users/sugimura/Documents/plis/spec/task.md) を更新し、すべてのタスクを完了に更新しました。
 
+### Fitbit直接連携および健康データ集約 (2026-06-22 実施)
+- **Fitbit 直接連携（OAuth 2.0）およびAPIクライアントの実装**:
+  - [mainFitbit.mjs](file:///Users/sugimura/Documents/plis/app/src/mainFitbit.mjs) を新規作成し、一時Webサーバー（デフォルト: `5000` ポート）の起動、システムブラウザを用いた認可、アクセストークンおよびリフレッシュトークン処理、Fitbit APIクライアント処理を実装しました。
+  - プロフィール、日次活動量、睡眠、心拍数、体重・体脂肪率のデータを取得し、ローカルDBに保存する同期ロジックを実装しました。
+  - `node-cron` を利用して、毎日午前3時に自動バックグラウンド同期を実行する処理を追加しました。
+- **データベースモデル定義の拡張**:
+  - [localDBModels.mjs](file:///Users/sugimura/Documents/plis/app/src/models/localDBModels.mjs) に `IOT_FitbitProfilesModel`, `IOT_FitbitDailiesModel`, `IOT_FitbitSleepsModel`, `IOT_FitbitHeartRatesModel`, `IOT_FitbitWeightsModel` の5テーブルのSequelize/SQLite3定義を追加し、デフォルトエクスポートに加えました。
+- **IPC通信ブリッジの追加とメインプロセス連携**:
+  - [preload.js](file:///Users/sugimura/Documents/plis/app/src/preload.js) に `FitbitSetConfig`, `FitbitGetConfig`, `FitbitStartAuth`, `FitbitSync` のブリッジAPIを追加しました。
+  - [main.mjs](file:///Users/sugimura/Documents/plis/app/src/main.mjs) で `mainFitbit` モジュールをロード・初期化し、各種IPCハンドラーを登録しました。
+- **フロントエンド UI および Chart.js による可視化**:
+  - [index.htm](file:///Users/sugimura/Documents/plis/app/src/public/index.htm) に「Fitbit 連携設定（クライアントID、シークレットの設定、認証ボタン、手動同期ボタン）」のアコーディオンセクションを追加し、さらにウェアラブルタブ内に睡眠、心拍、活動、体重のデータ表示エリアと各canvas要素を追加しました。
+  - [subFitbit.js](file:///Users/sugimura/Documents/plis/app/src/public/js/subFitbit.js) を新規作成し、各種UIイベント（設定の保存、認証開始、手動同期）をハンドリングするとともに、Chart.js を利用した各グラフ（睡眠の円グラフ、心拍ゾーンの棒グラフ、歩数推移の棒グラフ、体重・BMI推移の折れ線グラフ）の描画ロジックとインスタンス管理を実装しました。
+  - [index.js](file:///Users/sugimura/Documents/plis/app/src/public/js/index.js) にメインプロセスからのFitbit関連IPCメッセージ（`renewFitbitConfigView`, `fitbitAuthStatus`, `showFitbitData`）の転送ケースを追加しました。
+  - [formal.css](file:///Users/sugimura/Documents/plis/app/src/public/css/formal.css) の末尾に Fitbit テーマカラー（ティール `#00B0B9`）に準拠したハイライトおよび見出しのスタイルを定義しました。
+
+## 検証結果
+- **シンタックスチェックの合格**: 新設・改修したJavaScript/MJSファイルのシンタックス（`node --check`）に問題がないことを確認しました。
+- **データベース同期およびUI描画フローの検証**: メインプロセス、プリロード、レンダラープロセスの接続が正しく行われ、Fitbitの認証・設定保存・同期・UI描画イベントが正常に中継・バインドされていることを検証しました。
+- **specドキュメントの更新**: [todo.md](file:///Users/sugimura/Documents/plis/spec/todo.md) および [task.md](file:///Users/sugimura/Documents/plis/spec/task.md) を更新し、すべてのタスクを完了に更新しました。
+
 
 

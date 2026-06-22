@@ -755,18 +755,104 @@
 
 					</div>
 
-					<!-- Garminデータが未設定の場合の案内 -->
-					<div id="divGarminSuggest" class="none">
-						<h3><i class="fa-solid fa-watch"></i> Garminデータ</h3>
+					<!-- Fitbitデータが未設定の場合の案内 -->
+					<div id="divFitbitSuggest" class="none">
+						<h3><i class="fa-solid fa-heart"></i> Fitbitデータ</h3>
 						<div class='LinearLayoutParent'>
 							<div class='LinearLayoutChild'>
 								<section>
-									<strong>HAL CloudでGarmin連携を設定すると表示されます。</strong><br>
+									<strong>Fitbit連携を設定すると表示されます。</strong><br>
 									<button
-										onclick="document.getElementById('configTab').checked=true; location.hash='HALConfig'; document.getElementById('HALConfigDetail').open=true;">設定はこちら</button>
+										onclick="document.getElementById('configTab').checked=true; location.hash='FitbitConfig'; document.getElementById('FitbitConfigDetails').open=true;">設定はこちら</button>
 								</section>
 							</div>
 						</div>
+					</div>
+
+					<h2 id="H2Fitbit" class="none">
+						Fitbit
+						<span style="font-size: 0.5em; float: right; margin-top: 5px;">
+							<a href="#FitbitConfig" onclick="document.getElementById('configTab').checked=true; location.hash='FitbitConfig'; document.getElementById('FitbitConfigDetails').open=true;">
+								<i class="fa-solid fa-gear right"></i>
+							</a>
+						</span>
+					</h2>
+
+					<!-- Fitbitデータ表示エリア -->
+					<div id="divFitbit" class="p none">
+
+						<!-- 睡眠グラフ -->
+						<div class="chart-container">
+							<h3><i class="fa-solid fa-bed"></i> 睡眠データ (Fitbit)</h3>
+							<div class="LinearLayoutParent_split">
+								<div class="LinearLayoutChild_left">
+									<div id="fitbitSleepInfo" class="chart-info">
+										<p>総睡眠時間: <span id="fitbitTotalSleep">--</span></p>
+										<p>深い睡眠: <span id="fitbitDeepSleep">--</span></p>
+										<p>浅い睡眠: <span id="fitbitLightSleep">--</span></p>
+										<p>REM睡眠: <span id="fitbitRemSleep">--</span></p>
+										<p>覚醒時間: <span id="fitbitAwakeTime">--</span></p>
+										<p>睡眠効率: <span id="fitbitSleepEfficiency">--</span></p>
+									</div>
+								</div>
+								<div class="LinearLayoutChild_right">
+									<canvas id="fitbitSleepChart" class="canGarminChart"></canvas>
+								</div>
+							</div>
+						</div>
+
+						<!-- 心拍数グラフ -->
+						<div class="chart-container">
+							<h3><i class="fa-solid fa-heart-pulse"></i> 心拍数ゾーン (Fitbit)</h3>
+							<div class="LinearLayoutParent_split">
+								<div class="LinearLayoutChild_left">
+									<div id="fitbitHeartInfo" class="chart-info">
+										<p>安静時心拍数: <span id="fitbitRestingHR">--</span></p>
+										<p>脂肪燃焼ゾーン: <span id="fitbitFatBurnTime">--</span></p>
+										<p>有酸素ゾーン: <span id="fitbitCardioTime">--</span></p>
+										<p>ピークゾーン: <span id="fitbitPeakTime">--</span></p>
+									</div>
+								</div>
+								<div class="LinearLayoutChild_right">
+									<canvas id="fitbitHeartChart" class="canGarminChart"></canvas>
+								</div>
+							</div>
+						</div>
+
+						<!-- 活動量（歩数・距離・カロリー）グラフ -->
+						<div class="chart-container">
+							<h3><i class="fa-solid fa-shoe-prints"></i> 活動量 (Fitbit)</h3>
+							<div class="LinearLayoutParent_split">
+								<div class="LinearLayoutChild_left">
+									<div id="fitbitActivityInfo" class="chart-info">
+										<p>今日の歩数: <span id="fitbitSteps">--</span></p>
+										<p>今日の距離: <span id="fitbitDistance">--</span></p>
+										<p>消費カロリー: <span id="fitbitCalories">--</span></p>
+									</div>
+								</div>
+								<div class="LinearLayoutChild_right">
+									<canvas id="fitbitActivityChart" class="canGarminChart"></canvas>
+								</div>
+							</div>
+						</div>
+
+						<!-- 体重・BMIグラフ -->
+						<div class="chart-container">
+							<h3><i class="fa-solid fa-weight-scale"></i> 体重・BMI (Fitbit)</h3>
+							<div class="LinearLayoutParent_split">
+								<div class="LinearLayoutChild_left">
+									<div id="fitbitWeightInfo" class="chart-info">
+										<p>最新体重: <span id="fitbitLatestWeight">--</span> kg</p>
+										<p>最新BMI: <span id="fitbitLatestBMI">--</span></p>
+										<p>最新体脂肪率: <span id="fitbitLatestFat">--</span> %</p>
+									</div>
+								</div>
+								<div class="LinearLayoutChild_right">
+									<canvas id="fitbitWeightChart" class="canGarminChart"></canvas>
+								</div>
+							</div>
+						</div>
+
 					</div>
 
 				</div> <!-- Wearableタブ終了 -->
@@ -1630,6 +1716,42 @@
 						</p>
 					</details>
 
+					<!-- Fitbit -->
+					<a name="FitbitConfig"></a>
+					<details class="config" id="FitbitConfigDetails">
+						<summary class="config"><i class="fa-solid fa-heart"></i> Fitbit 連携設定</summary>
+						<div class="p">
+							<label><input type="checkbox" id="inFitbitUse"> Fitbit 連携を有効にする</label><br>
+							Client ID: <form class="secretBorder inline"><input id="inFitbitClientId" class="secretText" type="text" value="" size="50" /></form><br>
+							Client Secret: <form class="secretBorder inline"><input id="inFitbitClientSecret" class="secretText" type="password" value="" size="50" /><span id="inFitbitClientSecretButtonEye" class="fa fa-eye" onclick="window.pushHideButton('inFitbitClientSecret');"></span></form><br>
+							Redirect Port: <form class="inline"><input id="inFitbitRedirectPort" type="number" value="5000" style="width: 80px;" /></form> (認証用ポート)<br>
+							<br>
+							<div id="divFitbitAuthStatus" style="margin-bottom: 10px;">
+								ステータス: <span id="spanFitbitStatusText" style="font-weight: bold; color: gray;">未連携</span>
+							</div>
+							<div id="divFitbitProfile" style="margin-bottom: 10px;" class="none">
+								ユーザー: <span id="spanFitbitUser">--</span><br>
+								<img id="imgFitbitAvatar" src="" style="width: 50px; height: 50px; border-radius: 50%; vertical-align: middle; margin-top: 5px;">
+							</div>
+							<br>
+							<button id="btnFitbitConfigSave" onClick="window.btnFitbitConfigSave_Click();">設定を保存</button>
+							<button id="btnFitbitAuth" onClick="window.btnFitbitAuth_Click();">Fitbitと連携</button>
+							<button id="btnFitbitSync" onClick="window.btnFitbitSync_Click();" class="none">手動同期</button>
+						</div>
+
+						<div>
+							<h3>事前準備</h3>
+							<p>
+								1. <a href="#" onClick='window.URLopen("https://dev.fitbit.com/apps");'>Fitbit Developer Portal</a> にログインします。<br>
+								2. 「Register an App」から新しいアプリを登録します。<br>
+								   - OAuth 2.0 Application Type: <strong>Personal</strong>（※必須）<br>
+								   - Callback URL: <strong>http://localhost:5000/callback</strong><br>
+								   - Default Access Type: <strong>Read-Only</strong><br>
+								3. 登録後に発行される「OAuth 2.0 Client ID」と「Client Secret」を上記に入力してください。
+							</p>
+						</div>
+					</details>
+
 					<!-- AutoAssessment -->
 					<a name="autoAssessmentConfig"></a>
 					<details class="config" id="autoAssessmentConfigDetail">
@@ -2269,6 +2391,7 @@
 <script src="./js/subSwitchBot.js"></script>
 <script src="./js/subQuestionnaire.js"></script>
 <script src="./js/subGarmin.js"></script>
+<script src="./js/subFitbit.js"></script>
 <script src="./js/subAutoAssessment.js"></script>
 <script src="./js/subHAL.js"></script>
 <script src="./js/index.js"></script> <!-- 一応index.jsが最後にloadされるようにする。実際はonLoadで順序制御できてるはず -->

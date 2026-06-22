@@ -46,6 +46,7 @@ import { mainJma } from './mainJma.mjs';    // 天気予報、気象庁
 import { mainSwitchBot } from './mainSwitchBot.mjs'; // SwitchBot
 import { mainCalendar } from './mainCalendar.mjs'; // カレンダー準備
 import { mainCo2s } from './mainCo2s.mjs';  // usb-ud-co2センサー
+import { mainFitbit } from './mainFitbit.mjs'; // Fitbitの管理
 import licenses from './modules.json' with { type: "json" };
 
 //////////////////////////////////////////////////////////////////////
@@ -142,7 +143,8 @@ ipcMain.handle('already', async (event, arg) => {
 		mainSwitchBot.start(sendIPCMessage),
 		mainCalendar.start(sendIPCMessage),
 		mainHALsync.start(sendIPCMessage),
-		mainAutoAssessment.start(sendIPCMessage)
+		mainAutoAssessment.start(sendIPCMessage),
+		mainFitbit.start(sendIPCMessage)
 	]);
 
 	persist.HAL = await mainHALlocal.getLastData();
@@ -482,6 +484,36 @@ ipcMain.handle('SwitchBotStop', async (event, arg) => {
 ipcMain.handle('SwitchBotControl', async (event, arg) => {
 	logger.debug('main', config.debug, 'ipcMain <- SwitchBotControl, arg:', arg);
 	mainSwitchBot.control(arg.id, arg.command, arg.param);
+});
+
+// Fitbit 関連のIPCハンドラー
+ipcMain.handle('FitbitSetConfig', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- FitbitSetConfig');
+	await mainFitbit.saveConfig(arg);
+});
+
+ipcMain.handle('FitbitGetConfig', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- FitbitGetConfig');
+	sendIPCMessage("renewFitbitConfigView", mainFitbit.config);
+});
+
+ipcMain.handle('FitbitStartAuth', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- FitbitStartAuth');
+	try {
+		await mainFitbit.startAuthFlow();
+	} catch (error) {
+		logger.error('main', 'Fitbit Auth Flow error:', error);
+		sendIPCMessage('fitbitAuthStatus', { status: 'error', message: error.message });
+	}
+});
+
+ipcMain.handle('FitbitSync', async (event, arg) => {
+	logger.debug('main', config.debug, 'ipcMain <- FitbitSync');
+	try {
+		await mainFitbit.syncData();
+	} catch (error) {
+		logger.error('main', 'Fitbit Sync error:', error);
+	}
 });
 
 

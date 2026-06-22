@@ -2505,6 +2505,144 @@ const IOT_GarminUserMetricsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_G
 }) : makeStubModel('IOT_GarminUserMetrics');
 
 
+/** @type {Model} Fitbit プロフィール */
+const IOT_FitbitProfilesModel = canUseSequelizeSqlite ? sqlite3.define('IOT_FitbitProfiles', {
+    idIOT_FitbitProfiles: { type: Sequelize.BIGINT, autoIncrement: true, primaryKey: true },
+    encodedId: { type: Sequelize.STRING },
+    displayName: { type: Sequelize.STRING },
+    fullName: { type: Sequelize.STRING },
+    gender: { type: Sequelize.STRING },
+    dateOfBirth: { type: Sequelize.STRING },
+    height: { type: Sequelize.DOUBLE },
+    weight: { type: Sequelize.DOUBLE },
+    avatar: { type: Sequelize.STRING },
+    timezone: { type: Sequelize.STRING },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) { this.setDataValue('createdAt', val instanceof Date ? val.toISOString() : val); }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) { this.setDataValue('updatedAt', val instanceof Date ? val.toISOString() : val); }
+    }
+}, { freezeTableName: true, timestamps: true }) : makeStubModel('IOT_FitbitProfiles');
+
+/** @type {Model} Fitbit 日次活動記録 */
+const IOT_FitbitDailiesModel = canUseSequelizeSqlite ? sqlite3.define('IOT_FitbitDailies', {
+    idIOT_FitbitDailies: { type: Sequelize.BIGINT, autoIncrement: true, primaryKey: true },
+    encodedId: { type: Sequelize.STRING },
+    calendarDate: { type: Sequelize.STRING },
+    steps: { type: Sequelize.INTEGER },
+    distance: { type: Sequelize.DOUBLE },
+    caloriesOut: { type: Sequelize.INTEGER },
+    caloriesBMR: { type: Sequelize.INTEGER },
+    activityCalories: { type: Sequelize.INTEGER },
+    fairlyActiveMinutes: { type: Sequelize.INTEGER },
+    lightlyActiveMinutes: { type: Sequelize.INTEGER },
+    veryActiveMinutes: { type: Sequelize.INTEGER },
+    sedentaryMinutes: { type: Sequelize.INTEGER },
+    stepsGoal: { type: Sequelize.INTEGER },
+    caloriesOutGoal: { type: Sequelize.INTEGER },
+    distanceGoal: { type: Sequelize.DOUBLE },
+    activeMinutesGoal: { type: Sequelize.INTEGER },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) { this.setDataValue('createdAt', val instanceof Date ? val.toISOString() : val); }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) { this.setDataValue('updatedAt', val instanceof Date ? val.toISOString() : val); }
+    }
+}, { freezeTableName: true, timestamps: true }) : makeStubModel('IOT_FitbitDailies');
+
+/** @type {Model} Fitbit 睡眠記録 */
+const IOT_FitbitSleepsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_FitbitSleeps', {
+    idIOT_FitbitSleeps: { type: Sequelize.BIGINT, autoIncrement: true, primaryKey: true },
+    encodedId: { type: Sequelize.STRING },
+    logId: { type: Sequelize.BIGINT },
+    dateOfSleep: { type: Sequelize.STRING },
+    duration: { type: Sequelize.BIGINT },
+    efficiency: { type: Sequelize.INTEGER },
+    startTime: { type: Sequelize.STRING },
+    endTime: { type: Sequelize.STRING },
+    minutesAsleep: { type: Sequelize.INTEGER },
+    minutesAwake: { type: Sequelize.INTEGER },
+    timeInBed: { type: Sequelize.INTEGER },
+    isMainSleep: { type: Sequelize.BOOLEAN },
+    deepMinutes: { type: Sequelize.INTEGER },
+    lightMinutes: { type: Sequelize.INTEGER },
+    remMinutes: { type: Sequelize.INTEGER },
+    wakeMinutes: { type: Sequelize.INTEGER },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) { this.setDataValue('createdAt', val instanceof Date ? val.toISOString() : val); }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) { this.setDataValue('updatedAt', val instanceof Date ? val.toISOString() : val); }
+    }
+}, { freezeTableName: true, timestamps: true }) : makeStubModel('IOT_FitbitSleeps');
+
+/** @type {Model} Fitbit 心拍数記録 */
+const IOT_FitbitHeartRatesModel = canUseSequelizeSqlite ? sqlite3.define('IOT_FitbitHeartRates', {
+    idIOT_FitbitHeartRates: { type: Sequelize.BIGINT, autoIncrement: true, primaryKey: true },
+    encodedId: { type: Sequelize.STRING },
+    calendarDate: { type: Sequelize.STRING },
+    restingHeartRate: { type: Sequelize.INTEGER },
+    outOfRangeMinutes: { type: Sequelize.INTEGER },
+    fatBurnMinutes: { type: Sequelize.INTEGER },
+    cardioMinutes: { type: Sequelize.INTEGER },
+    peakMinutes: { type: Sequelize.INTEGER },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) { this.setDataValue('createdAt', val instanceof Date ? val.toISOString() : val); }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) { this.setDataValue('updatedAt', val instanceof Date ? val.toISOString() : val); }
+    }
+}, { freezeTableName: true, timestamps: true }) : makeStubModel('IOT_FitbitHeartRates');
+
+/** @type {Model} Fitbit 体重・体脂肪記録 */
+const IOT_FitbitWeightsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_FitbitWeights', {
+    idIOT_FitbitWeights: { type: Sequelize.BIGINT, autoIncrement: true, primaryKey: true },
+    encodedId: { type: Sequelize.STRING },
+    calendarDate: { type: Sequelize.STRING },
+    weight: { type: Sequelize.DOUBLE },
+    bmi: { type: Sequelize.DOUBLE },
+    fat: { type: Sequelize.DOUBLE },
+    source: { type: Sequelize.STRING },
+    createdAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) { this.setDataValue('createdAt', val instanceof Date ? val.toISOString() : val); }
+    },
+    updatedAt: {
+        type: Sequelize.STRING,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
+        allowNull: false,
+        set(val) { this.setDataValue('updatedAt', val instanceof Date ? val.toISOString() : val); }
+    }
+}, { freezeTableName: true, timestamps: true }) : makeStubModel('IOT_FitbitWeights');
+
+
 export default {
     Sequelize, Op, sqlite3,
     eldataModel,
@@ -2543,6 +2681,11 @@ export default {
     IOT_GarminPulseoxModel,
     IOT_GarminSleepsModel,
     IOT_GarminStressDetailsModel,
-    IOT_GarminUserMetricsModel
+    IOT_GarminUserMetricsModel,
+    IOT_FitbitProfilesModel,
+    IOT_FitbitDailiesModel,
+    IOT_FitbitSleepsModel,
+    IOT_FitbitHeartRatesModel,
+    IOT_FitbitWeightsModel
 };
 
