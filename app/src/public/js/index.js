@@ -344,6 +344,16 @@ function onLoad() {
 					window.renewEnergySubmeter(c.arg);
 					break;
 
+				case "renewRoomEnvEL":
+					console.log('main -> renewRoomEnvEL');
+					window.renewRoomEnvEL(c.arg);
+					break;
+
+				case "renewPowerEL":
+					console.log('main -> renewPowerEL');
+					window.renewPowerEL(c.arg);
+					break;
+
 
 				//----------------------------------------------
 				// カレンダー

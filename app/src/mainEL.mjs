@@ -134,6 +134,8 @@ let mainEL = {
 		await mainEL.init();
 
 		await mainEL.sendTodayEnergy(); 	// 本日のスマメデータの定期的送信、一発目
+		await mainEL.sendTodayRoomEnv(); 	// 本日のエアコン温湿度データの送信、一発目
+		await mainEL.sendTodayPower(); 	// 本日の消費電力データの送信、一発目
 
 		if (config.enabled && persist.parsed && !isObjEmpty(persist.parsed)) {
 			sendIPCMessage("fclEL", persist.parsed);
@@ -544,6 +546,14 @@ let mainEL = {
 			} catch (e) {
 				logger.error('mainEL', 'observationTask observation error:', e);
 			}
+			try {
+				if (config.enabled) {
+					await mainEL.sendTodayRoomEnv();
+					await mainEL.sendTodayPower();
+				}
+			} catch (e) {
+				logger.error('mainEL', 'observationTask sendTodayRoomEnv/Power error:', e);
+			}
 		});
 
 		// (5b) facilities 構造変化検出（1分毎）
@@ -872,6 +882,199 @@ let mainEL = {
 
 		} catch (error) {
 			logger.error('mainEL', 'getTodayElectricEnergy_submeter() error:', error);
+		}
+	},
+
+	/**
+	 * 本日のエアコン温湿度データを3分刻み平均に整形して配列で返す。
+	 */
+	getTodayRoomEnvEL: async function () {
+		try {
+			let now = new Date();
+			let begin = new Date(now);
+			begin.setHours(begin.getHours() - begin.getHours() - 1, 57, 0, 0); // 前日23:57
+			let end = new Date(begin);
+			end.setHours(begin.getHours() + 25, 0, 0, 0); // 翌日00:00
+
+			// databaseから家庭用エアコン01などの温度・湿度データを取得
+			let allRows = await eldataModel.findAll({
+				attributes: [
+					'seoj',
+					'epc',
+					'edt',
+					'createdAt'
+				],
+				where: {
+					seoj: { [Op.like]: '家庭用エアコン%' },
+					epc: { [Op.in]: ['室内温度計測値(BB)', '測定室相対湿度計測値(C0)'] },
+					createdAt: { [Op.between]: [begin.toISOString(), end.toISOString()] }
+				},
+				raw: true
+			});
+
+			// エアコン機器リストをユニーク化
+			let airconditionerList = Array.from(new Set(allRows.map(r => r.seoj)));
+
+			let ret = { srcType: 'EL', airconditionerList: airconditionerList };
+
+			// 480個のスロット (24h * 20slots = 480)
+			let totalSlots = 24 * 20;
+
+			for (const ac of airconditionerList) {
+				let acRows = allRows.filter(r => r.seoj === ac);
+				let array = [];
+				let currentBegin = new Date();
+				currentBegin.setHours(0, 0, 0, 0); // 当日00:00
+
+				for (let i = 0; i < totalSlots; i += 1) {
+					let slotEnd = new Date(currentBegin);
+					slotEnd.setMinutes(currentBegin.getMinutes() + 3);
+
+					// このスロットに入る行をフィルタ
+					const slotRows = acRows.filter(r => {
+						const t = new Date(r.createdAt).getTime();
+						return t >= currentBegin.getTime() && t < slotEnd.getTime();
+					});
+
+					// 平均値計算 (parseFloatで単位を剥ぎ取る)
+					let tempSum = 0, tempCount = 0;
+					let humSum = 0, humCount = 0;
+
+					for (const r of slotRows) {
+						let val = parseFloat(r.edt);
+						if (!isNaN(val)) {
+							if (r.epc.includes('室内温度')) {
+								tempSum += val;
+								tempCount++;
+							} else if (r.epc.includes('相対湿度')) {
+								humSum += val;
+								humCount++;
+							}
+						}
+					}
+
+					array.push({
+						id: i,
+						time: slotEnd.toISOString(),
+						temperature: tempCount > 0 ? tempSum / tempCount : null,
+						humidity: humCount > 0 ? humSum / humCount : null
+					});
+
+					currentBegin.setMinutes(currentBegin.getMinutes() + 3);
+				}
+				ret[ac] = array;
+			}
+
+			return ret;
+		} catch (error) {
+			logger.error('mainEL', 'getTodayRoomEnvEL() error:', error);
+			return {};
+		}
+	},
+
+	/**
+	 * 本日の各家電の瞬時消費電力データを3分刻み平均に整形して返す。
+	 */
+	getTodayPowerEL: async function () {
+		try {
+			let now = new Date();
+			let begin = new Date(now);
+			begin.setHours(begin.getHours() - begin.getHours() - 1, 57, 0, 0); // 前日23:57
+			let end = new Date(begin);
+			end.setHours(begin.getHours() + 25, 0, 0, 0); // 翌日00:00
+
+			// databaseから瞬時消費電力データを取得。
+			// スマート電力量メータ、低圧スマート電力量メータ、スマート電力量サブメータ などは除く
+			let allRows = await eldataModel.findAll({
+				attributes: [
+					'seoj',
+					'epc',
+					'edt',
+					'createdAt'
+				],
+				where: {
+					seoj: {
+						[Op.notLike]: '%スマート電力量%',
+					},
+					epc: '瞬時消費電力計測値(84)',
+					createdAt: { [Op.between]: [begin.toISOString(), end.toISOString()] }
+				},
+				raw: true
+			});
+
+			// 機器リストをユニーク化
+			let deviceList = Array.from(new Set(allRows.map(r => r.seoj)));
+
+			let ret = { srcType: 'ELPower', deviceList: deviceList };
+
+			// 480個のスロット (24h * 20slots = 480)
+			let totalSlots = 24 * 20;
+
+			for (const dev of deviceList) {
+				let devRows = allRows.filter(r => r.seoj === dev);
+				let array = [];
+				let currentBegin = new Date();
+				currentBegin.setHours(0, 0, 0, 0); // 当日00:00
+
+				for (let i = 0; i < totalSlots; i += 1) {
+					let slotEnd = new Date(currentBegin);
+					slotEnd.setMinutes(currentBegin.getMinutes() + 3);
+
+					// このスロットに入る行をフィルタ
+					const slotRows = devRows.filter(r => {
+						const t = new Date(r.createdAt).getTime();
+						return t >= currentBegin.getTime() && t < slotEnd.getTime();
+					});
+
+					let powerSum = 0, powerCount = 0;
+
+					for (const r of slotRows) {
+						let val = parseFloat(r.edt);
+						if (!isNaN(val)) {
+							powerSum += val;
+							powerCount++;
+						}
+					}
+
+					array.push({
+						id: i,
+						time: slotEnd.toISOString(),
+						power: powerCount > 0 ? powerSum / powerCount : null
+					});
+
+					currentBegin.setMinutes(currentBegin.getMinutes() + 3);
+				}
+				ret[dev] = array;
+			}
+
+			return ret;
+		} catch (error) {
+			logger.error('mainEL', 'getTodayPowerEL() error:', error);
+			return {};
+		}
+	},
+
+	/**
+	 * 本日のエアコン温湿度データをRendererへ送信
+	 */
+	sendTodayRoomEnv: async function () {
+		if (config.enabled) {
+			let arg = await mainEL.getTodayRoomEnvEL();
+			if (arg && arg.airconditionerList && arg.airconditionerList.length > 0) {
+				sendIPCMessage('renewRoomEnvEL', JSON.stringify(arg));
+			}
+		}
+	},
+
+	/**
+	 * 本日の各家電瞬時消費電力をRendererへ送信
+	 */
+	sendTodayPower: async function () {
+		if (config.enabled) {
+			let arg = await mainEL.getTodayPowerEL();
+			if (arg && arg.deviceList && arg.deviceList.length > 0) {
+				sendIPCMessage('renewPowerEL', JSON.stringify(arg));
+			}
 		}
 	}
 

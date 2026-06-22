@@ -503,4 +503,253 @@ window.addEventListener('DOMContentLoaded', function () {
 		}
 	};
 
+
+	//----------------------------------------------------------------------------------------------
+	// ECHONET Lite チャート用の設定
+
+	let complexChartOptionEL = {
+		responsive: true,
+		plugins: {
+			legend: {
+				display: true,
+				position: 'top'
+			}
+		},
+		scales: {
+			"y-axis-left": {
+				type: "linear",
+				position: "left",
+				suggestedMax: 50,
+				min: 0,
+				title: { display: true, text: 'Temperature[℃]' },
+				grid: {
+					color: 'rgba(255,0,0,0.1)',
+					borderColor: 'rgba(255,0,0,1.0)'
+				}
+			},
+			"y-axis-right": {
+				type: "linear",
+				position: "right",
+				suggestedMax: 100,
+				min: 0,
+				title: { display: true, text: 'Humidity[%]' },
+				grid: {
+					borderColor: 'rgba(0,0,255,1.0)'
+				}
+			},
+			"x": {
+				type: 'time',
+				time: {
+					unit: 'minutes',
+					parser: 'HH:mm',
+					displayFormats: {
+						minute: 'HH:mm',
+						hour: 'HH:mm'
+					},
+					stepSize: 30
+				},
+				labels: LABEL_X_30,
+				min: '00:00',
+				max: '24:00',
+				ticks: {
+					autoSkip: true,
+					source: 'labels',
+					minRotation: 90,
+					maxRotation: 90,
+					callback: function (value, index, ticks) {
+						return moment.tz(value, 'Asia/Tokyo').format('HH:mm');
+					}
+				},
+				grid: {
+					color: 'rgba(0,0,0,0.3)',
+					borderColor: 'rgba(0,0,0,1.0)'
+				}
+			}
+		}
+	};
+
+	let complexPowerChartOptionEL = {
+		responsive: true,
+		plugins: {
+			legend: {
+				display: true,
+				position: 'top'
+			}
+		},
+		scales: {
+			"y-axis-left-w": {
+				type: "linear",
+				position: "left",
+				suggestedMax: 1000,
+				min: 0,
+				title: { display: true, text: 'Watt [W]' },
+				grid: {
+					color: 'rgba(255,0,0,0.1)',
+					borderColor: 'rgba(255,0,0,1.0)'
+				}
+			},
+			"x": {
+				type: 'time',
+				time: {
+					unit: 'minutes',
+					parser: 'HH:mm',
+					displayFormats: {
+						minute: 'HH:mm',
+						hour: 'HH:mm'
+					},
+					stepSize: 30
+				},
+				labels: LABEL_X_30,
+				min: '00:00',
+				max: '24:00',
+				ticks: {
+					autoSkip: true,
+					source: 'labels',
+					minRotation: 90,
+					maxRotation: 90,
+					callback: function (value, index, ticks) {
+						return moment.tz(value, 'Asia/Tokyo').format('HH:mm');
+					}
+				},
+				grid: {
+					color: 'rgba(0,0,0,0.3)',
+					borderColor: 'rgba(0,0,0,1.0)'
+				}
+			}
+		}
+	};
+
+	// ECHONET Lite チャート
+	let myChartEL = null;
+	let myPowerChartEL = null;
+	let datasetsEL = [];
+	let datasetsELPower = [];
+
+	const canRoomEnvChartEL = document.getElementById('canRoomEnvChartEL');
+	const canRoomPowerChartEL = document.getElementById('canRoomPowerChartEL');
+	const ctxEL = canRoomEnvChartEL.getContext('2d');
+	const ctxELPower = canRoomPowerChartEL.getContext('2d');
+	const H3EL = document.getElementById('H3EL');
+	const H3ELPower = document.getElementById('H3ELPower');
+
+	const pointStyleList = ['circle', 'triangle', 'cross', 'rect', 'star', 'dash', 'rectRounded', 'crossRot', 'rectRot', 'line'];
+
+	let renewCanvasEL = function () {
+		H3EL.style.display = 'block';
+		canRoomEnvChartEL.style.display = 'block';
+		if (myChartEL) {
+			myChartEL.data.datasets = datasetsEL;
+			myChartEL.update();
+		} else {
+			myChartEL = new Chart(ctxEL, {
+				type: 'line',
+				data: {
+					datasets: datasetsEL
+				},
+				options: complexChartOptionEL
+			});
+		}
+	};
+
+	let renewPowerCanvasEL = function () {
+		H3ELPower.style.display = 'block';
+		canRoomPowerChartEL.style.display = 'block';
+		if (myPowerChartEL) {
+			myPowerChartEL.data.datasets = datasetsELPower;
+			myPowerChartEL.update();
+		} else {
+			myPowerChartEL = new Chart(ctxELPower, {
+				type: 'line',
+				data: {
+					datasets: datasetsELPower
+				},
+				options: complexPowerChartOptionEL
+			});
+		}
+	};
+
+	window.renewRoomEnvEL = function (_envDataObj) {
+		let envDataObj = JSON.parse(_envDataObj);
+		datasetsEL = [];
+		let pointStyle = 0;
+		let spanELEnvTime = document.getElementById('spanELEnvTime');
+		spanELEnvTime.textContent = moment().format("YYYY-MM-DD HH:mm:ss取得");
+
+		if (envDataObj && envDataObj.airconditionerList) {
+			for (const ac of envDataObj.airconditionerList) {
+				let envDataArray = envDataObj[ac];
+				if (envDataArray) {
+					let oTemperature = [];
+					let oHumidity = [];
+					for (const d of envDataArray) {
+						if (d.temperature !== null) {
+							oTemperature.push({ x: moment(d.time), y: d.temperature });
+						}
+						if (d.humidity !== null) {
+							oHumidity.push({ x: moment(d.time), y: d.humidity });
+						}
+					}
+
+					if (oTemperature.length > 0) {
+						datasetsEL.push({
+							label: ac + '：温度 [℃]', type: 'line', data: oTemperature, borderColor: "rgba(255,70,70,1.0)", backgroundColor: "rgba(255,178,178,1.0)",
+							radius: 4, borderWidth: 1, yAxisID: 'y-axis-left', xAxisID: 'x', pointStyle: pointStyleList[pointStyle]
+						});
+					}
+					if (oHumidity.length > 0) {
+						datasetsEL.push({
+							label: ac + '：湿度 [%RH]', type: 'line', data: oHumidity, borderColor: "rgba(70,70,255,1.0)", backgroundColor: "rgba(178,178,255,1.0)",
+							radius: 4, borderWidth: 1, yAxisID: 'y-axis-right', xAxisID: 'x', pointStyle: pointStyleList[pointStyle]
+						});
+					}
+					pointStyle = pointStyle == 9 ? 0 : pointStyle + 1;
+				}
+			}
+		}
+
+		if (datasetsEL.length > 0) {
+			renewCanvasEL();
+		} else {
+			H3EL.style.display = 'none';
+			canRoomEnvChartEL.style.display = 'none';
+		}
+	};
+
+	window.renewPowerEL = function (_powerDataObj) {
+		let powerDataObj = JSON.parse(_powerDataObj);
+		datasetsELPower = [];
+		let pointStyle = 0;
+		let spanELPowerTime = document.getElementById('spanELPowerTime');
+		spanELPowerTime.textContent = moment().format("YYYY-MM-DD HH:mm:ss取得");
+
+		if (powerDataObj && powerDataObj.deviceList) {
+			for (const dev of powerDataObj.deviceList) {
+				let powerDataArray = powerDataObj[dev];
+				if (powerDataArray) {
+					let oPower = [];
+					for (const d of powerDataArray) {
+						if (d.power !== null) {
+							oPower.push({ x: moment(d.time), y: d.power });
+						}
+					}
+
+					if (oPower.length > 0) {
+						datasetsELPower.push({
+							label: dev + '：電力 [W]', type: 'line', data: oPower, borderColor: "rgba(255,70,70,1.0)", backgroundColor: "rgba(255,178,178,1.0)",
+							radius: 4, borderWidth: 1, yAxisID: 'y-axis-left-w', xAxisID: 'x', pointStyle: pointStyleList[pointStyle]
+						});
+					}
+					pointStyle = pointStyle == 9 ? 0 : pointStyle + 1;
+				}
+			}
+		}
+
+		if (datasetsELPower.length > 0) {
+			renewPowerCanvasEL();
+		} else {
+			H3ELPower.style.display = 'none';
+			canRoomPowerChartEL.style.display = 'none';
+		}
+	};
+
 });
