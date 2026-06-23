@@ -579,7 +579,29 @@ let mainEL = {
 		// 変化通知: parsed 再生成し Renderer へ push
 		persist.facilities = objectSort(EL.facilities);
 
-		ELconv.refer(persist.facilities, function (devs) {
+		// 重複排除した facilities コピーを作成
+		let filteredFacilities = {};
+		let ipsToExclude = new Set();
+
+		if (EL.deviceIDs) {
+			for (const id of Object.keys(EL.deviceIDs)) {
+				const entry = EL.deviceIDs[id];
+				// 同一の識別番号に IPv4 と IPv6 の両方が存在する場合、IPv6 を除外対象にする
+				if (entry.ipv4 && entry.ipv6) {
+					ipsToExclude.add(entry.ipv6);
+				}
+			}
+		}
+
+		for (const ip of Object.keys(EL.facilities)) {
+			if (!ipsToExclude.has(ip)) {
+				filteredFacilities[ip] = EL.facilities[ip];
+			}
+		}
+
+		filteredFacilities = objectSort(filteredFacilities);
+
+		ELconv.refer(filteredFacilities, function (devs) {
 			persist.parsed = objectSort(devs);
 			if (!isObjEmpty(persist.parsed)) {
 				sendIPCMessage("fclEL", persist.parsed);
