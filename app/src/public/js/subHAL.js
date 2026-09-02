@@ -572,11 +572,13 @@ window.addEventListener('DOMContentLoaded', function () {
 	 * @return {void}
 	 */
 	window.HALSyncResponse = function (arg) {
+		// 成否によらずボタンは操作可能に戻す
+		btnHALSync.disabled = false;
+		btnHALSync.textContent = 'HAL Cloud 同期開始';
+
 		if (arg?.error) {
 			alert(arg.error);
 		} else {
-			btnHALSync.disabled = false;
-			btnHALSync.textContent = 'HAL Cloud 同期開始';
 			window.ipc.HALrenew();			// 同期成功したなら最新のHALもらう
 		}
 	}

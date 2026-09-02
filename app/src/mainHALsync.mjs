@@ -10,6 +10,7 @@
 // 基本ライブラリ
 import { store } from './storeSingleton.mjs';
 import https from 'https';
+import nodeHttp from 'http';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
 const { Op, eldataModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel } = localDB;
@@ -107,7 +108,7 @@ let mainHALsync = {
 		sendIPCMessage("renewHALConfigView", config);  // configを送る、そうするとViewがkeyチェックのためにprofile取りに来る
 		sendIPCMessage("showGarmin", persist.garmin);  // 保持しているGarminデータを表示する
 
-		if (!persist?.garmin) {  // garminデータがない時には一回ダウンロードする
+		if (!persist?.garmin || Object.keys(persist.garmin).length === 0) {  // garminデータがない時には一回ダウンロードする
 			mainHALsync.garminDownload();
 		}
 
@@ -124,6 +125,8 @@ let mainHALsync = {
 
 		// HAL API トークンが登録されていなければ終了
 		if (!config.halApiToken) {
+			// 応答を返さないと画面の同期ボタンが「同期中…」のまま固まる
+			sendIPCMessage("HALSyncResponse", { error: 'HAL API トークンが登録されていません。' });
 			return;
 		}
 
@@ -305,6 +308,8 @@ let mainHALsync = {
 				moduleName: 'mainHALsync.startSync()',
 				stackLog: `Detail: ${error}`
 			});
+			// 応答を返さないと画面の同期ボタンが「同期中…」のまま固まる
+			sendIPCMessage("HALSyncResponse", { error: `HAL との同期に失敗しました: ${error.message ? error.message : error}` });
 		}
 	},
 
@@ -689,11 +694,15 @@ let mainHALsync = {
 	 */
 	httpGetRequest: function (url, token) {
 		return new Promise((resolve, reject) => {
+			if (!token) {
+				token = config.halApiToken;
+			}
+
 			let http;
 			if (url.startsWith('https')) {
 				http = https;
 			} else {
-				http = require('http');
+				http = nodeHttp;
 			}
 
 			const options = {
@@ -714,6 +723,19 @@ let mainHALsync = {
 				});
 
 				res.on('end', () => {
+					if (res.statusCode !== 200) {
+						// HAL がエラーを返した場合は reject する
+						let message = 'method=get, url=' + url + ', code=' + res.statusCode + ', message=';
+						try {
+							let res_data = JSON.parse(body);
+							message += res_data.error;
+						} catch (error) {
+							message += body;
+						}
+						reject(new Error('Received an error response from HAL: ' + message));
+						return;
+					}
+
 					try {
 						// console.log('-- body:', body);
 						if (body == '' || body == 'OK') {
@@ -744,12 +766,16 @@ let mainHALsync = {
 	 */
 	httpPostRequest: function (url, data, token) {
 		return new Promise((resolve, reject) => {
+			if (!token) {
+				token = config.halApiToken;
+			}
+
 			const dataStr = JSON.stringify(data);
 			let http;
 			if (url.startsWith('https')) {
 				http = https;
 			} else {
-				http = require('http');
+				http = nodeHttp;
 			}
 
 			const options = {
@@ -772,6 +798,19 @@ let mainHALsync = {
 				});
 
 				res.on('end', () => {
+					if (res.statusCode !== 200) {
+						// HAL がエラーを返した場合は reject する
+						let message = 'method=post, url=' + url + ', code=' + res.statusCode + ', message=';
+						try {
+							let res_data = JSON.parse(body);
+							message += res_data.error;
+						} catch (error) {
+							message += body;
+						}
+						reject(new Error('Received an error response from HAL: ' + message));
+						return;
+					}
+
 					try {
 						// console.log('-- body:', body);
 						if (body == '' || body == 'OK') {
@@ -935,8 +974,12 @@ let mainHALsync = {
 		}
 
 		// 最後にアップロードした日時と Log ID をストレージに保存
-		await store.set('config.HAL.lastUploadedTime', Date.now());
-		await store.set('config.HAL.lastUploadedId', max_id);
+		// メモリ上の config も更新しないと、次回以降の再送や saveConfig() による
+		// 古い値の上書きで、同じログを重複アップロードしてしまう
+		config.lastUploadedTime = Date.now();
+		config.lastUploadedId = max_id;
+		await store.set('config.HAL.lastUploadedTime', config.lastUploadedTime);
+		await store.set('config.HAL.lastUploadedId', config.lastUploadedId);
 	},
 
 	//----------------------------------------------------------------------------------------------
