@@ -643,6 +643,15 @@ app.on('ready', async () => {
 		logger.debug('main', config.debug, 'on.ready. Local lifelog DB is ready with auto-migration.');
 	});
 
+	// sync() は既存テーブルへのカラム追加を行わないため、項目別メタ情報
+	// （_date / _source / _updatedAt）のカラムだけ個別にマイグレーションする
+	try {
+		await localDB.migrateTrackingColumns();
+		logger.debug('main', config.debug, 'on.ready. Tracking columns are migrated.');
+	} catch (error) {
+		logger.error('main', 'migrateTrackingColumns', error);
+	}
+
 	createWindow();
 
 	const loginItemSettings = app.getLoginItemSettings();

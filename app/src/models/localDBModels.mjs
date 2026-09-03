@@ -1115,6 +1115,69 @@ const IOT_QuestionnaireAnswersModel = canUseSequelizeSqlite ? sqlite3.define('IO
 }) : makeStubModel('IOT_QuestionnaireAnswers');
 
 
+//////////////////////////////////////////////////////////////////////
+// 項目別メタ情報（対象日 / データソース / 更新日時）
+// HAL と同じく、評価項目ごとに「いつの」「どこから来た」値なのかを個別に保持する。
+// レコード単位の date / assessmentSource / updatedAt とは独立に管理される。
+//////////////////////////////////////////////////////////////////////
+
+/** @type {string} 既存行へカラムを追加したときの初期値 */
+const TRACKING_DATE_DEFAULT = '1970-01-01';
+
+/** IOT_MajorResults で項目別に管理する評価項目 */
+const MAJOR_TRACKED_FIELDS = [
+    'smartLifeIndex', 'totalPoint', 'totalRank',
+    'clothingPoint', 'clothingRawScore',
+    'foodPoint', 'foodRawScore',
+    'housingPoint', 'housingRawScore',
+    'physicalHealthPoint', 'physicalHealthRawScore',
+    'mentalHealthPoint', 'mentalHealthRawScore',
+    'ecologyPoint', 'ecologyRawScore',
+    'comments'
+];
+
+/** IOT_MinorResults で項目別に管理する評価項目 */
+const MINOR_TRACKED_FIELDS = [
+    'r_1_1', 'r_1_2', 'r_1_3', 'r_1_4', 'r_1_5',
+    'r_1_6', 'r_1_7', 'r_1_8', 'r_1_9', 'r_2_1',
+    'r_2_2', 'r_2_3', 'r_2_4', 'r_2_5', 'r_2_6',
+    'r_2_7', 'r_2_8', 'r_3_1', 'r_3_2', 'r_3_3',
+    'r_3_4', 'r_3_5', 'r_3_6', 'r_3_7', 'r_3_8',
+    'r_4_1', 'r_4_2', 'r_4_3', 'r_4_4', 'r_4_5',
+    'r_4_6', 'r_4_7', 'r_4_8', 'r_5_1', 'r_5_2',
+    'r_5_3', 'r_5_4', 'r_5_5', 'r_5_6', 'r_5_7',
+    'r_5_8', 'r_5_9', 'r_6_1', 'r_6_2', 'r_6_3',
+    'r_6_4', 'r_6_5', 'r_6_6', 'r_6_7', 'r_6_8'
+];
+
+/**
+ * @func makeTrackingColumns
+ * @desc 評価項目ごとの _date / _source / _updatedAt カラム定義をまとめて生成する。
+ * @param {string[]} fields 評価項目名の配列
+ * @returns {Object} Sequelize のカラム定義
+ */
+function makeTrackingColumns(fields) {
+    const columns = {};
+    for (const field of fields) {
+        columns[`${field}_date`] = {
+            type: Sequelize.DATEONLY,
+            allowNull: false,
+            defaultValue: TRACKING_DATE_DEFAULT
+        };
+        columns[`${field}_source`] = {
+            type: Sequelize.STRING(16),
+            allowNull: false,
+            defaultValue: ''
+        };
+        columns[`${field}_updatedAt`] = {
+            type: Sequelize.DATE,
+            allowNull: true
+        };
+    }
+    return columns;
+}
+
+
 /** @type {Model} 主要な評価結果（総合スコア、分野別スコア等） */
 const IOT_MajorResultsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MajorResults', {
     idIOT_MajorResults: {
@@ -1178,6 +1241,8 @@ const IOT_MajorResultsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MajorR
     comments: {
         type: Sequelize.TEXT,
     },
+    // 評価項目ごとの対象日 / データソース / 更新日時
+    ...makeTrackingColumns(MAJOR_TRACKED_FIELDS),
     createdAt: {
         type: Sequelize.STRING,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
@@ -1373,6 +1438,8 @@ const IOT_MinorResultsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_MinorR
     r_6_8: {
         type: Sequelize.DOUBLE
     },
+    // 評価項目ごとの対象日 / データソース / 更新日時
+    ...makeTrackingColumns(MINOR_TRACKED_FIELDS),
     createdAt: {
         type: Sequelize.STRING,
         defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
@@ -2643,6 +2710,61 @@ const IOT_FitbitWeightsModel = canUseSequelizeSqlite ? sqlite3.define('IOT_Fitbi
 }, { freezeTableName: true, timestamps: true }) : makeStubModel('IOT_FitbitWeights');
 
 
+/**
+ * @func migrateTrackingColumns
+ * @desc 既存の lifelog.db に項目別メタ情報（_date / _source / _updatedAt）のカラムを追加し、
+ *       まだ値が入っていない行にはレコード単位の date / assessmentSource / updatedAt をコピーする。
+ *       sqlite3.sync() は alter を行わないため、この関数で差分だけを追加する。
+ * @returns {Promise<void>}
+ */
+async function migrateTrackingColumns() {
+    if (!canUseSequelizeSqlite) {
+        return;
+    }
+
+    const targets = [
+        { table: 'IOT_MajorResults', fields: MAJOR_TRACKED_FIELDS },
+        { table: 'IOT_MinorResults', fields: MINOR_TRACKED_FIELDS }
+    ];
+
+    for (const { table, fields } of targets) {
+        const [columns] = await sqlite3.query(`PRAGMA table_info(${table})`);
+        if (!columns || columns.length === 0) {
+            continue;  // テーブルがまだ無い
+        }
+        const existing = new Set(columns.map((column) => column.name));
+
+        // 不足しているカラムだけを追加する
+        for (const field of fields) {
+            if (!existing.has(`${field}_date`)) {
+                await sqlite3.query(`ALTER TABLE ${table} ADD COLUMN \`${field}_date\` DATE NOT NULL DEFAULT '${TRACKING_DATE_DEFAULT}'`);
+            }
+            if (!existing.has(`${field}_source`)) {
+                await sqlite3.query(`ALTER TABLE ${table} ADD COLUMN \`${field}_source\` VARCHAR(16) NOT NULL DEFAULT ''`);
+            }
+            if (!existing.has(`${field}_updatedAt`)) {
+                await sqlite3.query(`ALTER TABLE ${table} ADD COLUMN \`${field}_updatedAt\` DATETIME`);
+            }
+        }
+
+        // 先頭項目のカラムが初期値のままの行を「未移行」とみなして値をコピーする
+        const marker = fields[0];
+        const dateSourceFields = [];
+        for (const field of fields) {
+            dateSourceFields.push(`\`${field}_date\` = date`);
+            dateSourceFields.push(`\`${field}_source\` = COALESCE(assessmentSource, '')`);
+        }
+        await sqlite3.query(
+            `UPDATE ${table} SET ${dateSourceFields.join(', ')}`
+            + ` WHERE \`${marker}_date\` = '${TRACKING_DATE_DEFAULT}' AND date IS NOT NULL`);
+
+        const updatedAtFields = fields.map((field) => `\`${field}_updatedAt\` = updatedAt`);
+        await sqlite3.query(
+            `UPDATE ${table} SET ${updatedAtFields.join(', ')} WHERE \`${marker}_updatedAt\` IS NULL`);
+    }
+}
+
+
 export default {
     Sequelize, Op, sqlite3,
     eldataModel,
@@ -2662,6 +2784,9 @@ export default {
     IOT_MajorResultsModel,
     IOT_MinorResultsModel,
     IOT_MinorkeyMeansModel,
+    MAJOR_TRACKED_FIELDS,
+    MINOR_TRACKED_FIELDS,
+    migrateTrackingColumns,
     MinorkeyMeansValues,
     roomEnvModel,
     userStateModel,

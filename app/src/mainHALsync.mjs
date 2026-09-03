@@ -13,12 +13,15 @@ import https from 'https';
 import nodeHttp from 'http';
 import cron from 'node-cron';
 import localDB from './models/localDBModels.mjs';   // DBデータと連携
-const { Op, eldataModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel } = localDB;
+const { Op, MAJOR_TRACKED_FIELDS, MINOR_TRACKED_FIELDS, eldataModel, IOT_MajorResultsModel, IOT_MinorResultsModel, IOT_GarminDailiesModel, IOT_GarminStressDetailsModel, IOT_GarminEpochsModel, IOT_GarminSleepsModel, IOT_GarminUserMetricsModel, IOT_GarminActivitiesModel, IOT_GarminActivityDetailsModel, IOT_GarminMoveIQActivitiesModel, IOT_GarminAllDayRespirationModel, IOT_GarminPulseoxModel, IOT_GarminBodyCompsModel } = localDB;
 import { getToday, mergeDeeply, formatDate } from './mainSubmodule.mjs';
 import { logger } from './logger.mjs';
 
 // const store = new Store();
 const HAL_API_BASE_URL = 'https://hal.sugi-lab.net/api';
+// HTTP リクエストのタイムアウト (ms)
+// これが無いとサーバが無応答のときに同期画面が「同期中…」のまま固まる
+const HTTP_TIMEOUT = 30000;
 
 /**
  * HAL Sync 設定
@@ -68,6 +71,32 @@ let sendIPCMessage = null;
 
 //////////////////////////////////////////////////////////////////////
 // HAL, Home-life Assessment Listの処理
+/**
+ * 項目別の更新日時を比較して、HAL 側の値がローカルより新しいかを判定する。
+ * @param {string|Date|null} remote HAL 側の更新日時
+ * @param {string|Date|null} local ローカルの更新日時
+ * @returns {boolean} HAL 側が新しければ true
+ */
+function isNewerThanLocal(remote, local) {
+	if (remote === null || remote === undefined) {
+		return false;  // HAL 側に更新日時が無ければ取り込まない
+	}
+	if (local === null || local === undefined) {
+		return true;   // ローカルに更新日時が無ければ HAL 側を採用する
+	}
+
+	const remoteTime = new Date(remote).getTime();
+	const localTime = new Date(local).getTime();
+	if (isNaN(remoteTime)) {
+		return false;
+	}
+	if (isNaN(localTime)) {
+		return true;
+	}
+	return remoteTime > localTime;
+}
+
+
 let mainHALsync = {
 	get config() { return config; },
 	get persist() { return persist; },
@@ -176,97 +205,37 @@ let mainHALsync = {
 			}
 
 			// HAL から成績データをダウンロード
-			let dndata = await mainHALsync.httpGetRequest(hal_results_url);
+			// date を指定しないと「日付を問わず最新のレコード」が返るため、
+			// 過去日のデータを今日のレコードとして取り込んでしまう
+			let dndata = await mainHALsync.httpGetRequest(hal_results_url, undefined, { date: today });
 			logger.debug('mainHALsync', config.debug, '|- Downloading from HAL');
 
 			// HAL からダウンロードした成績データをローカルに保存
 			logger.debug('mainHALsync', config.debug, '|- Saving.');
 
-			// 今の日時 ("YYYY-MM-DD hh:mm:ss")
-			//let now = getNow();
+			// 今の日時
 			let now = new Date();
 
 			// MajorResults テーブルのレコードを保存
-			if (dndata.MajorResults) {
-				let rec = {};
-				if (updata.MajorResults) {
-					// ローカルに今日のレコードがあれば、それをダウンロードデータで UPDATE する。
-					// ただし、ローカルのレコードとダウンロードしたレコードの assessmentSource
-					// の値がともに "questionnaire" なら、すべてのカラムの値を上書きし、そうで
-					// なければ、ローカル側が null のカラムのみを更新する
-					if (updata.MajorResults.assessmentSource === 'questionnaire' && dndata.MajorResults.assessmentSource === 'questionnaire') {
-						for (let [k] of Object.entries(updata.MajorResults)) {
-							rec[k] = dndata.MajorResults[k];
-						}
-					} else {
-						for (let [k, v] of Object.entries(updata.MajorResults)) {
-							if (v === null && dndata.MajorResults[k] !== null) {
-								rec[k] = dndata.MajorResults[k];
-							}
-						}
-					}
-					let id = updata.MajorResults.idIOT_MajorResults;
-					rec.updatedAt = now;
-					await IOT_MajorResultsModel.update(rec, {
-						where: { idIOT_MajorResults: id }
-					});
-					let updated_res = await IOT_MajorResultsModel.findOne({
-						where: { idIOT_MajorResults: id }
-					});
-					logger.debug('mainHALsync', config.debug, '|- Updated the latest record in the IOT_MajorResults table:');
-					// config.debug ? console.log(JSON.stringify(updated_res.dataValues, null, '  ')) : 0;
-				} else {
-					// 今日のレコードがなければ、それを INSERT
-					rec = dndata.MajorResults;
-					delete rec.idIOT_MajorResults;
-					delete rec.UID;
-					// rec.createdAt = now;
-					// rec.updatedAt = now;
-					let ins_res = await IOT_MajorResultsModel.create(rec);
-					logger.debug('mainHALsync', config.debug, '|- Inserted a new record in the IOT_MajorResults table:');
-					// config.debug ? console.log(JSON.stringify(ins_res.dataValues, null, '  ')) : 0;
-				}
-			}
+			await mainHALsync.saveDownloadedResults({
+				model: IOT_MajorResultsModel,
+				idName: 'idIOT_MajorResults',
+				trackedFields: MAJOR_TRACKED_FIELDS,
+				localRow: updata.MajorResults,
+				remoteRow: dndata.MajorResults,
+				now: now
+			});
+
 			// MinorResults テーブルのレコードを保存
-			if (dndata.MinorResults) {
-				let rec = {};
-				if (updata.MinorResults) {
-					// ローカルに今日のレコードがあれば、それをダウンロードデータで UPDATE する。
-					// ただし、ローカルのレコードとダウンロードしたレコードの assessmentSource
-					// の値がともに "questionnaire" なら、すべてのカラムの値を上書きし、そうで
-					// なければ、ローカル側が null のカラムのみを更新する
-					if (updata.MinorResults.assessmentSource === 'questionnaire' && dndata.MinorResults.assessmentSource === 'questionnaire') {
-						for (let [k] of Object.entries(updata.MinorResults)) {
-							rec[k] = dndata.MinorResults[k];
-						}
-					} else {
-						for (let [k, v] of Object.entries(updata.MinorResults)) {
-							if (v === null && dndata.MinorResults[k] !== null) {
-								rec[k] = dndata.MinorResults[k];
-							}
-						}
-					}
-					let id = updata.MinorResults.idIOT_MinorResults;
-					rec.updatedAt = now;
-					await IOT_MinorResultsModel.update(rec, {
-						where: { idIOT_MinorResults: id }
-					});
-					let updated_res = await IOT_MinorResultsModel.findOne({
-						where: { idIOT_MinorResults: id }
-					});
-					logger.debug('mainHALsync', config.debug, '|- Updated the latest record in the IOT_MinorResults table:');
-					// config.debug ? console.log(JSON.stringify(updated_res.dataValues, null, '  ')) : 0;
-				} else {
-					// 今日のレコードがなければ、それを INSERT
-					rec = dndata.MinorResults;
-					delete rec.idIOT_MinorResults;
-					delete rec.UID;
-					// rec.createdAt = now;
-					// rec.updatedAt = now;
-					let ins_res = await IOT_MinorResultsModel.create(rec);
-					logger.debug('mainHALsync', config.debug, '|- Inserted a new record in the IOT_MinorResults table:');
-				}
-			}
+			await mainHALsync.saveDownloadedResults({
+				model: IOT_MinorResultsModel,
+				idName: 'idIOT_MinorResults',
+				trackedFields: MINOR_TRACKED_FIELDS,
+				localRow: updata.MinorResults,
+				remoteRow: dndata.MinorResults,
+				now: now
+			});
+
 			// MinorkeyMeans テーブルのレコードを保存
 			// MinorkeyMeansに関してはローカルで生成することにした
 			/*
@@ -312,6 +281,67 @@ let mainHALsync = {
 			sendIPCMessage("HALSyncResponse", { error: `HAL との同期に失敗しました: ${error.message ? error.message : error}` });
 		}
 	},
+
+	//----------------------------------------------------------------------------------------------
+	/**
+	 * HAL からダウンロードした成績データをローカルに反映する。
+	 * 評価項目ごとに更新日時（_updatedAt）を比較し、HAL 側が新しい項目だけを
+	 * 対象日（_date）・データソース（_source）ごと取り込む。
+	 * @param {Object} params
+	 * @param {Object} params.model 対象の Sequelize モデル
+	 * @param {string} params.idName 主キーのカラム名
+	 * @param {string[]} params.trackedFields 項目別管理している評価項目
+	 * @param {Object|null} params.localRow ローカルの今日のレコード（無ければ null）
+	 * @param {Object|null} params.remoteRow HAL からダウンロードしたレコード
+	 * @param {Date} params.now 現在日時
+	 * @returns {Promise<void>}
+	 */
+	saveDownloadedResults: async function ({ model, idName, trackedFields, localRow, remoteRow, now }) {
+		if (!remoteRow) {
+			return;  // HAL 側にデータが無い
+		}
+
+		if (!localRow) {
+			// ローカルに今日のレコードが無ければ、ダウンロードしたレコードをそのまま INSERT
+			let rec = Object.assign({}, remoteRow);
+			delete rec[idName];  // 主キーはローカルで採番する
+			delete rec.UID;      // UID は HAL 側だけが持つ
+			await model.create(rec);
+			logger.debug('mainHALsync', config.debug, `|- Inserted a new record in the ${model.name} table.`);
+			return;
+		}
+
+		// 項目ごとに新しい方を採用する
+		let update = {};
+		for (const field of trackedFields) {
+			if (remoteRow[field] === null || remoteRow[field] === undefined) {
+				continue;  // HAL 側に値が無い項目は触らない
+			}
+
+			let hasLocalValue = (localRow[field] !== null && localRow[field] !== undefined);
+			if (hasLocalValue && !isNewerThanLocal(remoteRow[`${field}_updatedAt`], localRow[`${field}_updatedAt`])) {
+				continue;  // ローカルの方が新しいので残す
+			}
+
+			update[field] = remoteRow[field];
+			// 項目別メタ情報も値とセットで取り込む（古い HAL には無いので存在チェックする）
+			for (const suffix of ['_date', '_source', '_updatedAt']) {
+				if (remoteRow[field + suffix] !== undefined) {
+					update[field + suffix] = remoteRow[field + suffix];
+				}
+			}
+		}
+
+		if (Object.keys(update).length === 0) {
+			logger.debug('mainHALsync', config.debug, `|- No update for the ${model.name} table.`);
+			return;
+		}
+
+		update.updatedAt = now;
+		await model.update(update, { where: { [idName]: localRow[idName] } });
+		logger.debug('mainHALsync', config.debug, `|- Updated ${Object.keys(update).length - 1} columns in the ${model.name} table.`);
+	},
+
 
 	//----------------------------------------------------------------------------------------------
 	/**
@@ -366,7 +396,6 @@ let mainHALsync = {
 					defaults: {
 						idIOT_GarminActivities: dndata.Activities.idIOT_GarminActivities,
 						garminId: dndata.Activities.garminId,
-						garminAccessToken: dndata.Activities.garminAccessToken,
 						summaryId: dndata.Activities.summaryId,
 						activityId: dndata.Activities.activityId,
 						durationInSeconds: dndata.Activities.durationInSeconds,
@@ -401,7 +430,6 @@ let mainHALsync = {
 					defaults: {
 						idIOT_GarminActivityDetails: dndata.ActivityDetails.idIOT_GarminActivityDetails,
 						garminId: dndata.ActivityDetails.garminId,
-						garminAccessToken: dndata.ActivityDetails.garminAccessToken,
 						summaryId: dndata.ActivityDetails.summaryId,
 						activityId: dndata.ActivityDetails.activityId,
 						summary: dndata.ActivityDetails.summary,
@@ -423,7 +451,6 @@ let mainHALsync = {
 					defaults: {
 						idIOT_GarminAllDayRespiration: dndata.AllDayRespiration.idIOT_GarminAllDayRespiration,
 						garminId: dndata.AllDayRespiration.garminId,
-						garminAccessToken: dndata.AllDayRespiration.garminAccessToken,
 						summaryId: dndata.AllDayRespiration.summaryId,
 						activityId: dndata.AllDayRespiration.activityId,
 						durationInSeconds: dndata.AllDayRespiration.durationInSeconds,
@@ -446,7 +473,6 @@ let mainHALsync = {
 					defaults: {
 						idIOT_GarminBodyComps: dndata.BodyComps.idIOT_GarminBodyComps,
 						garminId: dndata.BodyComps.garminId,
-						garminAccessToken: dndata.BodyComps.garminAccessToken,
 						summaryId: dndata.BodyComps.summaryId,
 						muscleMassInGrams: dndata.BodyComps.muscleMassInGrams,
 						boneMassInGrams: dndata.BodyComps.boneMassInGrams,
@@ -472,7 +498,6 @@ let mainHALsync = {
 					defaults: {
 						idIOT_GarminDailies: dndata.Dailies.idIOT_GarminDailies,
 						garminId: dndata.Dailies.garminId,
-						garminAccessToken: dndata.Dailies.garminAccessToken,
 						summaryId: dndata.Dailies.summaryId,
 						calendarDate: dndata.Dailies.calendarDate,
 						startTimeInSeconds: dndata.Dailies.startTimeInSeconds,
@@ -521,7 +546,6 @@ let mainHALsync = {
 					defaults: {
 						idIOT_GarminEpochs: dndata.Epochs.idIOT_GarminEpochs,
 						garminId: dndata.Epochs.garminId,
-						garminAccessToken: dndata.Epochs.garminAccessToken,
 						summaryId: dndata.Epochs.summaryId,
 						startTimeInSeconds: dndata.Epochs.startTimeInSeconds,
 						startTimeOffsetInSeconds: dndata.Epochs.startTimeOffsetInSeconds,
@@ -551,7 +575,6 @@ let mainHALsync = {
 					defaults: {
 						idIOT_GarminMoveIQActivities: dndata.MoveIQActivities.idIOT_GarminMoveIQActivities,
 						garminId: dndata.MoveIQActivities.garminId,
-						garminAccessToken: dndata.MoveIQActivities.garminAccessToken,
 						summaryId: dndata.MoveIQActivities.summaryId,
 						calendarDate: dndata.MoveIQActivities.calendarDate,
 						startTimeInSeconds: dndata.MoveIQActivities.startTimeInSeconds,
@@ -575,7 +598,6 @@ let mainHALsync = {
 					defaults: {
 						idIOT_GarminPulseox: dndata.Pulseox.idIOT_GarminPulseox,
 						garminId: dndata.Pulseox.garminId,
-						garminAccessToken: dndata.Pulseox.garminAccessToken,
 						summaryId: dndata.Pulseox.summaryId,
 						calendarDate: dndata.Pulseox.calendarDate,
 						startTimeInSeconds: dndata.Pulseox.startTimeInSeconds,
@@ -599,7 +621,6 @@ let mainHALsync = {
 					defaults: {
 						idIOT_GarminSleeps: dndata.Sleeps.idIOT_GarminSleeps,
 						garminId: dndata.Sleeps.garminId,
-						garminAccessToken: dndata.Sleeps.garminAccessToken,
 						summaryId: dndata.Sleeps.summaryId,
 						calendarDate: dndata.Sleeps.calendarDate,
 						startTimeInSeconds: dndata.Sleeps.startTimeInSeconds,
@@ -631,7 +652,6 @@ let mainHALsync = {
 					defaults: {
 						idIOT_GarminStressDetails: dndata.StressDetails.idIOT_GarminStressDetails,
 						garminId: dndata.StressDetails.garminId,
-						garminAccessToken: dndata.StressDetails.garminAccessToken,
 						summaryId: dndata.StressDetails.summaryId,
 						startTimeInSeconds: dndata.StressDetails.startTimeInSeconds,
 						startTimeOffsetInSeconds: dndata.StressDetails.startTimeOffsetInSeconds,
@@ -655,7 +675,6 @@ let mainHALsync = {
 					defaults: {
 						idIOT_GarminUserMetrics: dndata.UserMetrics.idIOT_GarminUserMetrics,
 						garminId: dndata.UserMetrics.garminId,
-						garminAccessToken: dndata.UserMetrics.garminAccessToken,
 						summaryId: dndata.UserMetrics.summaryId,
 						calendarDate: dndata.UserMetrics.calendarDate,
 						vo2Max: dndata.UserMetrics.vo2Max,
@@ -690,9 +709,10 @@ let mainHALsync = {
 	 * HTTP GET request
 	 * @param {string} url - request url
 	 * @param {string} token - auth token
+	 * @param {Object} [extraHeaders] - 追加のリクエストヘッダ（date など）
 	 * @return {Promise<Object>} result
 	 */
-	httpGetRequest: function (url, token) {
+	httpGetRequest: function (url, token, extraHeaders) {
 		return new Promise((resolve, reject) => {
 			if (!token) {
 				token = config.halApiToken;
@@ -707,9 +727,9 @@ let mainHALsync = {
 
 			const options = {
 				method: 'GET',
-				headers: {
+				headers: Object.assign({
 					'Authorization': `Bearer ${token}`
-				},
+				}, extraHeaders),
 				requestCert: true,
 				agent: false
 			};
@@ -751,6 +771,10 @@ let mainHALsync = {
 
 			req.on('error', (e) => {
 				reject(e);
+			});
+
+			req.setTimeout(HTTP_TIMEOUT, () => {
+				req.destroy(new Error(`HAL への接続がタイムアウトしました (${HTTP_TIMEOUT} ms): ${url}`));
 			});
 
 			req.end();
@@ -826,6 +850,10 @@ let mainHALsync = {
 
 			req.on('error', (e) => {
 				reject(e);
+			});
+
+			req.setTimeout(HTTP_TIMEOUT, () => {
+				req.destroy(new Error(`HAL への接続がタイムアウトしました (${HTTP_TIMEOUT} ms): ${url}`));
 			});
 
 			req.write(dataStr);
